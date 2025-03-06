@@ -111,3 +111,112 @@ public class OrderService {
 
 </details>
 
+<details>
+<summary><strong>0306</strong></summary>
+
+## DDD (Domain-Driven Design)
+
+### ✅ DDD란?
+- **도메인을 중심으로 소프트웨어를 설계하는 방법론**
+- 복잡한 비즈니스 로직을 효율적으로 관리하기 위해 사용됨
+- 객체의 상태와 행위를 함께 포함하여 **도메인 모델**을 구현
+
+---
+
+### 📌 DDD의 핵심 개념
+
+#### 1️⃣ **엔티티(Entity)**
+- 고유한 식별자를 가지는 도메인 객체
+- 상태와 행위를 함께 포함함
+- **비즈니스 로직을 포함할 수 있음** (→ 기존의 MVC 패턴과 차이점)
+
+```java
+public class Order {
+    private Long id;
+    private OrderStatus status;
+    
+    public void completeOrder() {
+        if (this.status != OrderStatus.PENDING) {
+            throw new IllegalStateException("Order cannot be completed");
+        }
+        this.status = OrderStatus.COMPLETED;
+    }
+}
+```
+
+#### 2️⃣ **밸류 객체(Value Object, VO)**
+- 고유한 식별자가 없음
+- 값 자체가 의미를 가지며 불변 객체로 설계하는 것이 일반적
+
+```java
+public class Address {
+    private String street;
+    private String city;
+    private String zipCode;
+    
+    // 생성자에서 불변성 유지
+    public Address(String street, String city, String zipCode) {
+        this.street = street;
+        this.city = city;
+        this.zipCode = zipCode;
+    }
+}
+```
+
+#### 3️⃣ **애그리거트(Aggregate)와 애그리거트 루트**
+- **애그리거트(Aggregate)**: 논리적으로 하나의 도메인 객체 그룹을 의미
+- **애그리거트 루트(Aggregate Root)**: 애그리거트 내에서 유일하게 외부에서 직접 접근 가능한 객체
+
+```java
+public class Order {
+    private List<OrderItem> orderItems = new ArrayList<>();
+    
+    public void addItem(OrderItem item) {
+        this.orderItems.add(item);
+    }
+}
+```
+
+#### 4️⃣ **도메인 서비스(Domain Service)**
+- 특정 엔티티나 밸류 객체에 속하지 않는 도메인 로직을 처리하는 서비스
+- **도메인 간의 복잡한 비즈니스 로직을 담당**
+
+```java
+public class PaymentService {
+    public void processPayment(Order order) {
+        // 결제 처리 로직
+    }
+}
+```
+
+#### 5️⃣ **이벤트(Event)와 도메인 이벤트**
+- 도메인에서 발생한 상태 변경을 다른 컴포넌트에 알리는 역할
+- 이벤트를 발행하면 이를 감지한 다른 서비스가 비동기적으로 처리 가능
+
+```java
+public class OrderCreatedEvent {
+    private Long orderId;
+    public OrderCreatedEvent(Long orderId) {
+        this.orderId = orderId;
+    }
+}
+```
+
+---
+
+### 🔍 DDD vs 기존 MVC 패턴의 차이
+| 구분 | MVC 패턴 | DDD 패턴 |
+|------|---------|---------|
+| 도메인 로직 | 서비스(Service) 계층에 집중 | 엔티티(Entity)에 포함 |
+| 데이터 관리 | DB 중심의 설계 | 도메인 중심의 설계 |
+| 확장성 | 단순 구조이지만 대형 시스템에선 유지보수 어려움 | 복잡하지만 도메인 변화에 유연하게 대응 가능 |
+
+---
+
+### 📌 결론
+- DDD는 **비즈니스 로직을 객체 내부에 포함**하여 도메인 중심 설계를 가능하게 함
+- **엔티티와 밸류 객체를 구분**하고, **애그리거트와 도메인 서비스**를 적절히 활용해야 함
+- 이벤트 기반 설계를 통해 **확장성과 유지보수성을 높일 수 있음**
+
+</details>
+
