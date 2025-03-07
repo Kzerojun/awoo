@@ -488,11 +488,175 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
   - Context path: 애플리케이션 컨텍스트 지정
   - Tomcat URL, 자격증명 입력
 
-### 학습 내용 정리
+#### 학습 내용 정리
 
 1. `Gradle vs Maven`: Gradle은 빌드 속도가 빠르고 설정이 간결하다는 장점이 있다.
 2. `Gradle Wrapper`: 프로젝트 내에 포함되는 스크립트로, Gradle이 설치되어 있지 않아도 빌드 가능하다.
 3. `서버 자원 최적화`: 작은 인스턴스에서 Jenkins를 실행할 때는 디스크 공간과 스왑 메모리 설정이 중요하다.
 4. `배포 자동화`: Jenkins의 Deploy to container 플러그인을 통해 Tomcat 배포를 자동화할 수 있다.
+
+</details>
+
+<details>
+<summary><strong>0307</strong></summary>
+
+# Gradle vs Maven
+
+### 1. 기본 개념
+
+#### Maven
+
+- XML 기반 프로젝트 구성
+- 2004년에 출시된 Apache의 프로젝트
+- 선언적 접근 방식 (What to do)
+- POM(Project Object Model) 파일 사용
+
+#### Gradle
+
+- Groovy 또는 Kotlin DSL 기반 스크립트
+- 2012년에 출시됨
+- 프로그래매틱 접근 방식 (How to do)
+- build.gradle 파일 사용
+
+### 2. 문법 및 구성 파일
+
+#### Maven
+
+```xml
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>my-app</artifactId>
+    <version>1.0.0</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+#### Gradle
+
+```groovy
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+```
+
+### 3. 성능 차이
+
+#### 빌드 속도
+
+- `Gradle`:
+
+  - 증분 빌드 기능이 강력함
+  - 빌드 캐시를 사용하여 반복 빌드 시간 단축
+  - 병렬 실행 지원이 우수
+  - 대규모 프로젝트에서 특히 유리
+
+- `Maven`:
+
+  - 일관적이지만 상대적으로 느림
+  - 증분 빌드 기능이 제한적
+  - 빌드 최적화 옵션이 제한적
+
+#### 메모리 사용
+
+- Gradle은 초기에 더 많은 메모리를 사용하지만, 캐싱으로 인해 반복 빌드에서는 효율적
+- Maven은 일반적으로 메모리 사용량이 더 적음
+
+### 4. 의존성 관리
+
+#### Maven
+
+- 중앙 저장소 개념을 도입
+- 전이적 의존성(Transitive Dependency) 관리
+- 의존성 충돌 해결: "가장 가까운 정의" 규칙
+- BOM(Bill of Materials) 개념 제공
+
+#### Gradle
+
+- Maven 저장소 호환
+- 더 유연한 의존성 관리 메커니즘
+- 동적 버전과 버전 범위 지정 가능
+- 세분화된 의존성 구성 (implementation, api, compileOnly 등)
+- 의존성 잠금(dependency locking) 기능
+
+### 5. 플러그인 시스템
+
+#### Maven
+
+- 플러그인 구성이 XML 기반으로 제한적
+- 광범위한 플러그인 생태계
+- 플러그인 구성이 상대적으로 복잡
+
+#### Gradle
+
+- 코드 기반 플러그인 작성 가능
+- 커스텀 태스크 정의 용이
+- 플러그인 간 상호작용 및 확장 용이
+- 빌드 로직 재사용 및 모듈화 우수
+
+### 6. 멀티 모듈 프로젝트
+
+#### Maven
+
+- 계층적인 프로젝트 구조
+- 상속 기반 설정 공유
+- 모듈 간 의존성 관리가 명시적
+
+#### Gradle
+
+- 더 유연한 멀티 프로젝트 구성
+- 설정 공유를 위한 다양한 메커니즘 (상속, 플러그인, 스크립트 적용)
+- 조건부 구성 가능
+
+### 7. 커스터마이징
+
+#### Maven
+
+- 라이프사이클이 고정되어 있음
+- XML로 인한 커스터마이징 제약
+- 빌드 프로세스 확장 시 복잡해짐
+
+#### Gradle
+
+- 태스크 그래프 기반의 유연한 모델
+- 코드 기반으로 높은 커스터마이징 가능
+- 빌드 로직을 직접 프로그래밍 가능
+
+### 8. 사용 사례별 적합성
+
+#### Maven에 적합한 경우
+
+- 엄격한 표준화가 중요한 경우
+- 명확한 규칙과 관례가 필요한 경우
+- XML에 익숙한 팀
+- 간단하고 작은 프로젝트
+
+#### Gradle에 적합한 경우
+
+- 복잡한 빌드 로직이 필요한 경우
+- 대규모 멀티 모듈 프로젝트
+- 빌드 성능이 중요한 경우
+- Android 개발 (공식 빌드 도구)
+- 빌드 자동화 및 CI/CD 고도화
 
 </details>
