@@ -256,3 +256,147 @@ public class OrderCreatedEvent {
 - **HTTPS**는 보안을 위해 필수적인 프로토콜로, 민감한 정보를 다루는 모든 서비스에서 권장됨.
 
 </details>
+
+<details>
+<summary><strong>0308</strong></summary>
+
+## JPA (Java Persistence API)
+
+### ✅ JPA란?
+- **Java 애플리케이션에서 관계형 데이터베이스를 쉽게 다룰 수 있도록 도와주는 ORM 기술**
+- SQL을 직접 작성하지 않고 **객체를 통해 데이터베이스를 조작**할 수 있음
+- Spring Boot와 함께 사용하면 **자동으로 SQL을 생성 및 실행**할 수 있음
+
+---
+
+### 📌 JPA의 주요 특징
+1. **객체 지향적인 데이터베이스 접근** → SQL 없이 엔티티 객체를 사용하여 데이터 저장 및 조회
+2. **자동 SQL 생성** → `save()`, `findById()`, `delete()` 등의 메서드를 제공
+3. **트랜잭션 관리 지원** → `@Transactional`을 사용하여 데이터 일관성을 유지
+4. **캐싱 및 성능 최적화** → 1차 캐시, 지연 로딩(Lazy Loading) 등의 기능 제공
+
+---
+
+### 📌 JPA 기본 사용 예제
+
+#### 1️⃣ **의존성 추가 (Spring Boot + JPA)**
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+> 💡 **H2 데이터베이스**는 테스트용으로 가볍게 사용할 수 있는 인메모리 DB
+
+---
+
+#### 2️⃣ **엔티티(Entity) 생성**
+```java
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false)
+    private String name;
+    
+    private String email;
+    
+    protected User() {}
+    
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+    
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+}
+```
+
+---
+
+#### 3️⃣ **JPA 리포지토리 (Repository) 생성**
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByEmail(String email);
+}
+```
+> 💡 `JpaRepository`를 상속하면 기본적인 CRUD 메서드를 자동으로 제공
+
+---
+
+#### 4️⃣ **서비스(Service) 계층에서 사용하기**
+```java
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    
+    @Transactional
+    public User createUser(String name, String email) {
+        User user = new User(name, email);
+        return userRepository.save(user);
+    }
+    
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+}
+```
+
+---
+
+#### 5️⃣ **컨트롤러(Controller)에서 API 제공**
+```java
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+    private final UserService userService;
+    
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+    
+    @PostMapping
+    public User createUser(@RequestParam String name, @RequestParam String email) {
+        return userService.createUser(name, email);
+    }
+    
+    @GetMapping("/{email}")
+    public User getUser(@PathVariable String email) {
+        return userService.getUserByEmail(email);
+    }
+}
+```
+
+---
+
+### 📌 정리
+- **JPA는 객체를 통해 데이터를 다룰 수 있도록 도와주는 ORM 기술**
+- Spring Boot에서는 `JpaRepository`를 사용하여 **자동으로 SQL을 생성 및 실행**
+- `@Entity`, `@Repository`, `@Transactional` 같은 **어노테이션을 사용하여 DB와 매핑**
+
+> **🔥 한 줄 요약:** "JPA를 사용하면 SQL 없이 객체만으로 데이터를 저장하고 조회할 수 있다!"
+
+</details>
