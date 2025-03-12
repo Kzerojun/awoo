@@ -1,5 +1,6 @@
 ## Today I Learned
 
+<details> <summary><strong>1주차</strong></summary>
 <details> <summary><strong>0304</strong></summary>
 <h2>Storybook</h2>
 Storybook이란?
@@ -400,3 +401,158 @@ public class UserController {
 > **🔥 한 줄 요약:** "JPA를 사용하면 SQL 없이 객체만으로 데이터를 저장하고 조회할 수 있다!"
 
 </details>
+</details>
+
+<details>
+<summary><strong>0310</strong></summary>
+
+## 데이터베이스 기초 개념
+
+### 1️⃣ 식별자와 비식별자
+#### ✅ **식별자(Identifier)**
+- 데이터베이스에서 **각 행(row)을 고유하게 구분하는 속성**
+- 주로 **기본 키(Primary Key, PK)**로 사용됨
+- 예: 주민등록번호, 학번, 자동차 번호판 등
+
+#### ✅ **비식별자(Non-identifier)**
+- 개체를 유일하게 구분하지 않는 속성
+- 중복될 수 있음
+- 예: 이름, 주소, 이메일 등
+
+---
+
+### 2️⃣ CHAR vs VARCHAR
+#### ✅ **CHAR**
+- **고정 길이(Fixed Length) 문자열**
+- 저장할 문자열 길이가 항상 일정한 경우 사용
+- ex) `CHAR(10)` → 길이가 5인 문자열을 저장해도 10바이트가 할당됨 (공백 패딩 추가)
+- **속도는 빠르지만, 저장 공간 낭비 발생 가능**
+
+#### ✅ **VARCHAR**
+- **가변 길이(Variable Length) 문자열**
+- 입력된 문자열 길이에 따라 **동적으로 크기가 결정됨**
+- ex) `VARCHAR(10)` → 길이가 5인 문자열을 저장하면 5바이트만 사용
+- **공간 효율적이지만, CHAR보다 속도가 다소 느릴 수 있음**
+
+> 🔥 **정리:** CHAR은 속도 빠름 & 공간 낭비 가능, VARCHAR은 공간 효율적이지만 속도 약간 느림
+
+---
+
+### 3️⃣ UNSIGNED의 의미
+- `UNSIGNED`는 **부호 없는 정수(음수 없음)**를 의미함
+- 일반적으로 **MySQL**에서 사용됨
+- `TINYINT`, `SMALLINT`, `INT`, `BIGINT` 같은 정수 타입에서 적용 가능
+
+#### ✅ **예제**
+```sql
+CREATE TABLE example (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    age TINYINT UNSIGNED
+);
+```
+
+#### ✅ **장점**
+- **음수를 허용하지 않아 저장 공간을 절약할 수 있음**
+- 예를 들어 `TINYINT`의 범위는 `-128 ~ 127`이지만, `TINYINT UNSIGNED`는 `0 ~ 255`까지 저장 가능
+
+> 🔥 **정리:** `UNSIGNED`를 사용하면 **음수 대신 양수 범위를 늘려 저장 효율을 높일 수 있음**
+
+---
+
+### 4️⃣ ENUM
+- `ENUM`은 **여러 개의 값 중 하나를 선택할 수 있는 데이터 타입**
+- 데이터베이스에서 **제한된 선택지를 가질 때 사용** (예: 성별, 상태값, 카테고리 등)
+
+#### ✅ **예제**
+```sql
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    status ENUM('ACTIVE', 'INACTIVE', 'BANNED') NOT NULL
+);
+```
+- `status` 컬럼은 `ACTIVE`, `INACTIVE`, `BANNED` 중 하나만 저장 가능
+- `ENUM`은 내부적으로 **정수 값으로 저장되기 때문에 조회 성능이 빠름**
+
+#### ✅ **장점 & 단점**
+✅ **장점:**
+- 값이 정해진 범위 내에서만 저장 가능 → 데이터 무결성 보장
+- 내부적으로 숫자로 저장되므로 빠른 검색 가능
+
+❌ **단점:**
+- 새로운 값을 추가하려면 **테이블을 수정해야 함**
+- 다른 데이터베이스로 마이그레이션 시 호환성 문제가 발생할 수 있음
+
+> 🔥 **정리:** `ENUM`은 **미리 정해진 값만 저장해야 할 때 유용하지만, 유연성이 부족할 수 있음**
+
+</details>
+
+<details>
+<summary><strong>0311</strong></summary>
+
+## 데이터 무결성과 정합성
+
+### 1️⃣ 데이터 무결성 (Data Integrity)
+- **데이터가 정확하고 일관되며 신뢰할 수 있도록 유지하는 것**
+- 데이터베이스 내에서 **오류, 중복, 불일치가 발생하지 않도록 보장**
+- 주로 **제약 조건(Constraints)**을 통해 유지됨
+
+#### ✅ **데이터 무결성의 종류**
+1. **개체 무결성(Entity Integrity)**: 기본 키(PK)는 **고유해야 하며, NULL이 될 수 없음**
+2. **참조 무결성(Referential Integrity)**: 외래 키(FK)는 **존재하는 값만 참조해야 함**
+3. **도메인 무결성(Domain Integrity)**: 속성 값은 **허용된 데이터 타입과 범위를 따라야 함**
+4. **고유성 무결성(Unique Integrity)**: 특정 속성은 **중복된 값을 가질 수 없음**
+
+#### ✅ **예제**
+```sql
+-- 개체 무결성 (PK가 NULL이면 안 됨)
+CREATE TABLE users (
+    id INT PRIMARY KEY,  -- NULL 불가능
+    name VARCHAR(50) NOT NULL
+);
+
+-- 참조 무결성 (user_id가 users 테이블의 id를 참조해야 함)
+CREATE TABLE orders (
+    id INT PRIMARY KEY,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id) -- 존재하는 값만 참조 가능
+);
+```
+
+---
+
+### 2️⃣ 데이터 정합성 (Data Consistency)
+- **데이터가 여러 위치에서 일관되게 유지되는 것**
+- 분산 시스템이나 다중 데이터베이스 환경에서 중요함
+- 무결성이 **제약 조건을 통한 데이터 보장**이라면, **정합성은 시스템 전체에서 데이터가 논리적으로 일치하는 것**
+
+#### ✅ **예제**
+- 은행 시스템에서 **A 계좌에서 100만 원을 출금하고 B 계좌에 100만 원을 입금하는 경우**
+  - `A.balance -= 1,000,000`
+  - `B.balance += 1,000,000`
+  - 하나라도 실패하면 트랜잭션을 롤백해야 정합성이 깨지지 않음
+
+```sql
+START TRANSACTION;
+
+UPDATE accounts SET balance = balance - 1000000 WHERE id = 1; -- A 계좌 출금
+UPDATE accounts SET balance = balance + 1000000 WHERE id = 2; -- B 계좌 입금
+
+COMMIT;  -- 모든 작업 성공 시 적용
+-- 만약 하나라도 실패하면 ROLLBACK;
+```
+
+#### ✅ **정합성이 깨지는 사례**
+- **중간에 시스템 오류 발생 → 데이터 일부만 반영됨**
+- **다중 서버 간 데이터 동기화 실패 → 서버마다 다른 데이터가 존재**
+
+---
+
+### 3️⃣ 데이터 무결성과 정합성의 차이
+|  | 데이터 무결성 | 데이터 정합성 |
+|---|----------------|----------------|
+| 정의 | 데이터가 정확하고 오류가 없도록 유지 | 여러 위치에서 데이터가 논리적으로 일치함 |
+| 보장 방식 | 기본 키, 외래 키, 제약 조건 | 트랜잭션, 동기화, ACID 원칙 |
+| 적용 예시 | PK, FK, UNIQUE, CHECK | 분산 DB에서 일관된 데이터 유지 |
+
+</details>
+

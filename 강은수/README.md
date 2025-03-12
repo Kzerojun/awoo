@@ -103,3 +103,53 @@
 - 오프라인에서도 일부 기능을 제공하고 싶을 때
 
 </details>
+
+<details> <summary><strong>0307</strong></summary>
+
+## Atomic Design
+
+[Atomic Desigb - Brad Frost](https://atomicdesign.bradfrost.com/chapter-2/)
+
+- 화학점 관점에서 영감을 얻은 디자인 시스템
+- 모든 것은 **_atom(원자)_** 로 구성되어 있고 atom 들이 서로 결합하여 **_molecule(분자)_** 이 되고, molecule는 더 복잡한 **_organism(유기체)_** 로 결합하여 궁극적으로 모든 물질을 생성
+- Atomic Design에서는 이 개념을 차용해서 컴포넌트를 atom, molecule, organism, template, page의 5가지 레벨 나눔
+  ![5 levels from Atomic Design](image.png)
+
+### _Atom_
+
+- 더 이상 분해할 수 없는 기본 컴포넌트
+- label, input, button과 같이 기본 HTML element 태그 혹은 글꼴, 애니메이션, 컬러 팔레트, 레이아웃과 같이 추상적인 요소도 포함 가능
+- atom과 다른 atom을 결합한 molecule 혹은 organism 단위에서 여러 단위와 결합하여 유용하게 사용 가능
+
+### _Molecule_
+
+- 여러 개의 atom을 결합하여 자신의 고유한 특성을 가진다
+- **한 가지 일을 하는 것** 이 중요한 특징!
+- SRP(Single Responsibility Principle)원칙으로 인해 키워드 전송 기능이 필요한 곳에서 재사용 가능
+
+### _Organism_
+
+- 더 복잡하고 서비스에서 표현될 수 있는 명확한 영역과 특정 컨텍스트를 가진다.
+- atom, molecule, organism으로 구성 가능
+- ex) logo(atom), navigation(molecule), search form(molecule)을 포함 가능
+- atom, molecule에 비해 좀 더 구체적으로 표현되고 컨텍스트를 가지기 때문에 상대적으로 재사용성이 낮아지는 특성
+
+### _Template_
+
+- Page를 만들 수 있도록 여러 개의 organism, molecule로 구성 가능
+- 실제 콘텐츠가 없는 page 수준의 스켈레톤
+
+### _Page_
+
+- 유저가 볼 수 있는 실제 콘텐츠
+- template의 인스턴스
+
+</details>
+
+<details> <summary><strong>0310</strong></summary>
+
+## TypeScript
+
+- 자바스크립트에 정적 타입 기능 등을 탑재한 프로그래밍 언어로, 마이크로소프트가 중심이 되어 개발 추진
+
+</details>
