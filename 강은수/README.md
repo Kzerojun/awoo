@@ -148,8 +148,120 @@
 
 <details> <summary><strong>0310</strong></summary>
 
-## TypeScript
+### _SSR/SSG의 필요성_
+
+- SPA 등의 클라이언트 사이드 렌더링은 그대로 사용하면 초기 표시가 지연되는 문제가 존재
+
+#### SSR
+
+- 서버 사이드 렌더링 (Server Side Rendering)
+- 서버 사이드 자바스크립트 실행환경에서 요청에 대한 페이지를 생성해서 HTML을 반환하는 것
+- 장점
+  - 렌더링을 서버 사이드에서 수행한 결과를 반환하므로, 사이트를 빠르게 표시할 수 있다.
+  - 서버 사이드에서 콘텐츠를 생성하므로, SPA에서는 복잡했던 SEO를 향상할 수 있다.
+- 단점
+  - Node.js 등 서버 사이드 자바스크립트 실행 환경이 필요하다
+  - 서버 사이드에서 렌더링하므로 서버 CPU의 부하가 증가한다
+  - 서버와 클라이언트에서 자바스크립트의 로직이 분산될 가능성이 있다
+
+#### SSG
+
+- 정적 사이트 생성 (Static Site Generation)
+- 사전에 정적 파일로서 생성, 배포하는 구조
+- 서버로 접근할 때 HTML을 생성하므로, 트래픽이 많을 때는 서버의 부하에 관해 고려해야만 하는 SSR의 관점을 보완
+
+</details>
+
+<details> <summary><strong>0311</strong></summary>
+
+## TypeScript 1
 
 - 자바스크립트에 정적 타입 기능 등을 탑재한 프로그래밍 언어로, 마이크로소프트가 중심이 되어 개발 추진
+- 예시 자바스크립트 코드
+
+```
+function sayHello (firstName) {
+   console.log('hello'+firstName)
+}
+let firstName = 'Hana'
+sayHello(firstName)
+```
+
+- 위의 자바스크립트 코드를 타입스크립트로 변환한 코드
+
+```
+// firstName 뒤에 string 타입을 붙여, 문자열 이외의 값을 전달하지 못하게 할 수 있다.
+function sayHello (firstName: string) {
+   console.log('Hello'+firstName)
+}
+let firstName: string = 'Hana'
+sayHello(firstName)
+```
+
+- 타입스크립트는 자바스크립트에 주로 다음 기능을 추가한 것
+  - 타입 정의
+  - 인터페이스와 클래스
+  - null / undefined-safe
+  - 범용적인 클래스나 메서드 타입을 실혀하는 제너릭(Generic)
+  - 그 외, ECMA에서 정의되어 있는 자바스크립트의 최신 사양
+- 단점
+  - 프로젝트 규모에 따라 컴파일에 시간이 걸린다
+  - 타입스크립트 경험자가 없을 경우, 도입을 위한 많은 학습 비용이 발생할 수도 있다.
+  </details>
+
+<details> <summary><strong>0311</strong></summary>
+
+## useMemo와 useCallback의 차이
+
+### _useMemo_
+
+- 특정 값의 계산 결과를 메모이제이션하여, 디펜던시가 변경되지 않는 한 동일한 값을 반환
+- 복잡한 계산을 반복적으로 수행하지 않도록 하여 성능을 최적화하는 데 유용
+
+```
+const memoizedValue = useMemo(() => {
+   return computeExpensiveValue(a, b);
+}. [a, b])
+```
+
+- 위의 코드에서 a와 b가 변경되지 않는 한 computeExpensiveValue 함수는 다시 호출되지 않는다.
+  - 왜냐면 useMemo는 디펜던시 배열을 기반으로 메모이제이션된 값을 반환하기 때문
+- useMemo는 특히 렌더링 비용이 높은 컴포넌트에서 유용
+  - 복잡한 계산을 수행하거나, 대규모 데이터를 처리하는 경우에 사용하면 좋다
+- **그러나** 모든 경우에 useMemo를 사용하는 것은 권장되지 않는다!
+  - 왜냐면 메모이제이션 자체에도 비용이 발생하기 때문 -> 성능 최적화가 필요한 경우에만 사용하는 것이 좋다
+
+### _useCallback_
+
+- 특정 함수를 메모이제이션하여, 디펜던시가 변경되지 않는 한 동일한 함수를 반환. 자식 컴포넌트에 함수를 props로 전달할 때 유용
+
+```
+const memoizedCallback = useCallback(() => {
+   doSomething(a, b);
+}, [a, b])
+```
+
+- a와 b가 변경되지 않는 한 doSomething 함수는 새로 생성되지 않는다.
+  - 왜냐하면 useCallback은 디펜던시 배열을 기반으로 메모이제이션 된 함수를 반환하기 때문
+- useCallback은 특히 자식 컴포넌트가 React.memo로 최적화되어 있는 경우에 유용
+  왜냐하면 함수가 변경되지 않으면, 자식 컴포넌트가 불필요하게 렌더링되지 않기 때문
+- 하지만 모든 경우에 useCallback을 사용하는 것은 권장되지 않는다.
+  - 왜냐하면 메모이제이션 자체에도 비용이 발생하기 때문. 따라서, 성능 최적화가 필요한 경우에만 사용하는 것이 좋다
+
+### \_useMemo와 useCallback의 차이점
+
+- useMemo와 useCallback은 비슷한 목적을 가지고 있지만, 사용하는 대상이 다르다.
+- useMemo는 값을 메모이제이션하고, useCallback은 함수를 메모이제이션한다.
+
+```
+// useMemo
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+
+// useCallback
+const memoizedCallback = useCallback(() => doSomething(a, b), [a, b]);
+```
+
+- useMemo는 계산된 값을 반환하고, useCallback은 메모이제이션된 함수를 반환한다.
+  - useMemo는 값의 메모이제이션에 초점을 맞추고, useCallback은 함수의 메모이제이션에 초점을 맞추기 때문
 
 </details>
