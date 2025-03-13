@@ -209,7 +209,7 @@ sayHello(firstName)
   - 타입스크립트 경험자가 없을 경우, 도입을 위한 많은 학습 비용이 발생할 수도 있다.
   </details>
 
-<details> <summary><strong>0311</strong></summary>
+<details> <summary><strong>0312</strong></summary>
 
 ## useMemo와 useCallback의 차이
 
@@ -248,7 +248,7 @@ const memoizedCallback = useCallback(() => {
 - 하지만 모든 경우에 useCallback을 사용하는 것은 권장되지 않는다.
   - 왜냐하면 메모이제이션 자체에도 비용이 발생하기 때문. 따라서, 성능 최적화가 필요한 경우에만 사용하는 것이 좋다
 
-### \_useMemo와 useCallback의 차이점
+### _useMemo와 useCallback의 차이점_
 
 - useMemo와 useCallback은 비슷한 목적을 가지고 있지만, 사용하는 대상이 다르다.
 - useMemo는 값을 메모이제이션하고, useCallback은 함수를 메모이제이션한다.
