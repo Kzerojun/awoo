@@ -265,3 +265,183 @@ const memoizedCallback = useCallback(() => doSomething(a, b), [a, b]);
   - useMemo는 값의 메모이제이션에 초점을 맞추고, useCallback은 함수의 메모이제이션에 초점을 맞추기 때문
 
 </details>
+
+<details> <summary><strong>0313</strong></summary>
+
+## TypeScript 기본 문법
+
+### _1. 기본 타입 선언_
+
+```
+# 문자열
+let hello: string = "helloWorld!";
+
+# 숫자
+let tripleSeven: number = 777;
+
+# 배열
+let arr1: number[] = [10, 20, 30];
+let arr2: Array<number> = [10, 20, 30];
+let arr3: Array<string> = ["hello", "world"];
+let arr4: [string, number] = ["eunsu". 26]
+
+# 객체
+let eunsu: object = {
+   name: "eunsu",
+   age: 26
+};
+let person: { name: string, age: number } = {name: "eunsu", age: 26}
+```
+
+### _2. 함수 선언_
+
+```
+# 2-1. 함수 타입 선언
+function add(x: number, y: number): number {
+   return x + y;
+};
+
+# 2-2. 선택적 매개변수 (optional parameter)
+function buildName(firstName: string, lastName?: string) {
+   if (lastName)
+      return firstName + " " + lastName
+   else
+      return firstName
+};
+
+let result1 = buildName("Bob");
+let result2 = buildName("Bob", "Adams", "Sr."); // 에러
+let result3 = buildName("Bob", "Adams");
+
+```
+
+### _3. 인터페이스(Interface)_
+
+- TypeScript 의 핵심 원칙 중 하나는 타입 검사가 값의 **형태**에 초점을 맞추고 있다는 것이다.
+- 이를 "덕 타이핑(duck typing)" 혹은 "구조적 서브타이핑(structural subtyping)"이라고도 한다.
+- TypeScript에서 인터페이스는 이런 타입들의 이름을 짓는 역할을 하고 코드 안의 계약을 정의하는 것뿐만 아니라 프로젝트 외부에서 사용하는 코드의 계약을 정의하는 강력한 방법
+- `interface`는 자주 사용하는 타입들을 object 형태의 묶음으로 정의해 **새로운 타입**을 만드는 기능이다.
+
+```
+# 3-1. interface 선언
+interface User {
+   age: number;
+   name`
+}
+
+# 3-2. 변수 활용
+const eunsu: User = {name:"eunsu", age:26}
+
+# 3-3. 함수 인자로의 활용
+function getUser(user:User) {
+   console.log(user)
+}
+getUser({name:"eunsu", age: 26})
+
+# 3-4. 함수 구조 활용
+interface Add {
+   (x: number, y:number): number;
+}
+let addFunc: Add = (a, b) => a + b;
+console.log(addFunc(14, 7))
+
+# 3-5. 배열 활용
+interface StringArr {
+   [index: number]: string;
+}
+let arr: StringArr = ["a","b","c"]
+
+# 3-6. 객체 활용
+interface Obj {
+   [key: string]: string;
+}
+const obj: Obj {
+   person1: "eunsu",
+   person2: "deokjin"
+}
+
+# 3-7. Interface 확장
+interface Person {
+   name: string,
+   age: number;
+}
+
+interface Developer extends Person {
+   position: string
+}
+
+const eunsu: Developer = {
+   name: "eunsu",
+   age: 26,
+   position: "FE"
+}
+
+```
+
+</details>
+
+<details> <summary><strong>0314</strong></summary>
+
+## TypeScript 기본 문법 2
+
+### _4.타입(Type)_
+
+```
+# 4-1. 타입 별칭 선언
+
+type StrOrNum = string | number;
+
+const str1: StrOrNum = "hello world";
+const str2: strOrNum = 777;
+
+# 4-2. type VS interface
+- 타입 별칭과 인터페이스의 가장 큰 차이점은 타입의 확장 가능 / 불가능 여부
+- 인터페이스는 확장이 가능한데 반해 타입 별칭은 확장이 불가능하다. 따라서 가능한한 type보다는 interface로 선언해서 사용하는 것을 추천한다.
+```
+
+### _5. 연산자(Operator)_
+
+```
+# 5-1. 유니언 타입 (Union Type)
+- 한 개 이상의 type을 선언할 때 사용할 수 있다.
+- | 키워드를 사용한다.
+
+function strOrnum (value: string | number) {
+   if (typeof value === 'string') {
+      value.toString();
+   } else if (typeof value === 'number') {
+      value.toLocalString();
+   } else {
+      throw new TypeError('문자열 또는 숫자를 넣어주세요!')
+   }
+}
+
+strOrNum('hello world');
+strOrNum(777);
+
+# 5-2.교차 타입(Intersection Type)
+- 합집합과 같은 개념
+- 함수 호출의 경우, 함수 인자에 명시한 Type을 모두 제공해야 한다.
+- & 키워드 사용
+
+interface Person {
+   name: string;
+   age: number;
+}
+interface Developer {
+   name: string;
+   skill: string;
+}
+
+type Capt = person & Developer;
+
+let devPerson: Capt = {
+   name: "KimDeokJinsssssssssssss",
+   age: 28,
+   skill: "FullStack"
+}
+
+
+```
+
+</details>
