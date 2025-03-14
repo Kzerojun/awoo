@@ -698,3 +698,65 @@ kafka-console-consumer.sh --topic my_topic --from-beginning --bootstrap-server l
 
 </details>
 
+<details>
+<summary><strong>0314</strong></summary>
+
+## 🔄 Kafka를 활용한 Microservices 간 비동기 통신
+
+### 1️⃣ 마이크로서비스 아키텍처(MSA)에서의 통신 방식
+- **동기 통신**: REST API, gRPC 등을 사용하여 **즉시 응답을 받는 방식**
+- **비동기 통신**: 메시지 큐(Kafka, RabbitMQ 등)를 활용하여 **서비스 간 독립적으로 처리하는 방식**
+
+### 2️⃣ Kafka를 활용한 비동기 통신의 필요성
+✅ **서비스 간 결합도 감소** → REST API보다 서비스 간 의존성이 낮음
+✅ **비동기 이벤트 처리** → 특정 서비스가 다운되더라도 메시지를 잃지 않음
+✅ **고성능 처리** → 대량의 트래픽을 효율적으로 처리 가능
+✅ **스케일 아웃 가능** → 서비스가 증가해도 부담 없이 확장 가능
+
+### 3️⃣ Kafka 기반 비동기 통신 구조
+- **Producer**: 이벤트를 생성하여 Kafka에 메시지를 전송
+- **Broker**: 메시지를 Topic에 저장하고 Consumer에게 전달
+- **Consumer**: Topic을 구독하여 이벤트를 소비하고 처리
+- **Consumer Group**: 여러 개의 Consumer가 병렬로 메시지를 처리하여 부하 분산 가능
+
+### 4️⃣ Kafka를 이용한 마이크로서비스 예제
+#### ✅ **1) 주문 생성 서비스 (Order Service)**
+- 사용자가 주문을 생성하면 `order.created` Topic에 이벤트 발행
+
+```java
+public void createOrder(Order order) {
+    // 주문 저장 로직
+    orderRepository.save(order);
+    
+    // Kafka로 이벤트 발행
+    kafkaTemplate.send("order.created", order.getId());
+}
+```
+
+#### ✅ **2) 결제 서비스 (Payment Service) - Consumer 역할**
+- `order.created` 이벤트를 구독하여 자동으로 결제 처리 수행
+
+```java
+@KafkaListener(topics = "order.created", groupId = "payment-service")
+public void processPayment(String orderId) {
+    // 결제 처리 로직
+    paymentService.charge(orderId);
+}
+```
+
+### 5️⃣ Kafka를 활용한 비동기 통신의 장점 & 단점
+#### ✅ **장점**
+- **서비스 간 낮은 결합도** → 각 서비스가 독립적으로 운영 가능
+- **고성능 처리** → 비동기 이벤트 스트리밍으로 높은 처리량 보장
+- **데이터 유실 방지** → 메시지 저장 및 재시도 가능
+
+#### ❌ **단점**
+- **운영 복잡성 증가** → Kafka 클러스터 관리 필요
+- **메시지 순서 보장 어려움** → Partition 구조로 인해 일부 순서가 변경될 수 있음
+- **일관성 관리 필요** → 데이터 정합성을 유지하는 추가 로직 필요
+
+### 6️⃣ 마무리
+> Kafka를 활용하면 **마이크로서비스 간 비동기 통신을 통해 높은 확장성과 유연성을 확보**할 수 있음. 하지만 운영 및 데이터 일관성 관리에 대한 추가 고려가 필요함.
+
+</details>
+
