@@ -436,7 +436,7 @@ interface Developer {
 type Capt = person & Developer;
 
 let devPerson: Capt = {
-   name: "KimDeokJinsssssssssssss",
+   name: "KimDeokJin",
    age: 28,
    skill: "FullStack"
 }
