@@ -558,6 +558,7 @@ COMMIT;  -- 모든 작업 성공 시 적용
 
 <details>
 <summary><strong>0312</strong></summary>
+
 ## 🔍 엘라스틱서치(Elasticsearch)
 
 ### 1️⃣ 엘라스틱서치란?
@@ -630,3 +631,70 @@ DELETE /my_index/_doc/1
 
 
 </details>
+
+<details>
+<summary><strong>0313</strong></summary>
+
+## 📨 아파치 카프카(Apache Kafka)
+
+### 1️⃣ 아파치 카프카란?
+- **대용량 데이터 스트리밍을 위한 분산 메시지 브로커**
+- **Publisher-Subscriber(발행-구독) 모델 기반**
+- **실시간 데이터 처리 및 이벤트 스트리밍**에 최적화
+- **분산 아키텍처**로 높은 처리량과 안정성을 제공
+
+### 2️⃣ 주요 특징
+✅ **고성능**: 초당 수백만 개의 메시지를 처리 가능
+✅ **확장성**: 여러 개의 브로커를 추가하여 시스템 확장 가능
+✅ **내결함성**: 데이터 복제(replication) 기능으로 장애 발생 시 복구 가능
+✅ **다양한 언어 지원**: Java, Python, Go 등 다양한 클라이언트 라이브러리 제공
+✅ **배치 & 실시간 처리 모두 지원**
+
+### 3️⃣ 기본 개념
+#### 📌 **Producer (생산자)**
+- 데이터를 생성하고 **Kafka로 전송하는 역할**
+- 예) 로그 생성기, IoT 센서 데이터, 트랜잭션 기록 등
+
+#### 📌 **Broker (브로커)**
+- **Kafka 서버 역할**을 수행하며 메시지를 저장 및 관리
+- 여러 개의 브로커가 **클러스터**를 이루어 동작
+
+#### 📌 **Topic (토픽)**
+- 메시지가 **전달되는 특정 채널**
+- 여러 Producer가 같은 Topic에 데이터를 보낼 수 있음
+
+#### 📌 **Consumer (소비자)**
+- 특정 Topic의 메시지를 구독하여 데이터 소비
+- Consumer Group을 통해 병렬 처리 가능
+
+#### 📌 **Partition (파티션) & Offset (오프셋)**
+- Topic은 **여러 개의 Partition**으로 나뉘며, **병렬 처리 성능을 향상**
+- Offset: 각 메시지가 저장된 위치를 의미 (순서 보장 가능)
+
+### 4️⃣ 카프카 기본 명령어
+#### ✅ **토픽 생성**
+```bash
+kafka-topics.sh --create --topic my_topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 2
+```
+
+#### ✅ **메시지 전송 (Producer)**
+```bash
+kafka-console-producer.sh --topic my_topic --bootstrap-server localhost:9092
+```
+
+#### ✅ **메시지 소비 (Consumer)**
+```bash
+kafka-console-consumer.sh --topic my_topic --from-beginning --bootstrap-server localhost:9092
+```
+
+### 5️⃣ 카프카 활용 사례
+- **로그 및 이벤트 스트리밍** (실시간 로그 처리, 모니터링 시스템)
+- **메시지 큐 시스템** (RabbitMQ, ActiveMQ 대체 가능)
+- **ETL(Extract, Transform, Load) 파이프라인**
+- **IoT 데이터 처리** (센서 데이터 수집 및 분석)
+- **Microservices 간 비동기 통신**
+
+> 🔥 **정리:** 카프카는 **고성능, 확장성, 내결함성을 갖춘 분산 메시지 큐 시스템**으로, 실시간 데이터 스트리밍 및 비동기 이벤트 처리에 강력한 성능을 발휘함.
+
+</details>
+
