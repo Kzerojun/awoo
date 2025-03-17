@@ -1,3 +1,5 @@
+import { background } from "storybook/internal/theming";
+
 export default {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx}", // ✅ Next.js App Router 적용
@@ -6,21 +8,12 @@ export default {
     "./src/styles/**/*.{css,scss}", // ✅ Tailwind 관련 CSS 파일 감지
     "./src/common/**/*.{js,ts,jsx,tsx}",
     "./src/stories/**/*.{js,ts,jsx,tsx}", // Storybook 파일 경로 추가
+    "../app/globals.css",
   ],
   theme: {
     extend: {
       fontFamily: {
         nanumsquare: ["NanumSquareNeo", "sans-serif"],
-      },
-      colors: {
-        "--aqua": "#0fc9ba",
-        "LIGHT-AQUA": "#8aede1",
-        GREEN: "#77debb",
-        "LIGHT-GREEN": "#9eebd1",
-        WHITE: "#FFFFFF",
-        BLACK: "#000000",
-        GRAY: "968F8F",
-        ERROR: "#f12a2a",
       },
     },
   },
