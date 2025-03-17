@@ -17,7 +17,7 @@ const Button = ({
   text,
   className,
   type = "button",
-  width = "25px",
+  width = "50px",
   fontColor = "white",
   backgroundColor = "#0FC9BA",
   img,
@@ -28,7 +28,13 @@ const Button = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`cursor-pointer ${className} bg-${backgroundColor} text-${fontColor} w-${width} h-20 rounded-lg flex items-center justify-center}`}
+      className={`cursor-pointer ${className} rounded-lg text-center}`}
+      style={{
+        backgroundColor,
+        color: fontColor,
+        width: width,
+        height: "45px",
+      }}
     >
       {text} {img && <img src={img} alt="paw button" className="h-10 w-10 inline" />}
     </button>
