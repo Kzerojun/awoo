@@ -404,6 +404,8 @@ public class UserController {
 </details>
 
 <details>
+<summary><strong>2주차</strong></summary>
+<details>
 <summary><strong>0310</strong></summary>
 
 ## 데이터베이스 기초 개념
@@ -757,6 +759,97 @@ public void processPayment(String orderId) {
 
 ### 6️⃣ 마무리
 > Kafka를 활용하면 **마이크로서비스 간 비동기 통신을 통해 높은 확장성과 유연성을 확보**할 수 있음. 하지만 운영 및 데이터 일관성 관리에 대한 추가 고려가 필요함.
+
+</details>
+</details>
+
+<details>
+<summary><strong>0317</strong></summary>
+
+## 🔍 추상 클래스(Abstract Class) vs 인터페이스(Interface)
+
+### 1️⃣ 추상 클래스란?
+- **공통된 필드와 메서드를 포함할 수 있는 클래스**
+- **일부 구현이 포함될 수 있으며, 객체 생성이 불가능**
+- `abstract` 키워드 사용
+- **상속을 통해 기능을 확장**하는 데 사용됨
+
+#### ✅ 예제 (추상 클래스)
+```java
+abstract class Animal {
+    protected String name;
+    
+    public Animal(String name) {
+        this.name = name;
+    }
+    
+    public abstract void makeSound(); // 추상 메서드 (구현 필요)
+    
+    public void sleep() {
+        System.out.println(name + " is sleeping"); // 구현된 메서드
+    }
+}
+
+class Dog extends Animal {
+    public Dog(String name) {
+        super(name);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println("Woof Woof");
+    }
+}
+```
+
+### 2️⃣ 인터페이스란?
+- **구현해야 할 메서드의 규격(명세)만 정의**
+- 모든 메서드는 기본적으로 **추상 메서드**
+- **다중 구현**(Multiple Inheritance)이 가능함
+- `implements` 키워드를 사용하여 구현
+
+#### ✅ 예제 (인터페이스)
+```java
+interface Flyable {
+    void fly(); // 구현 필요
+}
+
+class Bird implements Flyable {
+    @Override
+    public void fly() {
+        System.out.println("Bird is flying");
+    }
+}
+```
+
+### 3️⃣ 추상 클래스 vs 인터페이스 차이점
+| 구분 | 추상 클래스 | 인터페이스 |
+|------|------------|------------|
+| 키워드 | `abstract` | `interface` |
+| 메서드 | 일부 구현 가능 | 모든 메서드가 추상 메서드 (Java 8+에서는 default 메서드 허용) |
+| 필드 | 인스턴스 변수, 생성자 사용 가능 | 상수만 선언 가능 (`static final`) |
+| 상속 | 단일 상속만 가능 | 다중 구현 가능 |
+| 목적 | 공통된 속성과 동작을 정의 | 특정 기능을 강제하여 구현 |
+
+### 4️⃣ 구현체(Concrete Class)란?
+- **추상 클래스나 인터페이스를 실제로 구현한 클래스**
+- 모든 추상 메서드를 오버라이딩해야 함
+
+#### ✅ 예제 (인터페이스 구현체)
+```java
+class Airplane implements Flyable {
+    @Override
+    public void fly() {
+        System.out.println("Airplane is flying");
+    }
+}
+```
+
+### 5️⃣ 언제 사용해야 할까?
+✅ **추상 클래스** → 상속 관계가 있는 클래스들 사이에서 공통된 필드나 메서드를 제공할 때 사용
+✅ **인터페이스** → 서로 다른 클래스들에서 **동일한 동작을 강제**하고 싶을 때 사용 (ex. `Comparable`, `Runnable`)
+
+> **🔥 정리:** 추상 클래스는 **공통 기능을 공유하는 용도**, 인터페이스는 **구현 강제**와 **다중 구현 가능성**을 제공하는 특징이 있음!
 
 </details>
 
