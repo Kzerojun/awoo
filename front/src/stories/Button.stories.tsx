@@ -1,4 +1,4 @@
-// src/components/Button.stories.tsx
+// src/stories/Button.stories.tsx
 import { Meta, StoryFn } from "@storybook/react";
 import Button from "../common/Button";
 
@@ -13,8 +13,8 @@ export const Default: StoryFn<typeof Button> = (args) => <Button {...args} />;
 Default.args = {
   text: "하이루",
   onClick: () => alert("Button clicked"),
-  width: "50",
-  backgroundColor: "AQUA",
-  fontColor: "BLACK",
+  width: "long",
+  backgroundColor: "main",
+  fontColor: "black",
   disabled: false,
 };
