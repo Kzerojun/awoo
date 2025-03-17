@@ -15,6 +15,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
+      <head>
+        {/* 나눔스퀘어네오 웹폰트 추가 */}
+        <link
+          href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
+          rel="stylesheet"
+        />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>
