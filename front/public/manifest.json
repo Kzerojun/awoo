@@ -1,7 +1,13 @@
 {
-  "name": "My PWA App",
-  "short_name": "PWA App",
-  "icons": [],
+  "name": "AwOO",
+  "short_name": "AwOO",
+  "icons": [
+    {
+      "src": "/icons/AwOO.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
