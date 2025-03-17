@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @tailwind utilities;
 
 @layer base {
@@ -7,8 +8,8 @@
 }
 
 /* Tailwind v4에서는 `@layer utilities`에서만 `@apply` 가능 */
-@layer utilities {
+/* @layer utilities {
   .container {
     @apply mx-auto;
   }
-}
+} */

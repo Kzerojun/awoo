@@ -1,5 +1,5 @@
 // src/components/Button.stories.tsx
-import { Meta, Story } from "@storybook/nextjs";
+import { Meta, StoryFn } from "@storybook/react";
 import Button from "../common/Button";
 
 const meta: Meta<typeof Button> = {
@@ -9,9 +9,12 @@ const meta: Meta<typeof Button> = {
 
 export default meta;
 
-export const Default: Story<typeof Button> = (args) => <Button {...args} />;
+export const Default: StoryFn<typeof Button> = (args) => <Button {...args} />;
 Default.args = {
   text: "하이루",
   onClick: () => alert("Button clicked"),
-  width: "60px",
+  width: "50",
+  backgroundColor: "AQUA",
+  fontColor: "BLACK",
+  disabled: false,
 };
