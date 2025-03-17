@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
     skipWaiting: true,
     disable: false,
   }),
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.css$/,
+      use: ["style-loader", "css-loader", "postcss-loader"], // PostCSS 로더 설정
+    });
+    return config;
+  },
 };
 
 export default nextConfig;
