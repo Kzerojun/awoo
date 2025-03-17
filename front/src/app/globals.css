@@ -1,1 +1,14 @@
-@import "tailwindcss";
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "NanumSquareNeo", sans-serif;
+  }
+}
+
+/* Tailwind v4에서는 `@layer utilities`에서만 `@apply` 가능 */
+@layer utilities {
+  .container {
+    @apply mx-auto;
+  }
+}
