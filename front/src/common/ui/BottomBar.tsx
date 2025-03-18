@@ -1,50 +1,58 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
-const navItems = [
-  {
-    name: "홈",
-    path: "/home",
-    activeIcon: "/icons/bottombar/active/home_aqua.svg",
-    inactiveIcon: "/icons/bottombar/deactive/home.svg",
-  },
-  {
-    name: "중고거래",
-    path: "/market",
-    activeIcon: "/icons/bottombar/active/market_aqua.svg",
-    inactiveIcon: "/icons/bottombar/deactive/market.svg",
-  },
-  {
-    name: "산책",
-    path: "/walk",
-    activeIcon: "/icons/bottombar/active/walk_aqua.svg",
-    inactiveIcon: "/icons/bottombar/deactive/walk.svg",
-  },
-  {
-    name: "마이",
-    path: "/my",
-    activeIcon: "/icons/bottombar/active/my_aqua.svg",
-    inactiveIcon: "/icons/bottombar/deactive/my.svg",
-  },
-];
+interface BottombarProps {
+  currentPath: string; // ✅ props로 `currentPath`를 받음
+}
 
-// 특정 페이지에서 하단바 숨김 (필요할 경우 이곳에 추가)
-const hideOnPages = ["/login", "/signup"];
+const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
+  const navItems = [
+    {
+      name: "홈",
+      path: "/home",
+      activeIcon: "/icons/bottombar/active/home_aqua.svg",
+      inactiveIcon: "/icons/bottombar/deactive/home.svg",
+    },
+    {
+      name: "중고거래",
+      path: "/market",
+      activeIcon: "/icons/bottombar/active/market_aqua.svg",
+      inactiveIcon: "/icons/bottombar/deactive/market.svg",
+    },
+    {
+      name: "산책",
+      path: "/walk",
+      activeIcon: "/icons/bottombar/active/walk_aqua.svg",
+      inactiveIcon: "/icons/bottombar/deactive/walk.svg",
+    },
+    {
+      name: "마이",
+      path: "/my",
+      activeIcon: "/icons/bottombar/active/my_aqua.svg",
+      inactiveIcon: "/icons/bottombar/deactive/my.svg",
+    },
+  ];
 
-const Bottombar = () => {
-  const pathname = usePathname();
-  const router = useRouter();
+  // 특정 페이지에서 하단바 숨김 (필요할 경우 추가 가능)
+  const hideOnPages = ["/#"];
+  if (hideOnPages.includes(currentPath)) return null; // 특정 페이지에서는 하단바 숨김
 
-  if (hideOnPages.includes(pathname)) return null;
   return (
     <nav className="fixed bottom-1.5 left-0 w-full bg-custom-white shadow-[0_-1px_4px_rgba(0,0,0,0.05)] h-12">
       <div className="flex justify-around py-2">
         {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.path);
+          const isActive = currentPath.startsWith(item.path); // ✅ `usePathname()` 대신 `currentPath` 사용
+
           return (
-            <Link href={item.path} key={item.path} className="flex flex-col items-center gap-1">
+            <Link
+              href={item.path}
+              key={item.path}
+              prefetch={false}
+              scroll={false}
+              replace
+              className="flex flex-col items-center gap-1"
+            >
               <img
                 className="h-5 w-5"
                 src={isActive ? item.activeIcon : item.inactiveIcon}
