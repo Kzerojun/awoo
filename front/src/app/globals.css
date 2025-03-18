@@ -9,6 +9,9 @@
   --color-error: #f12a2a;
   --color-custom-white: #ffffff;
   --color-custom-black: #000000;
+  --color-kakao: #fee500;
+  --color-naver: #00c300;
+  --color-kakao-font: #392020;
 }
 /* 
 @tailwind base;
@@ -53,6 +56,14 @@
     background-color: var(--color-custom-black);
   }
 
+  .bg-kakao {
+    background-color: var(--color-kakao);
+  }
+
+  .bg-naver {
+    background-color: var(--color-naver);
+  }
+
   /* 텍스트 색상 적용 */
   .text-aqua {
     color: var(--color-aqua);
@@ -84,6 +95,10 @@
 
   .text-custom-black {
     color: var(--color-custom-black);
+  }
+
+  .text-kakao {
+    color: var(--color-kakao-font);
   }
 }
 
