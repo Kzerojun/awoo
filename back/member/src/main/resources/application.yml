@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: member
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${USER_NAME}
+    password: ${PASSWORD}
+
+
+
+jwt :
+  secret_key : ${JWT_SECRET_KEY}
+  access_expiration : ${ACCESS_EXPIRATION}
