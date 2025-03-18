@@ -1,4 +1,4 @@
-import "@/app/globals.css"; // 글로벌 CSS (Tailwind 포함)
+import "@/app/globals.css";
 import { Providers } from "./providers";
 import { Metadata, Viewport } from "next";
 import BottombarWrapper from "@/common/ui/BottombarWrapper"; // 클라이언트 하단바 컴포넌트
@@ -30,8 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>
           <div className="relative min-h-screen flex flex-col">
+            {/* 페이지 컨텐츠 */}
             <main className="flex-1">{children}</main>
-            {/* ✅ 클라이언트 컴포넌트로 분리된 하단바 */}
+            {/* ✅ 하단바는 유지되고, 아이콘만 변경되도록 분리 */}
             <BottombarWrapper />
           </div>
         </Providers>
