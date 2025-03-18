@@ -4,7 +4,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -15,8 +14,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Value("${JWT_SECRET_KEY}")
-    private String secretKey;
     private final long validityInMilliseconds = 3600000; // 1시간
     private final JwtProperties jwtProperties;
 
@@ -34,7 +31,7 @@ public class JwtTokenProvider {
                 .claim("email", email)             // 커스텀 클레임
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(getSignKey(secretKey), SignatureAlgorithm.HS256)
+                .signWith(getSignKey(jwtProperties.getSecretKey()), SignatureAlgorithm.HS256)
                 .compact();
     }
 
