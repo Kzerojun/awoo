@@ -1,4 +1,4 @@
-import { background } from "storybook/internal/theming";
+
 
 export default {
   content: [
