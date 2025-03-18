@@ -1,6 +1,6 @@
 // src/stories/Button.stories.tsx
 import { Meta, StoryFn } from "@storybook/react";
-import Button from "../common/Button";
+import Button from "../common/ui/Button";
 
 const meta: Meta<typeof Button> = {
   title: "Common/Button",

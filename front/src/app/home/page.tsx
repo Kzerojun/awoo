@@ -1,7 +1,17 @@
+"use client";
+
+import Button from "../../common/ui/Button";
+import { useRouter } from "next/navigation";
 import TopBar from "@/common/ui/TopBar";
 import { BellIcon } from "@heroicons/react/24/outline"; // Heroicons 아이콘 추가
 
 export default function Home() {
+  const router = useRouter();
+
+  const goToLogin = (): void => {
+    router.push("/login");
+  };
+
   return (
     <div className="relative min-h-screen bg-white">
       {/* 상단바 */}
@@ -13,6 +23,13 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-center">AwOO</h1>
         </div>
         <p className="text-gray-500 mt-2">새로운 발자국 금융 라이프</p>
+
+        <Button
+          text="로그인 하러가기"
+          backgroundColor="aqua"
+          fontColor="white"
+          onClick={goToLogin}
+        />
       </main>
     </div>
   );

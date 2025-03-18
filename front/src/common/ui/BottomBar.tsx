@@ -31,7 +31,7 @@ const navItems = [
 ];
 
 // 특정 페이지에서 하단바 숨김 (필요할 경우 이곳에 추가)
-const hideOnPages = ["/#"];
+const hideOnPages = ["/login", "/signup"];
 
 const Bottombar = () => {
   const pathname = usePathname();
