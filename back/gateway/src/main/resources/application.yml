@@ -1,0 +1,28 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: API-GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: pet-service
+          uri: lb://pet
+          predicates:
+            - Path=/**
+      discovery:
+        locator:
+          enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+jwt:
+  secret_key: nD/99zQMrX/fypNsi0J2IG+h46ePk0hddF3uCwRQITw=
+  access_expiration: 86400000
+  refresh_expiration: 604800000
