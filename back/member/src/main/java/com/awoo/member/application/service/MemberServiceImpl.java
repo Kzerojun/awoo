@@ -11,41 +11,41 @@ import com.awoo.member.infra.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider; // JWT 생성 클래스 (아래 예시 참고)
 
+    // 회원가입
     @Override
-    public Member signUp(SignUpRequestDto requestDto) {
-        // 1) 이미 해당 이메일로 가입된 계정이 있는지 검사
-        memberRepository.findByEmail(new Email(requestDto.getEmail()))
-                .ifPresent(m -> {
-                    throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
-                });
+    public Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) {
+        // 1. S3 업로드 처리
+        String uploadedImageUrl = null;
+        if (profileImageFile != null && !profileImageFile.isEmpty()) {
+            uploadedImageUrl = awsS3Service.uploadFile(profileImageFile);
+        }
 
-        // 2) 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
-
-        // 3) 도메인 객체 생성
+        // 2. Member 엔티티 생성
         Member member = new Member(
                 new Email(requestDto.getEmail()),
-                encodedPassword,
+                passwordEncoder.encode(requestDto.getPassword()),
                 new Name(requestDto.getName()),
                 new BirthDate(requestDto.getBirthDate()),
                 new Gender(requestDto.getGender()),
                 requestDto.getPhone(),
-                requestDto.getProfileImage(),
+                uploadedImageUrl, // DB에는 업로드한 URL을 저장
                 new PrivacyAgreement(requestDto.isPrivacyAgreed()),
                 requestDto.getNickname(),
-                Provider.L   // 자체 회원가입 시 Provider는 L
+                Provider.L
         );
 
-        // 4) 저장
+        // 3. DB 저장
         return memberRepository.save(member);
     }
 
@@ -65,32 +65,29 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member updateMemberInfo(Long memberId, MemberUpdateRequestDto requestDto) {
-        // 1) 회원 조회
+    // 회원정보 수정
+    public Member updateMemberInfo(Long memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
 
-        // 2) 도메인 로직에 따라 필요한 값만 업데이트
-        //    예) 이름, 전화번호, 프로필 이미지, 닉네임 등
-        //    (Email, BirthDate 등은 VO 특성상 쉽게 바뀌지 않음
+        // 1. 이름, 전화번호, 닉네임 등 텍스트 값 수정
         if (requestDto.getName() != null) {
             member.changeName(new Name(requestDto.getName()));
         }
-
         if (requestDto.getPhone() != null) {
             member.changePhone(requestDto.getPhone());
         }
-
-        if (requestDto.getProfileImage() != null) {
-            member.updateProfileImage(requestDto.getProfileImage());
-        }
-
         if (requestDto.getNickname() != null) {
             member.changeNickname(requestDto.getNickname());
         }
 
-        // 3) 변경 사항 저장
-        return memberRepository.save(member);
+        // 2. 프로필 이미지 파일이 있으면 업로드 후 Member 엔티티에 반영
+        if (profileImageFile != null && !profileImageFile.isEmpty()) {
+            String newUploadedUrl = awsS3Service.uploadFile(profileImageFile);
+            member.updateProfileImage(newUploadedUrl);
+        }
+
+        return member;
     }
 }
 

@@ -14,7 +14,6 @@ public class SignUpRequestDto {
     private LocalDate birthDate;
     private String gender;     // "M" or "F"
     private String phone;
-    private String profileImage; //nullable
     private boolean privacyAgreed;
     private String nickname;
 }
