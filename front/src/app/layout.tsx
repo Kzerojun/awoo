@@ -1,7 +1,7 @@
 import "@/app/globals.css"; // 글로벌 CSS (Tailwind 포함)
 import { Providers } from "./providers";
 import { Metadata, Viewport } from "next";
-import BottombarWrapper from "@/common/ui/BottomabrWrapper"; // 클라이언트 하단바 컴포넌트
+import BottombarWrapper from "@/common/ui/BottombarWrapper"; // 클라이언트 하단바 컴포넌트
 
 // ✅ Next.js에서 metadata 유지 (서버 컴포넌트 전용)
 export const metadata: Metadata = {
