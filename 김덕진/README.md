@@ -853,3 +853,87 @@ class Airplane implements Flyable {
 
 </details>
 
+<details>
+<summary><strong>0319</strong></summary>
+
+## 🔐 로그인 방식: Session vs JWT
+
+### 1️⃣ 로그인 인증 방식이란?
+- 사용자가 로그인하면 서버가 인증을 수행하고 **인증 정보를 저장**하는 방식
+- 대표적인 방식: **Session 기반 인증, JWT 기반 인증**
+
+---
+
+### 2️⃣ Session 기반 인증
+#### ✅ 개념
+- 서버가 로그인한 사용자의 정보를 **세션(Session) 객체**에 저장
+- 클라이언트는 이후 요청 시 **세션 ID(Session ID)**를 함께 전송
+- **세션 ID는 서버에서 관리**되며, 데이터베이스나 메모리에 저장됨
+
+#### ✅ 동작 방식
+1. 클라이언트가 **로그인 요청**을 보냄
+2. 서버에서 사용자를 인증한 후, **세션 ID를 생성**하여 클라이언트에 반환
+3. 클라이언트는 이후 요청 시 **세션 ID를 쿠키에 담아 서버에 전송**
+4. 서버는 세션 ID를 확인하여 **사용자 인증을 처리**
+
+#### ✅ 예제 (Spring Boot)
+```java
+@RequestMapping("/login")
+public String login(HttpSession session) {
+    session.setAttribute("user", "admin"); // 세션에 사용자 정보 저장
+    return "Login successful";
+}
+```
+
+#### ✅ 장점 & 단점
+| 장점 | 단점 |
+|------|------|
+| 보안성이 높음 (서버가 직접 관리) | 확장성이 낮음 (서버마다 세션을 공유해야 함) |
+| 세션 만료 및 강제 로그아웃 가능 | 서버 메모리 사용량 증가 |
+
+---
+
+### 3️⃣ JWT 기반 인증
+#### ✅ 개념
+- 서버에서 인증된 사용자에게 **JWT(JSON Web Token)**을 발급
+- 클라이언트는 이후 요청 시 **JWT를 헤더에 포함하여 전송**
+- **서버는 상태를 저장하지 않고** JWT를 검증하여 인증 수행 (Stateless)
+
+#### ✅ 동작 방식
+1. 클라이언트가 **로그인 요청**을 보냄
+2. 서버가 사용자를 인증한 후, **JWT를 생성**하여 클라이언트에 반환
+3. 클라이언트는 이후 요청 시 **JWT를 Authorization 헤더에 포함하여 전송**
+4. 서버는 JWT를 검증하여 **사용자 인증을 처리**
+
+#### ✅ 예제 (Spring Boot + JWT)
+```java
+String token = Jwts.builder()
+    .setSubject("user")
+    .setIssuedAt(new Date())
+    .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1시간 유효
+    .signWith(SignatureAlgorithm.HS256, "secret-key")
+    .compact();
+```
+
+#### ✅ 장점 & 단점
+| 장점 | 단점 |
+|------|------|
+| 서버의 부하가 적음 (Stateless) | 토큰이 탈취되면 보안 문제 발생 가능 |
+| 확장성이 뛰어남 (서버 간 인증 정보 공유 가능) | 토큰이 만료될 때까지 무효화 불가 |
+
+---
+
+### 4️⃣ Session vs JWT 비교
+| 비교 항목 | Session 방식 | JWT 방식 |
+|-----------|-------------|-------------|
+| 상태 관리 | 서버에서 세션 저장 | 클라이언트에서 JWT 보관 |
+| 확장성 | 낮음 (세션 공유 필요) | 높음 (Stateless) |
+| 보안 | 서버 관리로 안전 | 토큰 탈취 시 보안 위험 |
+| 인증 속도 | 느림 (DB 조회 필요) | 빠름 (토큰 검증만 수행) |
+
+> **🔥 결론:**
+> - **세션 방식**: 보안이 중요하고 트래픽이 낮은 시스템에서 적합
+> - **JWT 방식**: 확장성이 필요한 API 기반 시스템에서 적합
+
+</details>
+
