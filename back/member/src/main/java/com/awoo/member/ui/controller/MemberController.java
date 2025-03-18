@@ -8,6 +8,7 @@ import com.awoo.member.domain.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
     //회원가입
-    @PostMapping("/sign-up")
+    @PostMapping
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto requestDto) {
         // 서비스 호출
         Member savedMember = memberService.signUp(requestDto);
@@ -38,9 +39,11 @@ public class MemberController {
     }
 
     //회원정보 수정
-    @PutMapping("/{memberId}")
-    public ResponseEntity<?> updateMemberInfo(@PathVariable Long memberId,
-                                              @RequestBody MemberUpdateRequestDto requestDto) {
+    @PutMapping
+    public ResponseEntity<?> updateMemberInfo(@RequestBody MemberUpdateRequestDto requestDto) {
+        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long memberId = Long.valueOf(currentUserId);
+
         Member updatedMember = memberService.updateMemberInfo(memberId, requestDto);
         return ResponseEntity.ok(updatedMember);
     }
