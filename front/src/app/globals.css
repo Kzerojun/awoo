@@ -10,9 +10,9 @@
   --color-custom-white: #ffffff;
   --color-custom-black: #000000;
 }
-
+/* 
 @tailwind base;
-@tailwind components;
+@tailwind components; */
 @tailwind utilities;
 
 @layer base {
