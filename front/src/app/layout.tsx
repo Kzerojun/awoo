@@ -1,6 +1,7 @@
 import "@/app/globals.css"; // 글로벌 CSS 파일 불러오기 (Tailwind 포함)
 import { Providers } from "./providers";
 import { Metadata, Viewport } from "next"; // Next.js의 Metadata API 사용
+import Bottombar from "@/common/ui/BottomBar";
 
 // Next.js에서 페이지 메타데이터(PWA 포함) 설정
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Providers>{children}</Providers>
+        <Bottombar />
       </body>
     </html>
   );
