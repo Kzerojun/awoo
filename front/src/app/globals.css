@@ -1,9 +1,89 @@
 @import "tailwindcss";
+
+@theme {
+  --color-aqua: #0fc9ba;
+  --color-light-aqua: #8aede1;
+  --color-green: #77debb;
+  --color-light-green: #9eebd1;
+  --color-custom-gray: #968f8f;
+  --color-error: #f12a2a;
+  --color-custom-white: #ffffff;
+  --color-custom-black: #000000;
+}
+
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
     font-family: "NanumSquareNeo", sans-serif;
+  }
+
+  /* 색상 커스텀 */
+  .bg-aqua {
+    background-color: var(--color-aqua);
+  }
+
+  .bg-light-aqua {
+    background-color: var(--color-light-aqua);
+  }
+
+  .bg-green {
+    background-color: var(--color-green);
+  }
+
+  .bg-light-green {
+    background-color: var(--color-light-green);
+  }
+
+  .bg-custom-gray {
+    background-color: var(--color-custom-gray);
+  }
+
+  .bg-error {
+    background-color: var(--color-error);
+  }
+
+  .bg-custom-white {
+    background-color: var(--color-custom-white);
+  }
+
+  .bg-custom-black {
+    background-color: var(--color-custom-black);
+  }
+
+  /* 텍스트 색상 적용 */
+  .text-aqua {
+    color: var(--color-aqua);
+  }
+
+  .text-light-aqua {
+    color: var(--color-light-aqua);
+  }
+
+  .text-green {
+    color: var(--color-green);
+  }
+
+  .text-light-green {
+    color: var(--color-light-green);
+  }
+
+  .text-custom-gray {
+    color: var(--color-custom-gray);
+  }
+
+  .text-error {
+    color: var(--color-error);
+  }
+
+  .text-custom-white {
+    color: var(--color-custom-white);
+  }
+
+  .text-custom-black {
+    color: var(--color-custom-black);
   }
 }
 
