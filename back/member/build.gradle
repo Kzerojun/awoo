@@ -30,10 +30,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//Mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'com.h2database:h2'
+
+	//Kafka
 	implementation 'org.springframework.kafka:spring-kafka'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	//Swagger 의존성
@@ -47,6 +51,8 @@ dependencies {
 	//비밀번호 암호화
 	implementation 'org.springframework.security:spring-security-crypto:5.7.1'
 
+	//Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {
