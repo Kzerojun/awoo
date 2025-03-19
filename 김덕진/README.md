@@ -854,7 +854,7 @@ class Airplane implements Flyable {
 </details>
 
 <details>
-<summary><strong>0319</strong></summary>
+<summary><strong>0318</strong></summary>
 
 ## 🔐 로그인 방식: Session vs JWT
 
@@ -934,6 +934,80 @@ String token = Jwts.builder()
 > **🔥 결론:**
 > - **세션 방식**: 보안이 중요하고 트래픽이 낮은 시스템에서 적합
 > - **JWT 방식**: 확장성이 필요한 API 기반 시스템에서 적합
+
+</details>
+
+<details>
+<summary><strong>0319</strong></summary>
+
+## 🛡️ CSRF & XSS 보안 취약점
+
+### 1️⃣ CSRF (Cross-Site Request Forgery, 사이트 간 요청 위조)
+#### ✅ 개념
+- 사용자가 **인증된 세션을 이용하여 공격자가 의도한 요청을 서버에 보내는 공격 기법**
+- 사용자가 특정 사이트에 로그인한 상태에서 **악의적인 요청이 자동으로 실행됨**
+- 공격자는 사용자의 **쿠키 기반 세션을 악용**하여 비정상적인 요청을 서버로 보냄
+
+#### ✅ 공격 시나리오
+1. 사용자가 **A 사이트에 로그인**하여 세션이 유지된 상태
+2. 사용자가 **악성 사이트(B)에 접속**
+3. B 사이트에 포함된 악성 스크립트가 **A 사이트에 요청을 자동 실행**
+4. A 사이트는 사용자의 세션을 신뢰하여 **의도치 않은 요청을 수행** (예: 계좌이체, 비밀번호 변경 등)
+
+#### ✅ 방어 방법
+✅ **CSRF 토큰 사용** (`_csrf` 토큰을 요청 시 포함하여 검증)
+✅ **Referer & Origin 헤더 검사** (외부 사이트에서 요청 차단)
+✅ **SameSite 쿠키 설정** (Cross-Origin 요청 제한)
+
+#### ✅ CSRF 방어 코드 예제 (Spring Boot)
+```java
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+}
+```
+
+---
+
+### 2️⃣ XSS (Cross-Site Scripting, 크로스 사이트 스크립팅)
+#### ✅ 개념
+- 공격자가 **웹 페이지에 악성 스크립트를 삽입**하여 사용자 브라우저에서 실행되도록 하는 공격
+- 사용자의 **세션 쿠키 탈취, 피싱 공격, 악성 코드 실행** 등이 가능함
+
+#### ✅ XSS 공격 유형
+1. **저장형 XSS (Stored XSS)** → 데이터베이스에 저장된 악성 스크립트가 실행됨 (예: 댓글, 게시글)
+2. **반사형 XSS (Reflected XSS)** → URL 또는 입력값을 통해 악성 스크립트가 실행됨
+3. **DOM 기반 XSS** → 클라이언트 측에서 JavaScript 조작으로 발생
+
+#### ✅ 공격 시나리오 (Reflected XSS)
+1. 공격자가 **악성 스크립트가 포함된 URL을 생성**
+2. 사용자가 해당 URL을 클릭하면 **브라우저에서 스크립트 실행**
+3. 사용자의 **쿠키 탈취, 계정 정보 유출** 등의 피해 발생
+
+#### ✅ 방어 방법
+✅ **입력값 검증 (Input Validation)** → `<script>` 태그 필터링
+✅ **출력 시 이스케이프 처리 (HTML Encoding)** → `&lt;script&gt;`로 변환
+✅ **Content Security Policy (CSP) 적용** → 외부 스크립트 실행 차단
+
+#### ✅ XSS 방어 코드 예제 (Spring Boot + Thymeleaf)
+```html
+<p th:text="${userInput}"></p> <!-- 자동 HTML 이스케이프 적용 -->
+```
+
+---
+
+### 3️⃣ CSRF vs XSS 비교
+| 구분 | CSRF (사이트 간 요청 위조) | XSS (크로스 사이트 스크립팅) |
+|------|----------------|----------------|
+| 공격 대상 | 사용자의 **세션을 악용**하여 서버에 요청 | **사용자의 브라우저에서 악성 스크립트 실행** |
+| 공격 방식 | 사용자가 모르게 **원치 않는 요청 실행** | 악성 스크립트를 삽입하여 **브라우저에서 실행** |
+| 주요 피해 | 계정 탈취, 금전 거래 조작, 설정 변경 | 쿠키 탈취, 세션 하이재킹, 피싱 공격 |
+| 방어 기법 | CSRF 토큰, SameSite 쿠키 설정, Referer 검증 | 입력값 검증, HTML 이스케이프, CSP 적용 |
+
+> **🔥 결론:**
+> - CSRF는 **사용자의 인증된 세션을 악용**하는 공격
+> - XSS는 **악성 스크립트를 실행**하여 사용자 데이터를 탈취하는 공격
+> - 두 가지 모두 웹 애플리케이션 보안에서 반드시 고려해야 하는 취약점임
 
 </details>
 
