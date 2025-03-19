@@ -36,7 +36,7 @@ const LoginForm = () => {
           placeholder="이메일을 입력하세요"
           value={formData.email}
           onChange={handleChange}
-          className="bg-custom-white border border-custom-gray focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-56 placeholder:p-2 placeholder:text-xs"
+          className="bg-custom-white border border-custom-gray focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-72 placeholder:p-2 placeholder:text-xs"
         />
 
         {/* 비밀번호 입력 */}
@@ -47,7 +47,7 @@ const LoginForm = () => {
           placeholder="비밀번호를 입력하세요"
           value={formData.password}
           onChange={handleChange}
-          className="bg-custom-white border shadow-none border-custom-gray focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-56 placeholder:px-1 placeholder:text-xs"
+          className="bg-custom-white border shadow-none border-custom-gray focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-72 placeholder:px-1 placeholder:text-xs"
         />
 
         <Button

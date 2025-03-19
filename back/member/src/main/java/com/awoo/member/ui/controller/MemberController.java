@@ -5,11 +5,16 @@ import com.awoo.member.application.dto.MemberUpdateRequestDto;
 import com.awoo.member.application.dto.SignUpRequestDto;
 import com.awoo.member.application.service.MemberService;
 import com.awoo.member.domain.model.Member;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/members")
@@ -18,13 +23,14 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    //회원가입
-    @PostMapping
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto requestDto) {
-        // 서비스 호출
-        Member savedMember = memberService.signUp(requestDto);
-
-        // 성공 시 201(Created) 리턴 등
+    // 회원가입 (multipart/form-data)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> signUp(
+            @RequestPart(value = "requestDto") SignUpRequestDto requestDto,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile
+    ) {
+        // Service로 DTO와 파일을 넘겨 처리
+        Member savedMember = memberService.signUp(requestDto, profileImageFile);
         return new ResponseEntity<>(savedMember.getId(), HttpStatus.CREATED);
     }
 
@@ -38,13 +44,15 @@ public class MemberController {
         return ResponseEntity.ok(token);
     }
 
-    //회원정보 수정
-    @PutMapping
-    public ResponseEntity<?> updateMemberInfo(@RequestBody MemberUpdateRequestDto requestDto) {
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateMemberInfo(
+            @RequestPart(value = "requestDto") MemberUpdateRequestDto requestDto,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile
+    ) {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
         Long memberId = Long.valueOf(currentUserId);
 
-        Member updatedMember = memberService.updateMemberInfo(memberId, requestDto);
+        Member updatedMember = memberService.updateMemberInfo(memberId, requestDto, profileImageFile);
         return ResponseEntity.ok(updatedMember);
     }
 }

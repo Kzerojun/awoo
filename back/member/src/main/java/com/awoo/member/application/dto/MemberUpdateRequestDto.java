@@ -8,7 +8,6 @@ import lombok.Setter;
 public class MemberUpdateRequestDto {
     private String name;
     private String phone;
-    private String profileImage;
     private String nickname;
 }
 
