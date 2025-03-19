@@ -22,7 +22,7 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     },
     {
       name: "산책",
-      path: "/walk",
+      path: "/walk/pre/select-dog",
       activeIcon: "/icons/bottombar/active/walk_aqua.svg",
       inactiveIcon: "/icons/bottombar/deactive/walk.svg",
     },
