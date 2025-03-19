@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class RegisterPetResponse {
+public class ModifyPetResponse {
 
     private int petId;
     private int memberId;
@@ -16,8 +16,8 @@ public class RegisterPetResponse {
     private int age;
     private int savingId;
 
-    public static RegisterPetResponse fromEntity(Pet entity){
-        return RegisterPetResponse.builder()
+    public static ModifyPetResponse fromEntity(Pet entity){
+        return ModifyPetResponse.builder()
                 .petId(entity.getPetId())
                 .memberId(entity.getMemberId())
                 .name(entity.getName())
@@ -27,6 +27,4 @@ public class RegisterPetResponse {
                 .savingId(entity.getSavingId())
                 .build();
     }
-
-
 }

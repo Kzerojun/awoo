@@ -1,5 +1,6 @@
 package com.awoo.pet.domain.pet;
 
+import com.awoo.pet.application.command.ModifyPetCommand;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,11 +9,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class PetEntity {
+public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer petId;
 
     @Column(nullable = false)
     private int memberId;
@@ -31,4 +32,12 @@ public class PetEntity {
 
     @Column
     private int savingId;
+
+    public void modifyPet(final ModifyPetCommand command){
+        this.name = command.name();
+        this.profileImage = command.profileImage();
+        this.breed = command.breed();
+        this.age = command.age();
+    }
+
 }

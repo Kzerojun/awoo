@@ -4,5 +4,5 @@ import com.awoo.pet.application.command.RegisterPetCommand;
 
 public interface RegisterPetService {
 
-    Integer registerRet(RegisterPetCommand command);
+    Integer registerPet(RegisterPetCommand command);
 }
