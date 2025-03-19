@@ -9,7 +9,6 @@ const SignupPage = () => {
     <>
       <TopBar title="회원가입" />
       <main className="flex flex-col items-center justify-center h-full min-h-[calc(100vh-3rem)] gap-3">
-        회원가입 페이지
         <Image src={logo} alt="logo" />
         <SignupForm />
       </main>
