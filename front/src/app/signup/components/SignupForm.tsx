@@ -10,7 +10,10 @@ import { EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import gender from "../../../../public/icons/signup/gender.svg";
 
+import paw from "../../../../public/icons/white_paw.svg";
+
 import SignupPolicy from "./SignupPolicy";
+import Button from "@/common/ui/Button";
 
 const SignupForm = () => {
   const [name, setName] = useState<string>(""); // 이름
@@ -110,7 +113,7 @@ const SignupForm = () => {
 
     if (!validatePassword(value)) {
       setIsValidPassword(false);
-      setPasswordMessage("비밀번호는 최소 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
+      setPasswordMessage("최소 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
     } else {
       setIsValidPassword(true);
       setPasswordMessage("사용 가능한 비밀번호입니다.");
@@ -133,10 +136,10 @@ const SignupForm = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center gap-4">
+      <form className="flex flex-col justify-center items-center gap-4">
         {/* 이름 입력 */}
         <div className="flex flex-col justify-center items-start">
-          <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+          <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua">
             <label htmlFor="name">
               <UserCircleIcon className="w-6 h-6 text-custom-gray" />
             </label>
@@ -155,7 +158,7 @@ const SignupForm = () => {
         {/* 생년월일 & 성별 */}
         <div className="flex items-center justify-center w-72 gap-x-2">
           {/* 생년월일 */}
-          <div className="flex items-center justify-start gap-4 w-2/3 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+          <div className="flex items-center justify-start gap-4 w-2/3 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua">
             <label htmlFor="birthdate">
               <CalendarIcon className="w-6 h-6 text-custom-gray" />
             </label>
@@ -169,7 +172,7 @@ const SignupForm = () => {
             />
           </div>
           {/* 성별 */}
-          <div className="flex items-center justify-start gap-4 w-1/3 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+          <div className="flex items-center justify-start gap-4 w-1/3 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua">
             <label htmlFor="gender">
               <Image src={gender} alt="성별 아이콘" className="w-6 h-6 inline" />
             </label>
@@ -190,7 +193,7 @@ const SignupForm = () => {
         </div>
 
         {/* 휴대폰 번호 입력 */}
-        <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+        <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua">
           <label htmlFor="phonenum">
             <DevicePhoneMobileIcon className="w-6 h-6 text-custom-gray" />
           </label>
@@ -207,7 +210,7 @@ const SignupForm = () => {
         {/* 이메일 */}
         <div className="flex flex-col ">
           <div
-            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray  ${!isValidEmail ? "border-b-error" : ""} focus-within:border-b-aqua`}
+            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-1 border-b-custom-gray  ${!isValidEmail ? "border-b-error" : ""} focus-within:border-b-aqua`}
           >
             <label htmlFor="email">
               <EnvelopeIcon className="w-6 h-6 text-custom-gray" />
@@ -236,7 +239,7 @@ const SignupForm = () => {
         {/* 비밀번호 */}
         <div className="flex flex-col">
           <div
-            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua ${!isValidPassword ? "border-b-error" : ""}`}
+            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua ${!isValidPassword && password1.length > 0 ? "border-b-error" : ""}`}
           >
             <label htmlFor="password1">
               <LockClosedIcon className="w-6 h-6 text-custom-gray" />
@@ -251,14 +254,14 @@ const SignupForm = () => {
             />
             <button type="button" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? (
-                <EyeIcon className="w-6 h-6 text-aqua" />
+                <EyeIcon className="w-6 h-6 text-aqua inline" />
               ) : (
-                <EyeSlashIcon className="w-6 h-6 text-custom-gray" />
+                <EyeSlashIcon className="w-6 h-6 text-custom-gray inline" />
               )}
             </button>
           </div>
           {passwordMessage && (
-            <p className={`text-[10px] pt-2 ${isValidPassword ? "text-aqua" : "text-error"}`}>
+            <p className={`text-xs pt-2 ${isValidPassword ? "text-aqua" : "text-error"}`}>
               {passwordMessage}
             </p>
           )}
@@ -267,7 +270,7 @@ const SignupForm = () => {
         {/* 비밀번호 확인 */}
         <div className="flex flex-col">
           <div
-            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua ${!isMatch ? "border-b-error" : ""}`}
+            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua ${!isMatch && password2.length > 0 ? "border-b-error" : ""}`}
           >
             <label htmlFor="password2">
               <LockClosedIcon className="w-6 h-6 text-custom-gray" />
@@ -286,11 +289,12 @@ const SignupForm = () => {
             <p className="text-xs pt-2 text-error">비밀번호가 일치하지 않습니다.</p>
           )}
         </div>
-      </div>
-      {/* 약관 컴포넌트 부분 */}
-      <SignupPolicy />
+        {/* 약관 컴포넌트 부분 */}
+        <SignupPolicy />
 
-      {/* 회원가입 버튼 부분 */}
+        {/* 회원가입 버튼 부분 */}
+        <Button text="회원가입" img={paw} type="submit" />
+      </form>
     </>
   );
 };

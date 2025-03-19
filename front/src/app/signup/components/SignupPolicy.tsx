@@ -39,7 +39,7 @@ const SignupPolicy = () => {
   };
 
   return (
-    <div className="w-72 flex flex-col gap-y-2">
+    <div className="w-72 flex flex-col gap-y-3">
       <div className="border-b-1 border-b-aqua py-1 w-72 text-center font-bold">
         AwOO 이용약관 동의
       </div>

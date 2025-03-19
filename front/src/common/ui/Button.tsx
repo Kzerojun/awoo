@@ -25,7 +25,7 @@ const Button = ({
   type = "button",
   width = "long",
   fontColor = "custom-white",
-  backgroundColor = "green",
+  backgroundColor = "aqua",
   img,
   disabled = false,
 }: ButtonProps) => {
@@ -48,9 +48,9 @@ const Button = ({
   }
 
   const widthTypes: widthTypes = {
-    long: "w-56",
+    long: "w-72",
     short: "w-24",
-    medium: "W-40",
+    medium: "w-56",
   };
 
   const textSizeTypes: textSizeTypes = {
