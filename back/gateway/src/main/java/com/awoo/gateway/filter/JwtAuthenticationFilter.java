@@ -5,6 +5,7 @@ import com.awoo.gateway.exception.ApiUtils;
 import com.awoo.gateway.exception.JwtValidationException;
 import com.awoo.gateway.jwt.JwtParser;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
 
     private final JwtParser jwtParser;
@@ -39,7 +41,6 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
 
             // Bearer 제거
             token = token.substring(7);
-
 
             try{
                 // 토큰 2차 검증 후 추출
