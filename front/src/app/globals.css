@@ -102,9 +102,31 @@
   }
 }
 
-/* Tailwind v4에서는 `@layer utilities`에서만 `@apply` 가능 */
-/* @layer utilities {
-  .container {
-    @apply mx-auto;
+@layer utilities {
+  /* ✅ Tailwind에서 사용할 `scrollbar-hide` 유틸리티 클래스 추가 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* ✅ 크롬, 사파리, 엣지 */
   }
-} */
+
+  .scrollbar-hide {
+    scrollbar-width: none; /* ✅ 파이어폭스 */
+  }
+}
+@layer base {
+  /* ✅ 전체 페이지에서 불필요한 스크롤 제거 */
+  html,
+  body {
+    height: 100dvh; /* ✅ 동적 뷰포트 높이 적용 */
+    overflow: hidden; /* ✅ 전체적인 스크롤 숨기기 */
+  }
+
+  /* ✅ 스크롤바 숨기기 */
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* ✅ IE, Edge 대응 */
+  }
+}
