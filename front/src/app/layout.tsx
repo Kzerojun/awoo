@@ -20,22 +20,26 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="ko" className="min-h-[100dvh]">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link
           href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
           rel="stylesheet"
         />
       </head>
-      <body>
+
+      {/* ✅ `overflow-hidden` 제거, `min-h-[100dvh]` 적용 */}
+      <body className="min-h-[100dvh] flex flex-col">
         <Providers>
-          <div className="relative min-h-screen flex flex-col">
-            {/* 페이지 컨텐츠 */}
-            <main className="flex-1">{children}</main>
-            {/* ✅ 하단바는 유지되고, 아이콘만 변경되도록 분리 */}
-            <BottombarWrapper />
-          </div>
+          {/* ✅ `h-[calc(100dvh-3rem)]`을 사용하여 하단바 제외한 높이 설정 */}
+          <main className="flex-1 h-[calc(100dvh-3rem)] overflow-y-auto pb-16">{children}</main>
         </Providers>
+
+        {/* ✅ 하단바 고정 유지 - `fixed bottom-0`으로 변경 */}
+        <div className="fixed bottom-0 left-0 w-full">
+          <BottombarWrapper />
+        </div>
       </body>
     </html>
   );
