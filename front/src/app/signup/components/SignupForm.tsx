@@ -10,6 +10,8 @@ import { EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import gender from "../../../../public/icons/signup/gender.svg";
 
+import SignupPolicy from "./SignupPolicy";
+
 const SignupForm = () => {
   const [name, setName] = useState<string>(""); // 이름
   const [nameErr, setNameErr] = useState<string>("");
@@ -130,160 +132,166 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-2">
-      {/* 이름 입력 */}
-      <div className="flex flex-col justify-center items-start">
+    <>
+      <div className="flex flex-col justify-center items-center gap-4">
+        {/* 이름 입력 */}
+        <div className="flex flex-col justify-center items-start">
+          <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+            <label htmlFor="name">
+              <UserCircleIcon className="w-6 h-6 text-custom-gray" />
+            </label>
+            <input
+              id="name"
+              type="text"
+              placeholder="이름을 입력하세요"
+              value={name}
+              onChange={handleNameChange}
+              className="text-sm placeholder:text-sm placeholder:text-opacity-50 focus:outline-none"
+            />
+          </div>
+          {nameErr && <div className="text-xs text-error pt-2">{nameErr}</div>}
+        </div>
+
+        {/* 생년월일 & 성별 */}
+        <div className="flex items-center justify-center w-72 gap-x-2">
+          {/* 생년월일 */}
+          <div className="flex items-center justify-start gap-4 w-2/3 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+            <label htmlFor="birthdate">
+              <CalendarIcon className="w-6 h-6 text-custom-gray" />
+            </label>
+            <input
+              id="birthdate"
+              type="text"
+              placeholder="생년월일 8자리"
+              value={birthdate}
+              onChange={handleBirthdateChange}
+              className="text-sm placeholder:text-sm placeholder:text-opacity-50 w-2/3 focus:outline-none"
+            />
+          </div>
+          {/* 성별 */}
+          <div className="flex items-center justify-start gap-4 w-1/3 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
+            <label htmlFor="gender">
+              <Image src={gender} alt="성별 아이콘" className="w-6 h-6 inline" />
+            </label>
+            <select
+              name="gender"
+              id="gender"
+              value={genderValue}
+              onChange={(e) => setGenderValue(e.target.value)}
+              className="text-sm"
+            >
+              <option value="" disabled className="text-custom-gray">
+                성별
+              </option>
+              <option value="M">남</option>
+              <option value="F">여</option>
+            </select>
+          </div>
+        </div>
+
+        {/* 휴대폰 번호 입력 */}
         <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
-          <label htmlFor="name">
-            <UserCircleIcon className="w-6 h-6 text-custom-gray" />
+          <label htmlFor="phonenum">
+            <DevicePhoneMobileIcon className="w-6 h-6 text-custom-gray" />
           </label>
           <input
-            id="name"
+            id="phonenum"
             type="text"
-            placeholder="이름을 입력하세요"
-            value={name}
-            onChange={handleNameChange}
-            className="text-sm placeholder:text-sm placeholder:text-opacity-50 focus:outline-none"
-          />
-        </div>
-        {nameErr && <div className="text-xs text-error pt-2">{nameErr}</div>}
-      </div>
-
-      {/* 생년월일 & 성별 */}
-      <div className="flex items-center justify-center w-72 gap-x-2">
-        {/* 생년월일 */}
-        <div className="flex items-center justify-start gap-4 w-2/3 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
-          <label htmlFor="birthdate">
-            <CalendarIcon className="w-6 h-6 text-custom-gray" />
-          </label>
-          <input
-            id="birthdate"
-            type="text"
-            placeholder="생년월일 8자리"
-            value={birthdate}
-            onChange={handleBirthdateChange}
-            className="text-sm placeholder:text-sm placeholder:text-opacity-50 w-2/3 focus:outline-none"
-          />
-        </div>
-        {/* 성별 */}
-        <div className="flex items-center justify-start gap-4 w-1/3 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
-          <label htmlFor="gender">
-            <Image src={gender} alt="성별 아이콘" className="w-6 h-6 inline" />
-          </label>
-          <select
-            name="gender"
-            id="gender"
-            value={genderValue}
-            onChange={(e) => setGenderValue(e.target.value)}
-            className="text-sm"
-          >
-            <option value="" disabled className="text-custom-gray">
-              성별
-            </option>
-            <option value="M">남</option>
-            <option value="F">여</option>
-          </select>
-        </div>
-      </div>
-
-      {/* 휴대폰 번호 입력 */}
-      <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua">
-        <label htmlFor="phonenum">
-          <DevicePhoneMobileIcon className="w-6 h-6 text-custom-gray" />
-        </label>
-        <input
-          id="phonenum"
-          type="text"
-          placeholder="휴대폰 번호를 입력하세요"
-          value={phonenum}
-          className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
-          onChange={handlePhoneChange}
-        />
-      </div>
-
-      {/* 이메일 */}
-      <div className="flex flex-col ">
-        <div
-          className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray  ${!isValidEmail ? "border-b-error" : ""} focus-within:border-b-aqua`}
-        >
-          <label htmlFor="email">
-            <EnvelopeIcon className="w-6 h-6 text-custom-gray" />
-          </label>
-          <input
-            id="email"
-            type="text"
-            placeholder="이메일을 입력하세요"
-            value={email}
-            className="placeholder:text-sm placeholder:text-opacity-50 text-sm w-44 focus:outline-none"
-            onChange={handleEmailChange}
-          />
-
-          <button
-            type="button"
-            onClick={handleEmailCheck}
-            className="text-aqua border border-aqua text-xs p-1 rounded-md hover:bg-aqua hover:text-white transition"
-          >
-            중복체크
-          </button>
-        </div>
-        {/* 이메일 메시지 */}
-        {emailMessage && <p className="text-error text-xs pt-2">{emailMessage}</p>}
-      </div>
-
-      {/* 비밀번호 */}
-      <div className="flex flex-col">
-        <div
-          className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua ${!isValidPassword ? "border-b-error" : ""}`}
-        >
-          <label htmlFor="password1">
-            <LockClosedIcon className="w-6 h-6 text-custom-gray" />
-          </label>
-          <input
-            id="password1"
-            type={showPassword ? "text" : "password"}
-            placeholder="비밀번호를 입력하세요"
-            value={password1}
+            placeholder="휴대폰 번호를 입력하세요"
+            value={phonenum}
             className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
-            onChange={handlePasswordChange}
+            onChange={handlePhoneChange}
           />
-          <button type="button" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? (
-              <EyeIcon className="w-6 h-6 text-aqua" />
-            ) : (
-              <EyeSlashIcon className="w-6 h-6 text-custom-gray" />
-            )}
-          </button>
         </div>
-        {passwordMessage && (
-          <p className={`text-[10px] pt-2 ${isValidPassword ? "text-aqua" : "text-error"}`}>
-            {passwordMessage}
-          </p>
-        )}
-      </div>
 
-      {/* 비밀번호 확인 */}
-      <div className="flex flex-col">
-        <div
-          className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua ${!isMatch ? "border-b-error" : ""}`}
-        >
-          <label htmlFor="password2">
-            <LockClosedIcon className="w-6 h-6 text-custom-gray" />
-          </label>
-          <input
-            id="password2"
-            type={showPassword ? "text" : "password"}
-            placeholder="비밀번호를 다시 입력하세요"
-            value={password2}
-            className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
-            onChange={handleConfirmPasswordChange}
-          />
+        {/* 이메일 */}
+        <div className="flex flex-col ">
+          <div
+            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray  ${!isValidEmail ? "border-b-error" : ""} focus-within:border-b-aqua`}
+          >
+            <label htmlFor="email">
+              <EnvelopeIcon className="w-6 h-6 text-custom-gray" />
+            </label>
+            <input
+              id="email"
+              type="text"
+              placeholder="이메일을 입력하세요"
+              value={email}
+              className="placeholder:text-sm placeholder:text-opacity-50 text-sm w-44 focus:outline-none"
+              onChange={handleEmailChange}
+            />
+
+            <button
+              type="button"
+              onClick={handleEmailCheck}
+              className="text-aqua border border-aqua text-xs p-1 rounded-md hover:bg-aqua hover:text-white transition"
+            >
+              중복체크
+            </button>
+          </div>
+          {/* 이메일 메시지 */}
+          {emailMessage && <p className="text-error text-xs pt-2">{emailMessage}</p>}
         </div>
-        {/* 비밀번호 일치 여부 */}
-        {!isMatch && password2.length > 0 && (
-          <p className="text-xs pt-2 text-error">비밀번호가 일치하지 않습니다.</p>
-        )}
+
+        {/* 비밀번호 */}
+        <div className="flex flex-col">
+          <div
+            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua ${!isValidPassword ? "border-b-error" : ""}`}
+          >
+            <label htmlFor="password1">
+              <LockClosedIcon className="w-6 h-6 text-custom-gray" />
+            </label>
+            <input
+              id="password1"
+              type={showPassword ? "text" : "password"}
+              placeholder="비밀번호를 입력하세요"
+              value={password1}
+              className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
+              onChange={handlePasswordChange}
+            />
+            <button type="button" onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <EyeIcon className="w-6 h-6 text-aqua" />
+              ) : (
+                <EyeSlashIcon className="w-6 h-6 text-custom-gray" />
+              )}
+            </button>
+          </div>
+          {passwordMessage && (
+            <p className={`text-[10px] pt-2 ${isValidPassword ? "text-aqua" : "text-error"}`}>
+              {passwordMessage}
+            </p>
+          )}
+        </div>
+
+        {/* 비밀번호 확인 */}
+        <div className="flex flex-col">
+          <div
+            className={`flex items-center justify-start w-72 gap-4 pb-2 border-b-2 border-b-custom-gray focus-within:border-b-aqua ${!isMatch ? "border-b-error" : ""}`}
+          >
+            <label htmlFor="password2">
+              <LockClosedIcon className="w-6 h-6 text-custom-gray" />
+            </label>
+            <input
+              id="password2"
+              type={showPassword ? "text" : "password"}
+              placeholder="비밀번호를 다시 입력하세요"
+              value={password2}
+              className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
+              onChange={handleConfirmPasswordChange}
+            />
+          </div>
+          {/* 비밀번호 일치 여부 */}
+          {!isMatch && password2.length > 0 && (
+            <p className="text-xs pt-2 text-error">비밀번호가 일치하지 않습니다.</p>
+          )}
+        </div>
       </div>
-    </div>
+      {/* 약관 컴포넌트 부분 */}
+      <SignupPolicy />
+
+      {/* 회원가입 버튼 부분 */}
+    </>
   );
 };
 
