@@ -33,11 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-[100dvh] flex flex-col">
         <Providers>
           {/* ✅ `h-[calc(100dvh-3rem)]`을 사용하여 하단바 제외한 높이 설정 */}
-          <main className="flex-1 h-[calc(100dvh-3rem)] overflow-y-auto pb-16">{children}</main>
+          <main className="flex-1 h-[calc(100dvh-48px)] overflow-y-auto">{children}</main>
         </Providers>
 
         {/* ✅ 하단바 고정 유지 - `fixed bottom-0`으로 변경 */}
-        <div className="fixed bottom-0 left-0 w-full">
+        <div className="fixed bottom-0 left-0 w-full h-12">
           <BottombarWrapper />
         </div>
       </body>

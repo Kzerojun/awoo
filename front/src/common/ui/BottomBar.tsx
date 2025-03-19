@@ -39,7 +39,7 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
   if (hideOnPages.includes(currentPath)) return null; // 특정 페이지에서는 하단바 숨김
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-custom-white shadow-[0_-1px_4px_rgba(0,0,0,0.05)] h-12 z-50">
+    <nav className="fixed bottom-0 left-0 w-full bg-custom-white shadow-[0_-1px_4px_rgba(0,0,0,0.05)] h-13.5 z-50">
       <div className="flex justify-around py-2">
         {navItems.map((item) => {
           const isActive = currentPath.startsWith(item.path); // ✅ `usePathname()` 대신 `currentPath` 사용
