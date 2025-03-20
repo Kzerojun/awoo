@@ -1,37 +1,28 @@
 "use client";
 
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
+import paw from "../../../../../public/icons/white_paw.svg";
+
+import CheckEnd from "../../components/CheckEnd";
+import Button from "@/common/ui/Button";
 
 const EndCheckPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  // 산책 데이터
-  const startTime = useAppSelector((state) => state.walk.startTime);
-  const endTime = useAppSelector((state) => state.walk.endTime);
-  const totalTime = useAppSelector((state) => state.walk.totalTime);
-  const distance = useAppSelector((state) => state.walk.distance);
-  const image = useAppSelector((state) => state.walk.photo);
+  const goToHome = () => {
+    setTimeout(() => {
+      router.push("/home");
+    }, 500);
+  };
 
   return (
-    <>
-      <div>
-        <h1>산책이 종료</h1>
-        <p>산책이 기록되었습니다!</p>
-      </div>
-      {/* 산책 데이터 */}
-      <div>
-        <span>
-          <div>총 산책 시간</div>
-          <p>{totalTime}</p>
-        </span>
-        <span>
-          <div>총 산책 거리</div>
-          <p>{distance}</p>
-        </span>
-      </div>
-    </>
+    <div className="h-full flex flex-col justify-center items-center gap-8">
+      <CheckEnd />
+      <Button text="홈으로" onClick={goToHome} backgroundColor="green" img={paw} />
+    </div>
   );
 };
 
