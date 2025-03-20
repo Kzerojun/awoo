@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { clearPhoto } from "@/lib/slices/photoSlice";
+import { setWalkData } from "@/lib/slices/walkSlice";
 
 const PhotoCheckPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const image = useAppSelector((state) => state.photo.image);
+  const image = useAppSelector((state) => state.walk.photo);
 
   return (
     <div className="flex flex-col items-center">
@@ -23,7 +23,7 @@ const PhotoCheckPage = () => {
             </button>
             <button
               onClick={() => {
-                dispatch(clearPhoto()); // Redux 상태 초기화
+                dispatch(setWalkData({ photo: null })); // Redux 상태 초기화
                 router.push("/walk/take-photo");
               }}
               className="px-4 py-2 bg-red-500 text-white rounded-lg"

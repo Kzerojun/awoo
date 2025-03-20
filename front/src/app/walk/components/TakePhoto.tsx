@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/store";
-import { setPhoto } from "@/lib/slices/photoSlice";
+import { setWalkData } from "@/lib/slices/walkSlice";
 
 const TakePhoto = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -51,7 +51,7 @@ const TakePhoto = () => {
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const dataUrl = canvas.toDataURL("image/png");
 
-      dispatch(setPhoto(dataUrl));
+      dispatch(setWalkData({ photo: dataUrl }));
       stopCamera();
       router.push("/walk/photo-check");
     }
