@@ -29,4 +29,8 @@ public class PaymentEntity {
         this.password = password;
         this.memberId = memberId;
     }
+
+    public void registerPassword(String password) {
+        this.password = password;
+    }
 }
