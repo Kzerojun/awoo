@@ -1,36 +1,35 @@
 "use client";
 
-import Button from "../../common/ui/Button";
-import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
-import { BellIcon } from "@heroicons/react/24/outline"; // Heroicons 아이콘 추가
+import Header from "@/app/home/components/Header";
+import SavingRecommendation from "./components/SavingRecommendation";
+import MainActions from "./components/Mainactions";
+import InfoCard from "./components/InfoCard";
 
 export default function Home() {
-  const router = useRouter();
-
-  const goToLogin = (): void => {
-    router.push("/login");
-  };
-
   return (
-    <div className="relative min-h-screen bg-white">
-      {/* 상단바 */}
-      <TopBar title="페이지 제목" rightAction={<BellIcon className="h-6 w-6 text-gray-500" />} />
+    <div className="flex flex-col min-h-screen">
+      {/* 네비게이션 바 */}
+      <Header />
 
-      {/* 메인 컨텐츠 - 중앙 정렬 */}
-      <main className="flex flex-col items-center justify-center h-full min-h-[calc(100vh-3rem)]">
-        <div className="flex items-center space-x-2">
-          <h1 className="text-4xl font-bold text-center">AwOO</h1>
-        </div>
-        <p className="text-gray-500 mt-2">새로운 발자국 금융 라이프</p>
+      <div className="p-4 pt-0 space-y-3">
+        {/* 추천 적금 배너 */}
+        <SavingRecommendation />
 
-        <Button
-          text="로그인 하러가기"
-          backgroundColor="aqua"
-          fontColor="white"
-          onClick={goToLogin}
+        {/* 주요 기능 버튼 */}
+        <MainActions />
+
+        {/* 정보 카드 */}
+        <InfoCard
+          title="안전한 중고거래, 멍페이로 해결"
+          description="입출금 계좌 개설하고, 간편하게 멍페이로 결제하세요!"
         />
-      </main>
+
+        <InfoCard
+          title="반려견을 위한 보험"
+          description="쉽게 찾고 쉽게 가입할 수 있어요!"
+          iconSrc="/icons/main/scales.svg"
+        />
+      </div>
     </div>
   );
 }

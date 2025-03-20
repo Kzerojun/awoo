@@ -1,36 +1,57 @@
-import "@/app/globals.css"; // 글로벌 CSS 파일 불러오기 (Tailwind 포함)
+import "@/app/globals.css";
 import { Providers } from "./providers";
-import { Metadata, Viewport } from "next"; // Next.js의 Metadata API 사용
-import Bottombar from "@/common/ui/BottomBar";
+import { Metadata, Viewport } from "next";
+import BottomBarWrapper from "@/common/ui/BottombarWrapper";
+import TopBarWrapper from "@/common/ui/TopbarWrapper";
 
-// Next.js에서 페이지 메타데이터(PWA 포함) 설정
 export const metadata: Metadata = {
-  title: "AwOO", // ✅ PWA 기본 타이틀
-  description: "AwOO - 강아지 라이프 플랫폼", // ✅ SEO 및 검색 최적화
-  manifest: "/manifest.json", // ✅ PWA 설정 파일 연결
+  title: "AwOO",
+  description: "AwOO - 강아지 라이프 플랫폼",
+  manifest: "/manifest.json",
 };
 
-// viewport는 별도로 설정
 export const viewport: Viewport = {
-  width: "device-width", // 뷰포트를 기기의 화면 너비에 맞게 조정 (반응형 레이아웃을 위해 필요)
-  initialScale: 1, // 페이지 로드 시 기본 확대 배율 (1: 기본 크기)
-  maximumScale: 1, // 사용자가 페이지를 확대(줌)하는 것을 방지 (접근성을 고려해 변경 가능)
-  themeColor: "#ffffff", //PWA 및 모바일 브라우저의 상단 바(탭 바) 색상 설정
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#ffffff",
 };
-// RootLayout 컴포넌트 (Next.js App Router에서 모든 페이지를 감싸는 역할)
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+
+export default function RootLayout({
+  children,
+  title,
+  rightAction,
+}: {
+  children: React.ReactNode;
+  title?: string;
+  rightAction?: React.ReactNode;
+}) {
+  // 상단바가 표시될지 여부 결정
+  const showTopBar = title || rightAction;
+
   return (
-    <html lang="ko">
+    <html lang="ko" className="h-screen">
       <head>
-        {/* 나눔스퀘어네오 웹폰트 추가 */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link
           href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
           rel="stylesheet"
         />
       </head>
-      <body>
-        <Providers>{children}</Providers>
-        <Bottombar />
+
+      <body className="h-screen flex flex-col">
+        <Providers>
+          {/* ✅ 상단바 (fixed top-0) */}
+          <TopBarWrapper title={title} rightAction={rightAction} />
+
+          {/* ✅ 메인 컨텐츠 영역 */}
+          <main className="flex-1 overflow-y-auto w-full min-h-screen pt-14 pb-14 scrollbar-hide">
+            {children}
+          </main>
+
+          {/* ✅ 하단바 (fixed bottom-0) */}
+          <BottomBarWrapper />
+        </Providers>
       </body>
     </html>
   );
