@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.math.BigDecimal;
 
@@ -18,16 +20,19 @@ public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer paymentId;
 
+    @Column(nullable = false)
     private BigDecimal balance;
 
     private String password;
 
+    @Column(nullable = false)
     private Integer memberId;
 
     @Builder
     public PaymentEntity(String password, Integer memberId) {
         this.password = password;
         this.memberId = memberId;
+        this.balance = BigDecimal.ZERO;
     }
 
     public void registerPassword(String password) {
