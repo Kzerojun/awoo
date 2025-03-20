@@ -19,6 +19,6 @@ public class ModifyPetServiceImpl implements ModifyPetService {
     public Pet modifyPet(final ModifyPetCommand command) {
         Pet entity = petRepository.searchPet(command.petId());
         entity.modifyPet(command);
-        return null;
+        return entity;
     }
 }

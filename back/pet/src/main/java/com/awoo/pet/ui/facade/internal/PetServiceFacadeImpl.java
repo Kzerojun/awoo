@@ -2,6 +2,7 @@ package com.awoo.pet.ui.facade.internal;
 
 import com.awoo.pet.application.ModifyPetService;
 import com.awoo.pet.application.RegisterPetService;
+import com.awoo.pet.application.SearchPetListService;
 import com.awoo.pet.application.SearchPetService;
 import com.awoo.pet.domain.pet.Pet;
 import com.awoo.pet.ui.facade.PetServiceFacade;
@@ -9,10 +10,13 @@ import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
 import com.awoo.pet.ui.facade.dto.response.ModifyPetResponse;
 import com.awoo.pet.ui.facade.dto.response.RegisterPetResponse;
+import com.awoo.pet.ui.facade.dto.response.SearchPetListResponse;
 import com.awoo.pet.ui.facade.dto.response.SearchPetResponse;
 import com.awoo.pet.ui.facade.internal.mapper.PetResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -22,13 +26,20 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     private final RegisterPetService registerPetService;
     private final SearchPetService searchPetService;
     private final ModifyPetService modifyPetService;
+    private final SearchPetListService searchPetListService;
     private final PetResponseMapper mapper;
 
     @Override
     public RegisterPetResponse registerPet(final RegisterPetRequest request, final Integer memberId) {
         Integer petId = registerPetService.registerPet(request.toCommand(memberId));
         Pet entity = searchPetService.searchPet(petId);
-        return mapper.registerPetResponse(entity);
+        return mapper.registerPet(entity);
+    }
+
+    @Override
+    public SearchPetListResponse searchPetList(final Integer memberId) {
+        List<Pet> pets = searchPetListService.searchPetList(memberId);
+        return mapper.searchPetList(pets);
     }
 
     @Override

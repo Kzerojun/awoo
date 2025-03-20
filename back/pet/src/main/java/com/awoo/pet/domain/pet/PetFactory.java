@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 public class PetFactory {
 
     public Pet registerPetEntity(final RegisterPetCommand command) {
-
         // 유저 정보 확인하고
         return Pet.builder()
                 .memberId(command.petCommand().memberId())

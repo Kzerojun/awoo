@@ -5,9 +5,12 @@ import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
 import com.awoo.pet.ui.facade.dto.response.ModifyPetResponse;
 import com.awoo.pet.ui.facade.dto.response.RegisterPetResponse;
+import com.awoo.pet.ui.facade.dto.response.SearchPetListResponse;
 import com.awoo.pet.ui.facade.dto.response.SearchPetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -21,9 +24,13 @@ public class PetController {
         return petServiceFacade.registerPet(request, 1);
     }
 
+    @GetMapping
+    public SearchPetListResponse searchPetList(){
+        return petServiceFacade.searchPetList(1);
+    }
+
     @GetMapping("/{petId}")
     public SearchPetResponse searchPet(@PathVariable Integer petId) {
-        System.out.println("호출");
         return petServiceFacade.searchPet(petId);
     }
 
