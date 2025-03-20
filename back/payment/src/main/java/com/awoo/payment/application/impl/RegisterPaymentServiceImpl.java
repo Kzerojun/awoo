@@ -20,7 +20,7 @@ public class RegisterPaymentServiceImpl implements RegisterPaymentService {
 
     @Override
     public Integer registerPayment(RegisterPaymentCommand command) {
-        paymentRepository.findById(command.memberId())
+        paymentRepository.findByMemberId(command.memberId())
                 .ifPresent(payment -> {
                     throw new PaymentAlreadyRegisterException(ApplicationErrorCode.PAYMENT_ALREADY_REGISTERED);
                 });
