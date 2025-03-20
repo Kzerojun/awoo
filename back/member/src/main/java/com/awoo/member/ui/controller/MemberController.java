@@ -28,7 +28,7 @@ public class MemberController {
     public ResponseEntity<?> signUp(
             @RequestPart(value = "requestDto") SignUpRequestDto requestDto,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile
-    ) {
+    ) throws Exception {
         // Service로 DTO와 파일을 넘겨 처리
         Member savedMember = memberService.signUp(requestDto, profileImageFile);
         return new ResponseEntity<>(savedMember.getId(), HttpStatus.CREATED);

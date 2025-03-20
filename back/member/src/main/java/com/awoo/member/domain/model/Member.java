@@ -2,10 +2,13 @@ package com.awoo.member.domain.model;
 
 import com.awoo.member.domain.model.vo.*;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor // JPA 기본 생성자 필요
 @Table(name = "members")
 public class Member {
 
@@ -19,6 +22,9 @@ public class Member {
 
     @Column(name = "password", nullable = false, length = 128)
     private String password;
+
+    @Column(name = "user_key", nullable = true)
+    private String userKey;
 
     @Embedded
     private Name name;
@@ -45,12 +51,12 @@ public class Member {
     @Column(name = "provider", nullable = false)
     private Provider provider;
 
-    protected Member() {} // JPA 기본 생성자
-
-    public Member(Email email, String password, Name name, BirthDate birthDate, Gender gender, String phone,
-                  String profileImage, PrivacyAgreement privacyAgreement, String nickname, Provider provider) {
+    @Builder // 빌더 패턴 추가
+    public Member(Email email, String password, String userKey, Name name, BirthDate birthDate, Gender gender,
+                  String phone, String profileImage, PrivacyAgreement privacyAgreement, String nickname, Provider provider) {
         this.email = email;
         this.password = password;
+        this.userKey = userKey;
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
@@ -77,4 +83,3 @@ public class Member {
         this.nickname = newNickname;
     }
 }
-
