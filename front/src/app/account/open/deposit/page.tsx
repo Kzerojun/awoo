@@ -3,6 +3,7 @@ import React from "react";
 import ProductSummary from "@/app/account/open/deposit/components/ProductSummary";
 import ProductIntro from "@/app/account/open/deposit/components/ProductIntro";
 import ProductDetails from "@/app/account/open/deposit/components/ProductDetails"; // ✅ 추가
+import ProductDocs from "@/app/account/open/deposit/components/ProductDocs";
 
 const Page = () => {
   return (
@@ -51,6 +52,7 @@ const Page = () => {
         {/* ✅ 상품 상세 탭 추가 */}
         <ProductDetails />
       </div>
+      <ProductDocs />;
     </div>
   );
 };
