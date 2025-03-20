@@ -23,7 +23,8 @@ const formatElapsedTime = (seconds: number) => {
 
 const Walking = () => {
   const { requestPermission } = useLocationPermission();
-  const { stopTracking, isTracking, elapsedTime, startTime, endTime } = useLocationTracking();
+  const { stopTracking, isTracking, elapsedTime, startTime, endTime, distance } =
+    useLocationTracking();
   const [totalWalkTime, setTotalWalkTime] = useState<string | null>(null);
   const [walkStartTime, setWalkStartTime] = useState<string | null>(null);
   const [walkEndTime, setWalkEndTime] = useState<string | null>(null);
@@ -51,20 +52,24 @@ const Walking = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center w-full px-8 justify-center">
       <div>산책 맵트래킹 페이지</div>
-      <MapTraking />
+      <div className="w-full max-w-3xl h-[60vh] mb-8">
+        <MapTraking />
+      </div>
+
       {isTracking ? (
         <Button text="산책 종료" img={paw} onClick={handleStopTracking} />
       ) : (
         <div className="mt-4 p-2 text-xl text-green-600">
           🏁 산책 종료!
           <br />
+          산책 거리 : {distance} <br />
           시작 시간 : {walkStartTime} <br />
           🕓 종료 시간: {walkEndTime} <br />⏳ 총 산책 시간: {totalWalkTime}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

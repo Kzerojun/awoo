@@ -1,88 +1,149 @@
 "use client";
 
 import useLocationTracking from "../hooks/useLocationTracking";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import WalkingLoading from "./WalkingLoading";
-import dynamic from "next/dynamic";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-// 동적 import (서버 실행 x)
-const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), {
-  ssr: false,
-});
-const TileLayer = dynamic(() => import("react-leaflet").then((mod) => mod.TileLayer), {
-  ssr: false,
-});
-const Polyline = dynamic(() => import("react-leaflet").then((mod) => mod.Polyline), { ssr: false });
-const Marker = dynamic(() => import("react-leaflet").then((mod) => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), { ssr: false });
-
-// 시작 지점 아이콘
-const startIcon = new L.Icon({
-  iconUrl: "/icons/walking/house.svg",
-  iconSize: [32, 32],
-  iconAnchor: [12, 12],
-});
-
-// 현재 위치 아이콘
-const currentLocationIcon = new L.Icon({
-  iconUrl: "/icons/walking/dog.svg",
-  iconSize: [16, 16],
-  iconAnchor: [8, 8],
-});
-
-// 도착 지점 아이콘
-const finishIcon = new L.Icon({
-  iconUrl: "/icons/walking/flag.svg",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
 
 const MapTraking = () => {
-  const { positions, distance, currentPosition, startPosition } = useLocationTracking();
-  const [isClient, setIsCliet] = useState<boolean>(false);
+  const { positions, currentPosition, startPosition, isTracking, distance } = useLocationTracking();
+  const [isScriptLoaded, setIsScriptLoaded] = useState<boolean>(false);
+  const mapRef = useRef<kakao.maps.Map | null>(null); // 지도 사이즈 문제 해결
 
   useEffect(() => {
-    setIsCliet(true);
+    const loadKakaoMapScript = () => {
+      if (window.kakao && window.kakao.maps) {
+        console.log("카카오맵 스크립트 이미 로드됨");
+        setIsScriptLoaded(true);
+        return;
+      }
+
+      const script = document.createElement("script");
+      // 로컬 API KEY 지도
+      // script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_LOCAL_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
+      // 배포 API KEY 지도
+      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
+      script.async = true;
+
+      script.onload = () => {
+        console.log("카카오맵 스크립트 로딩 완료");
+
+        // 카카오맵이 완전히 로드된 후 `window.kakao.maps.load()`를 호출해야 함!
+        window.kakao.maps.load(() => {
+          console.log("window.kakao.maps 로드 완료");
+          setIsScriptLoaded(true);
+        });
+      };
+
+      script.onerror = () => {
+        console.error("❌ 카카오맵 스크립트 로드 실패!");
+      };
+
+      document.head.appendChild(script);
+    };
+
+    loadKakaoMapScript();
   }, []);
 
-  if (!startPosition || !currentPosition || !isClient) {
+  useEffect(() => {
+    if (isScriptLoaded && mapRef.current) {
+      setTimeout(() => {
+        console.log("지도 리사이즈 실행");
+        if (mapRef.current) {
+          mapRef.current.relayout();
+        }
+      }, 300);
+    }
+  }, [isScriptLoaded]);
+
+  if (!isScriptLoaded) {
     return <WalkingLoading />;
   }
 
   return (
-    <>
-      <div>맵 트래킹이</div>
-      <div className="h-80 w-full">
-        <MapContainer center={startPosition} zoom={15} className="h-full w-full">
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <div className="w-full h-full">
+      {/* 카카오맵  */}
+      <Map
+        center={
+          currentPosition
+            ? { lat: currentPosition[0], lng: currentPosition[1] }
+            : { lat: 37.5665, lng: 126.978 }
+        }
+        style={{ width: "100%", height: "100%" }}
+        level={4}
+        ref={(map) => {
+          if (map) {
+            mapRef.current = map;
+          }
+        }} // ✅ `ref` 바인딩 방식 수정
+      >
+        {/* 출발 위치 */}
+        {startPosition && (
+          <MapMarker position={{ lat: startPosition[0], lng: startPosition[1] }}>
+            <div className="text-xs bg-white p-1 rounded">출발</div>
+          </MapMarker>
+        )}
 
-          {/* 현재 위치 마커 */}
-          <Marker position={currentPosition} icon={currentLocationIcon}>
-            <Popup>현재 위치!</Popup>
-          </Marker>
-          {/* 출발 지점 마커 */}
-          <Marker position={startPosition} icon={startIcon}>
-            <Popup>출발 지점</Popup>
-          </Marker>
+        {/* 사용자가 이동한 경로에 발자국 마커 표시 */}
+        {positions.map((pos, index) => (
+          <MapMarker
+            key={index}
+            position={{ lat: pos[0], lng: pos[1] }}
+            image={{
+              src: "/icons/walking/walking_paw.svg",
+              size: { width: 30, height: 30 },
+            }}
+          />
+        ))}
 
-          {/* 도착 지점 마커 */}
-          {positions.length > 5 && (
-            <Marker position={positions[positions.length - 1]} icon={finishIcon}>
-              <Popup>도착 지점</Popup>
-            </Marker>
-          )}
+        {/* 사용자의 현재 위치를 나타내는 마커 */}
+        {currentPosition && (
+          <MapMarker
+            position={{ lat: currentPosition[0], lng: currentPosition[1] }}
+            image={{
+              src: "/icons/walking/dog.svg",
+              size: { width: 50, height: 50 },
+            }}
+          />
+        )}
 
-          {/* 이동 경로 (점선) */}
-          {positions.length > 1 && (
-            <Polyline positions={positions} color="green" dashArray="5, 10" />
-          )}
-        </MapContainer>
+        {/* 사용자가 이동한 경로를 선으로 연결 */}
+        <Polyline
+          path={positions.map((pos) => ({ lat: pos[0], lng: pos[1] }))}
+          strokeWeight={5}
+          strokeColor={"#9eebd1"}
+          strokeOpacity={0.7}
+          strokeStyle={"solid"}
+        />
+
+        {positions.map(
+          (pos, index) =>
+            index % 2 === 0 && ( // 📌 너무 촘촘하지 않게 2칸마다 표시
+              <MapMarker
+                key={index}
+                position={{ lat: pos[0], lng: pos[1] }}
+                image={{
+                  src: "/icons/walking/walking_paw.svg", // 🐾 발자국 아이콘으로 경로 표현
+                  size: { width: 20, height: 20 },
+                }}
+              />
+            )
+        )}
+
+        {/* 트래킹 종료시 마지막 위치에 깃발 마커 표시 */}
+        {!isTracking && currentPosition && (
+          <MapMarker
+            position={{ lat: currentPosition[0], lng: currentPosition[1] }}
+            image={{
+              src: "/icons/walking/flag.svg",
+              size: { width: 30, height: 30 },
+            }}
+          />
+        )}
+
         <div className="rounded-lg shadow-md">이동 거리: {distance.toFixed(2)} km</div>
-      </div>
-    </>
+      </Map>
+    </div>
   );
 };
 
