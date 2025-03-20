@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import useLocationPermission from "../../hooks/useLocationPermission";
 import useLocationTracking from "../../hooks/useLocationTracking";
 import dynamic from "next/dynamic";
@@ -28,6 +29,7 @@ const Walking = () => {
   const [totalWalkTime, setTotalWalkTime] = useState<string | null>(null);
   const [walkStartTime, setWalkStartTime] = useState<string | null>(null);
   const [walkEndTime, setWalkEndTime] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     requestPermission(); //페이지가 로드될 때 권한 요청
@@ -51,6 +53,13 @@ const Walking = () => {
     setTotalWalkTime(formatElapsedTime(elapsedTime)); // 총 산책 시간
   };
 
+  // 사진 찍기 페이지로 이동
+  const goToPhoto = () => {
+    router.push("/walk/take-photo");
+  };
+
+  // 적금 납입 선택 or 그런 걸로 이동
+  const goToCheckPay = () => {};
   return (
     <div className="flex flex-col items-center w-full px-8 justify-center">
       <div>산책 맵트래킹 페이지</div>
@@ -61,13 +70,17 @@ const Walking = () => {
       {isTracking ? (
         <Button text="산책 종료" img={paw} onClick={handleStopTracking} />
       ) : (
-        <div className="mt-4 p-2 text-xl text-green-600">
-          🏁 산책 종료!
-          <br />
-          산책 거리 : {distance} <br />
-          시작 시간 : {walkStartTime} <br />
-          🕓 종료 시간: {walkEndTime} <br />⏳ 총 산책 시간: {totalWalkTime}
-        </div>
+        <>
+          <div className="mt-4 p-2 text-xl text-green-600">
+            🏁 산책 종료!
+            <br />
+            산책 거리 : {distance} <br />
+            시작 시간 : {walkStartTime} <br />
+            🕓 종료 시간: {walkEndTime} <br />⏳ 총 산책 시간: {totalWalkTime}
+          </div>
+          <Button text="사진 찍기" img={paw} onClick={goToPhoto} />
+          <Button text="건너 뛰기" onClick={goToCheckPay} />
+        </>
       )}
     </div>
   );
