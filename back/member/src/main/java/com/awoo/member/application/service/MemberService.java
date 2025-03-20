@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
 
-    Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile);
+    Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception;
 
     String login(LoginRequestDto requestDto);
 

@@ -3,47 +3,58 @@ package com.awoo.member.application.service;
 import com.awoo.member.application.dto.LoginRequestDto;
 import com.awoo.member.application.dto.MemberUpdateRequestDto;
 import com.awoo.member.application.dto.SignUpRequestDto;
+import com.awoo.member.application.dto.UserKeyResponseDto;
 import com.awoo.member.domain.model.Member;
 import com.awoo.member.domain.model.Provider;
 import com.awoo.member.domain.model.vo.*;
 import com.awoo.member.domain.repository.MemberRepository;
 import com.awoo.member.infra.jwt.JwtTokenProvider;
+import com.awoo.member.infra.util.AESUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    private final AESUtil aesUtil;
     private final AwsS3Service awsS3Service;
     private final MemberRepository memberRepository;
+    private final BeerClientService beerClientService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider; // JWT 생성 클래스 (아래 예시 참고)
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
     @Override
-    public Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) {
+    public Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception {
         // 1. S3 업로드 처리
         String uploadedImageUrl = null;
         if (profileImageFile != null && !profileImageFile.isEmpty()) {
             uploadedImageUrl = awsS3Service.uploadFile(profileImageFile);
         }
 
-        // 2. Member 엔티티 생성
-        Member member = new Member(
-                new Email(requestDto.getEmail()),
-                passwordEncoder.encode(requestDto.getPassword()),
-                new Name(requestDto.getName()),
-                new BirthDate(requestDto.getBirthDate()),
-                new Gender(requestDto.getGender()),
-                requestDto.getPhone(),
-                uploadedImageUrl, // DB에는 업로드한 URL을 저장
-                new PrivacyAgreement(requestDto.isPrivacyAgreed()),
-                requestDto.getNickname(),
-                Provider.L
-        );
+        // 2. BeerClientService를 통해 userKey 받은 뒤 암호화.
+        UserKeyResponseDto userKeyResponseDto = beerClientService.postBeer(requestDto.getEmail());
+        String encodedUserKey = userKeyResponseDto != null ? aesUtil.encrypt(userKeyResponseDto.getUserKey()) : null;
+
+        // 3. Member 엔티티 생성 (빌더 패턴 적용)
+        Member member = Member.builder()
+                .email(new Email(requestDto.getEmail()))
+                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .userKey(encodedUserKey)
+                .name(new Name(requestDto.getName()))
+                .birthDate(new BirthDate(requestDto.getBirthDate()))
+                .gender(new Gender(requestDto.getGender()))
+                .phone(requestDto.getPhone())
+                .profileImage(uploadedImageUrl)
+                .privacyAgreement(new PrivacyAgreement(requestDto.isPrivacyAgreed()))
+                .nickname(requestDto.getNickname())
+                .provider(Provider.L)
+                .build();
 
         // 3. DB 저장
         return memberRepository.save(member);
