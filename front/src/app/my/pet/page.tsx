@@ -1,5 +1,11 @@
 "use client";
+import TopBar from "@/common/ui/TopBar";
 
 export default function Pet() {
-  return <div>pet</div>;
+  return (
+    <>
+      <TopBar title="내 반려동물" />
+      <div>pet</div>
+    </>
+  );
 }
