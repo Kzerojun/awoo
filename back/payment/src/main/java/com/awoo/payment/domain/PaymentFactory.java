@@ -8,13 +8,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentFactory {
 
-    private final PasswordEncoder passwordEncoder;
-
-    public PaymentEntity createPaymentEntity(Integer memberId, String password) {
-        String encodedPassword = passwordEncoder.encode(password);
-
+    public PaymentEntity createPaymentEntity(Integer memberId) {
         return PaymentEntity.builder()
-                .password(encodedPassword)
                 .memberId(memberId)
                 .build();
     }
