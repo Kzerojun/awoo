@@ -3,10 +3,8 @@ package com.awoo.pet.ui.web;
 import com.awoo.pet.ui.facade.PetServiceFacade;
 import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
-import com.awoo.pet.ui.facade.dto.response.ModifyPetResponse;
-import com.awoo.pet.ui.facade.dto.response.RegisterPetResponse;
-import com.awoo.pet.ui.facade.dto.response.SearchPetListResponse;
-import com.awoo.pet.ui.facade.dto.response.SearchPetResponse;
+import com.awoo.pet.ui.facade.dto.request.RegisterWalkRequest;
+import com.awoo.pet.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +36,12 @@ public class PetController {
     @PutMapping("/{petId}")
     public ModifyPetResponse modifyPet(@PathVariable Integer petId, @RequestBody ModifyPetRequest request) {
         return petServiceFacade.modifyPet(request, petId , 1);
+    }
+
+
+    @PostMapping("/walks")
+    public RegisterWalkResponse registerWalk(@RequestBody RegisterWalkRequest request){
+        return petServiceFacade.registerWalk(request, 1);
     }
 
 

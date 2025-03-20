@@ -6,9 +6,7 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Pet {
 
     @Id
@@ -32,6 +30,17 @@ public class Pet {
 
     @Column
     private int savingId;
+
+    @Builder
+    public Pet(Integer petId, int memberId, String name, String profileImage, String breed, int age, int savingId) {
+        this.petId = petId;
+        this.memberId = memberId;
+        this.name = name;
+        this.profileImage = profileImage;
+        this.breed = breed;
+        this.age = age;
+        this.savingId = savingId;
+    }
 
     public void modifyPet(final ModifyPetCommand command){
         this.name = command.name();

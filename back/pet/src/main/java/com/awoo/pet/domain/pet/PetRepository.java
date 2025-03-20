@@ -6,7 +6,5 @@ public interface PetRepository {
 
     void registerPet(Pet pet);
 
-    Pet searchPet(Integer petId);
-
     List<Pet> searchPetList(Integer memberId);
 }

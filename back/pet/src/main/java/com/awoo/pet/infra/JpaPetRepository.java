@@ -1,4 +1,4 @@
-package com.awoo.pet.infra.pet;
+package com.awoo.pet.infra;
 
 import com.awoo.pet.domain.pet.Pet;
 import com.awoo.pet.domain.pet.PetRepository;
@@ -23,10 +23,10 @@ public interface JpaPetRepository extends JpaRepository<Pet, Integer>, PetReposi
     default void registerPet(Pet pet) {
         save(pet);
     }
-
-    @Override
-    default Pet searchPet(Integer petId) {
-        return findByPetId(petId).orElse(null);
-    }
+//
+//    @Override
+//    default Pet searchPet(Integer petId) {
+//        return findByPetId(petId).orElse(null);
+//    }
 
 }
