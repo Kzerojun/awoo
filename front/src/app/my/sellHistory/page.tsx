@@ -1,5 +1,11 @@
 "use client";
+import TopBar from "@/common/ui/TopBar";
 
 export default function SellHistory() {
-  return <div>sellHistory</div>;
+  return (
+    <>
+      <TopBar title="판매 내역" />
+      <div>sellHistory</div>
+    </>
+  );
 }
