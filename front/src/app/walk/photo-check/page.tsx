@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setWalkData } from "@/lib/slices/walkSlice";
+import Image from "next/image";
 import Button from "@/common/ui/Button";
 import paw from "../../../../public/icons/white_paw.svg";
 import greenPaw from "../../../../public/icons/walking/green_paw.svg";
@@ -22,13 +23,24 @@ const PhotoCheckPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center h-full gap-5">
       {image ? (
         <>
-          <img src={image} alt="Captured" className="border rounded-lg" />
+          <div className="text-3xl mb-5">사진 확인</div>
+          <Image
+            src={image}
+            alt="Captured"
+            width="300"
+            height="300"
+            className="border rounded-lg"
+          />
           <div className="mt-4 flex flex-col items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center">
+              <h3 className="text-xl">이 사진으로 기록할까요?</h3>
+              <p className="text-sm">사진은 캘린더에서 확인할 수 있습니다.</p>
+            </div>
             <Button
-              text="끝내기"
+              text="산책 종료"
               onClick={goToCheckEnd}
               backgroundColor="light-green"
               fontColor="custom-white"
