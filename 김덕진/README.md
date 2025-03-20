@@ -1011,3 +1011,78 @@ protected void configure(HttpSecurity http) throws Exception {
 
 </details>
 
+<details>
+<summary><strong>0320</strong></summary>
+
+## ⚙️ Gradle vs Maven
+
+### 1️⃣ Gradle과 Maven 개요
+✅ **Gradle**
+- Groovy 또는 Kotlin DSL 기반의 빌드 자동화 도구
+- **태스크(Task) 기반**의 빌드 시스템
+- 병렬 처리 및 캐싱을 지원하여 **빠른 빌드 속도 제공**
+- 플러그인 및 확장성이 뛰어나며 커스텀 빌드 가능
+
+✅ **Maven**
+- XML(POM.xml) 기반의 빌드 및 프로젝트 관리 도구
+- **라이프사이클(Lifecycle) 기반**의 빌드 구조
+- 일관된 프로젝트 구조 제공 (Convention Over Configuration)
+- 중앙 저장소(Repository)에서 의존성 관리
+
+---
+
+### 2️⃣ 주요 차이점 비교
+| 비교 항목 | **Gradle** | **Maven** |
+|-----------|-----------|-----------|
+| 설정 방식 | Groovy/Kotlin DSL (`build.gradle`) | XML (`pom.xml`) |
+| 빌드 속도 | **빠름** (병렬 빌드 & 캐싱) | 상대적으로 느림 (단일 스레드 실행) |
+| 의존성 관리 | 플러그인 및 DSL 활용 | XML 설정 기반 |
+| 확장성 | **높음** (커스텀 태스크 추가 가능) | 낮음 (XML 기반 설정) |
+| 학습 난이도 | **조금 어려움** (DSL 문법 학습 필요) | 비교적 쉬움 (일관된 구조) |
+| 사용 사례 | Android, Kotlin, 최신 프로젝트 | 기존 Java 기반 프로젝트 |
+
+---
+
+### 3️⃣ 기본 설정 예제
+#### ✅ **Gradle (build.gradle.kts - Kotlin DSL)**
+```kotlin
+plugins {
+    id("java")
+    id("application")
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
+}
+```
+
+#### ✅ **Maven (pom.xml)**
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>2.7.0</version>
+    </dependency>
+</dependencies>
+```
+
+---
+
+### 4️⃣ 언제 사용해야 할까?
+✅ **Gradle을 선택해야 하는 경우**
+- **빌드 속도가 중요한 프로젝트** (Android, 대규모 프로젝트)
+- **확장성과 유연한 빌드 설정이 필요한 경우**
+- **Kotlin 및 최신 기술 스택과 함께 사용**할 때
+
+✅ **Maven을 선택해야 하는 경우**
+- **전통적인 Java 프로젝트**에서 사용 (Spring Boot 등)
+- **구조화된 프로젝트 관리가 필요할 때**
+- **팀 내 표준화된 빌드 환경이 중요할 때**
+
+> **🔥 결론:**
+> - Gradle은 **빠르고 유연한 빌드 시스템**으로 최신 프로젝트에 적합
+> - Maven은 **일관성과 안정성이 중요한 프로젝트**에서 적합
+
+</details>
+
