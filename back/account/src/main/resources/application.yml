@@ -1,0 +1,39 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: account
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${USER_NAME}
+    password: ${PASSWORD}
+
+jwt :
+  secret_key : ${JWT_SECRET_KEY}
+  access_expiration : ${ACCESS_EXPIRATION}
+
+aes :
+  secret_key : ${AES_KEY}
+
+ssafy :
+  finance :
+    api_key : ${SSAFY_API_KEY}
+
+# AWS S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    region:
+      static: us-east-2  # 버킷의 리전
+    s3:
+      bucket: c209awoo   # 버킷 이름
+    stack:
+      auto: false
