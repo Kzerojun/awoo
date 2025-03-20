@@ -14,7 +14,7 @@ interface ButtonProps {
   backgroundColor?: string;
   img?: string;
   disabled?: boolean;
-  border?: "aqua" | "green" | "none";
+  border?: "aqua" | "green" | null;
 }
 
 const Button = ({
@@ -29,7 +29,7 @@ const Button = ({
   backgroundColor = "aqua",
   img,
   disabled = false,
-  border = "none",
+  border = null,
 }: ButtonProps) => {
   interface widthTypes {
     long: string;
@@ -84,7 +84,7 @@ const Button = ({
         onClick={onClick}
         type={type}
         disabled={disabled}
-        className={`${widthTypes[width]} ${textSizeTypes[textSize]} ${fontBoldTypes[fontBold]} ${borderTypes[border]} h-10 cursor-pointer ${className} bg-${backgroundColor} text-${fontColor} rounded-lg flex justify-center items-center`}
+        className={`${widthTypes[width]} ${textSizeTypes[textSize]} ${fontBoldTypes[fontBold]} ${borderTypes[border ?? "none"]} h-10 cursor-pointer ${className} bg-${backgroundColor} text-${fontColor} rounded-lg flex justify-center items-center`}
       >
         <span>{text}</span>
         <span>{img && <Image src={img} alt="paw button" className="h-8 w-8 px-1 inline" />}</span>
