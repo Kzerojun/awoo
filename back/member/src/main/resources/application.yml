@@ -18,6 +18,13 @@ jwt :
   secret_key : ${JWT_SECRET_KEY}
   access_expiration : ${ACCESS_EXPIRATION}
 
+aes :
+  secret_key : ${AES_KEY}
+
+ssafy :
+  finance :
+    api_key : ${SSAFY_API_KEY}
+
 # AWS S3
 cloud:
   aws:
