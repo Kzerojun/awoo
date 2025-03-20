@@ -3,33 +3,47 @@
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setWalkData } from "@/lib/slices/walkSlice";
+import Button from "@/common/ui/Button";
+import paw from "../../../../public/icons/white_paw.svg";
+import greenPaw from "../../../../public/icons/walking/green_paw.svg";
 
 const PhotoCheckPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const image = useAppSelector((state) => state.walk.photo);
 
+  const goToCheckEnd = () => {
+    router.push("/walk/end/check");
+  };
+
+  const rePhoto = () => {
+    dispatch(setWalkData({ photo: null })); // Redux 상태 초기화
+    router.push("/walk/take-photo");
+  };
+
   return (
     <div className="flex flex-col items-center">
       {image ? (
         <>
           <img src={image} alt="Captured" className="border rounded-lg" />
-          <div className="mt-4 flex gap-4">
-            <button
-              //   onClick={sendToBackend}
-              className="px-4 py-2 bg-purple-500 text-white rounded-lg"
-            >
-              끝내기
-            </button>
-            <button
-              onClick={() => {
-                dispatch(setWalkData({ photo: null })); // Redux 상태 초기화
-                router.push("/walk/take-photo");
-              }}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg"
-            >
-              다시 찍기
-            </button>
+          <div className="mt-4 flex flex-col items-center justify-center gap-4">
+            <Button
+              text="끝내기"
+              onClick={goToCheckEnd}
+              backgroundColor="light-green"
+              fontColor="custom-white"
+              img={paw}
+              width="medium"
+            />
+            <Button
+              text="다시 찍기"
+              onClick={rePhoto}
+              backgroundColor="custom-white"
+              fontColor="green"
+              img={greenPaw}
+              border="green"
+              width="medium"
+            />
           </div>
         </>
       ) : (

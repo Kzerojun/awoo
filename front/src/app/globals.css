@@ -100,6 +100,14 @@
   .text-kakao {
     color: var(--color-kakao-font);
   }
+
+  /* 보더 색 */
+  .border-1-aqua {
+    border: 1px solid var(--color-aqua);
+  }
+  .border-1-green {
+    border: 1px solid var(--color-green);
+  }
 }
 
 @layer utilities {

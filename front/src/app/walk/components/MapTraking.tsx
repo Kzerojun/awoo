@@ -19,9 +19,7 @@ const MapTraking = () => {
       }
 
       const script = document.createElement("script");
-      // 로컬 API KEY 지도
-      // script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_LOCAL_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
-      // 배포 API KEY 지도
+      // 카카오맵 API KEY 지도
       script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
       script.async = true;
 
@@ -108,23 +106,25 @@ const MapTraking = () => {
         )}
 
         {/* 사용자가 이동한 경로를 선으로 연결 */}
-        <Polyline
-          path={positions.map((pos) => ({ lat: pos[0], lng: pos[1] }))}
-          strokeWeight={5}
-          strokeColor={"#9eebd1"}
-          strokeOpacity={0.7}
-          strokeStyle={"solid"}
-        />
+        {positions?.length > 0 && (
+          <Polyline
+            path={positions.map((pos) => ({ lat: pos[0], lng: pos[1] }))}
+            strokeWeight={5}
+            strokeColor={"#9eebd1"}
+            strokeOpacity={0.7}
+            strokeStyle={"solid"}
+          />
+        )}
 
         {positions.map(
           (pos, index) =>
-            index % 2 === 0 && ( // 📌 너무 촘촘하지 않게 2칸마다 표시
+            index % 10 === 0 && ( // 📌 너무 촘촘하지 않게 2칸마다 표시
               <MapMarker
                 key={index}
                 position={{ lat: pos[0], lng: pos[1] }}
                 image={{
                   src: "/icons/walking/walking_paw.svg", // 🐾 발자국 아이콘으로 경로 표현
-                  size: { width: 20, height: 20 },
+                  size: { width: 15, height: 15 },
                 }}
               />
             )
