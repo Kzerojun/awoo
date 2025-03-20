@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setWalkData } from "@/lib/slices/walkSlice";
 
 const TakePhoto = () => {
@@ -11,6 +11,15 @@ const TakePhoto = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
+
+  const photoData = useAppSelector((state) => state.walk.photo);
+
+  //Redux 상태 변경을 감지하여 로그 출력
+  // useEffect(() => {
+  //   if (photoData) {
+  //     console.log("📸 Redux에 저장된 사진 데이터:", photoData);
+  //   }
+  // }, [photoData]);
 
   // 카메라 시작
   const startCamera = async () => {
@@ -52,11 +61,19 @@ const TakePhoto = () => {
       const dataUrl = canvas.toDataURL("image/png");
 
       dispatch(setWalkData({ photo: dataUrl }));
+
+      console.log(photoData);
       stopCamera();
-      router.push("/walk/photo-check");
+      setTimeout(() => {
+        router.push("/walk/photo-check"); // Redux 업데이트 후 페이지 이동
+      }, 100); // Redux 업데이트 후 약간의 지연을 추가
     }
   };
-
+  const goToCheckPay = () => {
+    stopCamera();
+    dispatch(setWalkData({ photo: null }));
+    router.push("/walk/photo-check");
+  };
   return (
     <div className="flex flex-col items-center">
       <video
@@ -78,17 +95,17 @@ const TakePhoto = () => {
           </button>
         )}
         {isCameraOn && (
-          <button onClick={captureImage} className="px-4 py-2 bg-green-500 text-white rounded-lg">
+          <button onClick={captureImage} className="px-4 py-2 bg-green text-white rounded-lg">
             사진 촬영
           </button>
         )}
         {isCameraOn && (
           <button
-            onClick={stopCamera}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg"
+            onClick={goToCheckPay}
+            className="px-4 py-2 bg-custom-gray text-white rounded-lg"
             disabled={!isCameraOn}
           >
-            카메라 종료
+            건너 뛰기
           </button>
         )}
       </div>
