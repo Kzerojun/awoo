@@ -1033,3 +1033,90 @@ Kubernetes에서는 서비스와 인그레스 설정을 통해, AWS에서는 Rou
 - `실패 관리`: 파이프라인 실패 시 명확한 피드백 제공
 - `가시성`: 모든 단계의 상태와 결과를 쉽게 확인 가능
 </details>
+
+<details>
+<summary><strong>0320</strong></summary>
+
+# TIL: Jenkins Pipeline에서 Credentials 관리하기
+
+## 학습 내용
+
+> 오늘은 Jenkins 파이프라인에서 민감한 정보(API 키, 비밀번호, IP 주소 등)를 안전하게 관리하는 방법을 배웠습니다.
+> <br>Jenkins의 Credentials 시스템을 활용하면 파이프라인 스크립트에 직접 민감한 정보를 하드코딩하지 않고도 필요한 곳에서 안전하게 사용할 수 있습니다.
+
+### Jenkins Credentials 시스템
+
+Jenkins Credentials 시스템은 다음과 같은 민감한 정보를 안전하게 저장하고 관리할 수 있게 해줍니다:
+
+- 사용자 이름과 비밀번호
+- SSH 키
+- API 토큰
+- 비밀 텍스트 (Secret Text)
+- 파일 (인증서 등)
+
+### Credentials 생성 방법
+
+1. Jenkins 대시보드에서 "Manage Jenkins" > "Manage Credentials" 로 이동
+2. 적절한 도메인 선택 후 "Add Credentials" 클릭
+3. 필요한 Credential 유형 선택 (예: Secret text, Username with password 등)
+4. 필요한 정보 입력 및 ID 지정 (ID는 파이프라인에서 참조할 식별자)
+5. "Create" 버튼 클릭
+
+### Pipeline에서 Credentials 사용하기
+
+- 환경 변수로 정의하기
+  ```groovy
+  environment {
+      // Secret Text 타입의 Credential 사용
+      API_KEY = credentials('api-key-credential-id')
+
+      // Username/Password 타입의 Credential 사용
+      DB_CREDS = credentials('db-credentials-id')
+
+      // 다른 환경 변수와 함께 사용
+      DOCKER_TAG = "${env.BUILD_NUMBER}"
+  }
+  ```
+- Credentials 활용 예시
+  ```groovy
+  stage('Create Environment File') {
+      steps {
+          dir('front') {
+              // API 키를 .env 파일에 저장
+              sh '''
+                  echo "NEXT_PUBLIC_KAKAO_MAP_API_KEY=${KAKAO_MAP_API_KEY}" > .env
+                  echo ".env 파일이 생성되었습니다."
+              '''
+          }
+      }
+  }
+  ```
+  ```groovy
+  stage('Docker Login') {
+      steps {
+          // Docker Hub 로그인에 credential 사용
+          sh "echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin"
+      }
+  }
+  ```
+
+### Username/Password Credential 사용 시 주의사항
+
+Username/Password 타입의 Credential을 사용할 때는 다음 변수에 자동으로 값이 할당됩니다:
+
+- `${CREDS_ID}` - Credential ID 전체 (거의 사용되지 않음)
+- `${CREDS_ID_USR}` - 사용자 이름 부분
+- `${CREDS_ID_PSW}`- 비밀번호 부분
+
+예: `DB_CREDS = credentials('db-credentials')` 라면
+
+- `${DB_CREDS_USR}` - DB 사용자 이름
+- `${DB_CREDS_PSW}` - DB 비밀번호
+
+### Credentials 사용의 장점
+
+1. 보안 강화: 민감한 정보가 파이프라인 스크립트에 직접 노출되지 않음
+2. 로그 보호: Jenkins는 자동으로 로그에서 credential 값을 마스킹 처리
+3. 중앙 관리: 모든 credential을 한 곳에서 관리하고 필요할 때 업데이트 가능
+4. 권한 관리: 특정 사용자만 특정 credential에 접근할 수 있도록 권한 설정 가능
+</details>
