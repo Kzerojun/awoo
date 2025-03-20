@@ -10,7 +10,7 @@ spring:
         - id: pet-service
           uri: lb://pet
           predicates:
-            - Path=/pets/**
+            - Path=/api/pets/**
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:

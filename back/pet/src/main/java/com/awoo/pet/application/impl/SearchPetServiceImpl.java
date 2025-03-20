@@ -1,0 +1,21 @@
+package com.awoo.pet.application.impl;
+
+import com.awoo.pet.application.SearchPetService;
+import com.awoo.pet.domain.pet.Pet;
+import com.awoo.pet.domain.pet.PetRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class SearchPetServiceImpl implements SearchPetService {
+
+    private final PetRepository petRepository;
+
+    @Override
+    @Transactional
+    public Pet searchPet(final Integer petId){
+        return petRepository.searchPet(petId);
+    }
+}
