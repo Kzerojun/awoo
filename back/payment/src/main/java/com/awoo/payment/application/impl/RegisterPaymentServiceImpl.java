@@ -25,7 +25,7 @@ public class RegisterPaymentServiceImpl implements RegisterPaymentService {
                     throw new PaymentAlreadyRegisterException(ApplicationErrorCode.PAYMENT_ALREADY_REGISTERED);
                 });
 
-        PaymentEntity paymentEntity = paymentFactory.createPaymentEntity(command.memberId(),command.password());
+        PaymentEntity paymentEntity = paymentFactory.createPaymentEntity(command.memberId());
         paymentRepository.store(paymentEntity);
 
         return paymentEntity.getPaymentId();

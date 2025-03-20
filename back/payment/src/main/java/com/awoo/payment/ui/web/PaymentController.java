@@ -16,12 +16,10 @@ public class PaymentController {
 
     private final PaymentServiceFacade paymentServiceFacade;
 
-    @PostMapping
-    public  ApiUtils.ApiResult<RegisterPaymentResponse> register(@RequestBody RegisterPaymentRequest request,
-                                                                 @RequestHeader("X-User-Id") Integer memberId) {
+    @PostMapping("/register")
+    public  ApiUtils.ApiResult<RegisterPaymentResponse> register(@RequestHeader("X-User-Id") Integer memberId) {
         RegisterPaymentCommand command = RegisterPaymentCommand.builder()
                 .memberId(memberId)
-                .password(request.password())
                 .build();
 
         RegisterPaymentResponse response = paymentServiceFacade.register(command);
