@@ -1,11 +1,14 @@
 package com.awoo.payment.ui.web;
 
 
+import com.awoo.payment.application.command.ChargeBalanceCommand;
 import com.awoo.payment.application.command.RegisterPaymentCommand;
 import com.awoo.payment.application.query.FetchBalanceQuery;
 import com.awoo.payment.support.ApiUtils;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
+import com.awoo.payment.ui.facade.dto.request.ChargeBalanceRequest;
 import com.awoo.payment.ui.facade.dto.request.RegisterPaymentPasswordRequest;
+import com.awoo.payment.ui.facade.dto.response.ChargeBalanceResponse;
 import com.awoo.payment.ui.facade.dto.response.FetchBalanceResponse;
 import com.awoo.payment.ui.facade.dto.response.RegisterPaymentPasswordResponse;
 import com.awoo.payment.ui.facade.dto.response.RegisterPaymentResponse;
@@ -24,7 +27,6 @@ public class PaymentController {
         RegisterPaymentCommand command = RegisterPaymentCommand.builder()
                 .memberId(memberId)
                 .build();
-
         RegisterPaymentResponse response = paymentServiceFacade.register(command);
         return ApiUtils.success(response);
     }
@@ -40,6 +42,15 @@ public class PaymentController {
     public ApiUtils.ApiResult<FetchBalanceResponse> fetchBalance(@RequestHeader("X-User-Id") Integer memberId) {
         FetchBalanceQuery query = FetchBalanceQuery.builder().memberId(memberId).build();
         FetchBalanceResponse response = paymentServiceFacade.fetchBalance(query);
+        return ApiUtils.success(response);
+    }
+
+    @PostMapping("/charges")
+    public ApiUtils.ApiResult<ChargeBalanceResponse> chargeBalance(@RequestHeader("X-User-Id") Integer memberId,
+                                                                  @RequestHeader("Idempotency-Key") String idempotencyKey,
+                                                                  @RequestBody ChargeBalanceRequest request) {
+        ChargeBalanceCommand command = request.toCommand(idempotencyKey, memberId);
+        ChargeBalanceResponse response = paymentServiceFacade.chargeBalance(command);
         return ApiUtils.success(response);
     }
 }

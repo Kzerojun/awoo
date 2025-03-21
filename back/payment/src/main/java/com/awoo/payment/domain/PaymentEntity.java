@@ -21,7 +21,7 @@ public class PaymentEntity {
     private Integer paymentId;
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private Integer balance;
 
     private String password;
 
@@ -38,4 +38,9 @@ public class PaymentEntity {
     public void registerPassword(String password) {
         this.password = password;
     }
+
+    public void chargeBalance(Integer amount) {
+        this.balance += amount;
+    }
+
 }

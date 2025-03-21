@@ -40,4 +40,6 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
         BigDecimal balance = queryPaymentService.fetchBalance(query);
         return FetchBalanceResponse.create(balance);
     }
+
+
 }
