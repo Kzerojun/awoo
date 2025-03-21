@@ -44,5 +44,8 @@ public class PetController {
         return petServiceFacade.registerWalk(request, 1);
     }
 
-
+//    @GetMapping("/walks")
+//    public RegisterWalkResponse registerWalk(@RequestBody RegisterWalkRequest request){
+//        return petServiceFacade.registerWalk(request, 1);
+//    }
 }
