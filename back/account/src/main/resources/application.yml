@@ -1,9 +1,9 @@
 server:
-  port: 8082
+  port: 8086
 
 spring:
   application:
-    name: member
+    name: account
 
   jackson:
     time-zone: Asia/Seoul
