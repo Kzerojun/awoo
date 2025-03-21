@@ -1,5 +1,5 @@
 # Today I Learned
-
+<details> <summary><strong>1주차</strong></summary>
 <details> <summary><strong>0304</strong></summary>
 
 ## StoryBook
@@ -145,7 +145,9 @@
 - template의 인스턴스
 
 </details>
+</details>
 
+<details> <summary><strong>2주차</strong></summary>
 <details> <summary><strong>0310</strong></summary>
 
 ### _SSR/SSG의 필요성_
@@ -380,6 +382,8 @@ const eunsu: Developer = {
 
 </details>
 
+
+
 <details> <summary><strong>0314</strong></summary>
 
 ## TypeScript 기본 문법 2
@@ -444,4 +448,198 @@ let devPerson: Capt = {
 
 ```
 
+</details>
+</details>
+
+<details> <summary><strong>3주차</strong></summary>
+
+<details> <summary><strong>0317</strong></summary>
+
+## use client를 사용하는 컴포넌트 vs 사용하지 않는 컴포넌트 차이
+- Next.js에서 use client 지시어를 사용하면 클라이언트 컴포넌트(Client Component)로 동작하고, 사용하지 않음
+
+### _서버 컴포넌트(기본값)_
+- "use client"를 선언하지 않으면 기본적으로 **서버 컴포넌트(Server Component)**로 동작
+- 서버에서 렌더링된 후 HTML만 클라이언트로 전달
+- 브라우저에서 실행되는 JavaScript가 거의 없음
+- useEffect, useState, useContext 와 같은 훅을 사용할 수 없음 (리액트 상태 관리 불가능)
+- API 요청이나 데이터베이스 접근을 직접 수행 가능 (fetch나 DB 쿼리 가능)
+
+### _클라이언트 컴포넌트(use client) 사용_
+- "use client"를 선언하면 클라이언트 컴포넌트(Client Component)로 동작함
+- 서버에서 HTML을 생성한 후, 클라이언트에서 리액트 상태 관리 및 인터랙션 가능
+- useState, useEffect, useContext 같은 훅 사용 가능
+- API 요청을 클라이언트에서 수행해야 함 (서버에서 직접 데이터베이스 접근 불가)
+
+|                        | 서버 컴포넌트 (기본값)           | 클라이언트 컴포넌트 (`use client`)    |
+|------------------------|----------------------------------|----------------------------------------|
+| **렌더링 위치**        | 서버에서 렌더링 후 HTML만 전송    | 서버에서 HTML 생성 후 클라이언트에서 실행 |
+| **상태 관리**          | `useState`, `useEffect` 사용 불가 | `useState`, `useEffect` 사용 가능       |
+| **DB 접근**            | 가능 (`fetch`로 DB 접근 가능)     | 불가능 (API 요청으로 데이터 받아야 함)  |
+| **인터랙션**           | 불가능 (정적 UI만 제공)           | 가능 (버튼 클릭, 입력 등 상호작용 지원) |
+| **번들 크기**          | 작음 (JS 실행 없음)               | 큼 (JS 번들 포함됨)                     |
+| **사용 예시**          | 초기 데이터 로드, SEO 최적화 페이지| 버튼, 폼, 드롭다운 등 사용자 상호작용 요소 |
+
+</details>
+<details> <summary><strong>0318</strong></summary>
+
+## 회원가입 유효성 검사
+### _정규식_
+| 입력 허용 방식 | `replace()` 정규식 |
+| --- | --- |
+| **숫자 제외 (영문+한글만 허용)** | `/[^a-zA-Zㄱ-ㅎ가-힣\s]/g, ""` |
+| **숫자+특수문자 제외 (오직 영문+한글만)** | `/[^a-zA-Zㄱ-ㅎ가-힣]/g, ""` |
+| **한글만 허용** | `/[^ㄱ-ㅎ가-힣\s]/g, ""` |
+| **영문만 허용** | `/[^a-zA-Z\s]/g, ""` |
+| **숫자만 허용** | `/\D/g, ""` |
+
+### _유효성 검사_
+```
+// 이름 5자리 제한
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^ㄱ-ㅎ가-힣\s]/g, ""); // 한글만 입력 가능
+    if (value.length > 5) {
+      value = value.slice(0, 5);
+      setNameErr("이름은 최대 5자리까지 입력 가능합니다.");
+    } else if (value.length <= 4) {
+      setNameErr("");
+    } // 최대 5자리 제한
+
+    setName(value);
+  };
+
+  // 생년월일 입력 시 자동으로 YYYY-MM-DD 형식으로 변환
+  const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ""); // 숫자만 입력 가능
+    if (value.length > 8) value = value.slice(0, 8); // 최대 8자리 제한
+
+    // YYYY-MM-DD 형식
+    if (value.length >= 4) value = value.slice(0, 4) + "-" + value.slice(4);
+    if (value.length >= 7) value = value.slice(0, 7) + "-" + value.slice(7);
+
+    setBirthdate(value);
+  };
+
+  // 전화번호 입력 시 자동으로 000-0000-0000 형식으로 변환
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ""); //숫자만 입력 가능
+    if (value.length > 11) value = value.slice(0, 11); // 최대 11자리
+
+    if (value.length >= 3) value = value.slice(0, 3) + "-" + value.slice(3);
+    if (value.length >= 8) value = value.slice(0, 8) + "-" + value.slice(8);
+
+    setPhonenum(value);
+  };
+
+  // 이메일 유효성 검사 함수
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
+
+  // 이메일 변경 시
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setEmail(value);
+    const isValid = validateEmail(value);
+    setIsValidEmail(isValid); // 입력할 때마다 검사
+    if (!isValid) {
+      setEmailMessage(""); // 유요하지 않은 이메일일 경우 중복 검사 메시지 초기화
+    }
+  };
+
+  // 이메일 중복 체크 - 백엔드 연결 필요
+  const handleEmailCheck = () => {
+    if (!isValidEmail || email.length === 0) {
+      setEmailMessage("올바른 이메일을 입력하세요.");
+      return;
+    }
+
+    // 백엔드 api 호출 + 결과값을 isDuplicate에 담기
+    if (isDuplicate) {
+      setEmailMessage("이미 사용 중인 이메일입니다.");
+    } else {
+      setEmailMessage("사용 가능한 이메일입니다.");
+    }
+  };
+
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = (password: string) => {
+    const passwordRegx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    return passwordRegx.test(password);
+  };
+
+  // 비밀번호 입력 시 유효성 검사
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setPassword1(value);
+
+    if (!validatePassword(value)) {
+      setIsValidPassword(false);
+      setPasswordMessage("최소 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
+    } else {
+      setIsValidPassword(true);
+      setPasswordMessage("사용 가능한 비밀번호입니다.");
+    }
+
+    if (value.length === 0) {
+      setPassword1("");
+      setPasswordMessage("");
+    }
+
+    setIsMatch(value === password2);
+  };
+
+  // 비밀번호 확인 입력 변경 시 일치 여부 확인
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    setPassword2(value);
+    setIsMatch(password1 === value);
+  };
+  ```
+
+</details>
+<details> <summary><strong>0319</strong></summary>
+
+## 스택(Stack)과 큐(Queue)
+| 자료 구조 | 삭제되는 요소 |
+| --- | --- |
+| 스택(Stack) | 가장 최근에 들어온 데이터 |
+| 큐(Queue) | 가장 먼저 들어온 데이터 |
+| 우선순위 큐(Priority Queue) | 가장 우선순위가 높은 데이터 |
+
+### _큐 (Queue)_
+- 컴퓨터의 기본적인 자료 구조의 한 가지로, 먼저 집어넣은 데이터가 먼저 나오는 FIFO 구조로 저장하는 형식
+- 우선순위 큐는 우선순위의 개념을 큐에 도입한 자료구조로, 데이터들이 우선순위를 가지고 있고 우선순위가 높은 데이터가 먼저 나가는 자료구조
+   - 우선순위 큐는 배열, 연결리스트, 힙으로 구현 가능. 이중에서 **힙(heap)으로 구현하는 것이 가장 효율적**
+   - 반면, 힙트리는 완전이진트리 구조이므로 힙트리의 높이는 log2(n+1)이며, 힙의 시간복잡도는 O(log2n)이다.
+
+### _힙 (heap)_
+- 힙(heap)은 최댓값 및 최솟갑을 찾아내는 연산을 빠르게 하기 위해 고안된 완전이진트리를 기본으로 한 자료구조
+   - A가 B의 부모노드이면, A의 key값과 B의 key값 사이에는 대소관계가 성립한다.(반정렬 상태)
+   - 키 값의 대소 관계는 부모/자식 간에만 성립하고, 형제노드 사이에는 대소 관계가 정해지지 않는다.
+   - 이진탐색트리(BST)와 달리 중복된 값이 허용된다.
+
+- 힙에는 '최대 힙'과 '최소 힙'이 있다.
+   - 최대 힙 : 부모 노드의 키 값이 자식 노드보다 크거나 같은 완전이진트리이다.
+❝ key(부모노드) ≥ key(자식노드) ❞
+   - 최소 힙: 부모 노드의 키 값이 자식 노드보다 작거나 같은 완전이진트리이다.
+   ❝ key(부모노드) ≥ key(자식노드) ❞
+
+- 힙은 가장 높은 (혹은 가장 낮은) 우선 순위를 가지는 노드가 항상 루트노드에 오게 되는 특징이 있으며, 이를 응용하면 우선순위 큐와 같은 추상적 자료형을 구현할 수 있다.
+
+
+</details>
+<details> <summary><strong>0320</strong></summary>
+
+## 힙의 구현
+
+## 파이썬 힙 자료구조
+
+
+</details>
+<details> <summary><strong>0321</strong></summary>
+
+
+</details>
 </details>
