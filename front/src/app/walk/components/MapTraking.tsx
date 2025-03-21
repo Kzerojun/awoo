@@ -6,7 +6,13 @@ import { Map, MapMarker, Polyline } from "react-kakao-maps-sdk";
 import WalkingLoading from "./WalkingLoading";
 
 const MapTraking = () => {
-  const { positions, currentPosition, startPosition, isTracking, distance } = useLocationTracking();
+  const {
+    positions = [],
+    currentPosition,
+    startPosition,
+    isTracking,
+    distance,
+  } = useLocationTracking();
   const [isScriptLoaded, setIsScriptLoaded] = useState<boolean>(false);
   const mapRef = useRef<kakao.maps.Map | null>(null); // 지도 사이즈 문제 해결
 
@@ -19,9 +25,7 @@ const MapTraking = () => {
       }
 
       const script = document.createElement("script");
-      // 로컬 API KEY 지도
-      // script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_LOCAL_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
-      // 배포 API KEY 지도
+      // 카카오맵 API KEY 지도
       script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
       script.async = true;
 
@@ -46,14 +50,11 @@ const MapTraking = () => {
   }, []);
 
   useEffect(() => {
-    if (isScriptLoaded && mapRef.current) {
-      setTimeout(() => {
-        console.log("지도 리사이즈 실행");
-        if (mapRef.current) {
-          mapRef.current.relayout();
-        }
-      }, 300);
-    }
+    if (!isScriptLoaded || !mapRef.current) return; // 지도가 로드되지 않았을 때 렌더링 방지
+    setTimeout(() => {
+      console.log("지도 리사이즈 실행");
+      mapRef.current?.relayout();
+    }, 300);
   }, [isScriptLoaded]);
 
   if (!isScriptLoaded) {
@@ -78,26 +79,27 @@ const MapTraking = () => {
         }} // ✅ `ref` 바인딩 방식 수정
       >
         {/* 출발 위치 */}
-        {startPosition && (
+        {isScriptLoaded && startPosition && (
           <MapMarker position={{ lat: startPosition[0], lng: startPosition[1] }}>
             <div className="text-xs bg-white p-1 rounded">출발</div>
           </MapMarker>
         )}
 
         {/* 사용자가 이동한 경로에 발자국 마커 표시 */}
-        {positions.map((pos, index) => (
-          <MapMarker
-            key={index}
-            position={{ lat: pos[0], lng: pos[1] }}
-            image={{
-              src: "/icons/walking/walking_paw.svg",
-              size: { width: 30, height: 30 },
-            }}
-          />
-        ))}
+        {/* {isScriptLoaded &&
+          positions.map((pos, index) => (
+            <MapMarker
+              key={index}
+              position={{ lat: pos[0], lng: pos[1] }}
+              image={{
+                src: "/icons/walking/single_paw.svg",
+                size: { width: 30, height: 30 },
+              }}
+            />
+          ))} */}
 
         {/* 사용자의 현재 위치를 나타내는 마커 */}
-        {currentPosition && (
+        {isScriptLoaded && currentPosition && (
           <MapMarker
             position={{ lat: currentPosition[0], lng: currentPosition[1] }}
             image={{
@@ -108,27 +110,31 @@ const MapTraking = () => {
         )}
 
         {/* 사용자가 이동한 경로를 선으로 연결 */}
-        <Polyline
-          path={positions.map((pos) => ({ lat: pos[0], lng: pos[1] }))}
-          strokeWeight={5}
-          strokeColor={"#9eebd1"}
-          strokeOpacity={0.7}
-          strokeStyle={"solid"}
-        />
-
-        {positions.map(
-          (pos, index) =>
-            index % 2 === 0 && ( // 📌 너무 촘촘하지 않게 2칸마다 표시
-              <MapMarker
-                key={index}
-                position={{ lat: pos[0], lng: pos[1] }}
-                image={{
-                  src: "/icons/walking/walking_paw.svg", // 🐾 발자국 아이콘으로 경로 표현
-                  size: { width: 20, height: 20 },
-                }}
-              />
-            )
+        {isScriptLoaded && positions && positions?.length > 0 && (
+          <Polyline
+            path={positions.map((pos) => ({ lat: pos[0], lng: pos[1] }))}
+            strokeWeight={5}
+            strokeColor={"#9eebd1"}
+            strokeOpacity={0.7}
+            strokeStyle={"solid"}
+          />
         )}
+
+        {isScriptLoaded &&
+          positions &&
+          positions.map(
+            (pos, index) =>
+              index % 80 === 0 && (
+                <MapMarker
+                  key={index}
+                  position={{ lat: pos[0], lng: pos[1] }}
+                  image={{
+                    src: "/icons/walking/single_paw.svg", // 🐾 발자국 아이콘으로 경로 표현
+                    size: { width: 20, height: 20 },
+                  }}
+                />
+              )
+          )}
 
         {/* 트래킹 종료시 마지막 위치에 깃발 마커 표시 */}
         {!isTracking && currentPosition && (
