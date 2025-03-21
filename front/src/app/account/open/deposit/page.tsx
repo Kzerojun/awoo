@@ -52,7 +52,7 @@ const Page = () => {
         {/* ✅ 상품 상세 탭 추가 */}
         <ProductDetails />
       </div>
-      <ProductDocs />;
+      <ProductDocs />
     </div>
   );
 };
