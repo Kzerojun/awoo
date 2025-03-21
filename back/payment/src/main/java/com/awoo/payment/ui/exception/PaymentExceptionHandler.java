@@ -17,6 +17,11 @@ public class PaymentExceptionHandler {
         return newResponse(e.getMessage(),e.getHttpStatus());
     }
 
+    @ExceptionHandler(UiException.class)
+    public ResponseEntity<?> handleApplicationException(UiException e) {
+        return newResponse(e.getMessage(),e.getHttpStatus());
+    }
+
     private ResponseEntity<ApiUtils.ApiResult<?>> newResponse(String message, HttpStatus status) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

@@ -20,12 +20,12 @@ public class RegisterPaymentServiceImpl implements RegisterPaymentService {
 
     @Override
     public Integer registerPayment(RegisterPaymentCommand command) {
-        paymentRepository.findById(command.memberId())
+        paymentRepository.findByMemberId(command.memberId())
                 .ifPresent(payment -> {
                     throw new PaymentAlreadyRegisterException(ApplicationErrorCode.PAYMENT_ALREADY_REGISTERED);
                 });
 
-        PaymentEntity paymentEntity = paymentFactory.createPaymentEntity(command.memberId(),command.password());
+        PaymentEntity paymentEntity = paymentFactory.createPaymentEntity(command.memberId());
         paymentRepository.store(paymentEntity);
 
         return paymentEntity.getPaymentId();

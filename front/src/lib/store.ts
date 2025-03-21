@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 // 슬라이스 리듀서 가져오기
 import counterReducer from "./slices/counterSlice";
+import walkReducer from "./slices/walkSlice";
 
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     // 여기에 추가 리듀서들을 넣을 수 있습니다
+    walk: walkReducer, // 산책 관련 리듀서
   },
   devTools: process.env.NODE_ENV !== "production",
 });
