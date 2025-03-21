@@ -29,4 +29,8 @@ public class PetResponseMapper {
     public RegisterWalkResponse registerWalk(final Walk entity) {
         return RegisterWalkResponse.fromEntity(entity);
     }
+
+    public SearchWalkResponse searchWalk(final Walk entity){
+        return SearchWalkResponse.fromEntity(entity);
+    }
 }

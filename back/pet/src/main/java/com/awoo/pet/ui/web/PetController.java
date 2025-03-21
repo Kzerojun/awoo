@@ -39,13 +39,13 @@ public class PetController {
     }
 
 
-    @PostMapping("/walks")
+    @PostMapping("/{petId}/walks")
+    public RegisterWalkResponse registerWalk(@PathVariable Integer petId, @RequestBody RegisterWalkRequest request){
+        return petServiceFacade.registerWalk(request, petId, 1);
+    }
+
+    @GetMapping("/walks")
     public RegisterWalkResponse registerWalk(@RequestBody RegisterWalkRequest request){
         return petServiceFacade.registerWalk(request, 1);
     }
-
-//    @GetMapping("/walks")
-//    public RegisterWalkResponse registerWalk(@RequestBody RegisterWalkRequest request){
-//        return petServiceFacade.registerWalk(request, 1);
-//    }
 }

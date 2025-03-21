@@ -21,7 +21,6 @@ public class RegisterPetServiceImpl implements RegisterPetService {
     public Integer registerPet(final RegisterPetCommand command) {
         Pet entity = petFactory.registerPetEntity(command);
         petRepository.registerPet(entity);
-        System.out.println(entity.getPetId());
         return entity.getPetId();
     }
 }

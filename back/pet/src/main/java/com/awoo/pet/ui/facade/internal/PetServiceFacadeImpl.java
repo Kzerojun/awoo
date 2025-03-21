@@ -24,6 +24,7 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     private final ModifyPetService modifyPetService;
     private final SearchPetListService searchPetListService;
     private final RegisterWalkService registerWalkService;
+    private final SearchWalkService searchWalkService;
     private final PetResponseMapper mapper;
 
     @Override

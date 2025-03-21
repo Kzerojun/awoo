@@ -23,10 +23,10 @@ public interface JpaPetRepository extends JpaRepository<Pet, Integer>, PetReposi
     default void registerPet(Pet pet) {
         save(pet);
     }
-//
-//    @Override
-//    default Pet searchPet(Integer petId) {
-//        return findByPetId(petId).orElse(null);
-//    }
+
+    @Override
+    default Optional<Pet> searchPet(Integer petId) {
+        return findByPetId(petId);
+    }
 
 }
