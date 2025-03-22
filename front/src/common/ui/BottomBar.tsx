@@ -35,7 +35,7 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
   ];
 
   // 특정 페이지에서 하단바 숨김 (필요할 경우 추가 가능)
-  const hideOnPages = ["/#"];
+  const hideOnPages = ["/#", "/my/profile/withdraw"];
   if (hideOnPages.includes(currentPath)) return null; // 특정 페이지에서는 하단바 숨김
 
   return (
