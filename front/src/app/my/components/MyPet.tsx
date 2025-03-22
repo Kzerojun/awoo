@@ -2,6 +2,9 @@
 import vector from "../../../../public/icons/mypage/vector.svg";
 import Image from "next/image";
 import my from "../../../../public/icons/bottombar/deactive/my.svg";
+import nori1 from "../../../../public/icons/mypage/nori-1.svg";
+import nori2 from "../../../../public/icons/mypage/nori-2.svg";
+import nori3 from "../../../../public/icons/mypage/nori-3.svg";
 import Link from "next/link";
 
 export default function MyPet() {
@@ -14,9 +17,9 @@ export default function MyPet() {
           </div>
           <div className="mr-3 mt-2">
             <div className="flex space-x-4 ml-1">
-              <Image src={my} alt="반려동물 아이콘" width={43} height={43} />
-              <Image src={my} alt="반려동물 아이콘" width={43} height={43} />
-              <Image src={my} alt="반려동물 아이콘" width={43} height={43} />
+              <Image src={nori1} alt="반려동물 아이콘" width={60} height={60} />
+              <Image src={nori2} alt="반려동물 아이콘" width={60} height={60} />
+              <Image src={nori3} alt="반려동물 아이콘" width={60} height={60} />
             </div>
           </div>
         </div>
