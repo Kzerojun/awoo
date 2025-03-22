@@ -1065,6 +1065,7 @@ Jenkins Credentials 시스템은 다음과 같은 민감한 정보를 안전하�
 ### Pipeline에서 Credentials 사용하기
 
 - 환경 변수로 정의하기
+
   ```groovy
   environment {
       // Secret Text 타입의 Credential 사용
@@ -1077,6 +1078,7 @@ Jenkins Credentials 시스템은 다음과 같은 민감한 정보를 안전하�
       DOCKER_TAG = "${env.BUILD_NUMBER}"
   }
   ```
+
 - Credentials 활용 예시
   ```groovy
   stage('Create Environment File') {
@@ -1119,4 +1121,68 @@ Username/Password 타입의 Credential을 사용할 때는 다음 변수에 자�
 2. 로그 보호: Jenkins는 자동으로 로그에서 credential 값을 마스킹 처리
 3. 중앙 관리: 모든 credential을 한 곳에서 관리하고 필요할 때 업데이트 가능
 4. 권한 관리: 특정 사용자만 특정 credential에 접근할 수 있도록 권한 설정 가능
+</details>
+
+<details>
+<summary><strong>0320</strong></summary>
+
+# Apache Kafka와 ZooKeeper TIL
+
+## Kafka 개요
+
+> Apache Kafka는 높은 처리량과 낮은 지연 시간을 제공하는 분산 이벤트 스트리밍 플랫폼이다. LinkedIn에서 처음 개발되었으며, 현재는 Apache Software Foundation의 오픈소스 프로젝트로 유지되고 있다. 실시간 데이터 파이프라인과 스트리밍 애플리케이션을 구축하는 데 널리 사용된다.
+
+## Kafka의 주요 구성 요소
+
+1. `Producer`: 데이터를 생성하고 Kafka 클러스터로 전송하는 클라이언트
+2. `Consumer`: Kafka 클러스터에서 데이터를 구독하고 처리하는 클라이언트
+3. `Topic`: 메시지를 카테고리별로 구분하는 단위, 데이터 스트림의 논리적 채널
+4. `Partition`: 각 토픽이 분할되는 단위로, 병렬 처리와 확장성을 위해 사용
+5. `Broker`: Kafka 서버로, 클러스터를 구성하는 개별 노드
+6. `Consumer Group`: 여러 Consumer가 협력하여 토픽의 메시지를 처리하는 그룹
+
+## Kafka의 특징
+
+- `고성능`: 디스크 기반 지속성에도 불구하고 높은 처리량 제공
+- `확장성`: 수평적 확장이 용이한 분산 시스템
+- `내구성`: 메시지가 디스크에 저장되어 데이터 손실 방지
+- `고가용성`: 복제를 통한 내결함성 제공
+- `실시간 처리`: 스트림 처리 애플리케이션 지원
+
+## ZooKeeper 개요
+
+> Apache ZooKeeper는 분산 애플리케이션을 위한 조정 서비스다. 분산 시스템의 구성 정보 관리, 이름 지정, 동기화, 그룹 서비스 등을 제공한다. Kafka를 포함한 많은 분산 시스템에서 메타데이터 관리와 리더 선출에 사용된다.
+
+## ZooKeeper의 주요 기능
+
+- `구성 관리`: 분산 시스템의 설정 정보 중앙화
+- `리더 선출`: 분산 시스템에서 마스터 노드 선출 메커니즘 제공
+- `동기화 서비스`: 분산 노드 간 데이터 일관성 유지
+- `이름 서비스`: 분산 시스템의 리소스 네이밍 제공
+- `분산 잠금`: 공유 리소스에 대한 동시 접근 제어
+
+## Kafka와 ZooKeeper의 관계
+
+Kafka는 전통적으로 다음과 같은 작업을 위해 ZooKeeper에 의존했다:
+
+- 브로커 관리(추가/제거)
+- 토픽 구성 관리
+- 파티션 리더 선출
+- 클러스터 멤버십 관리
+- ACL(Access Control List) 관리
+
+그러나 최근 Kafka 버전(2.8+)에서는 KRaft(Kafka Raft) 모드를 도입하여 ZooKeeper 의존성을 제거하고 있다. KRaft 모드에서는 Kafka 자체 내에서 메타데이터 관리와 리더 선출을 처리한다.
+
+## 실제 활용 사례
+
+- `로그 집계`: 다양한 서비스에서 발생하는 로그를 중앙화
+- `메시징 시스템`: 비동기 통신을 위한 메시지 브로커
+- `활동 추적`: 사용자 행동 데이터 실시간 수집
+- `IoT 데이터 처리`: 센서 데이터 스트림 수집 및 처리
+- `이벤트 소싱`: 이벤트 기반 아키텍처의 기반
+
+## 오늘의 학습 포인트
+
+> Kafka와 ZooKeeper는 대규모 분산 시스템에서 중요한 역할을 담당하지만, Kafka는 점차 ZooKeeper 의존성을 줄이는 방향으로 발전하고 있다. 특히 실시간 데이터 처리와 이벤트 기반 아키텍처가 중요해지는 현대 시스템에서 Kafka의 역할이 더욱 중요해지고 있으며, 이를 효율적으로 활용하기 위한 아키텍처 설계가 중요하다.
+
 </details>
