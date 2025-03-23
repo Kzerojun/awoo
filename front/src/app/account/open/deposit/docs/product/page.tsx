@@ -20,22 +20,6 @@ const ProductManualPage = () => {
           <li>입출금이 자유로운 모바일 계좌</li>
           <li>멍페이 및 자동이체 연동</li>
           <li>AwoO 내부 계좌 간 수수료 면제</li>
-          <li>잔액 기준 차등 금리 적용</li>
-        </ul>
-
-        <h3 className="text-lg font-semibold mt-4 mb-2">📌 금리 및 수수료 안내</h3>
-        <p className="text-gray-700">
-          본 상품은 예금자 보호법에 따라 보호되며, 세부적인 금리 및 수수료 정책은 아래 내용을
-          참고하세요.
-        </p>
-
-        <ul className="list-disc ml-4 text-gray-700 space-y-1 mt-3">
-          <li>
-            기본 금리: <strong>연 0.1% (세전)</strong>
-          </li>
-          <li>100만 원 이하: 연 0.1%</li>
-          <li>100만 원 초과 ~ 500만 원 이하: 연 0.2%</li>
-          <li>500만 원 초과: 연 0.3%</li>
         </ul>
       </div>
 
