@@ -59,7 +59,7 @@ export default function EditPassword() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full max-w-md mx-auto bg-[#FCFCFC]">
+    <div className="flex flex-col w-full h-full max-w-md mx-auto bg-[#FCFCFC] pt-14">
       <TopBar title="비밀번호 변경" />
 
       <div className="w-full px-6 py-6">
