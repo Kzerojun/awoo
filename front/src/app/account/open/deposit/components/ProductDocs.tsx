@@ -52,7 +52,7 @@ const ProductDocs = () => {
 
       {/* 모달 */}
       {modalType && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black flex justify-center items-center z-50">
           <div className="bg-white max-w-xl w-[90%] max-h-[90vh] overflow-y-auto rounded-lg shadow-lg relative p-6">
             <button
               onClick={handleClose}
