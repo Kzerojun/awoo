@@ -39,12 +39,6 @@ const ProfileImage = ({
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const profileImage = useAppSelector((state) => state.register.profileImage);
-
-  useEffect(() => {
-    console.log("스토어에 저장된 프로필 이미지:", profileImage);
-  }, [profileImage]);
-
   // 이미지 바꾸는 핸들러
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
