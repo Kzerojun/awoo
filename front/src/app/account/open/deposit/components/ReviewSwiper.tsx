@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 
 const reviews = [
-  { text: "멍페이랑 자동 연결돼서 결제할 때 진짜 편해요!", user: "dani***en" },
+  { text: "멍페이랑 자동 연결돼서 결제할 때 진짜 편했어요!", user: "dani***en" },
   { text: "적금이랑 바로 연결되니까 따로 이체 안 해도 돼서 좋아요.", user: "pupp***mom" },
   { text: "AwoO 통장 하나로 서비스 전부 연결되는 게 최고!", user: "dogl***ve" },
 ];
@@ -25,7 +25,7 @@ export default function SimpleReviewSlider() {
         AwOO 유저들의 후기
         <ChatBubbleBottomCenterTextIcon className="w-5 h-5 text-aqua" />
       </h2>
-      <div className="bg-white p-5 rounded-xl shadow-md text-sm text-gray-800 leading-relaxed transition-opacity duration-500">
+      <div className="bg-white p-5 rounded-xl shadow-md text-sm text-gray-800 leading-relaxed transition-opacity duration-500 min-h-[100px] flex flex-col justify-between">
         <p>“{reviews[current].text}”</p>
         <div className="mt-2 text-xs text-gray-400 italic text-right">
           - {reviews[current].user}
