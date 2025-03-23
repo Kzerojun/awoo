@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { DevicePhoneMobileIcon } from "@heroicons/react/24/outline";
 import { CalendarIcon } from "@heroicons/react/24/outline";
@@ -8,14 +8,21 @@ import { LockClosedIcon } from "@heroicons/react/24/outline";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/store";
+import { setRegisterData } from "@/lib/slices/registerSlice";
+
 import gender from "../../../../public/icons/signup/gender.svg";
-
 import paw from "../../../../public/icons/white_paw.svg";
-
 import SignupPolicy from "./SignupPolicy";
 import Button from "@/common/ui/Button";
 
 const SignupForm = () => {
+  const router = useRouter();
+
+  // 스토어에 정보 저장하기 위한 dispatch 정의
+  const dispatch = useAppDispatch();
+
   const [name, setName] = useState<string>(""); // 이름
   const [nameErr, setNameErr] = useState<string>("");
   const [birthdate, setBirthdate] = useState<string>(""); // 생년월일
@@ -31,6 +38,9 @@ const SignupForm = () => {
   const [passwordMessage, setPasswordMessage] = useState<string>(""); // 비밀번호 메시지
   const [isMatch, setIsMatch] = useState<boolean>(true); // 비밀번호 일치
   const [showPassword, setShowPassword] = useState<boolean>(false); // 보여줄까 말까
+
+  // 약관 동의 체크
+  const [privacyAgreed, setPrivacyAgreed] = useState<boolean>(false);
 
   // 이름 5자리 제한
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,8 +105,10 @@ const SignupForm = () => {
     // 백엔드 api 호출 + 결과값을 isDuplicate에 담기
     if (isDuplicate) {
       setEmailMessage("이미 사용 중인 이메일입니다.");
+      setIsDuplicate(true);
     } else {
       setEmailMessage("사용 가능한 이메일입니다.");
+      setIsDuplicate(false);
     }
   };
 
@@ -128,15 +140,58 @@ const SignupForm = () => {
   };
 
   // 비밀번호 확인 입력 변경 시 일치 여부 확인
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setPassword2(value);
     setIsMatch(password1 === value);
   };
 
+  const goToProfileRegister = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      !name ||
+      !birthdate ||
+      !genderValue ||
+      !email ||
+      !password1 ||
+      !password2 ||
+      !isValidEmail ||
+      isDuplicate ||
+      !isValidPassword ||
+      !isMatch ||
+      !privacyAgreed
+    ) {
+      console.log("privacyAgreed", privacyAgreed);
+      console.log("birthdate", birthdate);
+      console.log("phonenum", phonenum);
+      alert("모든 입력값을 정확히 입력해주세요");
+      return;
+    }
+
+    // 스토어에 데이터 저장하기
+    dispatch(
+      setRegisterData({
+        name,
+        birthDate: birthdate,
+        gender: genderValue as "M" | "F",
+        phone: phonenum,
+        email,
+        password: password1,
+        privacyAgreed,
+      })
+    );
+
+    setTimeout(() => {
+      router.push("/signup/profile");
+    }, 100);
+  };
+
   return (
     <>
-      <form className="flex flex-col justify-center items-center gap-4">
+      <form
+        className="flex flex-col justify-center items-center gap-4"
+        onSubmit={goToProfileRegister}
+      >
         {/* 이름 입력 */}
         <div className="flex flex-col justify-center items-start">
           <div className="flex items-center justify-start w-72 gap-4 pb-2 border-b-1 border-b-custom-gray focus-within:border-b-aqua">
@@ -150,6 +205,7 @@ const SignupForm = () => {
               value={name}
               onChange={handleNameChange}
               className="text-sm placeholder:text-sm placeholder:text-opacity-50 focus:outline-none"
+              required
             />
           </div>
           {nameErr && <div className="text-xs text-error pt-2">{nameErr}</div>}
@@ -169,6 +225,7 @@ const SignupForm = () => {
               value={birthdate}
               onChange={handleBirthdateChange}
               className="text-sm placeholder:text-sm placeholder:text-opacity-50 w-2/3 focus:outline-none"
+              required
             />
           </div>
           {/* 성별 */}
@@ -182,6 +239,7 @@ const SignupForm = () => {
               value={genderValue}
               onChange={(e) => setGenderValue(e.target.value)}
               className="text-sm"
+              required
             >
               <option value="" disabled className="text-custom-gray">
                 성별
@@ -204,6 +262,7 @@ const SignupForm = () => {
             value={phonenum}
             className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
             onChange={handlePhoneChange}
+            required
           />
         </div>
 
@@ -222,6 +281,7 @@ const SignupForm = () => {
               value={email}
               className="placeholder:text-sm placeholder:text-opacity-50 text-sm w-44 focus:outline-none"
               onChange={handleEmailChange}
+              required
             />
 
             <button
@@ -251,8 +311,13 @@ const SignupForm = () => {
               value={password1}
               className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
               onChange={handlePasswordChange}
+              required
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="w-6 h-6"
+            >
               {showPassword ? (
                 <EyeIcon className="w-6 h-6 text-aqua inline" />
               ) : (
@@ -282,6 +347,7 @@ const SignupForm = () => {
               value={password2}
               className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
               onChange={handleConfirmPasswordChange}
+              required
             />
           </div>
           {/* 비밀번호 일치 여부 */}
@@ -290,7 +356,7 @@ const SignupForm = () => {
           )}
         </div>
         {/* 약관 컴포넌트 부분 */}
-        <SignupPolicy />
+        <SignupPolicy privacyAgreed={privacyAgreed} setPrivacyAgreed={setPrivacyAgreed} />
 
         {/* 회원가입 버튼 부분 */}
         <Button text="회원가입" img={paw} type="submit" />

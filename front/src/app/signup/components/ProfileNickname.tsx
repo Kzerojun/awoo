@@ -2,23 +2,64 @@
 import React, { useState, ChangeEvent } from "react";
 import Button from "@/common/ui/Button";
 import paw from "../../../../public/icons/white_paw.svg";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { setRegisterData, clearRegisterData } from "@/lib/slices/registerSlice";
+import urlToFile from "../hooks/useChangeFile";
+import { useSignup } from "@/hooks/user/useSignup";
 
 interface ProfileNicknameProps {
   nickname: string;
   setNickname: (v: string) => void;
+  imageFile: File | null;
+  selectedAvatar: string;
 }
 
-const ProfileNickname = ({ nickname, setNickname }: ProfileNicknameProps) => {
+const ProfileNickname = ({
+  nickname,
+  setNickname,
+  imageFile,
+  selectedAvatar,
+}: ProfileNicknameProps) => {
+  const dispatch = useAppDispatch();
+  const registerData = useAppSelector((state) => state.register);
+  const { mutate: signupMutate, isPending } = useSignup();
+
   const maxLength: number = 6;
 
   // 닉네임 변경 핸들러
   const handleNickname = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.slice(0, maxLength);
     setNickname(value);
+    dispatch(
+      setRegisterData({
+        nickname,
+      })
+    );
   };
 
   // 회원가입 완료 (백엔드 연결)
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    const requestDto = {
+      ...registerData,
+    };
+
+    signupMutate(
+      {
+        requestDto,
+        imageFile,
+        selectedAvatar,
+      },
+      {
+        onSuccess: (res) => {
+          console.log("회원가입 성공!", res);
+          // TODO: 로그인 처리, 페이지 이동
+        },
+        onError: (err) => {
+          console.error("회원가입 실패", err);
+        },
+      }
+    );
+  };
   return (
     <div className="h-full relative flex flex-col justify-center items-center gap-y-5">
       <h1 className="absolute top-6 left-0 w-full text-center text-xl z-10">프로필 등록 (2/2)</h1>

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import Button from "@/common/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 
 const defaultAvatars = [
   "/images/avatars/basic.jpg",
@@ -15,13 +16,26 @@ const defaultAvatars = [
 
 interface ProfileImageProps {
   imagePreview: string | null;
-  setImagePreview: (v: string | null) => void;
+  setImagePreview: (v: string) => void;
+  imageFile: File | null;
+  setImageFile: (v: File | null) => void;
+  selectedAvatar: string | null;
+  setSelectedAvatar: (v: string) => void;
 }
 
-const ProfileImage = ({ imagePreview, setImagePreview }: ProfileImageProps) => {
+const ProfileImage = ({
+  imagePreview,
+  setImagePreview,
+  imageFile,
+  setImageFile,
+  selectedAvatar,
+  setSelectedAvatar,
+}: ProfileImageProps) => {
+  const dispatch = useAppDispatch();
+
   // const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [selectedAvatar, setSelectedAvatar] = useState<string>(defaultAvatars[0]);
+  // const [imageFile, setImageFile] = useState<File | null>(null);
+  // const [selectedAvatar, setSelectedAvatar] = useState<string>(defaultAvatars[0]);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,9 +58,6 @@ const ProfileImage = ({ imagePreview, setImagePreview }: ProfileImageProps) => {
     setSelectedAvatar(url);
     setShowAvatarModal(false);
   };
-
-  // 프로필 이미지 업로드 (백엔드 연결)
-  const handleUpload = () => {};
 
   return (
     <div className="h-full relative flex flex-col justify-center items-center gap-y-5">
@@ -76,12 +87,6 @@ const ProfileImage = ({ imagePreview, setImagePreview }: ProfileImageProps) => {
                 backgroundColor="white"
                 fontColor="aqua"
                 border="aqua"
-                width="medium"
-              />
-              <Button
-                onClick={handleUpload}
-                text="이미지 업로드"
-                disabled={!imageFile}
                 width="medium"
               />
             </div>
