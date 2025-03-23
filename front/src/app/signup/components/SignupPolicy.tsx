@@ -4,7 +4,12 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const SignupPolicy = () => {
+interface SignupPolicyProps {
+  privacyAgreed: boolean;
+  setPrivacyAgreed: (v: boolean) => void;
+}
+
+const SignupPolicy = ({ privacyAgreed, setPrivacyAgreed }: SignupPolicyProps) => {
   const route = useRouter();
   const [isAllAgree, setIsAllAgree] = useState<boolean>(false);
   const [isPersonalAgree, setIsPersonalAgree] = useState<boolean>(false);
@@ -26,6 +31,7 @@ const SignupPolicy = () => {
     setIsLocationCollectAgree(true);
     setIsLocationUseAgree(true);
     setIsAllAgree(true);
+    setPrivacyAgreed(true);
   };
 
   // 전체 동의 취소
@@ -36,6 +42,7 @@ const SignupPolicy = () => {
     setIsLocationCollectAgree(false);
     setIsLocationUseAgree(false);
     setIsAllAgree(false);
+    setPrivacyAgreed(false);
   };
 
   return (
