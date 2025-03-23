@@ -9,7 +9,7 @@ export default function Withdraw() {
   const [isChecked, setIsChecked] = useState(false);
 
   return (
-    <div className="flex flex-col w-full h-full max-w-md mx-auto bg-[#FCFCFC]">
+    <div className="flex flex-col w-full h-full max-w-md mx-auto bg-[#FCFCFC] pt-14">
       <TopBar title="탈퇴" />
 
       <div className="w-full px-6 py-6">

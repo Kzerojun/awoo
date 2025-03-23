@@ -7,7 +7,7 @@ import editIcon from "./../../../../../public/icons/profile/edit.svg"; // 경로
 
 export default function Edit() {
   return (
-    <div className="flex flex-col items-center w-full h-full max-w-md mx-auto px-8 py-6 bg-[#FCFCFC]">
+    <div className="flex flex-col items-center w-full h-full max-w-md mx-auto px-8 py-6 bg-[#FCFCFC] pt-14">
       <TopBar title="프로필 수정" />
 
       <div className="w-full mt-8">

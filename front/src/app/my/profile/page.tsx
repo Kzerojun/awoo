@@ -10,7 +10,8 @@ export default function Profile() {
     <div className="flex flex-col items-center w-full h-full max-w-md mx-auto bg-[#FCFCFC]">
       <TopBar title="프로필" />
 
-      <div className="w-full px-6">
+      {/* pt-14 추가하여 TopBar 높이만큼 상단 여백 확보 */}
+      <div className="w-full px-6 pt-14">
         <ProfilePicture />
         <UserInformation />
 
