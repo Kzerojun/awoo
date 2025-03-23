@@ -7,15 +7,36 @@ import ProfileImage from "../components/ProfileImage";
 import ProfileNickname from "../components/ProfileNickname";
 
 const ProfileRegistPage = () => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<string>("");
 
   const pages = [
     {
       id: 0,
-      content: () => <ProfileImage imagePreview={imagePreview} setImagePreview={setImagePreview} />,
+      content: () => (
+        <ProfileImage
+          imagePreview={imagePreview}
+          setImagePreview={setImagePreview}
+          imageFile={imageFile}
+          setImageFile={setImageFile}
+          selectedAvatar={selectedAvatar}
+          setSelectedAvatar={setSelectedAvatar}
+        />
+      ),
     },
-    { id: 1, content: () => <ProfileNickname nickname={nickname} setNickname={setNickname} /> },
+    {
+      id: 1,
+      content: () => (
+        <ProfileNickname
+          nickname={nickname}
+          setNickname={setNickname}
+          imageFile={imageFile}
+          selectedAvatar={selectedAvatar}
+        />
+      ),
+    },
   ];
 
   const [page, setPage] = useState<number>(0);
