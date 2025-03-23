@@ -12,7 +12,7 @@ const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState("info");
 
   return (
-    <div className="mt-8">
+    <div>
       {/* 탭 메뉴 */}
       <div className="flex border-b border-gray-300">
         {tabs.map((tab) => (
