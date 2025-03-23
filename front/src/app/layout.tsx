@@ -2,7 +2,6 @@ import "@/app/globals.css";
 import { Providers } from "./providers";
 import { Metadata, Viewport } from "next";
 import BottomBarWrapper from "@/common/ui/BottombarWrapper";
-import TopBarWrapper from "@/common/ui/TopbarWrapper";
 
 export const metadata: Metadata = {
   title: "AwOO",
@@ -41,11 +40,8 @@ export default function RootLayout({
 
       <body className="h-screen flex flex-col">
         <Providers>
-          {/* ✅ 상단바 (fixed top-0) */}
-          <TopBarWrapper title={title} rightAction={rightAction} />
-
           {/* ✅ 메인 컨텐츠 영역 */}
-          <main className="flex-1 overflow-y-auto w-full min-h-screen pt-14 pb-14 scrollbar-hide">
+          <main className="flex-1 overflow-y-auto w-full min-h-screen pb-14 scrollbar-hide">
             {children}
           </main>
 
