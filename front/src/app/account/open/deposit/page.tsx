@@ -47,7 +47,7 @@ const Page = () => {
         backgroundColor="aqua" // 배경색
         className="mx-auto mt-8"
       />
-      <div className="min-h-screen bg-gray-100">
+      <div className=" bg-gray-100 pb-18">
         {/* 아이콘 + 소개 문구 */}
         <div className="mt-8">
           <ProductIntro
@@ -79,12 +79,12 @@ const Page = () => {
               },
             ]}
           />
-
-          <ReviewSwiper />
         </div>
-        {/* ✅ 상품 상세 탭 추가 */}
-        <ProductDetails />
+        <ReviewSwiper />
       </div>
+
+      {/* ✅ 상품 상세 탭 추가 */}
+      <ProductDetails />
       <ProductDocs />
     </div>
   );
