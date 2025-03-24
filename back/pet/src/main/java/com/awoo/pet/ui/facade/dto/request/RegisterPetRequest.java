@@ -2,6 +2,8 @@ package com.awoo.pet.ui.facade.dto.request;
 
 import com.awoo.pet.application.command.RegisterPetCommand;
 import com.awoo.pet.application.command.common.PetCommand;
+import com.awoo.pet.ui.exception.BreedRequiredException;
+import com.awoo.pet.ui.exception.NameRequiredException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class RegisterPetRequest {
     private int age;
 
     public RegisterPetCommand toCommand(Integer memberId) {
+        validate();
         return new RegisterPetCommand(
                 PetCommand.builder()
                         .memberId(memberId)
@@ -28,6 +31,18 @@ public class RegisterPetRequest {
                         .age(age)
                         .build()
         );
+    }
+
+    private void validate(){
+        if(name == null || name.isEmpty()){
+            throw new NameRequiredException();
+        }
+
+        if(breed == null || breed.isEmpty()){
+            throw new BreedRequiredException();
+        }
+
+        if(age < 0){}
     }
 
 }
