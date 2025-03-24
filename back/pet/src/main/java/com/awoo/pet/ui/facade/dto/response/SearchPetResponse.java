@@ -9,11 +9,23 @@ import lombok.Data;
 @Builder
 public class SearchPetResponse {
 
-    private PetResponse petResponse;
+    private int petId;
+    private int memberId;
+    private String name;
+    private String profileImage;
+    private String breed;
+    private int age;
+    private int savingId;
 
     public static SearchPetResponse fromEntity(Pet entity){
         return SearchPetResponse.builder()
-                .petResponse(PetResponse.fromEntity(entity))
+                .petId(entity.getPetId())
+                .memberId(entity.getMemberId())
+                .name(entity.getName())
+                .profileImage(entity.getProfileImage())
+                .breed(entity.getBreed())
+                .age(entity.getAge())
+                .savingId(entity.getSavingId())
                 .build();
     }
 
