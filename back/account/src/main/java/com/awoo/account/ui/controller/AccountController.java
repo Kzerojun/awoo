@@ -1,5 +1,6 @@
 package com.awoo.account.ui.controller;
 
+import com.awoo.account.support.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,10 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<?> createAccount(@RequestBody String userKey) {
-
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+//    @PostMapping
+//    public ApiUtils.ApiError<>
 
 }
