@@ -1,13 +1,16 @@
 package com.awoo.payment.ui.facade.internal;
 
 
+import com.awoo.payment.application.ChargeBalanceService;
 import com.awoo.payment.application.QueryPaymentService;
 import com.awoo.payment.application.RegisterPaymentPasswordService;
 import com.awoo.payment.application.RegisterPaymentService;
+import com.awoo.payment.application.command.ChargeBalanceCommand;
 import com.awoo.payment.application.command.RegisterPaymentCommand;
 import com.awoo.payment.application.command.RegisterPaymentPasswordCommand;
 import com.awoo.payment.application.query.FetchBalanceQuery;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
+import com.awoo.payment.ui.facade.dto.response.ChargeBalanceResponse;
 import com.awoo.payment.ui.facade.dto.response.FetchBalanceResponse;
 import com.awoo.payment.ui.facade.dto.response.RegisterPaymentPasswordResponse;
 import com.awoo.payment.ui.facade.dto.response.RegisterPaymentResponse;
@@ -23,6 +26,7 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final RegisterPaymentService registerPaymentService;
     private final RegisterPaymentPasswordService registerPaymentPasswordService;
     private final QueryPaymentService queryPaymentService;
+    private final ChargeBalanceService chargeBalanceService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -37,7 +41,13 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
 
     @Override
     public FetchBalanceResponse fetchBalance(FetchBalanceQuery query) {
-        BigDecimal balance = queryPaymentService.fetchBalance(query);
+        int balance = queryPaymentService.fetchBalance(query);
         return FetchBalanceResponse.create(balance);
+    }
+
+    @Override
+    public ChargeBalanceResponse chargeBalance(ChargeBalanceCommand command) {
+        chargeBalanceService.chargeBalance(command);
+        return ChargeBalanceResponse.create();
     }
 }

@@ -1,10 +1,9 @@
 package com.awoo.payment.ui.facade.dto.response;
 
-import java.math.BigDecimal;
 
-public record FetchBalanceResponse(BigDecimal balance) {
+public record FetchBalanceResponse(int balance) {
 
-    public static FetchBalanceResponse create(BigDecimal balance) {
+    public static FetchBalanceResponse create(int balance) {
         return new FetchBalanceResponse(balance);
     }
 }

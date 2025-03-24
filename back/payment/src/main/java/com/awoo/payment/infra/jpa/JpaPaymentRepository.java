@@ -1,4 +1,4 @@
-package com.awoo.payment.infra;
+package com.awoo.payment.infra.jpa;
 
 import com.awoo.payment.domain.PaymentEntity;
 import com.awoo.payment.domain.PaymentRepository;
