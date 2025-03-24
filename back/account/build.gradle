@@ -13,11 +13,17 @@ java {
     }
 }
 
+ext {
+    set('springCloudVersion', "2024.0.0")
+}
+
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+        // Spring Cloud Gateway 추가
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
+
 
 configurations {
     compileOnly {
@@ -45,8 +51,6 @@ dependencies {
     //Feign Client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-    //Kafka
-    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 tasks.named('test') {
