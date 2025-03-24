@@ -304,26 +304,28 @@ const SignupForm = () => {
             <label htmlFor="password1">
               <LockClosedIcon className="w-6 h-6 text-custom-gray" />
             </label>
-            <input
-              id="password1"
-              type={showPassword ? "text" : "password"}
-              placeholder="비밀번호를 입력하세요"
-              value={password1}
-              className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none"
-              onChange={handlePasswordChange}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="w-6 h-6"
-            >
-              {showPassword ? (
-                <EyeIcon className="w-6 h-6 text-aqua inline" />
-              ) : (
-                <EyeSlashIcon className="w-6 h-6 text-custom-gray inline" />
-              )}
-            </button>
+            <div className="flex items-center justify-between flex-1">
+              <input
+                id="password1"
+                type={showPassword ? "text" : "password"}
+                placeholder="비밀번호를 입력하세요"
+                value={password1}
+                className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none flex-1"
+                onChange={handlePasswordChange}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="w-6 h-6"
+              >
+                {showPassword ? (
+                  <EyeIcon className="w-6 h-6 text-aqua inline" />
+                ) : (
+                  <EyeSlashIcon className="w-6 h-6 text-custom-gray inline" />
+                )}
+              </button>
+            </div>
           </div>
           {passwordMessage && (
             <p className={`text-xs pt-2 ${isValidPassword ? "text-aqua" : "text-error"}`}>

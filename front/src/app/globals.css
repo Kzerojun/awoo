@@ -137,4 +137,18 @@
     scrollbar-width: none;
     -ms-overflow-style: none; /* ✅ IE, Edge 대응 */
   }
+
+  /* 토스트 커스텀 */
+  .Toastify__toast {
+    background-color: #ffffff !important;
+    white-space: pre-line;
+    font-weight: 500 !important;
+    border-radius: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+
+    .Toastify__progress-bar {
+      background: #0fc9ba !important; /* var(--color-aqua) 같은 색상 */
+    }
+  }
 }
