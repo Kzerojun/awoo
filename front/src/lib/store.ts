@@ -5,7 +5,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import counterReducer from "./slices/counterSlice";
 import walkReducer from "./slices/walkSlice";
 import registerReducer from "./slices/registerSlice";
-
+import userActionReducer from "./slices/userActionSlice";
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
@@ -13,6 +13,7 @@ export const store = configureStore({
     // 여기에 추가 리듀서들을 넣을 수 있습니다
     walk: walkReducer, // 산책 관련 리듀서
     register: registerReducer,
+    userAction: userActionReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });
