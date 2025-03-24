@@ -21,5 +21,8 @@ public interface MemberService {
 
     boolean isEmailDuplicate(String email);
     boolean isNicknameDuplicate(String nickname);
+
+    void updatePassword(Integer memberId, String newPassword);
+    void updatePasswordByEmail(String email, String newPassword);
 }
 
