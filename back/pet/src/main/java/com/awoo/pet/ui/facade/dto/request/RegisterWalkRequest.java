@@ -15,13 +15,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RegisterWalkRequest {
 
-    private Integer petId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private double distance;
-    private int savedAmount;
 
-    public RegisterWalkCommand toCommand(Integer memberId){
+    public RegisterWalkCommand toCommand(Integer petId, Integer memberId){
         return new RegisterWalkCommand(
                 WalkCommand.builder()
                         .memberId(memberId)
@@ -29,7 +27,6 @@ public class RegisterWalkRequest {
                         .startTime(startTime)
                         .endTime(endTime)
                         .distance(distance)
-                        .savedAmount(savedAmount)
                         .build()
         );
     }

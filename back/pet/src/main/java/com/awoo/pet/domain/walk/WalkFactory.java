@@ -15,7 +15,6 @@ public class WalkFactory {
                 .startTime(command.walkCommand().startTime())
                 .endTime(command.walkCommand().endTime())
                 .distance(command.walkCommand().distance())
-                .savedAmount(command.walkCommand().savedAmount())
                 .build();
     }
 }

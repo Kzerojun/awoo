@@ -25,6 +25,7 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     private final SearchPetListService searchPetListService;
     private final RegisterWalkService registerWalkService;
     private final SearchWalkService searchWalkService;
+    private final SearchWalkListService searchWalkListService;
     private final PetResponseMapper mapper;
 
     @Override
@@ -60,9 +61,29 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     }
 
     @Override
-    public RegisterWalkResponse registerWalk(final RegisterWalkRequest request, final Integer memberId) {
-        Integer walkId = registerWalkService.registerWalk(request.toCommand(memberId));
+    public RegisterWalkResponse registerWalk(final RegisterWalkRequest request, final Integer petId,  final Integer memberId) {
+        Integer walkId = registerWalkService.registerWalk(request.toCommand(petId, memberId));
         Walk entity = searchWalkService.searchWalk(walkId);
         return mapper.registerWalk(entity);
+    }
+
+    @Override
+    public SearchWalkResponse searchWalk(final Integer walkId) {
+        Walk entity = searchWalkService.searchWalk(walkId);
+        return mapper.searchWalk(entity);
+    }
+
+    @Override
+    public SearchWalkListResponse searchWalkListByPet(final Integer petId){
+        Pet pet = searchPetService.searchPet(petId);
+        List<Walk> walks = searchWalkListService.searchWalkListByPet(pet.getPetId());
+        return mapper.searchWalkList(walks);
+    }
+
+    @Override
+    public SearchWalkListResponse searchWalkListByMember(Integer memberId) {
+        //멤버 확인
+        List<Walk> walks = searchWalkListService.searchWalkListByMember(memberId);
+        return mapper.searchWalkList(walks);
     }
 }

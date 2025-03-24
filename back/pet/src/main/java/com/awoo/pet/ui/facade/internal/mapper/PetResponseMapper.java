@@ -33,4 +33,8 @@ public class PetResponseMapper {
     public SearchWalkResponse searchWalk(final Walk entity){
         return SearchWalkResponse.fromEntity(entity);
     }
+
+    public SearchWalkListResponse searchWalkList(final List<Walk> walks) {
+        return SearchWalkListResponse.fromEntity(walks);
+    }
 }

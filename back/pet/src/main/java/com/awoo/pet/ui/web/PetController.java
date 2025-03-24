@@ -19,7 +19,7 @@ public class PetController {
 
     @PostMapping
     public RegisterPetResponse registerPet(@RequestBody RegisterPetRequest request) {
-        return petServiceFacade.registerPet(request, 1);
+        return petServiceFacade.registerPet(request, 2);
     }
 
     @GetMapping
@@ -41,11 +41,21 @@ public class PetController {
 
     @PostMapping("/{petId}/walks")
     public RegisterWalkResponse registerWalk(@PathVariable Integer petId, @RequestBody RegisterWalkRequest request){
-        return petServiceFacade.registerWalk(request, petId, 1);
+        return petServiceFacade.registerWalk(request, petId, 2);
     }
 
-    @GetMapping("/walks")
-    public RegisterWalkResponse registerWalk(@RequestBody RegisterWalkRequest request){
-        return petServiceFacade.registerWalk(request, 1);
+    @GetMapping("/walks/{walkId}")
+    public SearchWalkResponse searchWalk(@PathVariable Integer walkId){
+        return petServiceFacade.searchWalk(walkId);
+    }
+
+    @GetMapping("/{petId}/walks")
+    public SearchWalkListResponse searchWalkListByPet(@PathVariable Integer petId){
+        return petServiceFacade.searchWalkListByPet(petId);
+    }
+
+    @GetMapping("/walks/member/{memberId}")
+    public SearchWalkListResponse searchWalkListByMember(@PathVariable Integer memberId){
+        return petServiceFacade.searchWalkListByMember(memberId);
     }
 }

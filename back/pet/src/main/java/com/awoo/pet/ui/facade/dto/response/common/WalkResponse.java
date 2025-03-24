@@ -16,7 +16,6 @@ public class WalkResponse {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private double distance;
-    private int savingAmount;
 
     public static WalkResponse fromEntity(Walk entity){
         return WalkResponse.builder()
@@ -26,7 +25,6 @@ public class WalkResponse {
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .distance(entity.getDistance())
-                .savingAmount(entity.getSavedAmount())
                 .build();
     }
 }
