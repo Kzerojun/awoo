@@ -15,7 +15,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", updatable = false, nullable = false)
-    private Long id;
+    private Integer id;
 
     @Embedded
     private Email email;
@@ -81,5 +81,9 @@ public class Member {
 
     public void changeNickname(String newNickname) {
         this.nickname = newNickname;
+    }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

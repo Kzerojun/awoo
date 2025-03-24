@@ -23,19 +23,24 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
 
     @Override
     public void chargeBalance(ChargeBalanceCommand command) {
+
         // 요청이 처리된적이 있는지 확인
        if((redisHandler.hasIdempotencyKey(command.idempotencyKey()))) {
             return;
        }
 
+        PaymentEntity paymentEntity = paymentRepository.findByMemberId(command.memberId())
+                .orElseThrow(PaymentNotFoundException::new);
+
         // 계좌 잔액 차감 요청
         WithdrawRequest request = WithdrawRequest.builder()
-                .amount(command.amount()).memberId(command.memberId()).build();
+                .amount(command.amount())
+                .memberId(command.memberId())
+                .accountNo(paymentEntity.getAccountNo())
+                .build();
         ApiResult<WithdrawResponse> response = accountClient.withdraw(request);
 
         if (response.isSuccess()) {
-            // 페이 서비스 잔액 충전
-            PaymentEntity paymentEntity = paymentRepository.findByMemberId(command.memberId()).orElseThrow(PaymentNotFoundException::new);
             paymentEntity.chargeBalance(command.amount());
         }
     }

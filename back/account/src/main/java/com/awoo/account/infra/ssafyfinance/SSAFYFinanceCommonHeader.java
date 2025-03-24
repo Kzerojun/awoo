@@ -1,4 +1,4 @@
-package com.awoo.account.application.dto;
+package com.awoo.account.infra.ssafyfinance;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ssafyFinanceCommonHeader {
+public class SSAFYFinanceCommonHeader {
     private String apiName;
     private String transmissionDate;
     private String transmissionTime;

@@ -51,6 +51,8 @@ dependencies {
     //Feign Client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    // Eureka Client 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
 
 tasks.named('test') {

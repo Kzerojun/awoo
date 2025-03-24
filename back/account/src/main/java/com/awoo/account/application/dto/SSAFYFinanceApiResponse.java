@@ -1,5 +1,6 @@
 package com.awoo.account.application.dto;
 
+import com.awoo.account.infra.ssafyfinance.SSAFYFinanceCommonHeader;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ssafyFinanceApiResponse<T> {
-    private ssafyFinanceCommonHeader Header;
+public class SSAFYFinanceApiResponse<T> {
+    private SSAFYFinanceCommonHeader Header;
     private List<T> REC;
 }

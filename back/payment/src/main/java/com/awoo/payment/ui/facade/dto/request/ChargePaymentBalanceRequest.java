@@ -5,14 +5,14 @@ import com.awoo.payment.ui.exception.AmountInvalidException;
 import com.awoo.payment.ui.exception.IdempotencyKeyRequiredException;
 import com.awoo.payment.ui.exception.MemberIdInvalidException;
 
-public record ChargePaymentBalanceRequest(int chargeAmount) {
+public record ChargePaymentBalanceRequest(int amount) {
 
 	public ChargeBalanceCommand toCommand(Integer memberId, String idempotencyKey) {
-		validate(memberId,chargeAmount,idempotencyKey);
+		validate(memberId,amount,idempotencyKey);
 
 		return ChargeBalanceCommand.builder()
 				.memberId(memberId)
-				.amount(chargeAmount)
+				.amount(amount)
 				.idempotencyKey(idempotencyKey)
 				.build();
 	}
