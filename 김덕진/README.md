@@ -764,6 +764,8 @@ public void processPayment(String orderId) {
 </details>
 
 <details>
+<summary><strong>3주차</strong></summary>
+<details>
 <summary><strong>0317</strong></summary>
 
 ## 🔍 추상 클래스(Abstract Class) vs 인터페이스(Interface)
@@ -1083,6 +1085,65 @@ dependencies {
 > **🔥 결론:**
 > - Gradle은 **빠르고 유연한 빌드 시스템**으로 최신 프로젝트에 적합
 > - Maven은 **일관성과 안정성이 중요한 프로젝트**에서 적합
+
+</details>
+</details>
+
+<details>
+<summary><strong>0324</strong></summary>
+
+## 🧾 Java Record 타입
+
+### 1️⃣ Record란?
+- Java 14부터 도입된 **데이터 전용 클래스**를 간결하게 선언할 수 있는 기능 (Java 16부터 정식 지원)
+- **불변 객체(immutable object)**를 표현할 때 사용
+- DTO, VO 등 **데이터 전달에 특화된 구조**
+
+### 2️⃣ 문법
+```java
+public record User(String name, int age) {}
+```
+- 위 한 줄로 다음과 같은 클래스를 자동 생성함:
+  - `private final` 필드
+  - 생성자
+  - `getter` 메서드 (`name()`, `age()` 형태)
+  - `equals()`, `hashCode()`, `toString()` 메서드
+
+### 3️⃣ 사용 예제
+```java
+public record Product(String name, int price) {}
+
+public class Main {
+    public static void main(String[] args) {
+        Product product = new Product("Laptop", 1200000);
+        System.out.println(product.name()); // "Laptop"
+        System.out.println(product.price()); // 1200000
+    }
+}
+```
+
+### 4️⃣ 특징
+✅ 자동으로 생성되는 메서드들로 **보일러플레이트 코드 감소**
+✅ `final` 필드 → **불변 객체** 보장
+✅ 클래스 상속 불가 (`final` 클래스)
+✅ 인터페이스는 **구현 가능**
+✅ `Serializable`, `Comparable` 등 구현 가능
+
+### 5️⃣ 주의사항
+- **상속 불가**: `record`는 암묵적으로 `final`이기 때문에 상속할 수 없음
+- **필드 추가 불가**: 생성자 외에 새로운 필드 정의 불가 (정적 필드는 가능)
+- **기본 목적**은 단순 데이터 컨테이너 역할 (로직 중심 클래스에는 부적합)
+
+### 6️⃣ 사용 예시: Spring에서 DTO로 활용
+```java
+public record MemberDto(String username, String email) {}
+```
+- 컨트롤러나 서비스 계층에서 **요청/응답 DTO**로 자주 활용됨
+
+---
+
+> 🔥 **정리:**
+> Java의 `record`는 **불변 데이터 객체를 간결하게 표현**할 수 있는 타입으로, DTO나 VO 설계 시 코드의 가독성과 유지보수성을 높여줌
 
 </details>
 
