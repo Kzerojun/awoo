@@ -1,5 +1,6 @@
 package com.awoo.pet.ui.web;
 
+import com.awoo.pet.support.ApiUtils;
 import com.awoo.pet.ui.facade.PetServiceFacade;
 import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
@@ -18,44 +19,44 @@ public class PetController {
     private final PetServiceFacade petServiceFacade;
 
     @PostMapping
-    public RegisterPetResponse registerPet(@RequestBody RegisterPetRequest request) {
-        return petServiceFacade.registerPet(request, 2);
+    public ApiUtils.ApiResult<RegisterPetResponse>  registerPet(@RequestHeader("X-User-Id") Integer memberId, @RequestBody RegisterPetRequest request) {
+        return ApiUtils.success(petServiceFacade.registerPet(request, memberId));
     }
 
     @GetMapping
-    public SearchPetListResponse searchPetList(){
-        return petServiceFacade.searchPetList(1);
+    public ApiUtils.ApiResult<SearchPetListResponse> searchPetList(@RequestHeader("X-User-Id") Integer memberId){
+        return ApiUtils.success(petServiceFacade.searchPetList(memberId));
     }
 
     @GetMapping("/{petId}")
-    public SearchPetResponse searchPet(@PathVariable Integer petId) {
-        return petServiceFacade.searchPet(petId);
+    public ApiUtils.ApiResult<SearchPetResponse> searchPet(@PathVariable Integer petId) {
+        return ApiUtils.success(petServiceFacade.searchPet(petId));
     }
 
 
     @PutMapping("/{petId}")
-    public ModifyPetResponse modifyPet(@PathVariable Integer petId, @RequestBody ModifyPetRequest request) {
-        return petServiceFacade.modifyPet(request, petId , 1);
+    public ApiUtils.ApiResult<ModifyPetResponse> modifyPet(@RequestHeader("X-User-Id") Integer memberId, @PathVariable Integer petId, @RequestBody ModifyPetRequest request) {
+        return ApiUtils.success(petServiceFacade.modifyPet(request, petId , memberId));
     }
 
 
     @PostMapping("/{petId}/walks")
-    public RegisterWalkResponse registerWalk(@PathVariable Integer petId, @RequestBody RegisterWalkRequest request){
-        return petServiceFacade.registerWalk(request, petId, 2);
+    public ApiUtils.ApiResult<RegisterWalkResponse> registerWalk(@RequestHeader("X-User-Id") Integer memberId, @PathVariable Integer petId, @RequestBody RegisterWalkRequest request){
+        return ApiUtils.success(petServiceFacade.registerWalk(request, petId, memberId));
     }
 
     @GetMapping("/walks/{walkId}")
-    public SearchWalkResponse searchWalk(@PathVariable Integer walkId){
-        return petServiceFacade.searchWalk(walkId);
+    public ApiUtils.ApiResult<SearchWalkResponse> searchWalk(@PathVariable Integer walkId){
+        return ApiUtils.success(petServiceFacade.searchWalk(walkId));
     }
 
     @GetMapping("/{petId}/walks")
-    public SearchWalkListResponse searchWalkListByPet(@PathVariable Integer petId){
-        return petServiceFacade.searchWalkListByPet(petId);
+    public ApiUtils.ApiResult<SearchWalkListResponse> searchWalkListByPet(@PathVariable Integer petId){
+        return ApiUtils.success(petServiceFacade.searchWalkListByPet(petId));
     }
 
     @GetMapping("/walks/member/{memberId}")
-    public SearchWalkListResponse searchWalkListByMember(@PathVariable Integer memberId){
-        return petServiceFacade.searchWalkListByMember(memberId);
+    public ApiUtils.ApiResult<SearchWalkListResponse> searchWalkListByMember(@PathVariable Integer memberId){
+        return ApiUtils.success(petServiceFacade.searchWalkListByMember(memberId));
     }
 }
