@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ssafyFinanceApiRequest<T> {
-    private ssafyFinanceCommonHeader Header;
+public class SSAFYFinanceApiRequest<T> {
+    private SSAFYFinanceCommonHeader Header;
     private T body;  // API마다 달라지는 영역
 }
