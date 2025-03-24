@@ -1,10 +1,20 @@
 server:
   port: 8086
+  servlet:
+    context-path: /api
 
 spring:
   application:
     name: PAYMENT-SERVICE
-
+#
+#  kafka:
+#    bootstrap-servers: localhost:9092
+#    consumer:
+#      group-id: paymentService
+#      auto-offset-reset: earliest
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#    producer:
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   datasource:
     url: jdbc:mysql://${MYSQL_URL}
