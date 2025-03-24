@@ -1,14 +1,8 @@
 package com.awoo.account.application.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.awoo.account.infra.ssafyfinance.SSAFYFinanceCommonHeader;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AccountCreateRequestDto {
-    String accountTypeUniqueNo;
+
+public record AccountCreateRequestDto(SSAFYFinanceCommonHeader header, String accountTypeUniqueNo) {
+
 }
