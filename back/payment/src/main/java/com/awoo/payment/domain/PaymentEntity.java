@@ -1,7 +1,5 @@
 package com.awoo.payment.domain;
 
-import com.awoo.payment.domain.event.BalanceChargedCancelEvent;
-import com.awoo.payment.domain.event.BalanceChargeProcessedEvent;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,17 +35,7 @@ public class PaymentEntity {
         this.password = password;
     }
 
-    public BalanceChargeProcessedEvent chargeBalance(Integer memberId,int amount) {
+    public void chargeBalance(int amount) {
         this.balance += amount;
-        return BalanceChargeProcessedEvent.builder()
-                .memberId(memberId)
-                .chargeAmount(amount)
-                .build();
     }
-
-    public BalanceChargedCancelEvent cancelCharge(int amount) {
-        this.balance -= amount;
-        return new BalanceChargedCancelEvent("잔액 충전에 실패하셨습니다.");
-    }
-
 }

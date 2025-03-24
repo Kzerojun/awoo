@@ -2,11 +2,9 @@ package com.awoo.payment.application.impl;
 
 import com.awoo.payment.application.ChargeBalanceService;
 import com.awoo.payment.application.command.ChargeBalanceCommand;
-import com.awoo.payment.application.event.ChargeBalanceSuccessEvent;
 import com.awoo.payment.application.exception.PaymentNotFoundException;
 import com.awoo.payment.domain.PaymentEntity;
 import com.awoo.payment.domain.PaymentRepository;
-import com.awoo.payment.domain.event.KafkaTopic;
 import com.awoo.payment.infra.client.AccountClient;
 import com.awoo.payment.infra.client.request.WithdrawRequest;
 import com.awoo.payment.infra.client.response.WithdrawResponse;
@@ -38,7 +36,7 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
         if (response.isSuccess()) {
             // 페이 서비스 잔액 충전
             PaymentEntity paymentEntity = paymentRepository.findByMemberId(command.memberId()).orElseThrow(PaymentNotFoundException::new);
-            paymentEntity.chargeBalance(command.memberId(), command.amount());
+            paymentEntity.chargeBalance(command.amount());
         }
     }
 }
