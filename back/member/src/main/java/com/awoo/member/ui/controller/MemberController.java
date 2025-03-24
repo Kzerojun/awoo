@@ -5,7 +5,6 @@ import com.awoo.member.application.dto.MemberInfoResponseDto;
 import com.awoo.member.application.dto.MemberUpdateRequestDto;
 import com.awoo.member.application.dto.SignUpRequestDto;
 import com.awoo.member.application.service.MemberService;
-import com.awoo.member.domain.model.Member;
 import com.awoo.member.support.ApiUtils;
 import com.awoo.member.ui.dto.FindMemberKeyResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +12,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -33,9 +30,9 @@ public class MemberController {
     public ApiUtils.ApiResult<?> signUp(
             @RequestPart(value = "requestDto") SignUpRequestDto requestDto,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile
-    ) throws Exception {
+    ) {
         try{
-            Member savedMember = memberService.signUp(requestDto, profileImageFile);
+            memberService.signUp(requestDto, profileImageFile);
             return ApiUtils.success(Map.of("message", "회원 가입 성공"));
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
