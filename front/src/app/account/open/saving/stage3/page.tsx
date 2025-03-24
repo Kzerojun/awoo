@@ -8,15 +8,15 @@ import UserReview from "@/app/account/open/saving/components/UserReview";
 
 const step3Reviews = [
   {
-    text: "꾸준히 함께한 여정이 정말 뿌듯해요!",
+    text: "꾸준히 함께한 여정이 정말 뿌듯해요! 계속 이용할 계획입니다.",
     user: "walk***done",
   },
   {
-    text: "산책도 적금도 이제는 습관이 되었어요 💪",
+    text: "산책도 적금도 이제는 습관이 되었어요 💪 아이도 너무 좋아해요",
     user: "cons***habit",
   },
   {
-    text: "강아지도 저도 건강해졌고, 통장도 두둑해졌어요!",
+    text: "미리 들어둔 적금으로 아이 병원비에 보탤 수 있었어요",
     user: "healt***save",
   },
 ];
