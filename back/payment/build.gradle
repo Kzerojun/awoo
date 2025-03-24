@@ -45,6 +45,8 @@ dependencies {
 	// redis 추가
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	//Feign Client
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 ext {
