@@ -14,6 +14,7 @@ public interface JpaMemberRepository
 
     // 파생 쿼리 메서드
     Optional<Member> findByEmail(Email email);
+    boolean existsByNickname(String nickname);
 
     // JpaRepository가 이미 제공하는 save(), findById(), findAll(), delete() 등은
     // MemberRepository에도 구현으로 매핑됩니다.

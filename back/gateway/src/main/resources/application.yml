@@ -11,6 +11,10 @@ spring:
           uri: lb://pet
           predicates:
             - Path=/api/pets/**
+        - id : member-service
+          uri : lb://member
+          predicates:
+            - Path=/api/members/**
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
