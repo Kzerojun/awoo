@@ -1,9 +1,6 @@
 package com.awoo.member.application.service;
 
-import com.awoo.member.application.dto.LoginRequestDto;
-import com.awoo.member.application.dto.MemberUpdateRequestDto;
-import com.awoo.member.application.dto.SignUpRequestDto;
-import com.awoo.member.application.dto.UserKeyResponseDto;
+import com.awoo.member.application.dto.*;
 import com.awoo.member.domain.model.Member;
 import com.awoo.member.domain.model.Provider;
 import com.awoo.member.domain.model.vo.*;
@@ -11,11 +8,11 @@ import com.awoo.member.domain.repository.MemberRepository;
 import com.awoo.member.infra.jwt.JwtTokenProvider;
 import com.awoo.member.infra.util.AESUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -77,9 +74,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     // 회원정보 수정
-    public Member updateMemberInfo(Long memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile) {
+    public Member updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
 
         // 1. 이름, 전화번호, 닉네임 등 텍스트 값 수정
         if (requestDto.getName() != null) {
@@ -98,7 +96,45 @@ public class MemberServiceImpl implements MemberService {
             member.updateProfileImage(newUploadedUrl);
         }
 
-        return member;
+        return memberRepository.save(member);
     }
+
+    //회원 정보 조회
+    @Override
+    public MemberInfoResponseDto getMemberInfo(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+
+        // Member 엔티티 정보를 DTO로 매핑
+        // birthDate가 LocalDate이므로 문자열로 변환해서 DTO에 담을 수 있습니다.
+        return MemberInfoResponseDto.builder()
+                .nickname(member.getNickname())
+                .name(member.getName().getValue())
+                .email(member.getEmail().getValue())
+                .phone(member.getPhone())
+                .birthDate(member.getBirthDate().getValue().toString())
+                .profileImage("https://c209awoo.s3.us-east-2.amazonaws.com/" + member.getProfileImage())
+                .build();
+    }
+
+    @Override
+    public String getUserKey(Integer memberId) throws Exception {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        return aesUtil.decrypt(member.getUserKey());
+    }
+
+    @Override
+    public boolean isEmailDuplicate(String email) {
+        return memberRepository.findByEmail(new Email(email)).isPresent();
+    }
+
+    @Override
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
 }
 
