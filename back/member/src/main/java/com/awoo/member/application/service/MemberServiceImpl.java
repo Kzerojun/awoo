@@ -10,6 +10,7 @@ import com.awoo.member.infra.util.AESUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -26,7 +27,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원가입
     @Override
-    public Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception {
+//    @Transactional
+    public void signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception {
         // 1. S3 업로드 처리
         String uploadedImageUrl = null;
         if (profileImageFile != null && !profileImageFile.isEmpty()) {
@@ -53,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         // 3. DB 저장
-        return memberRepository.save(member);
+        memberRepository.save(member);
     }
 
     @Override
@@ -72,8 +74,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+//    @Transactional
     // 회원정보 수정
-    public Member updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile) {
+    public void updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
 
@@ -95,7 +98,7 @@ public class MemberServiceImpl implements MemberService {
             member.updateProfileImage(newUploadedUrl);
         }
 
-        return memberRepository.save(member);
+        memberRepository.save(member);
     }
 
     //회원 정보 조회
@@ -134,6 +137,25 @@ public class MemberServiceImpl implements MemberService {
     public boolean isNicknameDuplicate(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
+
+    @Override
+    public void updatePassword(Integer memberId, String newPassword) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        member.changePassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+    }
+
+    @Override
+    public void updatePasswordByEmail(String email, String newPassword) {
+        Member member = memberRepository.findByEmail(new Email(email))
+                .orElseThrow(() -> new RuntimeException("해당 이메일의 사용자가 존재하지 않습니다."));
+
+        member.changePassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+    }
+
 
 }
 

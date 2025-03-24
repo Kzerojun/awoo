@@ -9,11 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
 
-    Member signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception;
+    void signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception;
 
     String login(LoginRequestDto requestDto);
 
-    Member updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile);
+    void updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile);
 
     MemberInfoResponseDto getMemberInfo(Integer memberId);
 
@@ -21,5 +21,8 @@ public interface MemberService {
 
     boolean isEmailDuplicate(String email);
     boolean isNicknameDuplicate(String nickname);
+
+    void updatePassword(Integer memberId, String newPassword);
+    void updatePasswordByEmail(String email, String newPassword);
 }
 
