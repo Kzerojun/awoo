@@ -4,7 +4,7 @@ import lombok.Builder;
 
 import java.math.BigDecimal;
 
-public record ChargeBalanceCommand(String idempotencyKey, Integer memberId, BigDecimal amount) {
+public record ChargeBalanceCommand(String idempotencyKey, Integer memberId, int amount) {
 
     @Builder
     public ChargeBalanceCommand {}

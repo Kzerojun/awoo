@@ -9,7 +9,10 @@ import org.springframework.http.HttpStatus;
 public enum UiErrorCode {
 
     PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "비밀번호는 필수입니다."),
-    PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호는 6자리 숫자여야 합니다.");
+    PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호는 6자리 숫자여야 합니다."),
+    MEMBER_ID_INVALID(HttpStatus.BAD_REQUEST, "잘못된 회원 ID입니다."),
+    AMOUNT_INVALID(HttpStatus.BAD_REQUEST, "금액은 0보다 커야 합니다."),
+    IDEMPOTENCY_KEY_REQUIRED(HttpStatus.BAD_REQUEST, "멱등성키는 필수입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

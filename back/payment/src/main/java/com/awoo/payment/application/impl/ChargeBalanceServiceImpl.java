@@ -2,14 +2,18 @@ package com.awoo.payment.application.impl;
 
 import com.awoo.payment.application.ChargeBalanceService;
 import com.awoo.payment.application.command.ChargeBalanceCommand;
+import com.awoo.payment.application.event.ChargeBalanceSuccessEvent;
 import com.awoo.payment.application.exception.PaymentNotFoundException;
 import com.awoo.payment.domain.PaymentEntity;
 import com.awoo.payment.domain.PaymentRepository;
+import com.awoo.payment.domain.event.KafkaTopic;
+import com.awoo.payment.infra.client.AccountClient;
+import com.awoo.payment.infra.client.request.WithdrawRequest;
+import com.awoo.payment.infra.client.response.WithdrawResponse;
 import com.awoo.payment.infra.redis.RedisHandler;
+import com.awoo.payment.support.ApiUtils.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +21,24 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
 
     private final RedisHandler redisHandler;
     private final PaymentRepository paymentRepository;
+    private final AccountClient accountClient;
 
     @Override
-    public String chargeBalance(ChargeBalanceCommand command) {
-
+    public void chargeBalance(ChargeBalanceCommand command) {
         // 요청이 처리된적이 있는지 확인
        if((redisHandler.hasIdempotencyKey(command.idempotencyKey()))) {
-           return redisHandler.getValue(command.idempotencyKey());
+            return;
        }
 
-        PaymentEntity paymentEntity = paymentRepository.findByMemberId(command.memberId()).orElseThrow(PaymentNotFoundException::new);
-        paymentEntity.
+        // 계좌 잔액 차감 요청
+        WithdrawRequest request = WithdrawRequest.builder()
+                .amount(command.amount()).memberId(command.memberId()).build();
+        ApiResult<WithdrawResponse> response = accountClient.withdraw(request);
+
+        if (response.isSuccess()) {
+            // 페이 서비스 잔액 충전
+            PaymentEntity paymentEntity = paymentRepository.findByMemberId(command.memberId()).orElseThrow(PaymentNotFoundException::new);
+            paymentEntity.chargeBalance(command.memberId(), command.amount());
+        }
     }
 }

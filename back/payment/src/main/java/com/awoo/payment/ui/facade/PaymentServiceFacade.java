@@ -18,4 +18,6 @@ public interface PaymentServiceFacade {
     FetchBalanceResponse fetchBalance(FetchBalanceQuery query);
 
     ChargeBalanceResponse chargeBalance(ChargeBalanceCommand command);
+
+
 }
