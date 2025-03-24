@@ -24,10 +24,13 @@ public class PaymentEntity {
     @Column(nullable = false)
     private Integer memberId;
 
+    private String accountNo;
+
     @Builder
-    public PaymentEntity(String password, Integer memberId) {
+    public PaymentEntity(String password, Integer memberId,String accountNo) {
         this.password = password;
         this.memberId = memberId;
+        this.accountNo = accountNo;
         this.balance = 0;
     }
 

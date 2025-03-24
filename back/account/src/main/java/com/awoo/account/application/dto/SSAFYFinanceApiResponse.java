@@ -1,5 +1,6 @@
 package com.awoo.account.application.dto;
 
+import com.awoo.account.infra.ssafyfinance.SSAFYFinanceCommonHeader;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

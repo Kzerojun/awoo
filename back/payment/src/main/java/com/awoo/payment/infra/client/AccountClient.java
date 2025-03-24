@@ -7,9 +7,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "account-service", url = "http://localhost/api/accounts")
+@FeignClient(name = "account-service", url = "http://localhost:8087/api/accounts")
 public interface AccountClient {
 
-	@PostMapping("/withdraw")
+	@PostMapping("/deduct")
 	ApiResult<WithdrawResponse> withdraw(@RequestBody WithdrawRequest request);
 }

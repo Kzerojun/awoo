@@ -12,6 +12,7 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -45,14 +46,18 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             try{
                 // 토큰 2차 검증 후 추출
                 Claims claims = jwtParser.getClaims(token);
-                String userId = claims.getSubject();
+                Integer memberId = claims.get("memberId", Integer.class);
                 String role = claims.get("role", String.class);
 
-                exchange.getRequest().mutate()
-                        .header("X-User-Id", userId)
+                ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                        .header("X-User-Id", String.valueOf(memberId))
                         .header("X-User-Role", role)
                         .build();
-                return chain.filter(exchange);
+
+                log.info("Modified Headers: {}", modifiedRequest.getHeaders());
+
+                return chain.filter(exchange.mutate().request(modifiedRequest).build());
+
             } catch (JwtValidationException e) {
                 exchange.getResponse().setStatusCode(e.getStatus());
                 exchange.getResponse().getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

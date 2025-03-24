@@ -15,10 +15,20 @@ spring:
           uri : lb://member
           predicates:
             - Path=/api/members/**
+        - id: payment-service-charge
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/payments/charges
+          filters:
+            - name: JwtAuthenticationFilter
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Path=/payments/**
+            - Path=/api/payments/charges
+          filters:
+            - name: JwtAuthenticationFilter
+
+
 
       discovery:
         locator:

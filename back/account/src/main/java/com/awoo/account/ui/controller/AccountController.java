@@ -5,7 +5,6 @@ import com.awoo.account.support.ApiUtils;
 import com.awoo.account.ui.facade.AccountServiceFacade;
 import com.awoo.account.ui.facade.dto.request.DeductBalanceRequest;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
-import com.awoo.account.ui.facade.internal.AccountServiceFacadeImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping
+    @PostMapping("/deduct")
     public ApiUtils.ApiResult<DeductBalanceResponse> deductBalance(@RequestBody DeductBalanceRequest request) {
         DeductBalanceCommand command = request.toCommand();
         return ApiUtils.success(accountServiceFacade.deductBalance(command));
