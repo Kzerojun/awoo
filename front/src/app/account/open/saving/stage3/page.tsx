@@ -6,6 +6,8 @@ import Button from "@/common/ui/Button";
 import ProductIntro from "../../deposit/components/ProductIntro";
 import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep3 from "../components/ProductDetailStep3";
+import ProductDocs from "../components/ProductDocs";
+
 const step3Reviews = [
   {
     text: "꾸준히 함께한 여정이 정말 뿌듯해요! 계속 이용할 계획입니다.",
@@ -70,6 +72,7 @@ const Page = () => {
         </div>
       </div>
       <ProductDetailsStep3 />
+      <ProductDocs />
     </div>
   );
 };

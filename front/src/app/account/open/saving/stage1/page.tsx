@@ -6,6 +6,7 @@ import Button from "@/common/ui/Button";
 import ProductIntro from "../../deposit/components/ProductIntro";
 import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep1 from "../components/ProductDetailStep1";
+import ProductDocs from "../components/ProductDocs";
 const step1Reviews = [
   {
     text: "처음 시작인데 부담 없이 할 수 있어서 좋아요!",
@@ -71,6 +72,7 @@ const Page = () => {
         <UserReview reviews={step1Reviews} />
       </div>
       <ProductDetailsStep1 />
+      <ProductDocs />
     </div>
   );
 };
