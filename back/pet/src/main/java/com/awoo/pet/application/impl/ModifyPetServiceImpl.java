@@ -17,7 +17,7 @@ public class ModifyPetServiceImpl implements ModifyPetService {
     @Override
     @Transactional
     public Pet modifyPet(final ModifyPetCommand command) {
-        Pet entity = petRepository.searchPet(command.petId());
+        Pet entity = petRepository.searchPet(command.petId()).orElseThrow(()-> new IllegalArgumentException("Pet not found"));
         entity.modifyPet(command);
         return entity;
     }

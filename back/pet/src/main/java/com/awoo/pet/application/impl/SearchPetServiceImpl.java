@@ -16,6 +16,6 @@ public class SearchPetServiceImpl implements SearchPetService {
     @Override
     @Transactional
     public Pet searchPet(final Integer petId){
-        return petRepository.searchPet(petId);
+        return petRepository.searchPet(petId).orElseThrow(() -> new IllegalArgumentException("해당 ID의 반려견이 없음"));
     }
 }

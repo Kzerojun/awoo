@@ -4,6 +4,23 @@ import React from "react";
 import ProductSummary from "../components/ProductSummary";
 import Button from "@/common/ui/Button";
 import ProductIntro from "../../deposit/components/ProductIntro";
+import UserReview from "@/app/account/open/saving/components/UserReview";
+import ProductDetailsStep1 from "../components/ProductDetailStep1";
+const step1Reviews = [
+  {
+    text: "처음 시작인데 부담 없이 할 수 있어서 좋아요!",
+    user: "start***dog",
+  },
+  {
+    text: "강아지랑 같이 목표 세운 기분이에요 🐶",
+    user: "puppy***love",
+  },
+  {
+    text: "매일 조금씩 쌓이는 재미가 있어요.",
+    user: "walk***step",
+  },
+];
+
 const Page = () => {
   return (
     <div className="container mx-auto max-w-lg py-6">
@@ -51,7 +68,9 @@ const Page = () => {
             ]}
           />
         </div>
+        <UserReview reviews={step1Reviews} />
       </div>
+      <ProductDetailsStep1 />
     </div>
   );
 };

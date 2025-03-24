@@ -4,6 +4,23 @@ import React from "react";
 import ProductSummary from "../components/ProductSummary";
 import Button from "@/common/ui/Button";
 import ProductIntro from "../../deposit/components/ProductIntro";
+import UserReview from "@/app/account/open/saving/components/UserReview";
+import ProductDetailsStep3 from "../components/ProductDetailStep3";
+const step3Reviews = [
+  {
+    text: "꾸준히 함께한 여정이 정말 뿌듯해요! 계속 이용할 계획입니다.",
+    user: "walk***done",
+  },
+  {
+    text: "산책도 적금도 이제는 습관이 되었어요 💪 아이도 너무 좋아해요",
+    user: "cons***habit",
+  },
+  {
+    text: "미리 들어둔 적금으로 아이 병원비에 보탤 수 있었어요",
+    user: "healt***save",
+  },
+];
+
 const Page = () => {
   return (
     <div className="container mx-auto max-w-lg py-6">
@@ -49,8 +66,10 @@ const Page = () => {
               },
             ]}
           />
+          <UserReview reviews={step3Reviews} />
         </div>
       </div>
+      <ProductDetailsStep3 />
     </div>
   );
 };
