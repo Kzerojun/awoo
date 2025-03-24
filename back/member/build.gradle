@@ -13,9 +13,14 @@ java {
 	}
 }
 
+ext {
+	set('springCloudVersion', "2024.0.0")
+}
+
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+		// Spring Cloud Gateway 추가
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
 
@@ -72,6 +77,9 @@ dependencies {
 
 	//Feign Client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	// Eureka Client 추가
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
 
 tasks.named('test') {
