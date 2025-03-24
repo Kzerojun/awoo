@@ -30,7 +30,6 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(final ServerWebExchange exchange, final GatewayFilterChain chain) {
-
         return modifyRequestBodyGatewayFilterFactory
                 .apply(modifyRequestBodyGatewayFilterConfig())
                 .filter(exchange, chain);

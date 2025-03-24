@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -69,7 +70,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 3) JWT 토큰 발급
-        return jwtTokenProvider.createToken(member.getId().toString(), member.getEmail().getValue());
+        return jwtTokenProvider.createAccessToken(member.getId(), member.getEmail().getValue());
     }
 
     @Override

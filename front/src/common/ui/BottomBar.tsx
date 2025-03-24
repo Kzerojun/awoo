@@ -36,7 +36,7 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
 
   // 특정 페이지에서 하단바 숨김 (필요할 경우 추가 가능)
   const hideOnPages = ["/#", "/my/profile/withdraw", "/signup/profile"];
-  if (hideOnPages.includes(currentPath)) return null; // 특정 페이지에서는 하단바 숨김
+  if (hideOnPages.includes(currentPath) || currentPath.includes("/admin")) return null; // 특정 페이지에서는 하단바 숨김
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-custom-white shadow-[0_-1px_4px_rgba(0,0,0,0.05)] h-13.5 z-50">

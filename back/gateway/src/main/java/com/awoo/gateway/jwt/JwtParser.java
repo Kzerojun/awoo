@@ -22,6 +22,7 @@ public class JwtParser implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         byte[] keyBytes =  Decoders.BASE64.decode(jwtProperties.getSecretKey());
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+        System.out.println("JWT PARSER 키값:"+ signingKey.toString());
     }
 
     public Claims getClaims(String token) {

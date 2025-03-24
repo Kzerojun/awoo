@@ -46,10 +46,10 @@ public class PaymentController {
     }
 
     @PostMapping("/charges")
-    public ApiUtils.ApiResult<ChargeBalanceResponse> chargeBalance(@RequestHeader("X-User-Id") Integer memberId,
+    public ApiUtils.ApiResult<ChargeBalanceResponse> chargeBalance(@RequestHeader("X-User-Id") String userId,
                                                                   @RequestHeader("Idempotency-Key") String idempotencyKey,
                                                                   @RequestBody ChargePaymentBalanceRequest request) {
-        ChargeBalanceCommand command = request.toCommand(memberId,idempotencyKey);
+        ChargeBalanceCommand command = request.toCommand(Integer.valueOf(userId),idempotencyKey);
         ChargeBalanceResponse response = paymentServiceFacade.chargeBalance(command);
         return ApiUtils.success(response);
     }

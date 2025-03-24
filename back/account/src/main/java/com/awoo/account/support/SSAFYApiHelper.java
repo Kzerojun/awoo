@@ -1,6 +1,8 @@
 package com.awoo.account.support;
 
-import com.awoo.account.application.dto.SSAFYFinanceCommonHeader;
+import com.awoo.account.infra.ssafyfinance.SSAFYFinanceCommonHeader;
+import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
+@Slf4j
 public class SSAFYApiHelper {
 
     @Value("${ssafy.finance.api_key}")
@@ -19,8 +22,8 @@ public class SSAFYApiHelper {
     }
 
 
-    private String generateTransmissionTime(){
-        return LocalDate.now().format(DateTimeFormatter.ofPattern("HHmmss"));
+    private String generateTransmissionTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss"));
     }
 
     private String generateInstitutionCode(){
@@ -32,7 +35,8 @@ public class SSAFYApiHelper {
     }
 
     public SSAFYFinanceCommonHeader createHeader(String memberKey,SSAFYCode code) {
-        return SSAFYFinanceCommonHeader.builder()
+        return SSAFYFinanceCommonHeader
+                .builder()
                 .apiName(code.getCode())
                 .transmissionDate(generateTransmissionDate())
                 .transmissionTime(generateTransmissionTime())
