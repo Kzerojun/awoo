@@ -1,17 +1,13 @@
 package com.awoo.pet.ui.facade.internal;
 
-import com.awoo.pet.application.ModifyPetService;
-import com.awoo.pet.application.RegisterPetService;
-import com.awoo.pet.application.SearchPetListService;
-import com.awoo.pet.application.SearchPetService;
+import com.awoo.pet.application.*;
 import com.awoo.pet.domain.pet.Pet;
+import com.awoo.pet.domain.walk.Walk;
 import com.awoo.pet.ui.facade.PetServiceFacade;
 import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
-import com.awoo.pet.ui.facade.dto.response.ModifyPetResponse;
-import com.awoo.pet.ui.facade.dto.response.RegisterPetResponse;
-import com.awoo.pet.ui.facade.dto.response.SearchPetListResponse;
-import com.awoo.pet.ui.facade.dto.response.SearchPetResponse;
+import com.awoo.pet.ui.facade.dto.request.RegisterWalkRequest;
+import com.awoo.pet.ui.facade.dto.response.*;
 import com.awoo.pet.ui.facade.internal.mapper.PetResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,6 +23,9 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     private final SearchPetService searchPetService;
     private final ModifyPetService modifyPetService;
     private final SearchPetListService searchPetListService;
+    private final RegisterWalkService registerWalkService;
+    private final SearchWalkService searchWalkService;
+    private final SearchWalkListService searchWalkListService;
     private final PetResponseMapper mapper;
 
     @Override
@@ -49,7 +48,7 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     }
 
     @Override
-    public ModifyPetResponse modifyPet(ModifyPetRequest modifyPetRequest, Integer petId, Integer memberId) {
+    public ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest, final Integer petId, final Integer memberId) {
         //내 반려견인지 확인
 
         //반려견 정보 가져오고 확인 절차
@@ -59,5 +58,32 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
         Pet modifyEntity = modifyPetService.modifyPet(modifyPetRequest.toCommand(petId));
 
         return mapper.modifyPet(modifyEntity);
+    }
+
+    @Override
+    public RegisterWalkResponse registerWalk(final RegisterWalkRequest request, final Integer petId,  final Integer memberId) {
+        Integer walkId = registerWalkService.registerWalk(request.toCommand(petId, memberId));
+        Walk entity = searchWalkService.searchWalk(walkId);
+        return mapper.registerWalk(entity);
+    }
+
+    @Override
+    public SearchWalkResponse searchWalk(final Integer walkId) {
+        Walk entity = searchWalkService.searchWalk(walkId);
+        return mapper.searchWalk(entity);
+    }
+
+    @Override
+    public SearchWalkListResponse searchWalkListByPet(final Integer petId){
+        Pet pet = searchPetService.searchPet(petId);
+        List<Walk> walks = searchWalkListService.searchWalkListByPet(pet.getPetId());
+        return mapper.searchWalkList(walks);
+    }
+
+    @Override
+    public SearchWalkListResponse searchWalkListByMember(Integer memberId) {
+        //멤버 확인
+        List<Walk> walks = searchWalkListService.searchWalkListByMember(memberId);
+        return mapper.searchWalkList(walks);
     }
 }

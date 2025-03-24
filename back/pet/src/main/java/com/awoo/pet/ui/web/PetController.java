@@ -3,10 +3,8 @@ package com.awoo.pet.ui.web;
 import com.awoo.pet.ui.facade.PetServiceFacade;
 import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
-import com.awoo.pet.ui.facade.dto.response.ModifyPetResponse;
-import com.awoo.pet.ui.facade.dto.response.RegisterPetResponse;
-import com.awoo.pet.ui.facade.dto.response.SearchPetListResponse;
-import com.awoo.pet.ui.facade.dto.response.SearchPetResponse;
+import com.awoo.pet.ui.facade.dto.request.RegisterWalkRequest;
+import com.awoo.pet.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +19,7 @@ public class PetController {
 
     @PostMapping
     public RegisterPetResponse registerPet(@RequestBody RegisterPetRequest request) {
-        return petServiceFacade.registerPet(request, 1);
+        return petServiceFacade.registerPet(request, 2);
     }
 
     @GetMapping
@@ -41,4 +39,23 @@ public class PetController {
     }
 
 
+    @PostMapping("/{petId}/walks")
+    public RegisterWalkResponse registerWalk(@PathVariable Integer petId, @RequestBody RegisterWalkRequest request){
+        return petServiceFacade.registerWalk(request, petId, 2);
+    }
+
+    @GetMapping("/walks/{walkId}")
+    public SearchWalkResponse searchWalk(@PathVariable Integer walkId){
+        return petServiceFacade.searchWalk(walkId);
+    }
+
+    @GetMapping("/{petId}/walks")
+    public SearchWalkListResponse searchWalkListByPet(@PathVariable Integer petId){
+        return petServiceFacade.searchWalkListByPet(petId);
+    }
+
+    @GetMapping("/walks/member/{memberId}")
+    public SearchWalkListResponse searchWalkListByMember(@PathVariable Integer memberId){
+        return petServiceFacade.searchWalkListByMember(memberId);
+    }
 }
