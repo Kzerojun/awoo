@@ -7,7 +7,7 @@ import { EyeIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline
 
 export default function MarketListItem({ image, title, time, price, views, chat }: MarketItem) {
   return (
-    <div className="flex gap-3 border-b pb-4">
+    <div className="flex gap-3 border-b  border-gray-200 pb-4">
       {/* 썸네일 */}
       <div className="w-24 h-24 relative flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
         <Image src={image} alt={title} fill className="object-cover" />
