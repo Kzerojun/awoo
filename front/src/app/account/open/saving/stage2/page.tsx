@@ -4,6 +4,22 @@ import React from "react";
 import ProductSummary from "../components/ProductSummary";
 import Button from "@/common/ui/Button";
 import ProductIntro from "../../deposit/components/ProductIntro";
+import UserReview from "@/app/account/open/saving/components/UserReview";
+
+const step2Reviews = [
+  {
+    text: "이제 산책이 루틴이 되었어요!",
+    user: "routi***ne",
+  },
+  {
+    text: "우리집 강아지가 더 건강해졌어요 😊",
+    user: "with***dog",
+  },
+  {
+    text: "꾸준히 걷고 저축하니까 보람도 두 배예요!",
+    user: "keep***go",
+  },
+];
 
 const Page = () => {
   return (
@@ -50,6 +66,7 @@ const Page = () => {
               },
             ]}
           />
+          <UserReview reviews={step2Reviews} />
         </div>
       </div>
     </div>

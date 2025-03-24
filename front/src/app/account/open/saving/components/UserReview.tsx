@@ -3,27 +3,16 @@
 import { useEffect, useState } from "react";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/solid";
 
-// 👉 산책 적금 전용 리뷰
-const reviews = [
-  {
-    text: "매일 산책할 수 있게 동기부여 돼서 좋아요!",
-    user: "dogl***ver",
-  },
-  {
-    text: "강아지 건강도 챙기고 적금도 되고 일석이조",
-    user: "pupp***mom",
-  },
-  {
-    text: "덕분에 재미있게 저축하고 있어요!",
-    user: "walk***buddy",
-  },
-  //   {
-  //     text: "다음목표를 향해 나아가는게 재밌어요",
-  //     user: "walks***b",
-  //   },
-];
+interface Review {
+  text: string;
+  user: string;
+}
 
-export default function WalkDepositReview() {
+interface WalkDepositReviewProps {
+  reviews: Review[];
+}
+
+export default function WalkDepositReview({ reviews }: WalkDepositReviewProps) {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -31,7 +20,7 @@ export default function WalkDepositReview() {
       setCurrent((prev) => (prev + 1) % reviews.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [reviews.length]);
 
   return (
     <div className="mt-12 px-4 max-w-md mx-auto transition-all duration-500">
