@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ssafyFinanceApiResponse<T> {
-    private ssafyFinanceCommonHeader Header;
+public class SSAFYFinanceApiResponse<T> {
+    private SSAFYFinanceCommonHeader Header;
     private List<T> REC;
 }
