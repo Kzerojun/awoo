@@ -26,7 +26,7 @@ export default function ReportDetailModal({ report, onClose, onProcess }: Report
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-lg relative">
         {/* 모달 헤더 및 로고 */}
         <div className="flex justify-center items-center p-3 relative">
