@@ -1,7 +1,11 @@
 package com.awoo.account.support;
 
+import com.awoo.account.infra.client.member.MemberClient;
+import com.awoo.account.infra.client.member.response.FetchMemberKeyResponse;
 import com.awoo.account.infra.ssafyfinance.SSAFYFinanceCommonHeader;
 import java.time.LocalDateTime;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,7 +16,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class SSAFYApiHelper {
+
+    private final MemberClient memberClient;
 
     @Value("${ssafy.finance.api_key}")
     private String apiKey;
@@ -34,7 +41,11 @@ public class SSAFYApiHelper {
         return code.toString();
     }
 
-    public SSAFYFinanceCommonHeader createHeader(String memberKey,SSAFYCode code) {
+    public SSAFYFinanceCommonHeader createHeader(Integer memberId,SSAFYCode code) {
+        // MemberKey 조회
+        ApiUtils.ApiResult<FetchMemberKeyResponse> response = memberClient.fetchMemberKey(memberId);
+        String memberKey = response.getResponse().memberKey();
+
         return SSAFYFinanceCommonHeader
                 .builder()
                 .apiName(code.getCode())

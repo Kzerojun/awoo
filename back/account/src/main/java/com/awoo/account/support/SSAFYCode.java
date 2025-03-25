@@ -11,7 +11,10 @@ public enum SSAFYCode {
 
     //계좌생성
     CREATE_ACCOUNT("createDemandDepositAccount"),
-    ACCOUNT_LIST("inquireDemandDepositAccountList");
+    //계좌조회
+    ACCOUNT_LIST("inquireDemandDepositAccountList"),
+    //거래내역조회
+    TransactionLIST("inquireTransactionHistoryList");
 
     private final String code;
 
