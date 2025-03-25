@@ -46,7 +46,7 @@ const ProfileImage = ({
 
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
-    console.log(URL.createObjectURL(file));
+    // console.log(URL.createObjectURL(file));
     // 기본 이미지 선택 해제
     setSelectedAvatar("");
   };
