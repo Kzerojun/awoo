@@ -2,6 +2,9 @@ package com.awoo.pet.ui.facade.dto.request;
 
 import com.awoo.pet.application.command.ModifyPetCommand;
 import com.awoo.pet.domain.pet.Pet;
+import com.awoo.pet.ui.exception.AgeRequiredException;
+import com.awoo.pet.ui.exception.BreedRequiredException;
+import com.awoo.pet.ui.exception.NameRequiredException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +22,21 @@ public class ModifyPetRequest {
     private int age;
 
     public ModifyPetCommand toCommand(Integer petId) {
+        validate();
         return new ModifyPetCommand(petId ,name, profileImage, breed, age);
+    }
+
+    private void validate(){
+        if(name == null || name.isEmpty()){
+            throw new NameRequiredException();
+        }
+
+        if(breed == null || breed.isEmpty()){
+            throw new BreedRequiredException();
+        }
+
+        if(age <= 0){
+            throw new AgeRequiredException();
+        }
     }
 }

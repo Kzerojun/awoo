@@ -2,6 +2,7 @@ package com.awoo.pet.ui.facade.dto.request;
 
 import com.awoo.pet.application.command.RegisterPetCommand;
 import com.awoo.pet.application.command.common.PetCommand;
+import com.awoo.pet.ui.exception.AgeRequiredException;
 import com.awoo.pet.ui.exception.BreedRequiredException;
 import com.awoo.pet.ui.exception.NameRequiredException;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,9 @@ public class RegisterPetRequest {
             throw new BreedRequiredException();
         }
 
-        if(age < 0){}
+        if(age <= 0){
+            throw new AgeRequiredException();
+        }
     }
 
 }

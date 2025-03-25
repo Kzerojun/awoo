@@ -50,6 +50,11 @@ public class PetController {
         return ApiUtils.success(petServiceFacade.searchWalk(walkId));
     }
 
+    @GetMapping("/walks")
+    public ApiUtils.ApiResult<SearchWalkListResponse> searchMyWalkList(@RequestHeader("X-User-Id") Integer memberId){
+        return ApiUtils.success(petServiceFacade.searchMyWalkList(memberId));
+    }
+
     @GetMapping("/{petId}/walks")
     public ApiUtils.ApiResult<SearchWalkListResponse> searchWalkListByPet(@PathVariable Integer petId){
         return ApiUtils.success(petServiceFacade.searchWalkListByPet(petId));
