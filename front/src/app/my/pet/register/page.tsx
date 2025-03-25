@@ -2,12 +2,15 @@
 
 import React from "react";
 import CommonTopBar from "@/common/ui/CommonTopBar";
+import PetRegister from "../components/PetRegister";
 
 const RegisterPetPage = () => {
   return (
     <>
-      <CommonTopBar title="반려견 등록" leftAction="back" />
-      <div className="mt-14 px-4 h-full">반려견 등록 페이지</div>
+      <CommonTopBar title="마이펫" leftAction="back" />
+      <main className="mt-14 px-4 h-full ">
+        <PetRegister />
+      </main>
     </>
   );
 };
