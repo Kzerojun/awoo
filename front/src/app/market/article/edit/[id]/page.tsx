@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { marketDummyData } from "@/app/market/data/marketDummyData"; // 게시글 더미 데이터 import
-import ArticleWritePage from "../../write/page"; // 글쓰기 페이지 컴포넌트 import (수정용으로 재사용)
+import ArticleWritePage from "../../write/components/ArticleWrite"; // 글쓰기 페이지 컴포넌트 import (수정용으로 재사용)
 
 export default function ArticleEditPage() {
   const params = useParams(); // 현재 URL에서 파라미터 가져오기
