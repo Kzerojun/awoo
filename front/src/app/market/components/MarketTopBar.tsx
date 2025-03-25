@@ -11,9 +11,10 @@ import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
 interface MarketTopBarProps {
   title?: string;
   authorId: string;
+  articleId: string;
 }
 
-const MarketTopBar = ({ title = "", authorId }: MarketTopBarProps) => {
+const MarketTopBar = ({ title = "", authorId, articleId }: MarketTopBarProps) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef<HTMLDivElement | null>(null);
 
@@ -79,7 +80,7 @@ const MarketTopBar = ({ title = "", authorId }: MarketTopBarProps) => {
                 <button
                   onClick={() => {
                     setShowOptions(false);
-                    alert("✏ 수정 페이지 이동 예정");
+                    router.push(`/market/article/edit/${articleId}`); // ✅ 수정 페이지로 이동
                   }}
                   className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >

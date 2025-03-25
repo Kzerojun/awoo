@@ -1,16 +1,16 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import MarketTopBar from "@/app/market/components/MarketTopBar"; // ✅ 경로 확인!
-import { marketDummyData } from "../data/marketDummyData";
-import ProductImage from "../components/ProductImage";
-import ProfileInfo from "../components/ProfileInfo";
-import DetailBottomBar from "../components/DetailBottomBar";
-import InfoStats from "../components/InfoStates";
+import MarketTopBar from "@/app/market/components/MarketTopBar"; // 중고거래 상단바 컴포넌트
+import { marketDummyData } from "../data/marketDummyData"; // 더미 게시글 데이터 import
+import ProductImage from "../components/ProductImage"; // 상품 이미지 컴포넌트
+import ProfileInfo from "../components/ProfileInfo"; // 작성자 프로필 정보 컴포넌트
+import DetailBottomBar from "../components/DetailBottomBar"; // 하단 가격 및 채팅 버튼 컴포넌트
+import InfoStats from "../components/InfoStates"; // 조회수, 좋아요, 채팅 수 등 통계 정보 표시
 
 export default function MarketDetailPage() {
-  const params = useParams();
-  const id = params?.id;
+  const params = useParams(); // URL에서 파라미터(id 등) 추출
+  const id = params?.id; // 게시글 ID 추출
   const article = marketDummyData.find((item) => item.id === id);
 
   if (!article) return <div>게시글을 찾을 수 없습니다.</div>;
@@ -18,7 +18,7 @@ export default function MarketDetailPage() {
   return (
     <div>
       {/* ✅ 상단바 고정 */}
-      <MarketTopBar title={article.title} authorId={article.authorId} />
+      <MarketTopBar authorId={article.authorId} articleId={article.id} />
 
       <div className="pt-14">
         {/* ✅ 이미지 렌더링 */}

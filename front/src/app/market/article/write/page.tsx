@@ -2,17 +2,22 @@
 
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import { useState, useRef } from "react";
-import { UplaodImages, ArticleForm } from "../../types/article";
+import { UploadImages, ArticleForm } from "../../types/article";
 import { CameraIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Button from "@/common/ui/Button";
-
-const ArticleWritePage = () => {
-  const [images, setImages] = useState<UplaodImages[]>([]);
-  const [form, setForm] = useState<ArticleForm>({
-    title: "",
-    price: "",
-    description: "",
-  });
+interface ArticleWritePageProps {
+  initialData?: ArticleForm;
+  isEdit?: boolean;
+}
+const ArticleWritePage = ({ initialData, isEdit = false }: ArticleWritePageProps) => {
+  const [images, setImages] = useState<UploadImages[]>([]);
+  const [form, setForm] = useState<ArticleForm>(
+    initialData || {
+      title: "",
+      price: "",
+      description: "",
+    }
+  );
 
   const MAX_DESCRIPTION_LENGTH = 500;
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -42,7 +47,7 @@ const ArticleWritePage = () => {
     const files = e.target.files;
     if (!files) return;
 
-    const newImages: UplaodImages[] = Array.from(files).map((file) => ({
+    const newImages: UploadImages[] = Array.from(files).map((file) => ({
       file,
       previewUrl: URL.createObjectURL(file),
     }));
@@ -57,7 +62,11 @@ const ArticleWritePage = () => {
 
   return (
     <div className="pt-14 px-4">
-      <CommonTopBar title="판매하기" leftAction="close" rightAction="none" />
+      <CommonTopBar
+        title={isEdit ? "수정하기" : "판매하기"}
+        leftAction="close"
+        rightAction="none"
+      />
 
       {/* 이미지 업로드 input */}
       <input
@@ -170,7 +179,7 @@ const ArticleWritePage = () => {
       {/* 등록하기 버튼 */}
       <div className="flex justify-center">
         <Button
-          text="등록하기"
+          text={isEdit ? "수정 완료" : "등록하기"}
           fontBold="base"
           width="long"
           backgroundColor="aqua"
