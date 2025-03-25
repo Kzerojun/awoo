@@ -6,6 +6,8 @@ import MarketHeader from "./components/MarketHeader";
 import MarketListItem from "./components/MarketListItem";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
+import Button from "@/common/ui/Button";
+import Router from "next/router";
 
 export default function MarketPage() {
   const [currentTab, setCurrentTab] = useState<MarketTab>("상품");
@@ -71,6 +73,16 @@ export default function MarketPage() {
           <ChatList />
         )}
       </div>
+      <Button
+        text="+ 글쓰기"
+        textSize="medium"
+        fontBold="base"
+        width="short"
+        className="fixed bottom-16 right-3 shadow-lg z-50"
+        backgroundColor="aqua"
+        fontColor="custom-white"
+        onClick={() => Router.push("/market/article/write")}
+      />
     </div>
   );
 }
