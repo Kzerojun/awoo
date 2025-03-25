@@ -2,6 +2,16 @@ import axios from "axios";
 import urlToFile from "@/app/signup/hooks/useChangeFile";
 import axiosInstance from "../axiosInstance";
 
+// 이메일 interface
+interface EmailPayload {
+  email: string;
+}
+
+// 닉네임 interface
+interface NicknamePayload {
+  nickname: string;
+}
+
 // 회원가입 interface
 interface SignupPayload {
   requestDto: Record<string, any>;
@@ -14,6 +24,35 @@ interface LoginPayload {
   email: string;
   password: string;
 }
+
+// 이메일 중복 체크
+export const emailCheck = async ({ email }: EmailPayload) => {
+  console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-email?email=${email}`);
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-email?email=${email}`
+    );
+    console.log("이메일 중복 확인 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("이메일 중복 확인 실패:", err);
+    throw err;
+  }
+};
+
+// 닉네임 중복
+export const nicknameCheck = async ({ nickname }: NicknamePayload) => {
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-nickname?nickname=${nickname}`
+    );
+    console.log("닉네임 중복 확인:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("닉네임 중복 확인 에러:", err);
+    throw err;
+  }
+};
 
 // 회원가입 API 요청
 export const signup = async ({ requestDto, imageFile, selectedAvatar }: SignupPayload) => {
@@ -32,15 +71,17 @@ export const signup = async ({ requestDto, imageFile, selectedAvatar }: SignupPa
     const file = await urlToFile(selectedAvatar, "default-avatar.jpg");
     formData.append("profileImage", file);
   }
-  // 후에 백엔드 완성되면 주석 풀 예정
-  //   try {
-  //     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/members`, formData, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-  //     return res.data;
-  //   } catch (err) {
-  //     console.error("회원가입 실패: ", err);
-  //   }
+
+  try {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(res.data);
+    return res.data;
+  } catch (err) {
+    console.error("회원가입 실패: ", err);
+    throw err;
+  }
 };
 
 // 로그인 API 요청
@@ -51,7 +92,7 @@ export const login = async ({ email, password }: LoginPayload) => {
   };
   try {
     const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/members/login`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/members/login`,
       loginData,
       { withCredentials: true, headers: { "Content-Type": "application/json" } }
     );
