@@ -17,8 +17,8 @@ export default function QuestionList({ questions, onViewDetail }: QuestionListPr
       <table className="w-full">
         <thead>
           <tr className="bg-gray-50 border-b">
-            <th className="px-6 py-4 text-left text-gray-600 font-medium">제목</th>
             <th className="px-6 py-4 text-left text-gray-600 font-medium">작성자</th>
+            <th className="px-6 py-4 text-left text-gray-600 font-medium">제목</th>
             <th className="px-6 py-4 text-left text-gray-600 font-medium">작성일</th>
             <th className="px-6 py-4 text-center text-gray-600 font-medium">처리</th>
           </tr>
@@ -33,11 +33,18 @@ export default function QuestionList({ questions, onViewDetail }: QuestionListPr
               onClick={() => handleRowClick(question)}
             >
               <td className="px-6 py-4">
-                <div className="font-medium text-gray-800">{question.title}</div>
+                <div className="flex items-center">
+                  <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-medium mr-3">
+                    {question.writer.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="text-gray-800">{question.writer}</div>
+                    <div className="text-sm text-gray-500">{question.userId}</div>
+                  </div>
+                </div>
               </td>
               <td className="px-6 py-4">
-                <div className="text-gray-700">{question.writer}</div>
-                <div className="text-sm text-gray-500">{question.userId}</div>
+                <div className="font-medium text-gray-800">{question.title}</div>
               </td>
               <td className="px-6 py-4 text-gray-700">{question.date}</td>
               <td className="px-6 py-4 text-center">
