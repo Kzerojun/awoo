@@ -21,6 +21,10 @@ spring:
             - Path=/api/payments/**
           filters:
             - name: JwtAuthenticationFilter
+        - id : account-service
+          uri: lb://account
+          predicates:
+            - Path=/api/accounts/**
 
 
 
