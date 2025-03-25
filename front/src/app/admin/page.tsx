@@ -29,9 +29,8 @@ export default function Admin() {
       // 여기서는 예시로 타임아웃 설정
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // 로그인 성공 시 대시보드로 이동
       // 실제 코드에서는 인증 토큰 저장 등의 로직 추가
-      router.push("/admin/dashboard");
+      router.push("/admin/userReport");
     } catch (err) {
       setError("로그인에 실패했습니다. 다시 시도해주세요.");
     } finally {
@@ -40,7 +39,7 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
+    <div className="h-[650px] flex flex-col items-center justify-center bg-white p-4">
       {/* 로고 영역 */}
       <div className="mb-8">
         <Image src={awooAdmin} alt="AwOO 어드민 로고" width={280} height={120} />
