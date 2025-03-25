@@ -1,4 +1,4 @@
-export interface UplaodImages {
+export interface UploadImages {
   file: File;
   previewUrl: string;
 }
