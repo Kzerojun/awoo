@@ -40,4 +40,8 @@ public class PaymentEntity {
     public void chargeBalance(int amount) {
         this.balance += amount;
     }
+
+    public void registerAccount(String accountNo) {
+        this.accountNo = accountNo;
+    }
 }

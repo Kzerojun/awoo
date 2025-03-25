@@ -6,11 +6,8 @@ import com.awoo.payment.application.command.*;
 import com.awoo.payment.application.query.FetchBalanceQuery;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
 import com.awoo.payment.ui.facade.dto.response.*;
-import com.awoo.payment.ui.facade.dto.response.constant.PaymentResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +19,8 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final ChargeBalanceService chargeBalanceService;
     private final SendAuthPhoneMessageService sendAuthPhoneMessageService;
     private final CheckAuthCodeService checkAuthCodeService;
+    private final RemitOneWonService remitOnewonService;
+    private final VerifyOneWonService verifyOneWonService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -58,4 +57,17 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
         return CheckAuthCodeResponse.create(authToken);
     }
 
+    @Override
+    public RemitOneWonResponse remitOneWon(RemitOneWonCommand command) {
+        remitOnewonService.remitOneWon(command);
+        return RemitOneWonResponse.create();
+    }
+
+    @Override
+    public VerifyOneWonResponse verifyOneWon(VerifyOneWonCommand command) {
+        verifyOneWonService.verifyOneWon(command);
+        return VerifyOneWonResponse.create();
+    }
 }
+
+
