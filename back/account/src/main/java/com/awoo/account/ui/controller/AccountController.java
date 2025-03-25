@@ -1,16 +1,15 @@
 package com.awoo.account.ui.controller;
 
+import com.awoo.account.application.command.CreateAccountCommand;
 import com.awoo.account.application.command.DeductBalanceCommand;
-import com.awoo.account.application.dto.SSAFYAccountResponseDto;
 import com.awoo.account.support.ApiUtils;
 import com.awoo.account.ui.facade.AccountServiceFacade;
+import com.awoo.account.ui.facade.dto.request.CreateAccountRequest;
 import com.awoo.account.ui.facade.dto.request.DeductBalanceRequest;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -20,9 +19,11 @@ public class AccountController {
     private final AccountServiceFacade accountServiceFacade;
 
     @PostMapping
-    public ApiUtils.ApiResult<?> createAccount(@RequestHeader("X-User-Id") String memberId) {
+    public ApiUtils.ApiResult<?> createAccount(@RequestHeader("X-User-Id") String memberId,
+                                               @RequestBody CreateAccountRequest request) {
         try{
-            accountServiceFacade.createAccount(memberId);
+            CreateAccountCommand command = request.toCommand();
+            accountServiceFacade.createAccount(memberId, command);
             return ApiUtils.success("계좌가 생성되었습니다.");
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);

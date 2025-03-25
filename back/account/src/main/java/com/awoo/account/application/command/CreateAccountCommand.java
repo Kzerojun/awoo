@@ -1,0 +1,11 @@
+package com.awoo.account.application.command;
+
+import lombok.Builder;
+
+public record CreateAccountCommand(String password, boolean conditionsAgreement) {
+
+    @Builder
+    public CreateAccountCommand {
+
+    }
+}

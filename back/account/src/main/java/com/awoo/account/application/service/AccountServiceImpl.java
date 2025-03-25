@@ -1,8 +1,9 @@
 package com.awoo.account.application.service;
 
+import com.awoo.account.application.command.CreateAccountCommand;
 import com.awoo.account.application.dto.SSAFYAccountResponseDto;
 import com.awoo.account.domain.AccountEntity;
-import com.awoo.account.infra.JpaAccountRepository;
+import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.infra.client.member.MemberClient;
 import com.awoo.account.infra.client.member.response.FetchMemberKeyResponse;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
@@ -14,7 +15,7 @@ import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.ApiUtils;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +29,10 @@ public class AccountServiceImpl implements AccountService{
     private final SSAFYDemandDepositApiClient SSAFYApiClient;
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
-    private final JpaAccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
-    public void createAccount(String memberId) throws Exception {
+    @Transactional
+    public void createAccount(String memberId, CreateAccountCommand command) throws Exception {
         // MemberKey 조회
         ApiUtils.ApiResult<FetchMemberKeyResponse> response = memberClient.fetchMemberKey(Integer.valueOf(memberId));
         String memberKey = response.getResponse().memberKey();
@@ -46,12 +48,18 @@ public class AccountServiceImpl implements AccountService{
 
         System.out.println("fetchAccountResponse.REC().accountNo()" + fetchAccountResponse.REC().accountNo());
 
-        //응답에서의 계좌 번호 암호화 후 DB 저장
+        //응답에서의 계좌 번호 암호화
         String encodedAccountNo = aesUtil.encrypt(fetchAccountResponse.REC().accountNo());
+
+        //요청에서의 계좌 비밀번호 암호화
+        String encodedPassword = aesUtil.encrypt(command.password());
+
         AccountEntity account = AccountEntity.builder()
-                .accountNumber(encodedAccountNo)
-                .bankCode(fetchAccountResponse.REC().bankCode())
                 .memberId(Integer.valueOf(memberId))
+                .bankCode(fetchAccountResponse.REC().bankCode())
+                .accountNumber(encodedAccountNo)
+                .password(encodedPassword)
+                .conditionsAgreement(command.conditionsAgreement())
                 .build();
 
         System.out.println(account.toString());
@@ -60,7 +68,7 @@ public class AccountServiceImpl implements AccountService{
         accountRepository.save(account);
     }
 
-    public List<SSAFYAccountResponseDto> getAccountList(String memberId) throws JsonProcessingException {
+    public List<SSAFYAccountResponseDto> getAccountList(String memberId) {
         // MemberKey 조회
         ApiUtils.ApiResult<FetchMemberKeyResponse> response = memberClient.fetchMemberKey(Integer.valueOf(memberId));
         String memberKey = response.getResponse().memberKey();
@@ -74,24 +82,6 @@ public class AccountServiceImpl implements AccountService{
 
         SSAFYAccountListResponse fetchAccountResponse = SSAFYApiClient.getAccountList(request);
 
-        // 응답 전체 로깅
-//        ObjectMapper mapper = new ObjectMapper();
-//        System.out.println("전체 응답 JSON: " + mapper.writeValueAsString(fetchAccountResponse));
-
-//        return fetchAccountResponse.getRec();
         return fetchAccountResponse.REC();
-
-//        //계좌 목록 조회
-//        SSAFYAccountListRequest request = SSAFYAccountListRequest.builder()
-//                .Header(ssafyApiHelper.createHeader(memberKey, SSAFYCode.ACCOUNT_LIST))
-//                .build();
-//
-//        SSAFYFetchAccountResponse fetchAccountResponse = SSAFYApiClient.getAccountList(request);
-//
-//        // 응답 전체 로깅
-//        ObjectMapper mapper = new ObjectMapper();
-//        System.out.println("전체 응답 JSON: " + mapper.writeValueAsString(fetchAccountResponse));
-
-//        return fetchAccountResponse.REC().accountList();
     }
 }
