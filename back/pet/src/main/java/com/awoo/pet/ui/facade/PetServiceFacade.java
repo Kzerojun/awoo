@@ -21,6 +21,8 @@ public interface PetServiceFacade {
 
     SearchWalkResponse searchWalk(final Integer walkId);
 
+    SearchWalkListResponse searchMyWalkList(final Integer memberId);
+
     SearchWalkListResponse searchWalkListByPet(final Integer petId);
 
     SearchWalkListResponse searchWalkListByMember(final Integer memberId);

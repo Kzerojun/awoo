@@ -1,6 +1,8 @@
 package com.awoo.pet.application.impl;
 
 import com.awoo.pet.application.SearchWalkService;
+import com.awoo.pet.application.exception.ApplicationErrorCode;
+import com.awoo.pet.application.exception.WalkNotFondException;
 import com.awoo.pet.domain.walk.Walk;
 import com.awoo.pet.domain.walk.WalkRepository;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,6 @@ public class SearchWalkServiceImpl implements SearchWalkService {
     @Override
     @Transactional
     public Walk searchWalk(final Integer walkId) {
-        return walkRepository.searchWalk(walkId).orElseThrow(() -> new IllegalArgumentException("해당 ID의 산채이 없음"));
+        return walkRepository.searchWalk(walkId).orElseThrow(() -> new WalkNotFondException(ApplicationErrorCode.WALK_NOT_FOUND));
     }
 }

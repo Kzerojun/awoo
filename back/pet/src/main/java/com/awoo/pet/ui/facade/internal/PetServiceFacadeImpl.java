@@ -49,14 +49,7 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
 
     @Override
     public ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest, final Integer petId, final Integer memberId) {
-        //내 반려견인지 확인
-
-        //반려견 정보 가져오고 확인 절차
-        Pet entity = searchPetService.searchPet(petId);
-
-        //받은 반려견 정보와 가져온 정보가 같으면
         Pet modifyEntity = modifyPetService.modifyPet(modifyPetRequest.toCommand(petId));
-
         return mapper.modifyPet(modifyEntity);
     }
 
@@ -74,6 +67,12 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     }
 
     @Override
+    public SearchWalkListResponse searchMyWalkList(final Integer memberId) {
+        List<Walk> walks = searchWalkListService.searchWalkListByMember(memberId);
+        return mapper.searchWalkList(walks);
+    }
+
+    @Override
     public SearchWalkListResponse searchWalkListByPet(final Integer petId){
         Pet pet = searchPetService.searchPet(petId);
         List<Walk> walks = searchWalkListService.searchWalkListByPet(pet.getPetId());
@@ -81,8 +80,7 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     }
 
     @Override
-    public SearchWalkListResponse searchWalkListByMember(Integer memberId) {
-        //멤버 확인
+    public SearchWalkListResponse searchWalkListByMember(final Integer memberId) {
         List<Walk> walks = searchWalkListService.searchWalkListByMember(memberId);
         return mapper.searchWalkList(walks);
     }

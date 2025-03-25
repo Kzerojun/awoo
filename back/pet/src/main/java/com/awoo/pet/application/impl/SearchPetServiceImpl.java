@@ -1,6 +1,8 @@
 package com.awoo.pet.application.impl;
 
 import com.awoo.pet.application.SearchPetService;
+import com.awoo.pet.application.exception.ApplicationErrorCode;
+import com.awoo.pet.application.exception.PetNotFoundException;
 import com.awoo.pet.domain.pet.Pet;
 import com.awoo.pet.domain.pet.PetRepository;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,6 @@ public class SearchPetServiceImpl implements SearchPetService {
     @Override
     @Transactional
     public Pet searchPet(final Integer petId){
-        return petRepository.searchPet(petId).orElseThrow(() -> new IllegalArgumentException("해당 ID의 반려견이 없음"));
+        return petRepository.searchPet(petId).orElseThrow(() -> new PetNotFoundException(ApplicationErrorCode.PET_NOT_FOUND));
     }
 }
