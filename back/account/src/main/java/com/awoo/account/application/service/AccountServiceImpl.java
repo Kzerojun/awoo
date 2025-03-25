@@ -2,6 +2,7 @@ package com.awoo.account.application.service;
 
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
+import com.awoo.account.infra.JpaAccountRepository;
 import com.awoo.account.infra.client.member.MemberClient;
 import com.awoo.account.infra.client.member.response.FetchMemberKeyResponse;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
@@ -22,7 +23,7 @@ public class AccountServiceImpl implements AccountService{
     private final SSAFYDemandDepositApiClient SSAFYApiClient;
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
-    private final AccountRepository accountRepository;
+    private final JpaAccountRepository accountRepository;
 
     public void createAccount(String memberId) throws Exception {
         // MemberKey 조회
