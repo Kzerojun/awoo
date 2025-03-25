@@ -1,5 +1,6 @@
 package com.awoo.account.ui.facade.internal;
 
+import com.awoo.account.application.command.CreateAccountCommand;
 import com.awoo.account.application.command.DeductBalanceCommand;
 import com.awoo.account.application.dto.SSAFYAccountResponseDto;
 import com.awoo.account.application.service.AccountService;
@@ -25,8 +26,8 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
         return DeductBalanceResponse.create();
     }
 
-    public void createAccount(String memberId) throws Exception {
-        accountService.createAccount(memberId);
+    public void createAccount(String memberId, CreateAccountCommand command) throws Exception {
+        accountService.createAccount(memberId, command);
     }
 
     public List<SSAFYAccountResponseDto> getAccountList(String memberId) throws JsonProcessingException {
