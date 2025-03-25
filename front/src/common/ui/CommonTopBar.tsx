@@ -7,7 +7,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { popPath } from "@/lib/slices/userActionSlice";
+import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
 
 interface CommonTopBarProps {
   title: string;
@@ -50,6 +50,7 @@ const CommonTopBar = ({
     if (leftAction === "back") {
       if (historyStack.length > 0) {
         const prevPath = historyStack[historyStack.length - 1];
+        dispatch(markGoingBack(true));
         dispatch(popPath());
         router.push(prevPath);
       } else {

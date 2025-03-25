@@ -5,7 +5,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import counterReducer from "./slices/counterSlice";
 import walkReducer from "./slices/walkSlice";
 import registerReducer from "./slices/registerSlice";
-import userActionReducer from "./slices/userActionSlice";
+import userActionReducer from "./slices/userActionSlice"; // 유저가 들어가는 페이지 추적
+import userReducer from "./slices/userSlice"; // 유저 정보
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     walk: walkReducer, // 산책 관련 리듀서
     register: registerReducer,
     userAction: userActionReducer,
+    user: userReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });
