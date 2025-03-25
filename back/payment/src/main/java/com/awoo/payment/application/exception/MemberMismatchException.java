@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class MemberMismatchException extends ApplicationException {
 
-  private final ApplicationErrorCode applicationErrorCode;
+    private final ApplicationErrorCode applicationErrorCode;
 
     public MemberMismatchException(ApplicationErrorCode applicationErrorCode) {
         super(applicationErrorCode);
