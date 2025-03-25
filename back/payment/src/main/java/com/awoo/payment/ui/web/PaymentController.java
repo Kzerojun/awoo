@@ -11,6 +11,7 @@ import com.awoo.payment.ui.facade.PaymentServiceFacade;
 import com.awoo.payment.ui.facade.dto.request.ChargePaymentBalanceRequest;
 import com.awoo.payment.ui.facade.dto.request.CheckAuthCodeRequest;
 import com.awoo.payment.ui.facade.dto.request.RegisterPaymentPasswordRequest;
+import com.awoo.payment.ui.facade.dto.request.RegisterPaymentRequest;
 import com.awoo.payment.ui.facade.dto.request.SendAuthPhoneMessageRequest;
 import com.awoo.payment.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,10 @@ public class PaymentController {
     private final PaymentServiceFacade paymentServiceFacade;
 
     @PostMapping("/register")
-    public  ApiUtils.ApiResult<RegisterPaymentResponse> register(@RequestHeader("X-User-Id") Integer memberId) {
-        RegisterPaymentCommand command = RegisterPaymentCommand.builder()
-                .memberId(memberId)
-                .build();
+    public  ApiUtils.ApiResult<RegisterPaymentResponse> register(@RequestHeader("X-User-Id") String memberId,
+                                                                 @RequestHeader("auth-token") String authToken,
+                                                                 @RequestBody RegisterPaymentRequest request) {
+        RegisterPaymentCommand command = request.toCommand(authToken,memberId);
         RegisterPaymentResponse response = paymentServiceFacade.register(command);
         return ApiUtils.success(response);
     }

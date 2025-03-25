@@ -27,10 +27,9 @@ public class PaymentEntity {
     private String accountNo;
 
     @Builder
-    public PaymentEntity(String password, Integer memberId,String accountNo) {
+    public PaymentEntity(String password, Integer memberId) {
         this.password = password;
         this.memberId = memberId;
-        this.accountNo = accountNo;
         this.balance = 0;
     }
 
