@@ -2,12 +2,14 @@ package com.awoo.payment.ui.web;
 
 
 import com.awoo.payment.application.command.ChargeBalanceCommand;
+import com.awoo.payment.application.command.CheckAuthCodeCommand;
 import com.awoo.payment.application.command.RegisterPaymentCommand;
 import com.awoo.payment.application.command.SendAuthPhoneMessageCommand;
 import com.awoo.payment.application.query.FetchBalanceQuery;
 import com.awoo.payment.support.ApiUtils;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
 import com.awoo.payment.ui.facade.dto.request.ChargePaymentBalanceRequest;
+import com.awoo.payment.ui.facade.dto.request.CheckAuthCodeRequest;
 import com.awoo.payment.ui.facade.dto.request.RegisterPaymentPasswordRequest;
 import com.awoo.payment.ui.facade.dto.request.SendAuthPhoneMessageRequest;
 import com.awoo.payment.ui.facade.dto.response.*;
@@ -58,6 +60,14 @@ public class PaymentController {
                                                                                  @RequestHeader("X-User-Id") String userId) {
         SendAuthPhoneMessageCommand command = request.toCommand(userId);
         SendAuthPhoneMessageResponse response = paymentServiceFacade.sendAuthPhoneMessage(command);
+        return ApiUtils.success(response);
+    }
+
+    @PostMapping("/auth/phone-verifications")
+    public ApiUtils.ApiResult<CheckAuthCodeResponse> checkAuthCode(@RequestBody CheckAuthCodeRequest request,
+                                              @RequestHeader("X-User-Id") String userId) {
+        CheckAuthCodeCommand command = request.toCommand(userId);
+        CheckAuthCodeResponse response = paymentServiceFacade.checkAuthCode(command);
         return ApiUtils.success(response);
     }
 

@@ -2,13 +2,11 @@ package com.awoo.payment.ui.facade.internal;
 
 
 import com.awoo.payment.application.*;
-import com.awoo.payment.application.command.ChargeBalanceCommand;
-import com.awoo.payment.application.command.RegisterPaymentCommand;
-import com.awoo.payment.application.command.RegisterPaymentPasswordCommand;
-import com.awoo.payment.application.command.SendAuthPhoneMessageCommand;
+import com.awoo.payment.application.command.*;
 import com.awoo.payment.application.query.FetchBalanceQuery;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
 import com.awoo.payment.ui.facade.dto.response.*;
+import com.awoo.payment.ui.facade.dto.response.constant.PaymentResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +21,7 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final QueryPaymentService queryPaymentService;
     private final ChargeBalanceService chargeBalanceService;
     private final SendAuthPhoneMessageService sendAuthPhoneMessageService;
+    private final CheckAuthCodeService checkAuthCodeService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -52,4 +51,11 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
         sendAuthPhoneMessageService.sendAuthPhoneMessage(command);
         return SendAuthPhoneMessageResponse.create();
     }
+
+    @Override
+    public CheckAuthCodeResponse checkAuthCode(CheckAuthCodeCommand command) {
+        String authToken = checkAuthCodeService.checkAuthCode(command);
+        return CheckAuthCodeResponse.create(authToken);
+    }
+
 }
