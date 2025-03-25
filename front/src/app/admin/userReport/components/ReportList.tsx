@@ -27,56 +27,52 @@ export default function ReportList({ reports, onViewDetail }: ReportListProps) {
       <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="border-b">
-              <th className="p-4 text-left text-gray-600 font-medium">신고 받은 유저</th>
-              <th className="p-4 text-left text-gray-600 font-medium">가입 날짜</th>
-              <th className="p-4 text-left text-gray-600 font-medium">신고 날짜</th>
-              <th className="p-4 text-left text-gray-600 font-medium">신고 사유</th>
-              <th className="p-4 text-center text-gray-600 font-medium">상세보기</th>
-              <th className="p-4 text-center text-gray-600 font-medium">누적 경고 수</th>
-              <th className="p-4 text-center text-gray-600 font-medium">처리</th>
+            <tr className="bg-gray-50 border-b">
+              <th className="px-6 py-4 text-left text-gray-600 font-medium">신고 대상자</th>
+              <th className="px-6 py-4 text-left text-gray-600 font-medium">가입 날짜</th>
+              <th className="px-6 py-4 text-left text-gray-600 font-medium">신고 날짜</th>
+              <th className="px-6 py-4 text-left text-gray-600 font-medium">신고 사유</th>
+              <th className="px-6 py-4 text-center text-gray-600 font-medium">상세보기</th>
+              <th className="px-6 py-4 text-center text-gray-600 font-medium">누적 경고 수</th>
+              <th className="px-6 py-4 text-center text-gray-600 font-medium">처리</th>
             </tr>
           </thead>
           <tbody>
             {currentReports.map((report, index) => (
               <tr
                 key={report.id}
-                className={`hover:bg-gray-50 cursor-pointer transition-colors duration-150 ${
+                className={`hover:bg-gray-50 transition-colors duration-150 ${
                   index !== currentReports.length - 1 ? "border-b border-gray-100" : ""
                 }`}
-                onClick={() => handleDetailClick(report)}
               >
-                <td className="p-4">
+                <td className="px-6 py-4">
                   <div className="flex items-center">
                     <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-medium mr-3">
                       {report.username.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-medium">{report.username}</div>
+                      <div className="font-medium text-gray-800">{report.username}</div>
                       <div className="text-sm text-gray-500">{report.userId}</div>
                     </div>
                   </div>
                 </td>
-                <td className="p-4 text-gray-700">{report.reportDate}</td>
-                <td className="p-4 text-gray-700">{report.processDate}</td>
-                <td className="p-4 text-gray-700">{report.reason}</td>
-                <td className="p-4 text-center">
+                <td className="px-6 py-4 text-gray-700">{report.reportDate}</td>
+                <td className="px-6 py-4 text-gray-700">{report.processDate}</td>
+                <td className="px-6 py-4 text-gray-700">{report.reason}</td>
+                <td className="px-6 py-4 text-center">
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDetailClick(report);
-                    }}
-                    className="px-3 py-1 bg-teal-400 text-white text-xs rounded-md hover:bg-teal-500 transition-colors duration-150 shadow-sm"
+                    onClick={() => handleDetailClick(report)}
+                    className="px-3 py-1 bg-teal-100 text-teal-600 text-xs rounded-full hover:bg-teal-200 transition-colors duration-150 shadow-sm"
                   >
                     상세보기
                   </button>
                 </td>
-                <td className="p-4 text-center">
+                <td className="px-6 py-4 text-center">
                   <span className="inline-flex items-center justify-center min-w-6 h-6 px-2 rounded-full bg-gray-100 text-gray-700">
                     {report.reportCount}회
                   </span>
                 </td>
-                <td className="p-4 text-center">
+                <td className="px-6 py-4 text-center">
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium inline-block
                     ${report.resolution === "대기" ? "bg-yellow-100 text-yellow-700" : ""}
@@ -90,58 +86,69 @@ export default function ReportList({ reports, onViewDetail }: ReportListProps) {
                 </td>
               </tr>
             ))}
+
+            {/* 데이터가 없을 경우 메시지 표시 */}
+            {currentReports.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                  등록된 신고가 없습니다.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
       {/* 페이지네이션 */}
-      <div className="pagination flex justify-center items-center mt-6 gap-2">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="pagination-btn w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 disabled:opacity-50 hover:bg-gray-50 transition-colors duration-150"
-        >
-          &lt;
-        </button>
+      {totalPages > 1 && (
+        <div className="pagination flex justify-center items-center mt-8 gap-2">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 disabled:opacity-50 hover:bg-gray-50 transition-colors duration-150"
+          >
+            &lt;
+          </button>
 
-        {Array.from({ length: Math.min(5, totalPages) }).map((_, index) => {
-          // 현재 페이지를 중심으로 표시할 페이지 번호 계산
-          let pageNum = currentPage;
-          if (currentPage <= 3) {
-            pageNum = index + 1;
-          } else if (currentPage >= totalPages - 2) {
-            pageNum = totalPages - 4 + index;
-          } else {
-            pageNum = currentPage - 2 + index;
-          }
+          {Array.from({ length: Math.min(5, totalPages) }).map((_, index) => {
+            // 현재 페이지를 중심으로 표시할 페이지 번호 계산
+            let pageNum = currentPage;
+            if (currentPage <= 3) {
+              pageNum = index + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + index;
+            } else {
+              pageNum = currentPage - 2 + index;
+            }
 
-          // 페이지 범위 체크
-          if (pageNum <= 0 || pageNum > totalPages) return null;
+            // 페이지 범위 체크
+            if (pageNum <= 0 || pageNum > totalPages) return null;
 
-          return (
-            <button
-              key={pageNum}
-              onClick={() => setCurrentPage(pageNum)}
-              className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors duration-150
-                ${
-                  currentPage === pageNum
-                    ? "bg-teal-500 text-white border border-teal-500"
-                    : "border border-gray-300 hover:bg-gray-50"
-                }`}
-            >
-              {pageNum}
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors duration-150
+                  ${
+                    currentPage === pageNum
+                      ? "bg-teal-500 text-white border border-teal-500"
+                      : "border border-gray-300 hover:bg-gray-50"
+                  }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
 
-        <button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="pagination-btn w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 disabled:opacity-50 hover:bg-gray-50 transition-colors duration-150"
-        >
-          &gt;
-        </button>
-      </div>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 disabled:opacity-50 hover:bg-gray-50 transition-colors duration-150"
+          >
+            &gt;
+          </button>
+        </div>
+      )}
     </div>
   );
 }
