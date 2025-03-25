@@ -18,10 +18,6 @@ const ArticleWritePage = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // 팝업 관련 상태
-  const [showImageSourceModal, setShowImageSourceModal] = useState(false);
-  const [captureMode, setCaptureMode] = useState<"camera" | "gallery" | null>(null);
-
   // 설명 입력 시 자동 리사이징
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -36,9 +32,9 @@ const ArticleWritePage = () => {
     }
   };
 
-  // 업로드 박스 클릭 → 팝업 열기
+  // 업로드 박스 클릭 → 곧장 갤러리 열기
   const handleClickUpload = () => {
-    setShowImageSourceModal(true);
+    fileInputRef.current?.click();
   };
 
   // 이미지 업로드 처리
@@ -65,11 +61,9 @@ const ArticleWritePage = () => {
 
       {/* 이미지 업로드 input */}
       <input
-        key={captureMode}
         type="file"
         accept="image/*"
         multiple
-        capture={captureMode === "camera" ? "environment" : undefined}
         ref={fileInputRef}
         onChange={handleImageUpload}
         className="hidden"
@@ -96,34 +90,8 @@ const ArticleWritePage = () => {
         </div>
       )}
 
+      {/* 업로드 박스 */}
       <div className="relative mb-3 mt-2">
-        {/* 수정된 팝업 위치 */}
-        {showImageSourceModal && (
-          <div className="absolute top-full mt-2 left-0 bg-white border border-gray-200 rounded-md shadow-md z-50 w-40">
-            <button
-              onClick={() => {
-                setCaptureMode("camera");
-                setShowImageSourceModal(false);
-                setTimeout(() => fileInputRef.current?.click(), 100);
-              }}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-            >
-              카메라로 찍기
-            </button>
-            <button
-              onClick={() => {
-                setCaptureMode("gallery");
-                setShowImageSourceModal(false);
-                setTimeout(() => fileInputRef.current?.click(), 0);
-              }}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-            >
-              갤러리에서 선택
-            </button>
-          </div>
-        )}
-
-        {/* 업로드 박스 */}
         <div
           onClick={handleClickUpload}
           className="w-[70px] h-[70px] bg-gray-100 rounded-lg flex flex-col items-center justify-center text-gray-400 text-sm cursor-pointer"
@@ -149,14 +117,22 @@ const ArticleWritePage = () => {
       <div className="mb-4">
         <label className="text-xs font-medium text-custom-black mb-1 block">가격</label>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
           min="0"
           placeholder="₩ 가격을 입력해주세요."
           value={form.price}
           onChange={(e) => {
-            const value = Number(e.target.value);
-            if (value >= 0) {
-              setForm({ ...form, price: e.target.value });
+            // 숫자만 추출
+            const rawValue = e.target.value.replace(/[^0-9]/g, "");
+
+            // 숫자로 변환 (선택 사항)
+            const numberValue = Number(rawValue);
+
+            if (numberValue >= 0) {
+              // 쉼표 추가해서 표시
+              const formatted = numberValue.toLocaleString();
+              setForm({ ...form, price: formatted });
             }
           }}
           className="w-full border border-gray-300 rounded-md px-3 py-3 text-base placeholder:text-sm placeholder:text-gray-400 hover:border-aqua focus:border-aqua focus:outline-none transition"
@@ -201,7 +177,11 @@ const ArticleWritePage = () => {
           fontColor="custom-white"
           className="w-full"
           onClick={() => {
-            console.log("등록 데이터:", form);
+            const priceNumber = Number(form.price.replace(/,/g, ""));
+            console.log("등록 데이터:", {
+              ...form,
+              price: priceNumber,
+            });
             console.log("이미지 파일:", images);
           }}
         />
