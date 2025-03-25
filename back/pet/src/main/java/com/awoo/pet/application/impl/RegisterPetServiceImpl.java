@@ -19,7 +19,6 @@ public class RegisterPetServiceImpl implements RegisterPetService {
     private final PetRepository petRepository;
 
     @Override
-    @Transactional
     public Integer registerPet(final RegisterPetCommand command) {
         Pet entity = petFactory.registerPetEntity(command);
         try{

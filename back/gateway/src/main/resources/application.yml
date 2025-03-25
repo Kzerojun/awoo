@@ -21,6 +21,10 @@ spring:
             - Path=/api/payments/**
           filters:
             - name: JwtAuthenticationFilter
+        - id: calendar-service
+          uri: lb://calendar
+          predicates:
+            - Path=/api/calendars/**
 
 
 
