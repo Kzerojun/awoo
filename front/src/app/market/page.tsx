@@ -7,11 +7,10 @@ import MarketListItem from "./components/MarketListItem";
 import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import Button from "@/common/ui/Button";
-import Router from "next/router";
-
+import { useRouter } from "next/navigation";
 export default function MarketPage() {
   const [currentTab, setCurrentTab] = useState<MarketTab>("상품");
-
+  const router = useRouter();
   const dummyData: MarketItem[] = [
     {
       id: 1,
@@ -81,7 +80,7 @@ export default function MarketPage() {
         className="fixed bottom-16 right-3 shadow-lg z-50"
         backgroundColor="aqua"
         fontColor="custom-white"
-        onClick={() => Router.push("/market/article/write")}
+        onClick={() => router.push("/market/article/write")}
       />
     </div>
   );
