@@ -1,0 +1,31 @@
+export const marketDummyData = [
+  {
+    id: "1",
+    image: "/images/market-dummy/dog-1.jpg",
+    title: "귀여운 강아지 패딩",
+    price: "15,000원",
+    time: "1시간 전",
+    views: 200,
+    chat: 3,
+    description:
+      "겨울철 강아지를 위한 귀여운 패딩입니다. 따뜻하고 귀여워요! 푸들이 입던거라 같은 푸들 친구들에게 강추합니다. 아주아주 깨끗하진 않습니당 ㅎ 처음에 멍품 가게에서 사서 중고가격도 좀 비싸용🐕‍🦺",
+    nickname: "댕댕이맘",
+    profileImage: "/images/market-dummy/dog-2.jpg",
+    isLiked: true,
+    likes: 120,
+  },
+  {
+    id: "2",
+    image: "/images/market-dummy/dog-2.jpg",
+    title: "강아지 털 장난감",
+    price: "5,000원",
+    time: "2시간 전",
+    views: 80,
+    chat: 0,
+    description: "거의 새상품이에요. 울 강아지가 장난감이 많아서 내놔요!",
+    nickname: "몽실이아빠",
+    profileImage: "/images/market-dummy/dog-2.jpg",
+    isLiked: false,
+    likes: 120,
+  },
+];
