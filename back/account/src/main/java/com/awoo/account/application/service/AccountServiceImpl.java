@@ -1,20 +1,21 @@
 package com.awoo.account.application.service;
 
 import com.awoo.account.application.command.CreateAccountCommand;
+import com.awoo.account.application.command.TransactionsCommand;
 import com.awoo.account.application.dto.SSAFYAccountResponseDto;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
-import com.awoo.account.infra.client.member.MemberClient;
-import com.awoo.account.infra.client.member.response.FetchMemberKeyResponse;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYAccountListRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateAccountRequest;
+import com.awoo.account.infra.ssafyfinance.request.SSAFYTransactionsRequest;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountListResponse;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYFetchAccountResponse;
+import com.awoo.account.infra.ssafyfinance.response.SSAFYTransactionsResponse;
 import com.awoo.account.infra.util.AESUtil;
-import com.awoo.account.support.ApiUtils;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
+import com.awoo.account.ui.facade.dto.response.TransactionResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService{
 
-    private final MemberClient memberClient;
+//    private final MemberClient memberClient;
     private final SSAFYDemandDepositApiClient SSAFYApiClient;
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
@@ -33,25 +34,19 @@ public class AccountServiceImpl implements AccountService{
 
     @Transactional
     public void createAccount(String memberId, CreateAccountCommand command) throws Exception {
-        // MemberKey 조회
-        ApiUtils.ApiResult<FetchMemberKeyResponse> response = memberClient.fetchMemberKey(Integer.valueOf(memberId));
-        String memberKey = response.getResponse().memberKey();
-
-        System.out.println(memberKey);
-
-        // 계좌 생성
+        // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
-                .Header(ssafyApiHelper.createHeader(memberKey, SSAFYCode.CREATE_ACCOUNT))
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
                 .accountTypeUniqueNo("999-1-2f9c2ea1789943")    //Test 계좌 상품 연결
                 .build();
-        SSAFYFetchAccountResponse fetchAccountResponse = SSAFYApiClient.createAccount(request);
 
-        System.out.println("fetchAccountResponse.REC().accountNo()" + fetchAccountResponse.REC().accountNo());
+        //SSAFY API 호출
+        SSAFYFetchAccountResponse fetchAccountResponse = SSAFYApiClient.createAccount(request);
 
         //응답에서의 계좌 번호 암호화
         String encodedAccountNo = aesUtil.encrypt(fetchAccountResponse.REC().accountNo());
 
-        //요청에서의 계좌 비밀번호 암호화
+        //응답에서의 계좌 비밀번호 암호화
         String encodedPassword = aesUtil.encrypt(command.password());
 
         AccountEntity account = AccountEntity.builder()
@@ -62,26 +57,35 @@ public class AccountServiceImpl implements AccountService{
                 .conditionsAgreement(command.conditionsAgreement())
                 .build();
 
-        System.out.println(account.toString());
-
         // DB 저장
         accountRepository.save(account);
     }
 
     public List<SSAFYAccountResponseDto> getAccountList(String memberId) {
-        // MemberKey 조회
-        ApiUtils.ApiResult<FetchMemberKeyResponse> response = memberClient.fetchMemberKey(Integer.valueOf(memberId));
-        String memberKey = response.getResponse().memberKey();
-
-        System.out.println("memberKey: " + memberKey);
-
-        //계좌 목록 조회
+        //SSAFY 계좌 목록 조회 요청 생성
         SSAFYAccountListRequest request = SSAFYAccountListRequest.builder()
-                .Header(ssafyApiHelper.createHeader(memberKey, SSAFYCode.ACCOUNT_LIST))
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.ACCOUNT_LIST))
                 .build();
 
         SSAFYAccountListResponse fetchAccountResponse = SSAFYApiClient.getAccountList(request);
 
         return fetchAccountResponse.REC();
+    }
+
+    public List<TransactionResponse> getTransactions(String memberId, TransactionsCommand command) {
+        //SSAFY 계좌 거래 내역 요청 생성
+        SSAFYTransactionsRequest request = SSAFYTransactionsRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.TransactionLIST))
+                .accountNo(command.accountNo())
+                .startDate(command.startDate())
+                .endDate(command.endDate())
+                .transactionType("A")
+                .orderByType("DESC")
+                .build();
+
+//        System.out.println("요청 본문: " + request.toString());
+        SSAFYTransactionsResponse fetchAccountResponse = SSAFYApiClient.getTransactions(request);
+//        System.out.println("전체 응답: " + fetchAccountResponse.REC().toString());
+        return fetchAccountResponse.REC().list();
     }
 }
