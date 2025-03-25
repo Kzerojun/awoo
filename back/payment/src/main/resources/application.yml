@@ -45,3 +45,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
+
+sms:
+  cool:
+    sms-key : ${COOL_SMS_KEY}
+    sms-scret-key : ${COOL_SMS_SECRET_KEY}

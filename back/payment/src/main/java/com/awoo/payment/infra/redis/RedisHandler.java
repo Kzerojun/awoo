@@ -23,4 +23,15 @@ public class RedisHandler {
     public void addIdempotencyKey(String idempotencyKey) {
         redisTemplate.opsForValue().set(idempotencyKey, "충전이 완료되었습니다.", 5, TimeUnit.MINUTES);
     }
+
+    public void addAuthCode(String phoneNumber, String authCode) {
+        String key = "auth_code:" + phoneNumber; // auth_code:+01012345678
+        redisTemplate.opsForValue().set(key, authCode, 5, TimeUnit.MINUTES);
+    }
+
+    public boolean verifyAuthCode(String phoneNumber, String authCode) {
+        String key = "auth_code:" + phoneNumber;
+        String storedCode = getValue(key);
+        return storedCode != null && storedCode.equals(authCode);
+    }
 }
