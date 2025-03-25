@@ -10,15 +10,19 @@ import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
 
 interface MarketTopBarProps {
   title?: string;
+  authorId: string;
 }
 
-const MarketTopBar = ({ title = "" }: MarketTopBarProps) => {
+const MarketTopBar = ({ title = "", authorId }: MarketTopBarProps) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
   const historyStack = useAppSelector((state) => state.userAction.historyStack);
+
+  const currentUserId = "u123"; // ✅ 로그인 유저 ID (임시 더미)
+  const isMine = authorId === currentUserId;
 
   const handleBack = () => {
     if (historyStack.length > 0) {
@@ -70,15 +74,41 @@ const MarketTopBar = ({ title = "" }: MarketTopBarProps) => {
 
         {showOptions && (
           <div className="absolute right-0 -mt-1 w-28 bg-white border border-gray-200 rounded shadow-lg z-[9999]">
-            <button
-              onClick={() => {
-                setShowOptions(false);
-                alert("🚨 신고하기 페이지로 이동!");
-              }}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              🚨 신고하기
-            </button>
+            {isMine ? (
+              <>
+                <button
+                  onClick={() => {
+                    setShowOptions(false);
+                    alert("✏ 수정 페이지 이동 예정");
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  수정하기
+                </button>
+                <button
+                  onClick={() => {
+                    setShowOptions(false);
+                    const confirmDelete = confirm("정말 삭제하시겠습니까?");
+                    if (confirmDelete) {
+                      alert("🗑 삭제 로직 예정");
+                    }
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                >
+                  삭제하기
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  setShowOptions(false);
+                  alert("🚨 신고하기 페이지로 이동!");
+                }}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                🚨 신고하기
+              </button>
+            )}
           </div>
         )}
       </div>

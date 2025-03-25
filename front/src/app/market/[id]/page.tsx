@@ -18,7 +18,7 @@ export default function MarketDetailPage() {
   return (
     <div>
       {/* ✅ 상단바 고정 */}
-      <MarketTopBar />
+      <MarketTopBar title={article.title} authorId={article.authorId} />
 
       <div className="pt-14">
         {/* ✅ 이미지 렌더링 */}
