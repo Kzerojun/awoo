@@ -10,6 +10,7 @@ import PetMain from "./components/PetMain";
 
 const Pet = () => {
   const dispatch = useAppDispatch();
+  // const currentView = 2; // 테스트를 위한 코드 (펫 메인페이지)
   const currentView = useAppSelector((state) => state.userAction.currentView);
   const petList = useAppSelector((state) => state.user.petList);
   const petNum = petList?.length;
