@@ -117,14 +117,22 @@ const ArticleWritePage = () => {
       <div className="mb-4">
         <label className="text-xs font-medium text-custom-black mb-1 block">가격</label>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
           min="0"
           placeholder="₩ 가격을 입력해주세요."
           value={form.price}
           onChange={(e) => {
-            const value = Number(e.target.value);
-            if (value >= 0) {
-              setForm({ ...form, price: e.target.value });
+            // 숫자만 추출
+            const rawValue = e.target.value.replace(/[^0-9]/g, "");
+
+            // 숫자로 변환 (선택 사항)
+            const numberValue = Number(rawValue);
+
+            if (numberValue >= 0) {
+              // 쉼표 추가해서 표시
+              const formatted = numberValue.toLocaleString();
+              setForm({ ...form, price: formatted });
             }
           }}
           className="w-full border border-gray-300 rounded-md px-3 py-3 text-base placeholder:text-sm placeholder:text-gray-400 hover:border-aqua focus:border-aqua focus:outline-none transition"
@@ -169,7 +177,11 @@ const ArticleWritePage = () => {
           fontColor="custom-white"
           className="w-full"
           onClick={() => {
-            console.log("등록 데이터:", form);
+            const priceNumber = Number(form.price.replace(/,/g, ""));
+            console.log("등록 데이터:", {
+              ...form,
+              price: priceNumber,
+            });
             console.log("이미지 파일:", images);
           }}
         />
