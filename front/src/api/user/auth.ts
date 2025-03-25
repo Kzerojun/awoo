@@ -1,6 +1,7 @@
 import axios from "axios";
 import urlToFile from "@/app/signup/hooks/useChangeFile";
 import axiosInstance from "../axiosInstance";
+import { headers } from "next/headers";
 
 // 이메일 interface
 interface EmailPayload {
@@ -40,7 +41,7 @@ export const emailCheck = async ({ email }: EmailPayload) => {
   }
 };
 
-// 닉네임 중복
+// 닉네임 중복 체크
 export const nicknameCheck = async ({ nickname }: NicknamePayload) => {
   try {
     const res = await axios.get(
@@ -101,10 +102,25 @@ export const login = async ({ email, password }: LoginPayload) => {
     return res;
   } catch (err) {
     console.error("로그인 실패:", err);
+    throw err;
   }
 };
 
 // 리프레시 토큰 확인
 export const refreshToken = (): Promise<{ data: { accessToken: string } }> => {
   return axiosInstance.post("/auth/refresh");
+};
+
+// 유저 정보 조회
+export const getUserInfo = async () => {
+  try {
+    const res = await axiosInstance.get("/members", {
+      headers: { "Content-Type": "application/json" },
+    });
+    console.log("유저 정보 조회 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("유저 정보 조회 중 에러:", err);
+    throw err;
+  }
 };
