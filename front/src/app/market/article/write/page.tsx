@@ -18,6 +18,10 @@ const ArticleWritePage = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // 팝업 관련 상태
+  const [showImageSourceModal, setShowImageSourceModal] = useState(false);
+  const [captureMode, setCaptureMode] = useState<"camera" | "gallery" | null>(null);
+
   // 설명 입력 시 자동 리사이징
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -32,9 +36,9 @@ const ArticleWritePage = () => {
     }
   };
 
-  // 업로드 input 클릭
+  // 업로드 박스 클릭 → 팝업 열기
   const handleClickUpload = () => {
-    fileInputRef.current?.click();
+    setShowImageSourceModal(true);
   };
 
   // 이미지 업로드 처리
@@ -61,10 +65,11 @@ const ArticleWritePage = () => {
 
       {/* 이미지 업로드 input */}
       <input
+        key={captureMode}
         type="file"
         accept="image/*"
-        capture="environment"
         multiple
+        capture={captureMode === "camera" ? "environment" : undefined}
         ref={fileInputRef}
         onChange={handleImageUpload}
         className="hidden"
@@ -91,8 +96,34 @@ const ArticleWritePage = () => {
         </div>
       )}
 
-      {/* 업로드 박스 */}
-      <div className="mb-3 mt-2">
+      <div className="relative mb-3 mt-2">
+        {/* 수정된 팝업 위치 */}
+        {showImageSourceModal && (
+          <div className="absolute top-full mt-2 left-0 bg-white border border-gray-200 rounded-md shadow-md z-50 w-40">
+            <button
+              onClick={() => {
+                setCaptureMode("camera");
+                setShowImageSourceModal(false);
+                setTimeout(() => fileInputRef.current?.click(), 100);
+              }}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+            >
+              카메라로 찍기
+            </button>
+            <button
+              onClick={() => {
+                setCaptureMode("gallery");
+                setShowImageSourceModal(false);
+                setTimeout(() => fileInputRef.current?.click(), 0);
+              }}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+            >
+              갤러리에서 선택
+            </button>
+          </div>
+        )}
+
+        {/* 업로드 박스 */}
         <div
           onClick={handleClickUpload}
           className="w-[70px] h-[70px] bg-gray-100 rounded-lg flex flex-col items-center justify-center text-gray-400 text-sm cursor-pointer"

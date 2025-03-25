@@ -28,7 +28,7 @@ export default function ReportList({ reports, onViewDetail }: ReportListProps) {
         <table className="w-full">
           <thead>
             <tr className="border-b">
-              <th className="p-4 text-left text-gray-600 font-medium">유저</th>
+              <th className="p-4 text-left text-gray-600 font-medium">신고 받은 유저</th>
               <th className="p-4 text-left text-gray-600 font-medium">가입 날짜</th>
               <th className="p-4 text-left text-gray-600 font-medium">신고 날짜</th>
               <th className="p-4 text-left text-gray-600 font-medium">신고 사유</th>

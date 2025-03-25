@@ -47,6 +47,9 @@ dependencies {
 
 	//Feign Client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	// CoolSMS
+	implementation 'net.nurigo:sdk:4.2.7'
 }
 
 ext {

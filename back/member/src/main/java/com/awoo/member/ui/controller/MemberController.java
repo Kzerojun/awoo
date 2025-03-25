@@ -7,6 +7,7 @@ import com.awoo.member.application.dto.SignUpRequestDto;
 import com.awoo.member.application.service.MemberService;
 import com.awoo.member.support.ApiUtils;
 import com.awoo.member.ui.dto.CheckMemberRequest;
+import com.awoo.member.ui.dto.CheckMemberResponse;
 import com.awoo.member.ui.dto.FindMemberKeyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -148,7 +149,7 @@ public class MemberController {
 
     @PostMapping("check-member")
     public ApiUtils.ApiResult<?> checkMember(@RequestBody CheckMemberRequest request) {
-        if (memberService.checkMember(request)) return ApiUtils.success("조회 성공");
+        if (memberService.checkMember(request)) return ApiUtils.success(new CheckMemberResponse("조회 성공"));
         return ApiUtils.error("조회 실패", HttpStatus.BAD_REQUEST);
     }
 
