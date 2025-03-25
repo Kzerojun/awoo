@@ -13,7 +13,9 @@ public enum PaymentResponseMessage {
     CHARGE_PAYMENT_FAIL("페이서비스 잔액 충전에 실패하였습니다."),
     CHARGE_PAYMENT_SUCCESS("페이서비스 잔액 충전에 성공하셨습니다."),
     SEND_AUTH_PHONE_MESSAGE_SUCCESS("핸드폰 인증 요청에 성공하셨습니다."),
-    CHECK_AUTH_SUCCESS("핸드폰 인증에 성공하셨습니다.");
+    CHECK_AUTH_SUCCESS("핸드폰 인증에 성공하셨습니다."),
+    REMIT_ONE_WON_SUCCESS("1원 송금 요청에 성공하셨습니다."),
+    VERIFY_ONE_WON_SUCCESS("1원 송금 인증에 성공하셨습니다.");
 
     private final String message;
 
