@@ -7,6 +7,7 @@ import com.awoo.member.domain.model.vo.*;
 import com.awoo.member.domain.repository.MemberRepository;
 import com.awoo.member.infra.jwt.JwtTokenProvider;
 import com.awoo.member.infra.util.AESUtil;
+import com.awoo.member.ui.dto.CheckMemberRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -154,6 +155,17 @@ public class MemberServiceImpl implements MemberService {
 
         member.changePassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
+    }
+
+    @Override
+    public boolean checkMember(CheckMemberRequest request) {
+        Member member = memberRepository.findById(request.memberId())
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        boolean nameMatches = member.getName().getValue().equals(request.name());
+        boolean phoneMatches = member.getPhone().equals(request.phone());
+
+        return nameMatches && phoneMatches;
     }
 
 

@@ -5,6 +5,7 @@ import com.awoo.member.application.dto.SignUpRequestDto;
 import com.awoo.member.application.dto.LoginRequestDto;
 import com.awoo.member.application.dto.MemberUpdateRequestDto;
 import com.awoo.member.domain.model.Member;
+import com.awoo.member.ui.dto.CheckMemberRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
@@ -24,5 +25,7 @@ public interface MemberService {
 
     void updatePassword(Integer memberId, String newPassword);
     void updatePasswordByEmail(String email, String newPassword);
+
+    boolean checkMember(CheckMemberRequest request);
 }
 

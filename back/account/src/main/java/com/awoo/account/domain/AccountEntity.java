@@ -22,12 +22,14 @@ public class AccountEntity {
     @Column(nullable = false, length = 3)
     private String bankCode;
 
+    @Column(nullable = false)
     private Integer memberId;
 
     @Builder
-    public AccountEntity(String accountNumber, String bankCode) {
+    public AccountEntity(String accountNumber, String bankCode, Integer memberId) {
         this.accountNumber = accountNumber;
         this.bankCode = bankCode;
+        this.memberId = memberId;
     }
 
 }

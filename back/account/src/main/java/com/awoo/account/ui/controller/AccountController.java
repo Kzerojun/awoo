@@ -1,28 +1,30 @@
 package com.awoo.account.ui.controller;
 
 import com.awoo.account.application.command.DeductBalanceCommand;
+import com.awoo.account.application.service.AccountService;
 import com.awoo.account.support.ApiUtils;
 import com.awoo.account.ui.facade.AccountServiceFacade;
 import com.awoo.account.ui.facade.dto.request.DeductBalanceRequest;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 public class AccountController {
-
+    private final AccountService accountService;
     private final AccountServiceFacade accountServiceFacade;
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody String userKey) {
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ApiUtils.ApiResult<?> createAccount(@RequestHeader("X-User-Id") String memberId) {
+        try{
+            accountService.createAccount(memberId);
+            return ApiUtils.success("계좌가 생성되었습니다.");
+        }catch (Exception e){
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/deduct")
