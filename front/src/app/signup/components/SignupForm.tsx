@@ -17,8 +17,14 @@ import paw from "../../../../public/icons/white_paw.svg";
 import SignupPolicy from "./SignupPolicy";
 import Button from "@/common/ui/Button";
 
+// 이메일 중복 체크 쿼리
+import { useEmailCheck } from "@/hooks/user/useEmailCheck";
+
 const SignupForm = () => {
   const router = useRouter();
+
+  // 리액트 쿼리 사용
+  const { mutate: checkEmail, isPending, isSuccess, data, error } = useEmailCheck();
 
   // 스토어에 정보 저장하기 위한 dispatch 정의
   const dispatch = useAppDispatch();
@@ -43,7 +49,7 @@ const SignupForm = () => {
   const [privacyAgreed, setPrivacyAgreed] = useState<boolean>(false);
 
   // 이름 5자리 제한
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/[^ㄱ-ㅎ가-힣\s]/g, ""); // 한글만 입력 가능
     if (value.length > 5) {
       value = value.slice(0, 5);
@@ -56,7 +62,7 @@ const SignupForm = () => {
   };
 
   // 생년월일 입력 시 자동으로 YYYY-MM-DD 형식으로 변환
-  const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBirthdateChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, ""); // 숫자만 입력 가능
     if (value.length > 8) value = value.slice(0, 8); // 최대 8자리 제한
 
@@ -68,13 +74,12 @@ const SignupForm = () => {
   };
 
   // 전화번호 입력 시 자동으로 000-0000-0000 형식으로 변환
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, ""); //숫자만 입력 가능
     if (value.length > 11) value = value.slice(0, 11); // 최대 11자리
 
     if (value.length >= 3) value = value.slice(0, 3) + "-" + value.slice(3);
     if (value.length >= 8) value = value.slice(0, 8) + "-" + value.slice(8);
-
     setPhonenum(value);
   };
 
@@ -85,7 +90,7 @@ const SignupForm = () => {
   };
 
   // 이메일 변경 시
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setEmail(value);
     const isValid = validateEmail(value);
@@ -95,20 +100,38 @@ const SignupForm = () => {
     }
   };
 
-  // 이메일 중복 체크 - 백엔드 연결 필요
+  // 이메일 중복 체크
   const handleEmailCheck = () => {
     if (!isValidEmail || email.length === 0) {
       setEmailMessage("올바른 이메일을 입력하세요.");
       return;
     }
 
+    checkEmail(
+      { email },
+      {
+        onSuccess: (res) => {
+          if (res.success === true) {
+            setEmailMessage(res.response.message);
+            console.log(res.response.message);
+            setIsDuplicate(false);
+          } else {
+            setEmailMessage(res.error.message);
+            console.error(res.error.message);
+            setIsDuplicate(true);
+          }
+        },
+        onError: () => {
+          setEmailMessage("이메일 확인 중 오류가 발생했습니다.");
+        },
+      }
+    );
+
     // 백엔드 api 호출 + 결과값을 isDuplicate에 담기
     if (isDuplicate) {
       setEmailMessage("이미 사용 중인 이메일입니다.");
-      setIsDuplicate(true);
     } else {
       setEmailMessage("사용 가능한 이메일입니다.");
-      setIsDuplicate(false);
     }
   };
 
@@ -119,7 +142,7 @@ const SignupForm = () => {
   };
 
   // 비밀번호 입력 시 유효성 검사
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setPassword1(value);
 
@@ -174,7 +197,7 @@ const SignupForm = () => {
         name,
         birthDate: birthdate,
         gender: genderValue as "M" | "F",
-        phone: phonenum,
+        phone: phonenum.replace(/-/g, ""),
         email,
         password: password1,
         privacyAgreed,
@@ -304,20 +327,20 @@ const SignupForm = () => {
             <label htmlFor="password1">
               <LockClosedIcon className="w-6 h-6 text-custom-gray" />
             </label>
-            <div className="flex items-center justify-between flex-1">
+            <div className="flex items-center">
               <input
                 id="password1"
                 type={showPassword ? "text" : "password"}
                 placeholder="비밀번호를 입력하세요"
                 value={password1}
-                className="placeholder:text-sm placeholder:text-opacity-50 text-sm focus:outline-none flex-1"
+                className="placeholder:text-sm placeholder:text-opacity-50 text-sm w-44 focus:outline-none"
                 onChange={handlePasswordChange}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="w-6 h-6"
+                className="w-6 h-6 ml-10"
               >
                 {showPassword ? (
                   <EyeIcon className="w-6 h-6 text-aqua inline" />
