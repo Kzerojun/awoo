@@ -1147,3 +1147,65 @@ public record MemberDto(String username, String email) {}
 
 </details>
 
+<details>
+<summary><strong>0325</strong></summary>
+
+## 🌱 Spring Boot 주요 어노테이션 정리
+
+### ✅ 1. 클래스/컴포넌트 스캔 관련
+| 어노테이션 | 설명 |
+|------------|------|
+| `@SpringBootApplication` | `@Configuration`, `@EnableAutoConfiguration`, `@ComponentScan`을 포함한 메인 클래스 어노테이션 |
+| `@ComponentScan` | 지정된 패키지 이하의 클래스를 스캔하여 빈으로 등록 |
+| `@Component` | 스프링이 관리하는 일반적인 빈으로 등록됨 (직접 생성한 클래스에서 사용) |
+| `@Service` | 서비스 계층 클래스에 사용, `@Component`와 기능은 동일 (가독성을 위한 용도) |
+| `@Repository` | DAO 클래스에 사용, 예외 처리와 관련된 기능 제공 |
+| `@Controller` | 웹 요청을 처리하는 컨트롤러 클래스에 사용 |
+| `@RestController` | `@Controller + @ResponseBody`, JSON 형태의 응답 처리에 주로 사용 |
+
+---
+
+### ✅ 2. 의존성 주입 관련
+| 어노테이션 | 설명 |
+|------------|------|
+| `@Autowired` | 생성자, 필드, 메서드에 의존성 주입을 수행 |
+| `@Inject` | `@Autowired`와 유사하나 Java 표준 (javax.inject) |
+| `@Qualifier` | 동일한 타입의 빈이 여러 개일 때 어떤 빈을 주입할지 지정 |
+| `@Value` | application.properties 또는 application.yml 값 주입 |
+
+---
+
+### ✅ 3. 설정 관련
+| 어노테이션 | 설명 |
+|------------|------|
+| `@Configuration` | 해당 클래스가 설정 클래스임을 명시. 내부에 `@Bean` 정의 가능 |
+| `@Bean` | 개발자가 수동으로 등록한 객체를 스프링 빈으로 등록할 때 사용 |
+| `@PropertySource` | 외부 설정 파일을 읽어오기 위한 어노테이션 |
+
+---
+
+### ✅ 4. 요청 처리 및 매핑 관련
+| 어노테이션 | 설명 |
+|------------|------|
+| `@RequestMapping` | URL 및 HTTP 메서드 매핑 (GET, POST 등 통합 처리) |
+| `@GetMapping`, `@PostMapping` 등 | `@RequestMapping(method = ...)`의 축약형 |
+| `@PathVariable` | URL 경로의 변수 값을 파라미터로 받음 |
+| `@RequestParam` | 쿼리 스트링 또는 form-data의 값을 파라미터로 받음 |
+| `@RequestBody` | 요청 본문(JSON)을 객체로 매핑 |
+| `@ResponseBody` | 메서드 반환값을 HTTP 응답 body에 직접 전달 (주로 JSON 형태)
+
+---
+
+### ✅ 5. 테스트 관련
+| 어노테이션 | 설명 |
+|------------|------|
+| `@SpringBootTest` | 스프링 전체 컨텍스트를 로드하여 통합 테스트 수행 |
+| `@WebMvcTest` | MVC 웹 계층 테스트에 사용. 컨트롤러만 로드함 |
+| `@DataJpaTest` | JPA 관련 Repository 테스트 수행 |
+| `@MockBean` | 테스트 환경에서 특정 Bean을 Mock 객체로 교체 |
+
+---
+
+> 🔍 **정리:** Spring Boot는 다양한 어노테이션을 통해 빈 등록, 의존성 주입, 웹 요청 처리 등을 간편하게 구현할 수 있으며, 역할별로 명확하게 나뉘어 있어 가독성과 유지보수성이 뛰어남.
+
+</details>
