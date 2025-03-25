@@ -66,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="flex-1 py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md transition duration-200 text-sm font-medium"
             onClick={() => console.log(`편집: ${product.name}`)}
           >
-            편집하기
+            수정하기
           </button>
           <button
             className={`flex-1 py-2 px-4 ${

@@ -34,6 +34,8 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                     .getHeaders()
                     .getFirst(HttpHeaders.AUTHORIZATION);
 
+            log.info("token: {}", token);
+
             // 토큰 1차 검증
             if (token == null || !token.startsWith("Bearer ")) {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);

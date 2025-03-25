@@ -1,13 +1,8 @@
 package com.awoo.payment.ui.facade;
 
-import com.awoo.payment.application.command.ChargeBalanceCommand;
-import com.awoo.payment.application.command.RegisterPaymentCommand;
-import com.awoo.payment.application.command.RegisterPaymentPasswordCommand;
+import com.awoo.payment.application.command.*;
 import com.awoo.payment.application.query.FetchBalanceQuery;
-import com.awoo.payment.ui.facade.dto.response.ChargeBalanceResponse;
-import com.awoo.payment.ui.facade.dto.response.FetchBalanceResponse;
-import com.awoo.payment.ui.facade.dto.response.RegisterPaymentPasswordResponse;
-import com.awoo.payment.ui.facade.dto.response.RegisterPaymentResponse;
+import com.awoo.payment.ui.facade.dto.response.*;
 
 public interface PaymentServiceFacade {
 
@@ -18,6 +13,10 @@ public interface PaymentServiceFacade {
     FetchBalanceResponse fetchBalance(FetchBalanceQuery query);
 
     ChargeBalanceResponse chargeBalance(ChargeBalanceCommand command);
+
+    SendAuthPhoneMessageResponse sendAuthPhoneMessage(SendAuthPhoneMessageCommand command);
+
+    CheckAuthCodeResponse checkAuthCode(CheckAuthCodeCommand command);
 
 
 }
