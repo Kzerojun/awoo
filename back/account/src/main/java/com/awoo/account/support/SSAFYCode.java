@@ -10,7 +10,8 @@ public enum SSAFYCode {
     DEDUCT_BALANCE("updateDemandDepositAccountWithdrawal"),
 
     //계좌생성
-    CREATE_ACCOUNT("createDemandDepositAccount");
+    CREATE_ACCOUNT("createDemandDepositAccount"),
+    ACCOUNT_LIST("inquireDemandDepositAccountList");
 
     private final String code;
 

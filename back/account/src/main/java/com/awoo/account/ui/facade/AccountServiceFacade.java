@@ -1,9 +1,16 @@
 package com.awoo.account.ui.facade;
 
 import com.awoo.account.application.command.DeductBalanceCommand;
+import com.awoo.account.application.dto.SSAFYAccountResponseDto;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.List;
 
 public interface AccountServiceFacade {
 
     DeductBalanceResponse deductBalance(DeductBalanceCommand command);
+
+    void createAccount(String memberId) throws Exception;
+    List<SSAFYAccountResponseDto> getAccountList(String memberId) throws JsonProcessingException;
 }
