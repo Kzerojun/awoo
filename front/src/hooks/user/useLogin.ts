@@ -9,12 +9,13 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
     mutationFn: login,
     onSuccess: async (res) => {
       console.log("로그인 성공", res);
+      console.log("로그인 헤더 확인", res.headers.authorization);
       // 추가 (토큰 저장)
       const accessToken = res?.headers?.authorization;
+      // console.log(accessToken);
       if (accessToken) {
         localStorage.setItem("accessToken", accessToken);
       }
-
       // 유저 정보 조회 refetch
       const { data: userData } = await refetchUserInfo();
 
