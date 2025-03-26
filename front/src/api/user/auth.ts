@@ -1,7 +1,6 @@
 import axios from "axios";
 import urlToFile from "@/app/signup/hooks/useChangeFile";
 import axiosInstance from "../axiosInstance";
-import { headers } from "next/headers";
 
 // 이메일 interface
 interface EmailPayload {
