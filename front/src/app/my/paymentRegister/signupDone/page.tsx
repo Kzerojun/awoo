@@ -11,7 +11,7 @@ export default function SignUpDone() {
 
   // 계좌 연결 페이지로 이동
   const handleLinkAccount = () => {
-    router.push("/my");
+    router.push("/my/paymentRegister/accountConnect");
   };
 
   return (
