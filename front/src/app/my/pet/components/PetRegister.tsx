@@ -43,6 +43,9 @@ const PetRegister = () => {
     setShowPetAvatarModal(false);
   };
 
+  // 반려견 등록
+  const registerPet = () => {};
+
   return (
     <div className="flex flex-col items-center justify-center gap-y-5">
       <h1 className="text-xl mt-5">반려견 등록</h1>
@@ -157,7 +160,7 @@ const PetRegister = () => {
         )}
       </AnimatePresence>
 
-      <Button text="등록하기" backgroundColor="green" width="medium" />
+      <Button text="등록하기" backgroundColor="green" width="medium" onClick={registerPet} />
     </div>
   );
 };
