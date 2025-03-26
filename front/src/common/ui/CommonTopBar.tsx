@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -12,7 +12,7 @@ import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
 interface CommonTopBarProps {
   title: string;
   leftAction?: "back" | "close";
-  rightAction?: "bell" | "none";
+  rightAction?: "bell" | "none" | "cancel";
   onClose?: () => void;
 }
 
@@ -30,6 +30,7 @@ const CommonTopBar = ({
   interface rightActionTypes {
     bell: React.ReactNode;
     none: null;
+    cancel: React.ReactNode;
   }
 
   const leftActionTypes: leftActionTypes = {
@@ -40,6 +41,7 @@ const CommonTopBar = ({
   const rightActionTypes: rightActionTypes = {
     bell: <BellIcon className="h-6 w-6" />,
     none: null,
+    cancel: <span className="text-sm ">취소</span>,
   };
 
   const router = useRouter();
@@ -62,6 +64,12 @@ const CommonTopBar = ({
         onClose();
       }
     }
+    // bell 등 다른 경우는 아직 미사용
+  };
+  const handleRightClick = () => {
+    if (rightAction == "cancel" && onClose) {
+      onClose();
+    }
   };
 
   const handleAlarm = () => {};
@@ -82,7 +90,7 @@ const CommonTopBar = ({
       )}
 
       {/* 우측 버튼 */}
-      <button onClick={handleAlarm} className="text-gray-500">
+      <button onClick={rightAction === "cancel" ? handleRightClick : handleAlarm}>
         {rightActionTypes[rightAction]}
       </button>
     </header>
