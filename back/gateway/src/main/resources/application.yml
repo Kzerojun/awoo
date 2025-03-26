@@ -9,7 +9,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'https://awoofinance.duckdns.org,http://localhost:3000'
+            allowedOrigins: 'https://awoofinance.duckdns.org,http://localhost:3000,http://localhost:80'
             allowedMethods:
               - GET
               - POST
