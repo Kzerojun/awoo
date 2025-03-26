@@ -53,7 +53,7 @@ const ProfileRegistPage = () => {
     onSwipedRight: () => changePage(page - 1, -1),
     preventScrollOnSwipe: true,
     trackTouch: true,
-    trackMouse: false,
+    trackMouse: true,
   });
 
   const variants = {
