@@ -5,7 +5,7 @@ import BottomBarWrapper from "@/common/ui/BottombarWrapper";
 import ToastWrapper from "@/common/ui/ToastWrapper";
 import { useTrackRouteChange } from "@/hooks/change-back/useTrackRouteChange";
 import TrackRouteWrapper from "@/common/ui/TrackRouteWrapper";
-import AppInitializer from "@/hooks/user/AppInitializer";
+// import AppInitializer from "@/hooks/user/AppInitializer";
 
 export const metadata: Metadata = {
   title: "AwOO",
