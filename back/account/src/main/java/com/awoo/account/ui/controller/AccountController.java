@@ -3,11 +3,13 @@ package com.awoo.account.ui.controller;
 import com.awoo.account.application.command.CreateAccountCommand;
 import com.awoo.account.application.command.DeductBalanceCommand;
 import com.awoo.account.application.command.TransactionsCommand;
+import com.awoo.account.application.command.TransferCommand;
 import com.awoo.account.support.ApiUtils;
 import com.awoo.account.ui.facade.AccountServiceFacade;
 import com.awoo.account.ui.facade.dto.request.CreateAccountRequest;
 import com.awoo.account.ui.facade.dto.request.DeductBalanceRequest;
 import com.awoo.account.ui.facade.dto.request.TransactionsRequest;
+import com.awoo.account.ui.facade.dto.request.TransferRequest;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,6 +52,18 @@ public class AccountController {
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/transfer")
+    public ApiUtils.ApiResult<?> transfer(@RequestHeader("X-User-Id") String memberId,
+                                          @RequestBody TransferRequest request) {
+        try{
+            TransferCommand command = request.toCommand();
+            return ApiUtils.success(accountServiceFacade.transfer(memberId, command));
+        }catch (Exception e){
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PostMapping("/deduct")

@@ -75,12 +75,12 @@ public class MemberController {
 
     //회원 정보 확인
     @GetMapping
-    public ApiUtils.ApiResult<?> getMemberInfo(@RequestHeader("X-User-Id")Integer memberId) {
+    public ApiUtils.ApiResult<?> getMemberInfo(@RequestHeader("X-User-Id") String memberId) {
         try {
-            MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(memberId);
+            MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(Integer.valueOf(memberId));
             return ApiUtils.success(memberInfoResponseDto);
         } catch (Exception e) {
-            return ApiUtils.error("회원 정보 확인 중 에러발생", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ApiUtils.error(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

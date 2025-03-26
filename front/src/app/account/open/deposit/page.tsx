@@ -6,8 +6,10 @@ import ProductDetails from "@/app/account/open/deposit/components/ProductDetails
 import ProductDocs from "@/app/account/open/deposit/components/ProductDocs";
 import Button from "@/common/ui/Button";
 import ReviewSwiper from "./components/ReviewSwiper";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter();
   return (
     <div className="container mx-auto max-w-lg py-6">
       {/* 상품 요약 정보 */}
@@ -38,8 +40,7 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
-          // 👉 가입 로직 or 라우팅 처리
-          console.log("가입하기 클릭됨!");
+          router.push("/account/open/deposit/agreement");
         }}
         width="long" // 버튼 길이
         textSize="medium" // 텍스트 크기

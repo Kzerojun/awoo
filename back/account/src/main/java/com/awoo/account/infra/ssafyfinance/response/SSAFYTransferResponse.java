@@ -4,6 +4,5 @@ import com.awoo.account.infra.ssafyfinance.SSAFYFinanceCommonHeader;
 
 import java.util.List;
 
-public record SSAFYAccountListResponse(SSAFYFinanceCommonHeader Header, List<SSAFYAccountResponseDto> REC) {
-
+public record SSAFYTransferResponse(SSAFYFinanceCommonHeader Header, List<SSAFYTransferREC> REC) {
 }
