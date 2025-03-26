@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import BankSelectorModal from "../../components/BankSelectorModal";
+import BankSelectorModal from "../../paymentRegister/components/BankSelectorModal";
 
-interface BankInfoTypingProps {
+interface SendBankInfoProps {
   onComplete?: (data: { bank: string; accountNumber: string }) => void;
 }
 
-export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
+export default function SendBankInfo({ onComplete }: SendBankInfoProps) {
   const router = useRouter();
   const [selectedBank, setSelectedBank] = useState<string>("");
   const [accountNumber, setAccountNumber] = useState<string>("");
@@ -80,7 +80,7 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
       </div>
 
       {/* 계좌번호 입력 영역 - 박스 스타일 */}
-      <div className="mb-10">
+      <div className="mb-5">
         <label className="block text-gray-500 mb-1 text-sm">계좌번호</label>
         <input
           type="text"
@@ -92,17 +92,17 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
       </div>
 
       {/* 버튼 영역 */}
-      <div className="mt-[60px] flex justify-center">
+      <div className="mt-[30px] flex justify-center">
         <button
           onClick={handleVerifyAccount}
           disabled={!selectedBank || accountNumber.length < 10}
-          className={`w-[180px] py-3 rounded-full ${
+          className={`w-[80px] py-3 rounded-xl ${
             selectedBank && accountNumber.length >= 10
               ? "bg-teal-500 text-white"
               : "bg-gray-200 text-gray-500"
           } font-medium transition-colors`}
         >
-          계좌인증요청
+          확인
         </button>
       </div>
 
