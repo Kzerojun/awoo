@@ -108,16 +108,18 @@ export default function AccountVerifyPage() {
       </div>
 
       <div className="mt-10 flex justify-center">
-        <Button
-          text="인증요청"
-          width="long"
-          disabled={!selectedBank || accountNumber.length < 8}
-          onClick={() => {
-            console.log("은행:", selectedBank);
-            console.log("계좌번호:", accountNumber);
-            alert(`은행: ${selectedBank}\n계좌번호: ${accountNumber}`);
-          }}
-        />
+        {selectedBank && accountNumber.length >= 8 && (
+          <div className="mt-10 flex justify-center">
+            <Button
+              text="인증요청"
+              width="long"
+              onClick={() => {
+                console.log("은행:", selectedBank);
+                console.log("계좌번호:", accountNumber);
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* 바텀시트 모달 */}
