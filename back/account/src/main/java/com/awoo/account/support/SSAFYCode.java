@@ -14,7 +14,9 @@ public enum SSAFYCode {
     //계좌조회
     ACCOUNT_LIST("inquireDemandDepositAccountList"),
     //거래내역조회
-    TransactionLIST("inquireTransactionHistoryList");
+    TransactionLIST("inquireTransactionHistoryList"),
+    //계좌이체
+    Transfer("updateDemandDepositAccountTransfer");
 
     private final String code;
 

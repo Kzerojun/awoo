@@ -1,4 +1,4 @@
-package com.awoo.account.application.dto;
+package com.awoo.account.infra.ssafyfinance.response;
 
 public record SSAFYAccountResponseDto(
         String bankCode,

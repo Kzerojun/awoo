@@ -2,16 +2,15 @@ package com.awoo.account.application.service;
 
 import com.awoo.account.application.command.CreateAccountCommand;
 import com.awoo.account.application.command.TransactionsCommand;
-import com.awoo.account.application.dto.SSAFYAccountResponseDto;
+import com.awoo.account.application.command.TransferCommand;
+import com.awoo.account.infra.ssafyfinance.response.*;
+import com.awoo.account.infra.ssafyfinance.request.SSAFYTransferRequest;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYAccountListRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateAccountRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYTransactionsRequest;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountListResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYFetchAccountResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYTransactionsResponse;
 import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
@@ -87,5 +86,20 @@ public class AccountServiceImpl implements AccountService{
         SSAFYTransactionsResponse fetchAccountResponse = SSAFYApiClient.getTransactions(request);
 //        System.out.println("전체 응답: " + fetchAccountResponse.REC().toString());
         return fetchAccountResponse.REC().list();
+    }
+
+    public List<SSAFYTransferREC> transfer(String memberId, TransferCommand command) {
+        //SSAFY 계좌 이체 요청 생성
+        SSAFYTransferRequest request = SSAFYTransferRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.Transfer))
+                .depositAccountNo(command.depositAccountNo())
+                .depositTransactionSummary(command.depositTransactionSummary())
+                .transactionBalance(command.transactionBalance())
+                .withdrawalAccountNo(command.withdrawalAccountNo())
+                .withdrawalTransactionSummary(command.withdrawalTransactionSummary())
+                .build();
+
+        SSAFYTransferResponse fetchAccountResponse = SSAFYApiClient.transfer(request);
+        return fetchAccountResponse.REC();
     }
 }

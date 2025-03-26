@@ -1,11 +1,7 @@
 package com.awoo.account.infra.ssafyfinance;
 
-import com.awoo.account.application.dto.SSAFYFinanceApiResponse;
+import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.ssafyfinance.request.*;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountListResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYDeductBalanceResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYFetchAccountResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYTransactionsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,5 +23,8 @@ public interface SSAFYDemandDepositApiClient {
 
     @PostMapping("/inquireTransactionHistoryList")
     SSAFYTransactionsResponse getTransactions(@RequestBody SSAFYTransactionsRequest request);
+
+    @PostMapping("/updateDemandDepositAccountTransfer")
+    SSAFYTransferResponse transfer(@RequestBody SSAFYTransferRequest request);
 
 }
