@@ -168,6 +168,16 @@ public class MemberServiceImpl implements MemberService {
         return nameMatches && phoneMatches;
     }
 
+    //멍페이 등록
+    @Transactional
+    public void paymentRegister(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        member.changePaymentRegister(true);
+        memberRepository.save(member);
+    }
+
 
 }
 
