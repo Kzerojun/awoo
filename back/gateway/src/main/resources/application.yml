@@ -6,6 +6,18 @@ spring:
     name: API-GATEWAY-SERVICE
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://awoofinance.duckdns.org,http://localhost:8080'
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+            allowCredentials: true
+
       routes:
         - id: pet-service
           uri: lb://pet
