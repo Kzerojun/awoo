@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import NumberKeypad from "../../components/NumberKeypad";
 
 interface PasswordProps {
   title?: string;
@@ -22,7 +23,6 @@ export default function Password({
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [activeButton, setActiveButton] = useState<number | null>(null);
 
   // 컴포넌트 마운트 시 항상 패스워드 초기화
   useEffect(() => {
@@ -32,10 +32,6 @@ export default function Password({
 
   // 숫자 입력 처리
   const handleNumberInput = (num: number) => {
-    // 버튼 활성화 효과
-    setActiveButton(num);
-    setTimeout(() => setActiveButton(null), 200);
-
     if (password.length < length) {
       const newPassword = password + num;
       setPassword(newPassword);
@@ -51,22 +47,14 @@ export default function Password({
 
   // 백스페이스 처리
   const handleBackspace = () => {
-    // 버튼 활성화 효과
-    setActiveButton(-1); // -1은 백스페이스를 의미
-    setTimeout(() => setActiveButton(null), 200);
-
     if (password.length > 0) {
       setPassword(password.slice(0, -1));
       setError("");
     }
   };
 
-  // 취소 버튼 처리
-  const handleCancel = () => {
-    // 버튼 활성화 효과
-    setActiveButton(-2); // -2는 취소를 의미
-    setTimeout(() => setActiveButton(null), 200);
-
+  // 패스워드 초기화
+  const handleClear = () => {
     setPassword("");
     setError("");
   };
@@ -84,7 +72,7 @@ export default function Password({
       }
       // ESC 키는 취소로 처리
       else if (e.key === "Escape") {
-        handleCancel();
+        handleClear();
       }
     };
 
@@ -95,7 +83,7 @@ export default function Password({
   }, [password, length, onComplete]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-56px)] bg-white">
+    <div className="flex flex-col h-[calc(107vh-56px)] bg-white">
       {/* 제목 영역 */}
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <h2 className="text-xl font-bold text-center mb-2">{title}</h2>
@@ -122,66 +110,12 @@ export default function Password({
         </p>
       </div>
 
-      {/* 숫자 키패드 */}
-      <div className="bg-gray-100 py-4">
-        <div className="grid grid-cols-3 gap-2 px-2">
-          {/* 숫자 버튼 1-9 */}
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-            <button
-              key={num}
-              onClick={() => handleNumberInput(num)}
-              className={`${
-                activeButton === num
-                  ? "bg-gray-300 transform scale-95"
-                  : "bg-white hover:bg-gray-100"
-              } py-3 rounded-md text-xl font-medium transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
-            >
-              {num}
-            </button>
-          ))}
-
-          {/* 하단 버튼들 */}
-          <button
-            onClick={handleCancel}
-            className={`${
-              activeButton === -2
-                ? "bg-gray-300 transform scale-95"
-                : "bg-gray-200 hover:bg-gray-300"
-            } py-3 rounded-md text-sm font-medium transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
-          >
-            취소
-          </button>
-          <button
-            onClick={() => handleNumberInput(0)}
-            className={`${
-              activeButton === 0 ? "bg-gray-300 transform scale-95" : "bg-white hover:bg-gray-100"
-            } py-3 rounded-md text-xl font-medium transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
-          >
-            0
-          </button>
-          <button
-            onClick={handleBackspace}
-            className={`${
-              activeButton === -1 ? "bg-gray-300 transform scale-95" : "bg-white hover:bg-gray-100"
-            } py-3 rounded-md flex items-center justify-center transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
-          >
-            <svg
-              className="w-6 h-6 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
+      {/* 숫자 키패드 컴포넌트 */}
+      <NumberKeypad
+        onNumberPress={handleNumberInput}
+        onBackspace={handleBackspace}
+        onClear={handleClear}
+      />
     </div>
   );
 }
