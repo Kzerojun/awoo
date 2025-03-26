@@ -44,6 +44,9 @@ spring:
             - Path=/api/accounts/**
           filters:
             - name: JwtAuthenticationFilter
+
+
+
       discovery:
         locator:
           enabled: true
