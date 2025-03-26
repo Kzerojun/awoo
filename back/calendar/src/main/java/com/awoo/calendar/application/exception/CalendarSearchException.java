@@ -5,10 +5,7 @@ import lombok.Getter;
 @Getter
 public class CalendarSearchException extends ApplicationException{
 
-    private final ApplicationErrorCode applicationErrorCode;
-
-    public CalendarSearchException(ApplicationErrorCode applicationErrorCode) {
-        super(applicationErrorCode);
-        this.applicationErrorCode = applicationErrorCode;
+    public CalendarSearchException() {
+        super(ApplicationErrorCode.CALENDAR_NOT_FOUND);
     }
 }

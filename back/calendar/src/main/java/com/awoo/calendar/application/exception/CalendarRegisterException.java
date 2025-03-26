@@ -5,10 +5,7 @@ import lombok.Getter;
 @Getter
 public class CalendarRegisterException extends ApplicationException {
 
-    private final ApplicationErrorCode applicationErrorCode;
-
-    public CalendarRegisterException(ApplicationErrorCode applicationErrorCode){
-        super(applicationErrorCode);
-        this.applicationErrorCode = applicationErrorCode;
+    public CalendarRegisterException() {
+        super(ApplicationErrorCode.CALENDAR_REGISTRATION_FAILED);
     }
 }
