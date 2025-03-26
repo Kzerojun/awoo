@@ -113,9 +113,7 @@ export const refreshToken = (): Promise<{ data: { accessToken: string } }> => {
 // 유저 정보 조회
 export const getUserInfo = async () => {
   try {
-    const res = await axiosInstance.get("/members", {
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await axiosInstance.get("/members");
     console.log("유저 정보 조회 성공:", res.data);
     return res.data;
   } catch (err) {
