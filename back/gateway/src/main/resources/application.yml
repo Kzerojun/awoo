@@ -50,8 +50,6 @@ spring:
       discovery:
         locator:
           enabled: true
-
-
 eureka:
   client:
     service-url:
