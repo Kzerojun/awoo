@@ -14,4 +14,5 @@ public class MemberInfoResponseDto {
     private String phone;
     private String birthDate;
     private String profileImage;
+    private boolean paymentRegister;
 }
