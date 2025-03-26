@@ -50,3 +50,10 @@ cloud:
       bucket: c209awoo   # 버킷 이름
     stack:
       auto: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
