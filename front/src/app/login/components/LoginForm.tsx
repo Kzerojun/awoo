@@ -6,23 +6,25 @@ import paw from "../../../../public/icons/white_paw.svg";
 import Link from "next/link";
 import { useLogin } from "@/hooks/user/useLogin";
 import { useUserInfo } from "@/hooks/user/useUserInfo";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const { refetch: refetchUserInfo } = useUserInfo();
-  const { mutate: loginMutate, isPending, isError } = useLogin(refetchUserInfo);
+  const { mutate: loginMutate, isPending, isError, isSuccess } = useLogin(refetchUserInfo);
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  // 로그인 에러 시
-  useEffect(() => {
-    if (isError) {
-      alert("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.");
-    }
-  }, [isError]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginMutate({ email, password });
+    if (isSuccess) {
+      setTimeout(() => {
+        router.replace("/home");
+      }, 300);
+    } else if (isError) {
+      alert("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.");
+    }
   };
 
   return (
