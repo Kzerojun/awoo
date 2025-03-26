@@ -47,7 +47,7 @@ const AgreementPage = () => {
       setShowWarning(true);
       return;
     }
-    router.push("/account/open/deposit/confirm");
+    router.push("/account/open/deposit/info");
   };
 
   return (

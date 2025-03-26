@@ -7,6 +7,8 @@ import walkReducer from "./slices/walkSlice";
 import registerReducer from "./slices/registerSlice";
 import userActionReducer from "./slices/userActionSlice"; // 유저가 들어가는 페이지 추적
 import userReducer from "./slices/userSlice"; // 유저 정보
+import passwordReducer from "./slices/passwordSlice";
+
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
@@ -16,6 +18,7 @@ export const store = configureStore({
     register: registerReducer,
     userAction: userActionReducer,
     user: userReducer,
+    password: passwordReducer, // 보안 키패드 관련 리듀서
   },
   devTools: process.env.NODE_ENV !== "production",
 });
