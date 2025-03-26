@@ -71,7 +71,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
   };
 
   return (
-    <div className="flex flex-col min-h-[calc(80vh-56px)] mt-[40px]">
+    <div className="flex flex-col min-h-[calc(60vh-56px)] mt-[40px]">
       {/* 입력 폼 - 상단 고정 */}
       <div className="p-6">
         {step === 1 ? (

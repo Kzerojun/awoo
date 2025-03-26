@@ -70,10 +70,10 @@ export default function Certificate() {
     <div className="flex flex-col min-h-screen bg-white">
       <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
 
-      <div className="pt-14 flex flex-col min-h-[calc(80vh-56px)]">
+      <div className="pt-14 flex flex-col min-h-[calc(70vh-56px)]">
         {/* 입력 폼 - 상단 고정 */}
         <div className="p-4">
-          <h2 className="text-lg font-bold mb-3">인증번호를 입력해 주세요</h2>
+          <h2 className="text-lg font-bold mb-4">인증번호를 입력해 주세요</h2>
           <input
             type="text"
             value={certificateNumber}
