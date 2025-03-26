@@ -1209,3 +1209,120 @@ public record MemberDto(String username, String email) {}
 > 🔍 **정리:** Spring Boot는 다양한 어노테이션을 통해 빈 등록, 의존성 주입, 웹 요청 처리 등을 간편하게 구현할 수 있으며, 역할별로 명확하게 나뉘어 있어 가독성과 유지보수성이 뛰어남.
 
 </details>
+
+<details>
+<summary><strong>0326</strong></summary>
+
+## 🌐 MSA에서의 Gateway & Eureka
+
+## 1️⃣ API Gateway
+### ✅ 개념
+- 마이크로서비스 아키텍처(MSA)에서 클라이언트 요청을 받아 여러 서비스로 라우팅해주는 중계 서버
+- 인증, 권한 부여, 로깅, 요청 변환 등 다양한 부가 기능 제공
+
+### ✅ 주요 기능
+- **라우팅(Routing)**: 요청을 적절한 서비스로 전달
+- **로드 밸런싱**: 서비스 간 요청 부하를 분산
+- **인증 및 권한 부여**: 서비스 접근 제어
+- **요청 및 응답 변환**: 데이터 형식 변환, 요청 헤더 추가 등
+- **로깅 및 모니터링**: 요청 및 응답 기록, 성능 모니터링
+
+### ✅ 사용 예시 (Spring Cloud Gateway)
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+```
+
+---
+
+## 2️⃣ Eureka
+### ✅ 개념
+- **서비스 디스커버리(Service Discovery)**를 위한 Netflix의 오픈 소스
+- MSA 환경에서 서비스들이 자신의 위치(IP, Port 등)를 등록하고 조회할 수 있도록 제공
+
+### ✅ 필요성
+- 마이크로서비스들이 많아지면 각 서비스가 서로의 위치 정보를 관리하기 어려움
+- Eureka 서버를 통해 중앙에서 관리하여 **서비스의 등록과 조회를 간편화**
+- 동적인 서비스 추가 및 제거에 쉽게 대응 가능
+
+### ✅ Eureka 구성 요소
+- **Eureka Server**
+  - 모든 서비스의 위치 정보(IP, Port)를 등록하고 관리하는 서버
+- **Eureka Client**
+  - Eureka Server에 자신의 정보를 등록하고 다른 서비스의 정보를 조회하는 마이크로서비스
+
+### ✅ 동작 과정
+1. 각 서비스(Eureka Client)가 Eureka Server에 **자신의 정보를 등록**
+2. 서비스가 주기적으로 Eureka Server에 **하트비트(Heartbeat)를 전송**하여 자신의 상태를 알림
+3. 클라이언트는 필요한 서비스의 위치를 Eureka Server에서 조회하여 통신
+
+### ✅ Eureka Server 설정 예제
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+}
+```
+
+```yaml
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false  # Eureka 서버 자체 등록 방지
+    fetch-registry: false
+```
+
+### ✅ Eureka Client 설정 예제
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class UserServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
+}
+```
+
+```yaml
+server:
+  port: 8081
+spring:
+  application:
+    name: USER-SERVICE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+```
+
+---
+
+### ✅ Eureka의 장점
+- **간단한 서비스 등록 및 조회**: 서비스 추가 및 제거 시 별도 설정 불필요
+- **장애 복구 및 고가용성**: 여러 Eureka 서버 구성으로 내결함성 확보 가능
+- **서비스 로드 밸런싱**: 자동으로 여러 서비스 인스턴스 간 로드 밸런싱 제공
+
+### ✅ Eureka의 주의사항
+- Eureka Server는 싱글 포인트 장애가 발생하지 않도록 다중 서버 구성 권장
+- 서비스 등록 및 하트비트 주기 설정에 따라 성능 및 서비스 가용성이 달라질 수 있음
+
+---
+
+> 🔥 **정리:**
+> - **API Gateway**는 외부 요청을 관리하고 각 서비스로의 라우팅을 처리
+> - **Eureka**는 서비스 등록과 발견을 담당하며 서비스 위치 정보를 중앙 관리
+
+</details>
+
