@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import RegisterInfo from "./RegisterInfo";
 
 const defaultPetAvatars = [
+  "/images/pet-avatars/petava_basic.png",
   "/images/pet-avatars/petava1.png",
   "/images/pet-avatars/petava2.png",
   "/images/pet-avatars/petava3.png",
