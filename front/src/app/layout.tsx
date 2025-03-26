@@ -44,7 +44,7 @@ export default function RootLayout({
 
       <body className="h-screen flex flex-col">
         <Providers>
-          <AppInitializer />
+          {/* <AppInitializer /> */}
           <TrackRouteWrapper />
           <ToastWrapper />
           {/* 메인 컨텐츠 영역 */}
