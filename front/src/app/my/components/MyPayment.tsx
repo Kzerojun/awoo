@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function MyPayment() {
   return (
-    <Link href="my/payment" className="w-full block">
+    <Link href="my/paymentRegister" className="w-full block">
       <div className="flex items-center w-full">
         <div className="flex-1">
           <div className="flex flex-col w-full">
