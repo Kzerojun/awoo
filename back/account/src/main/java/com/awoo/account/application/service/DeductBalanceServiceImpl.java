@@ -4,8 +4,8 @@ package com.awoo.account.application.service;
 import com.awoo.account.application.command.DeductBalanceCommand;
 import com.awoo.account.application.exception.InsufficientBalanceException;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
+import com.awoo.account.infra.ssafyfinance.request.SSAFYCHANRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYDeductBalanceRequest;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYFetchBalanceRequest;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYFetchAccountResponse;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
@@ -23,7 +23,7 @@ public class DeductBalanceServiceImpl implements DeductBalanceService{
     public void deductBalance(DeductBalanceCommand command) {
 
         // 계좌 잔액 조회
-        SSAFYFetchBalanceRequest request = SSAFYFetchBalanceRequest.builder()
+        SSAFYCHANRequest request = SSAFYCHANRequest.builder()
                 .Header(ssafyApiHelper.createHeader(command.memberId(), SSAFYCode.FETCH_BALANCE))
                 .accountNo(command.accountNo())
                 .build();
