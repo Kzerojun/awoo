@@ -632,13 +632,55 @@ let devPerson: Capt = {
 </details>
 <details> <summary><strong>0320</strong></summary>
 
-## 힙의 구현
+## react-query (tanstack-query)
+### _react-query_
+- fetching, caching, 서버 데이터와의 동기화를 지원해주는 라이브러리
+- React 환경에서의 비동기 Query(질의) 과정을 도와주는 라이브러리
+- React Query는 React Application에서 서버 상태를 불러오고, 캐싱하며, 지속적으로 동기화하고 업데이트하는 작업을 도와주는 라이브러리
+- 복잡하고 장황한 코드가 필요한 다른 데이터 불러오기 바익과 달리 React Component 내부에서 간단하고 직관적으로 API를 사용할 수 있다.
+- React Quert에서 제공하는 캐싱, Window Focus Refetching 등 다양한 기능을 활용하여 API 요청과 관련된 번잡한 작업 없이 "핵심 로직"에 집중 가능
 
-## 파이썬 힙 자료구조
-
+### _캐싱 (Caching)_
+- 캐싱이란 특정 데이터의 복사본을 저장하여 이후 동일한 데이터의 재접근 속도를 높이는 것
+- React-Query는 반복적인 비동기 데이터 호출을 방지하고, 이는 불필요한 API 콜을 줄여 서버에 대한 부하를 줄이는 좋은 결과
+- React-Query는 최신 데이터를 fresh한 데이터, 기존의 데이터를 stale 한 데이터라고 한다
+- 언제 데이터를 갱신하는가?
+   - 화면을 보고 있을 때
+   - 페이지의 전환이 일어났을 때
+   - 페이지 전환 없이 이벤트가 발생해 데이터를 요청할 때
+   ```
+   refetchOnWindowFocus, //default: true
+   refetchOnMount, //default: true
+   refetchOnReconnect, //default: true
+   staleTime, // default: 0
+   cacheTime, // default: 5분 (60 *5 * 1000)
+   ```
+   - 리액트 쿼리가 Refetching 하는 시점
+      - 1. 브라우저에 포커스가 들어온 경우 (refetchOnWindowFocus)
+      - 2. 새로운 컴포넌트 마운트가 발생한 경우 (refetchOnMount)
+      - 3. 네트워크 재연결이 발생한 경우 (refetchOnReconnect)
 
 </details>
 <details> <summary><strong>0321</strong></summary>
+
+## React-Query - 2
+### _staleTime & cacheTime_
+- staleTime
+   - staleTime은 데이터가 fresh -> stale 상태로 변경되는 데 걸리는 시간
+   - fresh 상태일 때는 Refetch 트리거가 발생해도 Refetch가 일어나지 않는다.
+   - 기본값이 0이므로 따로 설정해주지 않는다면 Refetch 트리거가 발생했을 때 무조건 Refetch가 발생한다.
+
+- cacheTime
+   - cacheTime은 데이터가 inactive한 상태일 때 캐싱된 상태로 남아있는 시간
+   - 특정 컴포넌트가 unmount(페이지 전환 등으로 화면에서 사라질 때)되면 사용된 데이터는 inactive 상태로 바뀌고, 이때 데이터느 cacheTime 만큼 유지된다.
+   - cacheTime 이후 데이터는 가비지 콜럭터로 수집되어 메모리에서 해제된다.
+   - 만일 cacheTime이 지나지 않았는데 해당 데이터를 사용하는 컴포넌트가 다시 mount 되면, 새로운 데이터를 fetch 해오는 동안 캐싱된 데이터를 보여준다.
+   - 즉, 캐싱된 데이터를 계속 보여주는 게 아닌, fetch하는 동안 임시로 보여준다는 것!
+
+### Client 데이터와 Server 데이터 간의 분리
+- Client data: 페이지 관련 데이터, 모달 관련 데이터 등등,,,
+- Server data: 사용자 정보, 비즈니스 로직 관련 정보 등등,,,
+- __**비동기 API 호출을 통해 불러오는 데이터**__들을 Server 데이터라고 할 수 있다.
 
 
 </details>
