@@ -24,10 +24,14 @@ spring:
           uri: lb://pet
           predicates:
             - Path=/api/pets/**
+          filters:
+            - name: JwtAuthenticationFilter
         - id : member-service
           uri : lb://member
           predicates:
             - Path=/api/members/**
+          filters:
+            - name: JwtAuthenticationFilter
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
@@ -38,6 +42,8 @@ spring:
           uri: lb://account
           predicates:
             - Path=/api/accounts/**
+          filters:
+            - name: JwtAuthenticationFilter
 
 
 
