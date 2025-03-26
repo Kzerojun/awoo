@@ -17,7 +17,7 @@ spring:
               - DELETE
             allowedHeaders: "*"
             allowCredentials: true
-            exposed-headers: "*"
+            exposed-headers: 'Authorization'
 
       routes:
         - id: pet-service
