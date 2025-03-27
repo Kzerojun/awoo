@@ -1,9 +1,12 @@
 package com.awoo.usedproduct.ui.web;
 
+import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
 import com.awoo.usedproduct.support.ApiUtils;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
+import com.awoo.usedproduct.ui.facade.dto.request.ModifyUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.request.RegisterUsedProductRequest;
+import com.awoo.usedproduct.ui.facade.dto.response.ModifyUsedProductResponse;
 import com.awoo.usedproduct.ui.facade.dto.response.RegisterUsedProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,16 @@ public class UsedProductController {
                                                                                @RequestHeader("X-User-Id") String userId) {
         RegisterUsedProductCommand command = request.toCommand(userId,images);
         RegisterUsedProductResponse response = usedProductServiceFacade.registerUsedProduct(command);
+        return ApiUtils.success(response);
+    }
+
+    @PutMapping("/{usedProductId}")
+    public ApiUtils.ApiResult<ModifyUsedProductResponse> modifyUsedProduct(@RequestPart ModifyUsedProductRequest request,
+                                                                           @RequestPart List<MultipartFile> images,
+                                                                           @RequestHeader("X-User-Id") String userId,
+                                                                           @PathVariable Integer usedProductId) {
+        ModifyUsedProductCommand command = request.toCommand(userId, usedProductId, images);
+        ModifyUsedProductResponse response = usedProductServiceFacade.modifyUsedProduct(command);
         return ApiUtils.success(response);
     }
 }
