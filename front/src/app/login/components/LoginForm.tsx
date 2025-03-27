@@ -15,16 +15,22 @@ const LoginForm = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  useEffect(() => {
+    if (isSuccess) {
+      router.replace("/home");
+    }
+  }, [isSuccess, router]);
+
+  useEffect(() => {
+    if (isError) {
+      alert("로그인에 실패했습니다. 이메일 또는 전화번호를 확인하세요.");
+      router.replace("/login");
+    }
+  }, [isError]);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginMutate({ email, password });
-    if (isSuccess) {
-      setTimeout(() => {
-        router.replace("/home");
-      }, 300);
-    } else if (isError) {
-      alert("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.");
-    }
   };
 
   return (

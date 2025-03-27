@@ -17,23 +17,31 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
         localStorage.setItem("accessToken", accessToken);
       }
       // 유저 정보 조회 refetch
-      const { data: userData } = await refetchUserInfo();
+      const response = await refetchUserInfo();
+
+      if (response.status === "success" && response.data) {
+        const getUserData = response.data;
+        dispatch(
+          setUserData({
+            nickname: getUserData.nickname,
+            name: getUserData.name,
+            email: getUserData.email,
+            phone: getUserData.phone,
+            birthDate: getUserData.birthDate,
+            profileImage: getUserData.profileImage,
+            paymentRegister: getUserData.paymentRegister,
+            accessToken: accessToken,
+          })
+        );
+      } else {
+        console.error("로그인 후 유저 정보 가져오기 실패:", response.error);
+      }
 
       // 스토어에도 저장
-      dispatch(
-        setUserData({
-          nickname: userData.nickname,
-          name: userData.name,
-          email: userData.email,
-          phone: userData.phone,
-          birthDate: userData.birthDate,
-          profileImage: userData.profileImage,
-          accessToken: accessToken,
-        })
-      );
     },
     onError: (error) => {
       console.error("로그인 실패:", error);
+      alert("로그인은 되었지만 사용자 정보를 불러오는 데 실패했습니다.");
     },
   });
 };
