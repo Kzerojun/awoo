@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import Button from "@/common/ui/Button";
+import { useAppDispatch } from "@/lib/store";
+import { setPhoneVerified } from "@/lib/slices/accountSlice";
 
 export default function PhoneVerifyPage() {
   const router = useRouter();
@@ -28,9 +30,15 @@ export default function PhoneVerifyPage() {
     setTimer(180);
   };
 
-  // 인증 완료
+  const dispatch = useAppDispatch();
+
   const handleVerify = () => {
     if (!authCode) return alert("인증번호를 입력해주세요.");
+
+    // ✅ Redux 상태 업데이트
+    dispatch(setPhoneVerified(true));
+    console.log("✅ 휴대폰 인증 Redux 저장 완료");
+
     alert("인증되었습니다.");
     router.push("/account/verify"); // 1원 송금으로 이동
   };

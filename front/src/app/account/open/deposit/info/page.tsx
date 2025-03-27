@@ -8,8 +8,12 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Button from "@/common/ui/Button";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
-import { setPassword as setAccountPassword } from "@/lib/slices/accountSlice";
+import {
+  setPassword as setAccountPassword,
+  setConditionsAgreement,
+} from "@/lib/slices/accountSlice";
 import { useRouter } from "next/navigation";
+
 export default function DepositInfoPage() {
   const [question1, setQuestion1] = useState<"yes" | "no" | null>(null);
   const [question2, setQuestion2] = useState<"yes" | "no" | null>(null);
@@ -140,8 +144,8 @@ export default function DepositInfoPage() {
                   }
 
                   dispatch(setAccountPassword(password)); // ✅ 최종 저장
-                  console.log("Redux 저장 확인:", password);
-                  router.push("/account/verify");
+                  dispatch(setConditionsAgreement(true)); // ✅ 동의 여부 저장
+                  router.push("/account/verify/phone");
                 }}
               />
             </div>

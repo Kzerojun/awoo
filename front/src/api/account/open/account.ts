@@ -5,7 +5,8 @@ interface OpenAccountRequest {
   conditionsAgreement: boolean;
 }
 
-export const openDepositAccount = async (data: OpenAccountRequest) => {
+export const OpenDepositAccount = async (data: OpenAccountRequest) => {
   const response = await axiosInstance.post("/accounts", data);
+  console.log("✅ 계좌 개설 응답:", response.data);
   return response.data;
 };
