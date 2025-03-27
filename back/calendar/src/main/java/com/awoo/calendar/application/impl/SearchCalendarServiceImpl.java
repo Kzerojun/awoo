@@ -2,8 +2,7 @@ package com.awoo.calendar.application.impl;
 
 import com.awoo.calendar.application.SearchCalendarService;
 import com.awoo.calendar.application.exception.AccessDeniedException;
-import com.awoo.calendar.application.exception.ApplicationErrorCode;
-import com.awoo.calendar.application.exception.CalendarSearchException;
+import com.awoo.calendar.application.exception.CalendarNotFoundException;
 import com.awoo.calendar.application.exception.PetNotFoundException;
 import com.awoo.calendar.domain.Calendar;
 import com.awoo.calendar.domain.CalendarRepository;
@@ -27,28 +26,27 @@ public class SearchCalendarServiceImpl implements SearchCalendarService {
     @Override
     public Map<String, Object> searchCalendar(Integer calendarId, Integer memberId) {
 
-        Calendar calendar = calendarRepository.searchCalendar(calendarId).orElseThrow(CalendarSearchException::new);
+        Calendar calendar = calendarRepository.searchCalendar(calendarId).orElseThrow(CalendarNotFoundException::new);
 
         if(calendar.getMemberId() != memberId){
             throw new AccessDeniedException();
         }
 
-        ApiUtils.ApiResult<?> petResponse = petClient.getPetInfo(calendar.getPetId());
+        try{
+            ApiUtils.ApiResult<?> petResponse = petClient.getPetInfo(calendar.getPetId());
+            Map<String, Object> petData = objectMapper.convertValue(petResponse.getResponse(), Map.class);
 
-        if(petResponse.getResponse() == null) {
+            String petName = (String) petData.get("name");
+            String petProfileImage = (String) petData.get("profileImage");
+
+            Map<String, Object> calendarData = new HashMap<>();
+            calendarData.put("calendarInfo", calendar);
+            calendarData.put("petName", petName);
+            calendarData.put("petProfileImage", petProfileImage);
+
+            return calendarData;
+        } catch (Exception e) {
             throw new PetNotFoundException();
         }
-
-        Map<String, Object> petData = objectMapper.convertValue(petResponse.getResponse(), Map.class);
-
-        String petName = (String) petData.get("name");
-        String petProfileImage = (String) petData.get("profileImage");
-
-        Map<String, Object> calendarData = new HashMap<>();
-        calendarData.put("calendarInfo", calendar);
-        calendarData.put("petName", petName);
-        calendarData.put("petProfileImage", petProfileImage);
-
-        return calendarData;
     }
 }

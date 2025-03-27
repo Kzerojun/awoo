@@ -24,9 +24,9 @@ public class RegisterCalendarServiceImpl implements RegisterCalendarService {
     @Override
     public Calendar registerCalender(RegisterCalendarCommand command) {
 
-        ApiUtils.ApiResult<?> petResponse = petClient.getPetInfo(command.calendarCommand().petId());
-
-        if(petResponse.getResponse() == null) {
+        try{
+            ApiUtils.ApiResult<?> petResponse = petClient.getPetInfo(command.calendarCommand().petId());
+        }catch (Exception e){
             throw new PetNotFoundException();
         }
 

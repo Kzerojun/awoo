@@ -1,15 +1,12 @@
 package com.awoo.calendar.ui.facade.internal;
 
-import com.awoo.calendar.application.RegisterCalendarService;
-import com.awoo.calendar.application.SearchCalendarListService;
-import com.awoo.calendar.application.SearchCalendarService;
+import com.awoo.calendar.application.*;
 import com.awoo.calendar.application.command.RegisterCalendarCommand;
 import com.awoo.calendar.domain.Calendar;
 import com.awoo.calendar.ui.facade.CalendarFacade;
+import com.awoo.calendar.ui.facade.dto.request.ModifyCalendarRequest;
 import com.awoo.calendar.ui.facade.dto.request.RegisterCalendarRequest;
-import com.awoo.calendar.ui.facade.dto.response.RegisterCalendarResponse;
-import com.awoo.calendar.ui.facade.dto.response.SearchCalendarListResponse;
-import com.awoo.calendar.ui.facade.dto.response.SearchCalendarResponse;
+import com.awoo.calendar.ui.facade.dto.response.*;
 import com.awoo.calendar.ui.facade.internal.mapper.CalendarResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,6 +21,8 @@ public class CalendarFacadeImpl implements CalendarFacade {
     private final RegisterCalendarService registerCalendarService;
     private final SearchCalendarService searchCalendarService;
     private final SearchCalendarListService searchCalendarListService;
+    private final ModifyCalendarService modifyCalendarService;
+    private final DeleteCalendarService deleteCalendarService;
     private final CalendarResponseMapper mapper;
 
     @Override
@@ -42,6 +41,18 @@ public class CalendarFacadeImpl implements CalendarFacade {
     public SearchCalendarListResponse searchCalendarList(final Integer memberId) {
         List<Map<String, Object>> calendarDataList = searchCalendarListService.searchCalendarList(memberId);
         return mapper.searchCalendarList(calendarDataList);
+    }
+
+    @Override
+    public ModifyCalendarResponse modifyCalendar(ModifyCalendarRequest request, Integer calendarId, Integer memberId) {
+        Calendar modifyCalendar = modifyCalendarService.modifyCalendar(request.toCommand(calendarId, memberId));
+        Map<String, Object> calendarData = searchCalendarService.searchCalendar(calendarId, memberId);
+        return mapper.modifyCalendar(calendarData);
+    }
+
+    @Override
+    public DeleteCalendarResponse deleteCalendar(Integer calendarId, Integer memberId) {
+        return mapper.deleteCalendar(deleteCalendarService.deleteCalendar(calendarId, memberId));
     }
 
 }

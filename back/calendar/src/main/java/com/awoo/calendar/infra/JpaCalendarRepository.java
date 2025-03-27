@@ -5,12 +5,14 @@ import com.awoo.calendar.domain.CalendarRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface JpaCalendarRepository extends JpaRepository<Calendar, Integer>, CalendarRepository {
 
     Optional<Calendar> findByCalendarId(Integer calendarId);
+    List<Calendar> findByMemberId(Integer memberId);
 
     @Override
     default void registerCalendar(Calendar calendar) {
@@ -23,6 +25,10 @@ public interface JpaCalendarRepository extends JpaRepository<Calendar, Integer>,
         return findByCalendarId(calendarId);
     }
 
+    @Override
+    default List<Calendar> searchCalendarList(Integer memberId) {
+        return findByMemberId(memberId);
+    }
 
 
 }

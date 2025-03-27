@@ -1,5 +1,7 @@
 package com.awoo.calendar.domain;
 
+import com.awoo.calendar.application.command.ModifyCalendarCommand;
+import com.awoo.calendar.application.command.common.CalendarCommand;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,6 +37,9 @@ public class Calendar {
     @Column(nullable = false)
     private String color;
 
+    @Column(length = 1, nullable = false, columnDefinition = "CHAR(1)")
+    private String delYn = "N";
+
     @Builder
     public Calendar(Integer calendarId, int memberId, int petId, String scheduleContent, LocalDateTime startTime, LocalDateTime endTime, String color) {
         this.calendarId = calendarId;
@@ -44,6 +49,18 @@ public class Calendar {
         this.startTime = startTime;
         this.endTime = endTime;
         this.color = color;
+    }
+
+    public void modify(final ModifyCalendarCommand command){
+        this.petId = command.petId();
+        this.scheduleContent = command.scheduleContent();
+        this.startTime = command.startTime();
+        this.endTime = command.endTime();
+        this.color = command.color();
+    }
+
+    public void delete(){
+        this.delYn = "Y";
     }
 
 }
