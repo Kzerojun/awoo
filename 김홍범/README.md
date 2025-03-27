@@ -1124,7 +1124,7 @@ Username/Password 타입의 Credential을 사용할 때는 다음 변수에 자�
 </details>
 
 <details>
-<summary><strong>0320</strong></summary>
+<summary><strong>0321</strong></summary>
 
 # Apache Kafka와 ZooKeeper TIL
 
@@ -1184,5 +1184,129 @@ Kafka는 전통적으로 다음과 같은 작업을 위해 ZooKeeper에 의존�
 ## 오늘의 학습 포인트
 
 > Kafka와 ZooKeeper는 대규모 분산 시스템에서 중요한 역할을 담당하지만, Kafka는 점차 ZooKeeper 의존성을 줄이는 방향으로 발전하고 있다. 특히 실시간 데이터 처리와 이벤트 기반 아키텍처가 중요해지는 현대 시스템에서 Kafka의 역할이 더욱 중요해지고 있으며, 이를 효율적으로 활용하기 위한 아키텍처 설계가 중요하다.
+
+</details>
+
+<details>
+<summary><strong>0324</strong></summary>
+
+# TIL : Redux 기본 개념
+
+> Redux는 JavaScript 애플리케이션의 상태 관리 라이브러리입니다. Redux의 핵심은 애플리케이션의 상태를 단일 스토어(store)에 저장하는 것입니다. 이 접근법은 상태 변화를 예측 가능하게 만들어 디버깅과 테스트를 용이하게 합니다. Redux는 세 가지 핵심 원칙을 따릅니다:
+
+1. `단일 진리의 원천(Single Source of Truth)`: 애플리케이션의 전체 상태는 하나의 스토어에 객체 트리 형태로 저장됩니다.
+2. `상태는 읽기 전용(State is Read-Only)`: 상태를 변경하는 유일한 방법은 액션(action)을 발생시키는 것입니다.
+3. `변경은 순수 함수로 작성(Changes are made with Pure Functions)`: 리듀서(reducer)는 이전 상태와 액션을 받아 새로운 상태를 반환하는 순수 함수입니다.
+</details>
+
+<details>
+<summary><strong>0325</strong></summary>
+
+# TIL : Redux의 핵심 구성 요소
+
+Redux는 다음과 같은 핵심 구성 요소로 이루어져 있습니다:
+
+1. `액션(Actions)`: 무엇이 일어났는지 설명하는 객체입니다. 반드시 type 속성을 가져야 하며, 추가 데이터를 포함할 수 있습니다.
+   ```js
+   { type: 'ADD_TODO', text: '리덕스 공부하기' }
+   ```
+2. `리듀서(Reducers)`: 현재 상태와 액션을 받아 새로운 상태를 반환하는 순수 함수입니다.
+   ```js
+   function todoReducer(state = [], action) {
+     switch (action.type) {
+       case "ADD_TODO":
+         return [...state, { text: action.text, completed: false }];
+       default:
+         return state;
+     }
+   }
+   ```
+3. `스토어(Store)`: 애플리케이션의 상태를 보관하고, 상태에 접근하게 해주며, 상태를 업데이트할 수 있게 해주는 객체입니다.
+`js
+    import { createStore } from 'redux';
+    const store = createStore(todoReducer);
+    `
+</details>
+
+<details>
+<summary><strong>0326</strong></summary>
+
+# TIL : Redux 미들웨어와 비동기 작업
+
+> Redux 미들웨어는 액션이 디스패치되어 리듀서에 도달하기 전에 가로채는 방법을 제공합니다. 미들웨어는 특히 비동기 작업(API 호출 등)을 처리할 때 유용합니다.
+> 가장 널리 사용되는 미들웨어는 다음과 같습니다:
+
+1. `Redux Thunk`: 액션 생성자가 객체 대신 함수를 반환할 수 있게 해줍니다. 이 함수는 dispatch와 getState를 인자로 받아 비동기 작업을 수행할 수 있습니다.
+
+   ```js
+   const fetchData = () => {
+     return async (dispatch) => {
+       dispatch({ type: "FETCH_DATA_START" });
+       try {
+         const response = await fetch("/api/data");
+         const data = await response.json();
+         dispatch({ type: "FETCH_DATA_SUCCESS", payload: data });
+       } catch (error) {
+         dispatch({ type: "FETCH_DATA_ERROR", error });
+       }
+     };
+   };
+   ```
+
+2. `Redux Saga`: 제너레이터 함수를 사용하여 비동기 흐름을 더 쉽게 테스트하고 관리할 수 있게 해줍니다.
+3. `Redux Observable`: RxJS의 강력한 Observable을 Redux와 통합하여 복잡한 비동기 작업을 처리합니다.
+</details>
+
+<details>
+<summary><strong>0327</strong></summary>
+
+# TIL : Redux Toolkit과 최신 Redux 패턴
+
+> Redux Toolkit은 Redux를 사용할 때 필요한 보일러플레이트 코드를 줄이고, 일반적인 작업을 단순화하기 위해 만들어진 공식 도구입니다.
+> 주요 기능:
+
+1. `configureStore()`: Redux 개발자 도구 설정, 미들웨어 추가 등이 자동으로 이루어집니다.
+   ```js
+   import { configureStore } from "@reduxjs/toolkit";
+   const store = configureStore({ reducer: rootReducer });
+   ```
+2. `createSlice()`: 리듀서 로직과 액션 생성자를 함께 정의할 수 있습니다.
+
+   ```js
+   import { createSlice } from "@reduxjs/toolkit";
+
+   const todosSlice = createSlice({
+     name: "todos",
+     initialState: [],
+     reducers: {
+       addTodo: (state, action) => {
+         state.push({ text: action.payload, completed: false });
+       },
+       toggleTodo: (state, action) => {
+         const todo = state.find((todo) => todo.id === action.payload);
+         if (todo) {
+           todo.completed = !todo.completed;
+         }
+       },
+     },
+   });
+
+   export const { addTodo, toggleTodo } = todosSlice.actions;
+   export default todosSlice.reducer;
+   ```
+
+3. `Immer 통합`: 불변성을 쉽게 유지할 수 있게 해줍니다. 위 예제에서 state.push()와 같은 변이 코드는 실제로는 불변 업데이트로 변환됩니다.
+4. `createAsyncThunk()`: 비동기 작업을 위한 액션 생성자를 간편하게 만들 수 있습니다.
+
+   ```js
+   import { createAsyncThunk } from "@reduxjs/toolkit";
+
+   export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
+     const response = await fetch("/api/todos");
+     return response.json();
+   });
+   ```
+
+이러한 최신 도구와 패턴은 Redux의 복잡성을 크게 줄이고, 더 간결하고 유지보수하기 쉬운 코드를 작성할 수 있게 도와줍니다.
 
 </details>
