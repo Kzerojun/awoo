@@ -4,12 +4,13 @@ import com.awoo.pet.ui.facade.dto.request.ModifyPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterPetRequest;
 import com.awoo.pet.ui.facade.dto.request.RegisterWalkRequest;
 import com.awoo.pet.ui.facade.dto.response.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface PetServiceFacade {
 
-    RegisterPetResponse registerPet(final RegisterPetRequest registerPetRequest, final Integer memberId);
+    RegisterPetResponse registerPet(final RegisterPetRequest registerPetRequest, final MultipartFile profileImage, final Integer memberId);
 
     SearchPetListResponse searchPetList(final Integer memberId);
 
