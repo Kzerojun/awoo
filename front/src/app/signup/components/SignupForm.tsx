@@ -106,6 +106,7 @@ const SignupForm = () => {
       setEmailMessage("올바른 이메일을 입력하세요.");
       return;
     }
+    console.log("이메일 확인:", email);
 
     checkEmail(
       { email },

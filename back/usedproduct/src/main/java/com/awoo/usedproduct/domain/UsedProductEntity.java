@@ -1,5 +1,7 @@
 package com.awoo.usedproduct.domain;
 
+import com.awoo.usedproduct.domain.exception.DomainExceptionErrorCode;
+import com.awoo.usedproduct.domain.exception.UnauthorizedModificationException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -51,4 +53,27 @@ public class UsedProductEntity {
         this.likeCount = 0;
         this.images = images;
     }
+
+    public void modify(String title, String content,
+                       Integer price, List<String> images){
+        this.title = title;
+        this.content = content;
+        this.price = price;
+        updateImages(images);
+    }
+
+    public boolean canModify(Integer memberId){
+        if(!this.memberId.equals(memberId)){
+            throw new UnauthorizedModificationException(DomainExceptionErrorCode.UNAUTHORIZED_MODIFICATION);
+        }
+        return true;
+    }
+
+    private void updateImages(List<String> imageUrls){
+        this.images = imageUrls.stream()
+                .map(UsedProductImage::new)
+                .toList();
+    }
+
+
 }

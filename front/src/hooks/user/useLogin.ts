@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/api/user/auth";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setUserData } from "@/lib/slices/userSlice";
 
 export const useLogin = (refetchUserInfo: () => Promise<any>) => {
@@ -18,9 +18,11 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
       }
       // 유저 정보 조회 refetch
       const response = await refetchUserInfo();
+      console.log(response);
 
-      if (response.status === "success" && response.data) {
+      if (response.status === "success" && response) {
         const getUserData = response.data;
+        console.log("유저 정보 테스트 데이터:", getUserData);
         dispatch(
           setUserData({
             nickname: getUserData.nickname,
@@ -41,7 +43,7 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
     },
     onError: (error) => {
       console.error("로그인 실패:", error);
-      alert("로그인은 되었지만 사용자 정보를 불러오는 데 실패했습니다.");
+      alert("로그인 실패.");
     },
   });
 };
