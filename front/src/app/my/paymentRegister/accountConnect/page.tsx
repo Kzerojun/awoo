@@ -22,7 +22,7 @@ export default function AccountConnect() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <TopBar title="계좌 연결" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
 
       <div className="pt-14 flex-1 flex flex-col">
         <BankInfoTyping onComplete={handleBankInfoComplete} />
