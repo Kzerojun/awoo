@@ -7,7 +7,12 @@ import { setRegisterData, clearRegisterData } from "@/lib/slices/registerSlice";
 import urlToFile from "../hooks/useChangeFile";
 // 회원가입 및 닉네임 중복 체크 쿼리
 import { useSignup } from "@/hooks/user/useSignup";
+// 로그인 쿼리
+import { useLogin } from "@/hooks/user/useLogin";
+// 유저 정보 쿼리
+import { useUserInfo } from "@/hooks/user/useUserInfo";
 import { useNicknameCheck } from "@/hooks/user/useNicknameCheck";
+import { useRouter } from "next/navigation";
 
 interface ProfileNicknameProps {
   nickname: string;
@@ -23,7 +28,11 @@ const ProfileNickname = ({
   selectedAvatar,
 }: ProfileNicknameProps) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const registerData = useAppSelector((state) => state.register);
+  const userEmail = useAppSelector((state) => state.register.email);
+  const userPassword = useAppSelector((state) => state.register.password);
+
   const {
     mutate: signupMutate,
     isPending: isSignupPending,
@@ -34,16 +43,25 @@ const ProfileNickname = ({
     isPending: isNicknamePending,
     isSuccess: isNicknameSuccess,
   } = useNicknameCheck();
+  const { refetch: refetchUserInfo } = useUserInfo();
+  const {
+    mutate: loginMutate,
+    isPending: isLoginPending,
+    isSuccess: isLoginSuccess,
+    isError: isLoginError,
+  } = useLogin(refetchUserInfo);
 
   const maxLength: number = 6;
 
   const [isDuplicateName, setIsDuplicateName] = useState<boolean>(true);
-  const [duplicateError, setDuplicateError] = useState<string>("닉네임 에러 메시지 나타내기");
+  const [duplicateError, setDuplicateError] = useState<string>("");
 
   // 닉네임 변경 핸들러
   const handleNickname = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.slice(0, maxLength);
     setNickname(value);
+    setIsDuplicateName(false);
+    setDuplicateError("");
     dispatch(
       setRegisterData({
         nickname: value,
@@ -61,14 +79,17 @@ const ProfileNickname = ({
             setDuplicateError(res.response.message);
             console.log(res.response.message);
             setIsDuplicateName(false);
+            setDuplicateError(res.response.message);
           } else {
             setDuplicateError(res.error.message);
             console.error(res.error.message);
             setIsDuplicateName(true);
+            setDuplicateError(res.error.message);
           }
         },
         onError: () => {
           setDuplicateError("닉네임 확인 중 오류가 발생했습니다.");
+          setIsDuplicateName(true);
         },
       }
     );
@@ -90,11 +111,21 @@ const ProfileNickname = ({
       {
         onSuccess: (res) => {
           console.log("회원가입 성공!", res);
-          dispatch(clearRegisterData());
-          // TODO: 로그인 처리, 페이지 이동
+
+          setTimeout(() => {
+            loginMutate({ email: userEmail, password: userPassword });
+            if (isLoginSuccess) {
+              router.replace("/home");
+            } else if (isLoginError) {
+              alert("로그인에 실패했습니다.");
+              router.replace("/login");
+              dispatch(clearRegisterData());
+            }
+          }, 300);
         },
         onError: (err) => {
           console.error("회원가입 실패", err);
+          router.replace("/signup");
         },
       }
     );
@@ -123,7 +154,11 @@ const ProfileNickname = ({
                 {nickname.length}/{maxLength}
               </span>
             </div>
-            {isDuplicateName && <div className="text-sm text-error">{duplicateError}</div>}
+            {
+              <div className={`text-sm ${isDuplicateName ? "text-error" : "text-aqua"}`}>
+                {duplicateError}
+              </div>
+            }
           </div>
           {/* 중복 확인 */}
           <div className="w-56 flex items-center justify-end">

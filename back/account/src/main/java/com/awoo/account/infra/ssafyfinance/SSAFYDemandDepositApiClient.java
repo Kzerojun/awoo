@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "ssafy-finance-api", url = "https://finopenapi.ssafy.io/ssafy/api/v1/edu/demandDeposit")
+@FeignClient(name = "ssafy-finance-accounts-api", url = "https://finopenapi.ssafy.io/ssafy/api/v1/edu/demandDeposit")
 public interface SSAFYDemandDepositApiClient {
     @PostMapping("/createDemandDepositAccount")
     SSAFYFetchAccountResponse createAccount(@RequestBody SSAFYCreateAccountRequest request);

@@ -28,7 +28,9 @@ const Pet = () => {
   return (
     <>
       <CommonTopBar title="마이펫" leftAction="back" />
-      <main className="mt-14 px-4 h-full">{currentView === 1 ? <NoPet /> : <PetMain />}</main>
+      <main className="mt-14 px-4 h-[calc(100vh-112px)]">
+        {currentView === 1 ? <NoPet /> : <PetMain />}
+      </main>
     </>
   );
 };

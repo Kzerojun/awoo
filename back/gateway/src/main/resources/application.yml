@@ -33,10 +33,14 @@ spring:
           uri: lb://pet
           predicates:
             - Path=/api/pets/**
+          filters:
+            - name: JwtAuthenticationFilter
         - id : member-service
           uri : lb://member
           predicates:
             - Path=/api/members/**
+          filters:
+            - name: JwtAuthenticationFilter
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
@@ -46,7 +50,9 @@ spring:
         - id : account-service
           uri: lb://account
           predicates:
-            - Path=/api/accounts/**
+            - Path=/api/accounts/**, /api/savings/**
+          filters:
+            - name: JwtAuthenticationFilter
         - id: used-product-service
           uri: lb://USED-PRODUCT-SERVICE
           predicates:
@@ -54,12 +60,9 @@ spring:
           filters:
             - name: JwtAuthenticationFilter
 
-
       discovery:
         locator:
           enabled: true
-
-
 eureka:
   client:
     service-url:

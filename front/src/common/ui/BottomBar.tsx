@@ -35,7 +35,16 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
   ];
 
   // 특정 페이지에서 하단바 숨김 (필요할 경우 추가 가능)
-  const hideOnPages = ["/#", "/my/profile/withdraw", "/signup/profile"];
+  const hideOnPages = [
+    "/#",
+    "/my/profile/withdraw",
+    "/signup/profile",
+    "/my/paymentRegister/signupDone",
+    "/my/paymentRegister/paymentPassword",
+    "/my/paymentRegister/accountCertificate",
+    "/my/paymentRegister/registerDone",
+    "/my/paymentSend/completeSend",
+  ];
   const isMarketDetail = /^\/market\/[^\/]+$/.test(currentPath);
 
   if (hideOnPages.includes(currentPath) || currentPath.includes("/admin") || isMarketDetail)
