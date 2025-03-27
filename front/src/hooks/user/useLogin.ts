@@ -41,7 +41,7 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
     },
     onError: (error) => {
       console.error("로그인 실패:", error);
-      alert("로그인은 되었지만 사용자 정보를 불러오는 데 실패했습니다.");
+      alert("로그인 실패.");
     },
   });
 };

@@ -39,6 +39,7 @@ interface UserInfo {
 // 이메일 중복 체크
 export const emailCheck = async ({ email }: EmailPayload) => {
   console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-email?email=${email}`);
+  console.log("이메일 요청 데이터", email);
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-email?email=${email}`
@@ -53,6 +54,7 @@ export const emailCheck = async ({ email }: EmailPayload) => {
 
 // 닉네임 중복 체크
 export const nicknameCheck = async ({ nickname }: NicknamePayload) => {
+  console.log("닉네임 요청 데이터");
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-nickname?nickname=${nickname}`
@@ -68,6 +70,7 @@ export const nicknameCheck = async ({ nickname }: NicknamePayload) => {
 // 회원가입 API 요청
 export const signup = async ({ requestDto, imageFile, selectedAvatar }: SignupPayload) => {
   const formData = new FormData();
+  console.log("회원가입 요청 데이터", formData);
 
   formData.append(
     "requestDto",
@@ -84,9 +87,7 @@ export const signup = async ({ requestDto, imageFile, selectedAvatar }: SignupPa
   }
 
   try {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members`, formData);
     console.log(res.data);
     return res.data;
   } catch (err) {
@@ -101,11 +102,17 @@ export const login = async ({ email, password }: LoginPayload) => {
     email,
     password,
   };
+  console.log("로그인 요청 데이터", loginData);
   try {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/members/login`,
       loginData,
-      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     // 나중에 주석 or 지우기
     console.log("로그인 성공:", res.data);
