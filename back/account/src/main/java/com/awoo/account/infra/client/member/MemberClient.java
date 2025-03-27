@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "member-service",url = "http://localhost:8085/api/members")
+@FeignClient(name = "member-service",url = "https://awoofinance.duckdns.org/api/members")
 public interface MemberClient {
 
     @GetMapping("/member-key")
