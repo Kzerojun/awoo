@@ -43,6 +43,7 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     "/my/paymentRegister/paymentPassword",
     "/my/paymentRegister/accountCertificate",
     "/my/paymentRegister/registerDone",
+    "/my/paymentSend/completeSend",
   ];
   const isMarketDetail = /^\/market\/[^\/]+$/.test(currentPath);
 

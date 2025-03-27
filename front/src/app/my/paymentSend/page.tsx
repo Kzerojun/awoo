@@ -8,12 +8,13 @@ import SendBankInfo from "./components/SendBankInfo";
 import SendAmountModal from "./components/SendAmountModal";
 import SendConfirmModal from "./components/SendConfirmModal";
 
-export default function AccountConnect() {
+export default function PaymentSend() {
   const router = useRouter();
   const [showAmountModal, setShowAmountModal] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [bankInfo, setBankInfo] = useState<{ bank: string; accountNumber: string } | null>(null);
   const [amount, setAmount] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(2999000); // 현재 잔액 - 실제로는 API에서 가져와야 함
 
   // 계좌 정보 입력 완료 처리
   const handleBankInfoComplete = (data: { bank: string; accountNumber: string }) => {
@@ -40,8 +41,16 @@ export default function AccountConnect() {
   const handleSendComplete = () => {
     console.log("송금 정보:", { ...bankInfo, amount });
 
-    // 실제 구현에서는 API 호출로 송금 처리
-    alert(`${amount.toLocaleString()}원이 송금되었습니다.`);
+    // 실제로는 API 호출로 송금 처리 후 잔액 업데이트
+    const newBalance = balance - amount;
+    setBalance(newBalance);
+
+    // 송금 완료 페이지로 이동하면서 필요한 정보 URL 파라미터로 전달
+    if (bankInfo) {
+      router.push(
+        `/my/paymentSend/completeSend?amount=${amount}&balance=${newBalance}&bank=${bankInfo.bank}&accountNumber=${bankInfo.accountNumber}&receiverName=받는분`
+      );
+    }
 
     // 송금 완료 후 모달 닫기
     setShowConfirmModal(false);
@@ -77,7 +86,7 @@ export default function AccountConnect() {
             isOpen={showConfirmModal}
             onClose={() => setShowConfirmModal(false)}
             onConfirm={handleSendComplete}
-            onEdit={handleEditAmount} // 추가된 부분
+            onEdit={handleEditAmount}
             amount={amount}
             bankInfo={bankInfo}
           />
