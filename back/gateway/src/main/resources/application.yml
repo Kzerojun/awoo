@@ -4,6 +4,15 @@ server:
 spring:
   application:
     name: API-GATEWAY-SERVICE
+  webflux:
+    multipart:
+      max-parts: 5
+      headers-charset: UTF-8
+      max-in-memory-size: 256KB
+  servlet:
+    multipart:
+      enabled: false
+
   cloud:
     gateway:
       globalcors:
@@ -44,8 +53,12 @@ spring:
             - Path=/api/accounts/**, /api/savings/**
           filters:
             - name: JwtAuthenticationFilter
-
-
+        - id: used-product-service
+          uri: lb://USED-PRODUCT-SERVICE
+          predicates:
+            - Path=/api/used-products/**
+          filters:
+            - name: JwtAuthenticationFilter
 
       discovery:
         locator:
