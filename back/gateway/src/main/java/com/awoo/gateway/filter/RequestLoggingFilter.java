@@ -6,6 +6,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.factory.rewrite.ModifyRequestBodyGatewayFilterFactory;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -28,15 +29,22 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
                 body);
     }
 
-    @Override
-    public Mono<Void> filter(final ServerWebExchange exchange, final GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        if (isMultipartRequest(exchange.getRequest())) {
+            // Multipart 요청은 로깅 생략
+            return chain.filter(exchange);
+        }
         return modifyRequestBodyGatewayFilterFactory
                 .apply(modifyRequestBodyGatewayFilterConfig())
                 .filter(exchange, chain);
     }
 
-    private ModifyRequestBodyGatewayFilterFactory.Config modifyRequestBodyGatewayFilterConfig() {
+    private boolean isMultipartRequest(ServerHttpRequest request) {
+        String contentType = request.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+        return contentType != null && contentType.startsWith("multipart/");
+    }
 
+    private ModifyRequestBodyGatewayFilterFactory.Config modifyRequestBodyGatewayFilterConfig() {
         return new ModifyRequestBodyGatewayFilterFactory.Config()
                 .setRewriteFunction(String.class, String.class, (exchange, body) -> {
                             logRequest(exchange.getRequest(), body);
@@ -47,7 +55,6 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-
         return Ordered.HIGHEST_PRECEDENCE;
     }
 }
