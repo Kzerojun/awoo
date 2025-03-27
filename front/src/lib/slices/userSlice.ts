@@ -18,7 +18,7 @@ interface UserState {
   profileImage: string | null;
   petList: Pet[] | null;
   paymentRegister: boolean;
-  accessToken: string[] | null;
+  accessToken: string | null;
 }
 
 const initialState: UserState = {
