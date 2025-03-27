@@ -5,22 +5,30 @@ import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
+import React from "react";
 
 interface CommonTopBarProps {
   title: string;
   leftAction?: "back" | "close";
-  rightAction?: "bell" | "none" | "cancel";
+  rightAction?: "bell" | "none" | "cancel" | "setting";
+  backColor?: "white" | "aqua";
   onClose?: () => void;
+  onBellClick?: () => void;
+  onSettingClick?: () => void;
 }
 
 const CommonTopBar = ({
   title,
   leftAction = "back",
-  rightAction = "bell",
+  rightAction = "none",
+  backColor = "white",
   onClose,
+  onBellClick,
+  onSettingClick,
 }: CommonTopBarProps) => {
   interface leftActionTypes {
     back: React.ReactNode;
@@ -31,6 +39,12 @@ const CommonTopBar = ({
     bell: React.ReactNode;
     none: null;
     cancel: React.ReactNode;
+    setting: React.ReactNode;
+  }
+
+  interface backColorTypes {
+    white: string;
+    aqua: string;
   }
 
   const leftActionTypes: leftActionTypes = {
@@ -42,6 +56,12 @@ const CommonTopBar = ({
     bell: <BellIcon className="h-6 w-6" />,
     none: null,
     cancel: <span className="text-sm ">취소</span>,
+    setting: <Cog6ToothIcon className="h-6 w-6 text-black" />,
+  };
+
+  const backColorTypes: backColorTypes = {
+    white: "bg-white",
+    aqua: "bg-aqua",
   };
 
   const router = useRouter();
@@ -49,6 +69,7 @@ const CommonTopBar = ({
   const historyStack = useAppSelector((state) => state.userAction.historyStack);
 
   const handleLeftClick = () => {
+    // 뒤로가기
     if (leftAction === "back") {
       if (historyStack.length > 0) {
         const prevPath = historyStack[historyStack.length - 1];
@@ -66,16 +87,27 @@ const CommonTopBar = ({
     }
     // bell 등 다른 경우는 아직 미사용
   };
+
+  // 오른쪽 액션
   const handleRightClick = () => {
+    // 취소
     if (rightAction == "cancel" && onClose) {
       onClose();
     }
+    // 세팅
+    else if (rightAction === "setting" && onSettingClick) {
+      onSettingClick();
+    }
+    // 알림
+    else if (rightAction === "bell" && onBellClick) {
+      onBellClick();
+    }
   };
 
-  const handleAlarm = () => {};
-
   return (
-    <header className="fixed top-0 left-0 w-full h-14 bg-white flex items-center px-4 justify-between z-50">
+    <header
+      className={`fixed top-0 left-0 w-full h-14 ${backColorTypes[backColor]} flex items-center px-4 justify-between z-50`}
+    >
       {/* 왼쪽 버튼 */}
 
       <button onClick={handleLeftClick} className="text-gray-500">
@@ -84,15 +116,13 @@ const CommonTopBar = ({
 
       {/* 중앙 제목 title 필수 */}
       {title && (
-        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-base font-medium text-custom-black leading-tight">
+        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg font-medium text-custom-black leading-tight">
           {title}
         </h1>
       )}
 
       {/* 우측 버튼 */}
-      <button onClick={rightAction === "cancel" ? handleRightClick : handleAlarm}>
-        {rightActionTypes[rightAction]}
-      </button>
+      <button onClick={handleRightClick}>{rightActionTypes[rightAction]}</button>
     </header>
   );
 };
