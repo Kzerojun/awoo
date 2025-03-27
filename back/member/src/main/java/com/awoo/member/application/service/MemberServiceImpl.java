@@ -109,7 +109,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
 
         // Member 엔티티 정보를 DTO로 매핑
-        // birthDate가 LocalDate이므로 문자열로 변환해서 DTO에 담을 수 있습니다.
         return MemberInfoResponseDto.builder()
                 .nickname(member.getNickname())
                 .name(member.getName().getValue())
@@ -117,6 +116,7 @@ public class MemberServiceImpl implements MemberService {
                 .phone(member.getPhone())
                 .birthDate(member.getBirthDate().getValue().toString())
                 .profileImage("https://c209awoo.s3.us-east-2.amazonaws.com/" + member.getProfileImage())
+                .paymentRegister(member.isPaymentRegister())
                 .build();
     }
 
@@ -166,6 +166,16 @@ public class MemberServiceImpl implements MemberService {
         boolean phoneMatches = member.getPhone().equals(request.phone());
 
         return nameMatches && phoneMatches;
+    }
+
+    //멍페이 등록
+    @Transactional
+    public void paymentRegister(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        member.changePaymentRegister(true);
+        memberRepository.save(member);
     }
 
 
