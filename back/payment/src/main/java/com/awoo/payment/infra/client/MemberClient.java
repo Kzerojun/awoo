@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "member-service", url = "http://localhost:8085/api/members")
+@FeignClient(name = "member")
 public interface MemberClient {
 
-    @PostMapping("/check-member")
+    @PostMapping("/api/members/check-member")
     ApiUtils.ApiResult<CheckMemberResponse> checkMember(@RequestBody CheckMemberRequest request);
 
-    @GetMapping("/member-key")
+    @GetMapping("/api/members/member-key")
     ApiUtils.ApiResult<FetchMemberKeyResponse> fetchMemberKey(@RequestParam("memberId")Integer memberId);
 
 }
