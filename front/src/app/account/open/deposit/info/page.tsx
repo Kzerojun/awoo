@@ -7,13 +7,17 @@ import PasswordInput from "./components/PasswordInput";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Button from "@/common/ui/Button";
 import { CheckIcon } from "@heroicons/react/24/solid";
-
+import { useAppSelector, useAppDispatch } from "@/lib/store";
+import { setPassword as setAccountPassword } from "@/lib/slices/accountSlice";
+import { useRouter } from "next/navigation";
 export default function DepositInfoPage() {
   const [question1, setQuestion1] = useState<"yes" | "no" | null>(null);
   const [question2, setQuestion2] = useState<"yes" | "no" | null>(null);
   const [agreed, setAgreed] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
-
+  const dispatch = useAppDispatch();
+  const { password, confirmPassword } = useAppSelector((state) => state.password);
+  const router = useRouter();
   return (
     <div>
       {/* 공통 상단바 */}
@@ -130,13 +134,14 @@ export default function DepositInfoPage() {
               <Button
                 text="다음"
                 onClick={() => {
-                  if (!agreed) {
+                  if (!agreed || password.length !== 4 || password !== confirmPassword) {
                     setShowWarning(true);
                     return;
                   }
 
-                  // ✅ 동의한 경우 다음 단계로 이동
-                  console.log("✅ 다음 단계로 이동");
+                  dispatch(setAccountPassword(password)); // ✅ 최종 저장
+                  console.log("Redux 저장 확인:", password);
+                  router.push("/account/verify");
                 }}
               />
             </div>
