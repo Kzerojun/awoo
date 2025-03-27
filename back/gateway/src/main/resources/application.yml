@@ -4,12 +4,21 @@ server:
 spring:
   application:
     name: API-GATEWAY-SERVICE
+  webflux:
+    multipart:
+      max-parts: 5
+      headers-charset: UTF-8
+      max-in-memory-size: 256KB
+  servlet:
+    multipart:
+      enabled: false
+
   cloud:
     gateway:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'https://awoofinance.duckdns.org,http://localhost:3000'
+            allowedOrigins: 'https://awoofinance.duckdns.org,http://localhost:3000,http://localhost:80'
             allowedMethods:
               - GET
               - POST
@@ -38,7 +47,12 @@ spring:
           uri: lb://account
           predicates:
             - Path=/api/accounts/**
-
+        - id: used-product-service
+          uri: lb://USED-PRODUCT-SERVICE
+          predicates:
+            - Path=/api/used-products/**
+          filters:
+            - name: JwtAuthenticationFilter
 
 
       discovery:
