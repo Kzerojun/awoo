@@ -51,7 +51,7 @@ export default function NumericKeypad({
             key={num}
             onClick={() => onNumberPress(num)}
             disabled={isLoading}
-            className="py-5 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
+            className="py-4 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
           >
             {num}
           </button>
@@ -61,7 +61,7 @@ export default function NumericKeypad({
             key={num}
             onClick={() => onNumberPress(num)}
             disabled={isLoading}
-            className="py-5 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
+            className="py-4 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
           >
             {num}
           </button>
@@ -71,7 +71,7 @@ export default function NumericKeypad({
             key={num}
             onClick={() => onNumberPress(num)}
             disabled={isLoading}
-            className="py-5 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
+            className="py-4 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
           >
             {num}
           </button>
@@ -81,7 +81,7 @@ export default function NumericKeypad({
       {/* 하단 버튼 영역 */}
       <div className="grid grid-cols-3">
         <button
-          className="py-5 border-r border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50"
+          className="py-4 border-r border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50"
           onClick={handleRearrange}
           disabled={isLoading}
         >
@@ -90,14 +90,14 @@ export default function NumericKeypad({
         <button
           onClick={() => onNumberPress(0)}
           disabled={isLoading}
-          className="py-5 border-r border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
+          className="py-4 border-r border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
         >
           0
         </button>
         <button
           onClick={onBackspace}
           disabled={isLoading}
-          className="py-5 hover:bg-gray-50 active:bg-gray-100 flex justify-center items-center disabled:opacity-50"
+          className="py-4 hover:bg-gray-50 active:bg-gray-100 flex justify-center items-center disabled:opacity-50"
         >
           <svg
             className="h-8 w-8 text-gray-500"
