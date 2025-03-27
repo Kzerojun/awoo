@@ -7,6 +7,8 @@ import com.awoo.member.application.dto.SignUpRequestDto;
 import com.awoo.member.ui.dto.CheckMemberRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface MemberService {
 
     void signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception;
@@ -22,11 +24,12 @@ public interface MemberService {
     boolean isEmailDuplicate(String email);
     boolean isNicknameDuplicate(String nickname);
 
-    void updatePassword(Integer memberId, String newPassword);
     void updatePasswordByEmail(String email, String newPassword);
 
     boolean checkMember(CheckMemberRequest request);
 
     void paymentRegister(Integer memberId);
+
+    void updateWalkCount(List<Integer> memberIdList);
 }
 

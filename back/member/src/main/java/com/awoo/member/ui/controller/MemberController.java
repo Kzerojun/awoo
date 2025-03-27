@@ -5,6 +5,7 @@ import com.awoo.member.application.dto.MemberInfoResponseDto;
 import com.awoo.member.application.dto.MemberUpdateRequestDto;
 import com.awoo.member.application.dto.SignUpRequestDto;
 import com.awoo.member.application.service.MemberService;
+import com.awoo.member.infra.BaseColumn.RequestHeaderAuditorAware;
 import com.awoo.member.support.ApiUtils;
 import com.awoo.member.ui.dto.CheckMemberRequest;
 import com.awoo.member.ui.dto.CheckMemberResponse;
@@ -33,6 +34,7 @@ public class MemberController {
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile
     ) {
         try{
+            RequestHeaderAuditorAware.setCurrentAuditor("0");
             memberService.signUp(requestDto, profileImageFile);
             return ApiUtils.success(Map.of("message", "회원 가입 성공"));
         }catch (Exception e) {
@@ -118,6 +120,7 @@ public class MemberController {
     //비밀번호 재설정
     @PatchMapping("/api/members/password")
     public ApiUtils.ApiResult<?> resetPassword(@RequestBody Map<String, String> requestBody) {
+        RequestHeaderAuditorAware.setCurrentAuditor("0");
         String newPassword = requestBody.get("newPassword");
 
         if (newPassword == null || newPassword.trim().isEmpty()) {

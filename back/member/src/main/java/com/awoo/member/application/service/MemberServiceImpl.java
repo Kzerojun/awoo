@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +38,11 @@ public class MemberServiceImpl implements MemberService {
             uploadedImageUrl = awsS3Service.uploadFile(profileImageFile);
         }
 
-        // 2. BeerClientService를 통해 userKey 받은 뒤 암호화.
-        UserKeyResponseDto userKeyResponseDto = beerClientService.postBeer(requestDto.getEmail());
-        String encodedUserKey = userKeyResponseDto != null ? aesUtil.encrypt(userKeyResponseDto.getUserKey()) : null;
-
         // 3. Member 엔티티 생성 (빌더 패턴 적용)
         Member member = Member.builder()
                 .email(new Email(requestDto.getEmail()))
                 .password(passwordEncoder.encode(requestDto.getPassword()))
-                .userKey(encodedUserKey)
+                .userKey("")    //빈 문자열로 임시 저장
                 .name(new Name(requestDto.getName()))
                 .birthDate(new BirthDate(requestDto.getBirthDate()))
                 .gender(new Gender(requestDto.getGender()))
@@ -55,7 +53,13 @@ public class MemberServiceImpl implements MemberService {
                 .provider(Provider.L)
                 .build();
 
-        // 3. DB 저장
+        // 2. BeerClientService를 통해 userKey 받은 뒤 암호화. (회원가입 실패 해도 ssafy 아이디가 생겨서 위와 순서 바꿈)
+        UserKeyResponseDto userKeyResponseDto = beerClientService.postBeer(requestDto.getEmail());
+        String encodedUserKey = userKeyResponseDto != null ? aesUtil.encrypt(userKeyResponseDto.getUserKey()) : null;
+
+        member.changeUserKey(encodedUserKey);   //받아온 암호화된 유저키 저장
+
+        // 4. DB 저장
         memberRepository.save(member);
     }
 
@@ -75,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-//    @Transactional
+    @Transactional
     // 회원정보 수정
     public void updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile) {
         Member member = memberRepository.findById(memberId)
@@ -99,7 +103,8 @@ public class MemberServiceImpl implements MemberService {
             member.updateProfileImage(newUploadedUrl);
         }
 
-        memberRepository.save(member);
+        // Transactional 처리로 주석처리
+        // memberRepository.save(member);
     }
 
     //회원 정보 조회
@@ -117,6 +122,7 @@ public class MemberServiceImpl implements MemberService {
                 .birthDate(member.getBirthDate().getValue().toString())
                 .profileImage("https://c209awoo.s3.us-east-2.amazonaws.com/" + member.getProfileImage())
                 .paymentRegister(member.isPaymentRegister())
+                .walkGrade(member.getWalkGrade())
                 .build();
     }
 
@@ -137,15 +143,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean isNicknameDuplicate(String nickname) {
         return memberRepository.existsByNickname(nickname);
-    }
-
-    @Override
-    public void updatePassword(Integer memberId, String newPassword) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
-
-        member.changePassword(passwordEncoder.encode(newPassword));
-        memberRepository.save(member);
     }
 
     @Override
@@ -178,6 +175,12 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    public void updateWalkCount(List<Integer> memberIdList) {
+        for (Integer memberId : memberIdList) {
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+            member.changeWalkCount();
+        }
+    }
 
 }
 
