@@ -36,6 +36,25 @@ interface UserInfo {
   paymentRegister: boolean;
 }
 
+// 프로필 수정 interface
+interface UpdateProfilePayload {
+  nickname?: string;
+  name?: string;
+  phone?: string;
+  imageFile?: File | null;
+}
+
+// 비밀번호 재설정 interface
+interface ResetPasswordPayload {
+  email: string;
+  newPassword: string;
+}
+
+// 회원 탈퇴 interface
+interface DeleteAccountPayload {
+  password: string;
+}
+
 // 이메일 중복 체크
 export const emailCheck = async ({ email }: EmailPayload) => {
   console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-email?email=${email}`);
@@ -136,6 +155,96 @@ export const getUserInfo = async (): Promise<UserInfo> => {
     return res.data;
   } catch (err) {
     console.error("유저 정보 조회 중 에러:", err);
+    throw err;
+  }
+};
+
+// 프로필 수정 API 요청
+export const updateProfile = async (payload: UpdateProfilePayload) => {
+  const formData = new FormData();
+
+  // 기본 정보를 JSON으로 변환하여 추가
+  const requestDto = {
+    name: payload.name,
+    phone: payload.phone,
+    nickname: payload.nickname,
+  };
+
+  // null이나 undefined인 필드 제거
+  const cleanedRequestDto = Object.fromEntries(
+    Object.entries(requestDto).filter(([_, value]) => value !== undefined)
+  );
+
+  formData.append(
+    "requestDto",
+    new Blob([JSON.stringify(cleanedRequestDto)], {
+      type: "application/json",
+    })
+  );
+
+  // 이미지 파일이 있으면 추가
+  if (payload.imageFile) {
+    formData.append("profileImage", payload.imageFile);
+  }
+
+  console.log("프로필 수정 요청 데이터", cleanedRequestDto);
+
+  try {
+    const res = await axiosInstance.put("/members", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("프로필 수정 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("프로필 수정 실패:", err);
+    throw err;
+  }
+};
+
+// 비밀번호 재설정 API 요청
+export const resetPassword = async ({ email, newPassword }: ResetPasswordPayload) => {
+  const passwordData = {
+    email,
+    newPassword,
+  };
+
+  console.log("비밀번호 재설정 요청");
+
+  try {
+    const res = await axiosInstance.patch("/members/password", passwordData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("비밀번호 재설정 성공");
+    return res.data;
+  } catch (err) {
+    console.error("비밀번호 재설정 실패:", err);
+    throw err;
+  }
+};
+
+// 회원 탈퇴 API 요청
+export const deleteAccount = async ({ password }: DeleteAccountPayload) => {
+  console.log("회원 탈퇴 요청");
+
+  try {
+    const res = await axiosInstance.delete("/members", {
+      data: { password },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // 탈퇴 성공 시 로컬 스토리지 토큰 제거
+    localStorage.removeItem("accessToken");
+
+    console.log("회원 탈퇴 성공");
+    return res.data;
+  } catch (err) {
+    console.error("회원 탈퇴 실패:", err);
     throw err;
   }
 };
