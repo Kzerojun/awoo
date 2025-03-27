@@ -133,7 +133,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
   try {
     const res = await axiosInstance.get("/members");
     console.log("유저 정보 조회 성공:", res.data);
-    return res.data;
+    return res.data.response;
   } catch (err) {
     console.error("유저 정보 조회 중 에러:", err);
     throw err;
