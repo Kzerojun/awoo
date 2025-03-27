@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
+import NumericKeypad from "./NumericKeypad";
 
 interface ConfirmPasswordProps {
   isOpen: boolean;
@@ -24,30 +25,14 @@ export default function ConfirmPassword({
 }: ConfirmPasswordProps) {
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [keypadNumbers, setKeypadNumbers] = useState<number[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // 비밀번호 원 표시를 위한 배열
   const passwordCircles = Array(6).fill(null);
 
-  // 키패드 번호 무작위 배치 함수
-  const shuffleKeypad = () => {
-    // 1부터 9까지의 숫자 배열 생성
-    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-    // Fisher-Yates 알고리즘으로 숫자 배열 섞기
-    for (let i = numbers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
-    }
-
-    setKeypadNumbers(numbers);
-  };
-
   // 모달이 열릴 때와 닫힐 때 초기화
   useEffect(() => {
     if (isOpen) {
-      shuffleKeypad();
       setPassword("");
       setIsLoading(false);
     }
@@ -78,9 +63,9 @@ export default function ConfirmPassword({
     setPassword("");
   };
 
-  // 키패드 재배열 처리
+  // 키패드 재배열 처리 - NumericKeypad 내부에서 처리하므로 빈 함수로 유지
   const handleRearrange = () => {
-    shuffleKeypad();
+    // 이 함수는 NumericKeypad 내부에서 처리
   };
 
   // 확인 버튼 처리
@@ -152,82 +137,13 @@ export default function ConfirmPassword({
           )}
         </div>
 
-        {/* 숫자 키패드 */}
-        <div className="border-t border-gray-200">
-          {/* 1-9 숫자 키패드 그리드 (섞인 배열 사용) */}
-          <div className="grid grid-cols-3">
-            {keypadNumbers.slice(0, 3).map((num) => (
-              <button
-                key={num}
-                onClick={() => handleNumberPress(num)}
-                disabled={isLoading}
-                className="py-5 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
-              >
-                {num}
-              </button>
-            ))}
-            {keypadNumbers.slice(3, 6).map((num) => (
-              <button
-                key={num}
-                onClick={() => handleNumberPress(num)}
-                disabled={isLoading}
-                className="py-5 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
-              >
-                {num}
-              </button>
-            ))}
-            {keypadNumbers.slice(6, 9).map((num) => (
-              <button
-                key={num}
-                onClick={() => handleNumberPress(num)}
-                disabled={isLoading}
-                className="py-5 border-r border-b border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
-              >
-                {num}
-              </button>
-            ))}
-          </div>
-
-          {/* 하단 버튼 영역 */}
-          <div className="grid grid-cols-3">
-            <button
-              className="py-5 border-r border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 disabled:opacity-50"
-              onClick={handleRearrange}
-              disabled={isLoading}
-            >
-              재배열
-            </button>
-            <button
-              onClick={() => handleNumberPress(0)}
-              disabled={isLoading}
-              className="py-5 border-r border-gray-200 hover:bg-gray-50 active:bg-gray-100 text-2xl font-medium disabled:opacity-50"
-            >
-              0
-            </button>
-            <button
-              onClick={handleBackspace}
-              disabled={isLoading}
-              className="py-5 hover:bg-gray-50 active:bg-gray-100 flex justify-center items-center disabled:opacity-50"
-            >
-              <svg
-                className="h-8 w-8 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"
-                />
-              </svg>
-            </button>
-          </div>
-
-          {/* 추가된 하단 여백과 구분선 */}
-          <div className="border-t border-gray-200 py-4"></div>
-        </div>
+        {/* 숫자 키패드 컴포넌트 */}
+        <NumericKeypad
+          onNumberPress={handleNumberPress}
+          onBackspace={handleBackspace}
+          onRearrange={handleRearrange}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
