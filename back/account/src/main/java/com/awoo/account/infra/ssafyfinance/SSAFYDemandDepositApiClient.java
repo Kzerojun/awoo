@@ -1,7 +1,7 @@
 package com.awoo.account.infra.ssafyfinance;
 
-import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.ssafyfinance.request.*;
+import com.awoo.account.infra.ssafyfinance.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,11 +12,11 @@ public interface SSAFYDemandDepositApiClient {
     SSAFYFetchAccountResponse createAccount(@RequestBody SSAFYCreateAccountRequest request);
 
     @PostMapping("/inquireDemandDepositAccountList")
-    SSAFYAccountListResponse getAccountList(@RequestBody SSAFYAccountListRequest request);
+    SSAFYAccountListResponse getAccountList(@RequestBody SSAFYCommonHeaderRequest request);
 //    SSAFYFetchAccountResponse getAccountList(@RequestBody SSAFYAccountListRequest request);
 
     @PostMapping("/inquireDemandDepositAccountBalance")
-    SSAFYFetchAccountResponse fetchAccountBalance(@RequestBody SSAFYFetchBalanceRequest request);
+    SSAFYFetchAccountResponse fetchAccountBalance(@RequestBody SSAFYCHANRequest request);
 
     @PostMapping("/updateDemandDepositAccountWithdrawal")
     SSAFYFinanceApiResponse<SSAFYDeductBalanceResponse> deductBalance(@RequestBody SSAFYDeductBalanceRequest request);

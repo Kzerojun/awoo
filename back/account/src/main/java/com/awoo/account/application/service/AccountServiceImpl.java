@@ -8,7 +8,7 @@ import com.awoo.account.infra.ssafyfinance.request.SSAFYTransferRequest;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYAccountListRequest;
+import com.awoo.account.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateAccountRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYTransactionsRequest;
 import com.awoo.account.infra.util.AESUtil;
@@ -62,7 +62,7 @@ public class AccountServiceImpl implements AccountService{
 
     public List<SSAFYAccountResponseDto> getAccountList(String memberId) {
         //SSAFY 계좌 목록 조회 요청 생성
-        SSAFYAccountListRequest request = SSAFYAccountListRequest.builder()
+        SSAFYCommonHeaderRequest request = SSAFYCommonHeaderRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.ACCOUNT_LIST))
                 .build();
 
