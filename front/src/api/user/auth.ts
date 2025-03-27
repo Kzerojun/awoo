@@ -25,6 +25,17 @@ interface LoginPayload {
   password: string;
 }
 
+// 유저 정보 조회 interface
+interface UserInfo {
+  nickname: string;
+  name: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  profileImage: string;
+  paymentRegister: boolean;
+}
+
 // 이메일 중복 체크
 export const emailCheck = async ({ email }: EmailPayload) => {
   console.log(`${process.env.NEXT_PUBLIC_API_BASE_URL}/members/check-email?email=${email}`);
@@ -111,7 +122,7 @@ export const refreshToken = (): Promise<{ data: { accessToken: string } }> => {
 };
 
 // 유저 정보 조회
-export const getUserInfo = async () => {
+export const getUserInfo = async (): Promise<UserInfo> => {
   try {
     const res = await axiosInstance.get("/members");
     console.log("유저 정보 조회 성공:", res.data);
