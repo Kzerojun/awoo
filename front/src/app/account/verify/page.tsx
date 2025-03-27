@@ -4,6 +4,7 @@ import CommonTopBar from "@/common/ui/CommonTopBar";
 import Button from "@/common/ui/Button";
 import { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 
 export default function AccountVerifyPage() {
   const [accountNumber, setAccountNumber] = useState("");
@@ -12,7 +13,7 @@ export default function AccountVerifyPage() {
   const [modalPosition, setModalPosition] = useState(100);
   const startYRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
-
+  const router = useRouter();
   const banks = [
     "한국",
     "산업",
@@ -75,9 +76,9 @@ export default function AccountVerifyPage() {
     <div>
       <CommonTopBar title="계좌인증" leftAction="back" rightAction="cancel" />
 
-      <div className="pt-16 px-4 flex flex-col gap-6">
+      <div className="pt-16 px-6 flex flex-col gap-6">
         <div>
-          <h2 className="text-lg font-bold">1원 송금 계좌 입력</h2>
+          <h2 className="text-xl font-bold">1원 송금 계좌 입력</h2>
           <p className="text-sm text-gray-500 mt-1">
             본인 명의로 개설된
             <br />
@@ -97,10 +98,15 @@ export default function AccountVerifyPage() {
 
           <input
             type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             placeholder="계좌번호"
             className="px-6 py-4 text-sm text-gray-900 placeholder-gray-400 w-full focus:outline-none"
             value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
+            onChange={(e) => {
+              const onlyNums = e.target.value.replace(/\D/g, "");
+              setAccountNumber(onlyNums);
+            }}
           />
         </div>
 
@@ -116,6 +122,7 @@ export default function AccountVerifyPage() {
               onClick={() => {
                 console.log("은행:", selectedBank);
                 console.log("계좌번호:", accountNumber);
+                router.push("/account/verify/confirm");
               }}
             />
           </div>
