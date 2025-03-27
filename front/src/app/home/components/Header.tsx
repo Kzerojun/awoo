@@ -14,8 +14,10 @@ export default function Header() {
         <Link href="/home">
           <span className={`${pathname === "/home" ? "text-black " : "text-gray-400"}`}>상품</span>
         </Link>
-        <Link href="/my-account">
-          <span className={`${pathname === "/#" ? "text-black" : "text-gray-400"}`}>내 계좌</span>
+        <Link href="/home/myaccount">
+          <span className={`${pathname === "/home/myaccount" ? "text-black" : "text-gray-400"}`}>
+            내 계좌
+          </span>
         </Link>
         <BellIcon className="h-6 w-6 text-gray-500" />
       </nav>

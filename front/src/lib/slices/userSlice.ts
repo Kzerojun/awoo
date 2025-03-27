@@ -1,16 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+interface Pet {
+  petId: number;
+  memberId: number;
+  name: string;
+  profileImage: string | null;
+  breed: string;
+  age: number;
+  savingId: number;
+}
 
 interface UserState {
   nickname: string | null;
+  name: string | null;
   email: string | null;
-  petList: string[] | null;
+  phone: string | null;
+  birthDate: string | null;
+  profileImage: string | null;
+  petList: Pet[] | null;
+  paymentRegister: boolean;
   accessToken: string[] | null;
 }
 
 const initialState: UserState = {
   nickname: null,
+  name: null,
   email: null,
+  phone: null,
+  birthDate: null,
+  profileImage: null,
   petList: [],
+  paymentRegister: false,
   accessToken: null,
 };
 

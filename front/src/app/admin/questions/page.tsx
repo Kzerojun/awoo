@@ -30,7 +30,7 @@ export default function Questions() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       {/* 문의 목록 컴포넌트 */}
       <QuestionList questions={questionData} onViewDetail={handleViewDetail} />
 

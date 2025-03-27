@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import RegisterInfo from "./RegisterInfo";
 
 const defaultPetAvatars = [
+  "/images/pet-avatars/petava_basic.png",
   "/images/pet-avatars/petava1.png",
   "/images/pet-avatars/petava2.png",
   "/images/pet-avatars/petava3.png",
@@ -42,6 +43,9 @@ const PetRegister = () => {
     setSelectedPetAvatar(url);
     setShowPetAvatarModal(false);
   };
+
+  // 반려견 등록
+  const registerPet = () => {};
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-5">
@@ -157,7 +161,7 @@ const PetRegister = () => {
         )}
       </AnimatePresence>
 
-      <Button text="등록하기" backgroundColor="green" width="medium" />
+      <Button text="등록하기" backgroundColor="green" width="medium" onClick={registerPet} />
     </div>
   );
 };

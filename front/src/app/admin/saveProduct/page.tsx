@@ -32,7 +32,7 @@ export default function SaveProduct() {
   };
 
   return (
-    <div className="container mx-auto p-4 relative pb-20">
+    <div className="container mx-auto relative pb-20">
       {/* 상품 카드 그리드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {currentProducts.map((product) => (

@@ -51,6 +51,9 @@ public class Member {
     @Column(name = "provider", nullable = false)
     private Provider provider;
 
+    @Column(name = "payment_register")
+    private boolean paymentRegister;
+
     @Builder // 빌더 패턴 추가
     public Member(Email email, String password, String userKey, Name name, BirthDate birthDate, Gender gender,
                   String phone, String profileImage, PrivacyAgreement privacyAgreement, String nickname, Provider provider) {
@@ -65,6 +68,7 @@ public class Member {
         this.privacyAgreement = privacyAgreement;
         this.nickname = nickname;
         this.provider = provider;
+        this.paymentRegister = false;
     }
 
     public void updateProfileImage(String newProfileImage) {
@@ -86,4 +90,6 @@ public class Member {
     public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
     }
+
+    public void changePaymentRegister(boolean paymentRegister) {this.paymentRegister = paymentRegister;}
 }

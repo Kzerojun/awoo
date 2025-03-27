@@ -32,7 +32,6 @@ public class SecurityConfig {
                         // 인증 없이 접근 가능한 엔드포인트 (필요 시 permitAll 유지)
                         .requestMatchers(permitAll).permitAll()
                         // 그 외 모든 요청은 인증 필요
-                        .anyRequest().authenticated()
                 );
         return http.build();
     }

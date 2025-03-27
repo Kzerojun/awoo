@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,13 +59,12 @@ public class MemberController {
     //회원 정보 수정
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiUtils.ApiResult<?> updateMemberInfo(
+            @RequestHeader("X-User-Id") String memberId,
             @RequestPart(value = "requestDto") MemberUpdateRequestDto requestDto,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile
     ) {
         try {
-            String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-            Integer memberId = Integer.valueOf(currentUserId);
-            memberService.updateMemberInfo(memberId, requestDto, profileImageFile);
+            memberService.updateMemberInfo(Integer.valueOf(memberId), requestDto, profileImageFile);
             return ApiUtils.success(Map.of("message", "회원 정보가 수정되었습니다."));
         }catch (Exception e) {
             return ApiUtils.error(e,HttpStatus.BAD_REQUEST);
@@ -75,12 +73,12 @@ public class MemberController {
 
     //회원 정보 확인
     @GetMapping
-    public ApiUtils.ApiResult<?> getMemberInfo(@RequestHeader("X-User-Id")Integer memberId) {
+    public ApiUtils.ApiResult<?> getMemberInfo(@RequestHeader("X-User-Id") String memberId) {
         try {
-            MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(memberId);
+            MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(Integer.valueOf(memberId));
             return ApiUtils.success(memberInfoResponseDto);
         } catch (Exception e) {
-            return ApiUtils.error("회원 정보 확인 중 에러발생", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ApiUtils.error(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -119,10 +117,7 @@ public class MemberController {
 
     //비밀번호 재설정
     @PatchMapping("/api/members/password")
-    public ApiUtils.ApiResult<?> resetPassword(
-            @RequestHeader(value = "X-User-Id", required = false) Integer memberId,
-            @RequestBody Map<String, String> requestBody
-    ) {
+    public ApiUtils.ApiResult<?> resetPassword(@RequestBody Map<String, String> requestBody) {
         String newPassword = requestBody.get("newPassword");
 
         if (newPassword == null || newPassword.trim().isEmpty()) {
@@ -130,18 +125,13 @@ public class MemberController {
         }
 
         try {
-            if (memberId != null) {
-                memberService.updatePassword(memberId, newPassword);
-            } else {
-                String email = requestBody.get("email");
-                if (email == null || email.trim().isEmpty()) {
-                    return ApiUtils.error("이메일이 누락되었습니다.", HttpStatus.BAD_REQUEST);
-                }
-                memberService.updatePasswordByEmail(email, newPassword);
+            String email = requestBody.get("email");
+            if (email == null || email.trim().isEmpty()) {
+                return ApiUtils.error("이메일이 누락되었습니다.", HttpStatus.BAD_REQUEST);
             }
+            memberService.updatePasswordByEmail(email, newPassword);
 
             return ApiUtils.success(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."));
-
         } catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

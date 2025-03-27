@@ -1,15 +1,32 @@
 "use Client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import Button from "../../../common/ui/Button";
 import paw from "../../../../public/icons/white_paw.svg";
 import Link from "next/link";
 import { useLogin } from "@/hooks/user/useLogin";
+import { useUserInfo } from "@/hooks/user/useUserInfo";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
-  const { mutate: loginMutate, isPending, isError } = useLogin();
+  const { refetch: refetchUserInfo } = useUserInfo();
+  const { mutate: loginMutate, isPending, isError, isSuccess } = useLogin(refetchUserInfo);
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.replace("/home");
+    }
+  }, [isSuccess, router]);
+
+  useEffect(() => {
+    if (isError) {
+      alert("로그인에 실패했습니다. 이메일 또는 전화번호를 확인하세요.");
+      router.replace("/login");
+    }
+  }, [isError]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

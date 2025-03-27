@@ -4,10 +4,16 @@ import Image from "next/image";
 import React from "react";
 import { MarketItem } from "../types/market";
 import { EyeIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
-export default function MarketListItem({ image, title, time, price, views, chat }: MarketItem) {
+export default function MarketListItem({ id, image, title, time, price, views, chat }: MarketItem) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/market/${id}`);
+  };
   return (
-    <div className="flex gap-3 border-b  border-gray-200 pb-4">
+    <div onClick={handleClick} className="flex gap-3 border-b  border-gray-200 pb-4">
       {/* 썸네일 */}
       <div className="w-24 h-24 relative flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
         <Image src={image} alt={title} fill className="object-cover" />

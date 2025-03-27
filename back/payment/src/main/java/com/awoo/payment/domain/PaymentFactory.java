@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentFactory {
 
-    public PaymentEntity createPaymentEntity(Integer memberId) {
+    public PaymentEntity createPaymentEntity(Integer memberId, String password) {
         return PaymentEntity.builder()
                 .memberId(memberId)
+                .password(password)
                 .build();
     }
 }

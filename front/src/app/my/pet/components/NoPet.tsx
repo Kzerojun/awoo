@@ -18,7 +18,7 @@ const NoPet = () => {
 
   return (
     <div className="h-full flex flex-col items-center justify-start">
-      <div className="text-2xl mt-32">반려견을 먼저 등록해주세요!</div>
+      <div className="text-2xl mt-20">반려견을 먼저 등록해주세요!</div>
       <div className="flex flex-col items-center justify-center mt-10">
         <Image src={awooLogo} alt="awoo 로고" priority />
 

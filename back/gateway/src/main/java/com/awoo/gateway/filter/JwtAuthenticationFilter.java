@@ -34,10 +34,13 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
                     .getHeaders()
                     .getFirst(HttpHeaders.AUTHORIZATION);
 
+            log.info("token: {}", token);
+
             // 토큰 1차 검증
+            // TODO : JWT 인증절차 나중에 처리
             if (token == null || !token.startsWith("Bearer ")) {
-                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                return exchange.getResponse().setComplete();
+//                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return chain.filter(exchange);
             }
 
             // Bearer 제거
