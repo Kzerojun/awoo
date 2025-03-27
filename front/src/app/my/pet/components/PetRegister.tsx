@@ -6,6 +6,8 @@ import Button from "@/common/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import RegisterInfo from "./RegisterInfo";
+import { useRegisterPet } from "@/hooks/pet/useRegisterPet";
+import { useRouter } from "next/navigation";
 
 const defaultPetAvatars = [
   "/images/pet-avatars/petava_basic.png",
@@ -16,11 +18,20 @@ const defaultPetAvatars = [
 ];
 
 const PetRegister = () => {
+  const router = useRouter();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [selectedPetAvatar, setSelectedPetAvatar] = useState<string>(defaultPetAvatars[0]);
   const [showPetAvatarModal, setShowPetAvatarModal] = useState<boolean>(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  // 반려견 등록 쿼리
+  const {
+    mutate: registerPetMutate,
+    isPending: registerPetPending,
+    isSuccess: registerPetSuccess,
+    isError: registerPetError,
+  } = useRegisterPet();
 
   // 반려견 이름
   const [petName, setPetName] = useState<string>("");
@@ -45,7 +56,37 @@ const PetRegister = () => {
   };
 
   // 반려견 등록
-  const registerPet = () => {};
+  const handleRegisterPet = () => {
+    if (
+      petName === "" ||
+      petAge === "" ||
+      breed === "" ||
+      (imageFile === null && selectedPetAvatar === "")
+    ) {
+      alert("올바른 정보를 입력해주세요.");
+      return;
+    }
+
+    const requestDto = {
+      petName,
+      petAge,
+      breed,
+    };
+
+    registerPetMutate(
+      { requestDto, imageFile, selectedPetAvatar },
+      {
+        onSuccess: () => {
+          alert("반려견을 성공적으로 등록했습니다.");
+          router.replace("/my/pet");
+        },
+        onError: () => {
+          alert("반려견 등록에 실패했습니다.");
+          return;
+        },
+      }
+    );
+  };
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-5">
@@ -161,7 +202,7 @@ const PetRegister = () => {
         )}
       </AnimatePresence>
 
-      <Button text="등록하기" backgroundColor="green" width="medium" onClick={registerPet} />
+      <Button text="등록하기" backgroundColor="green" width="medium" onClick={handleRegisterPet} />
     </div>
   );
 };

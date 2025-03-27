@@ -112,16 +112,19 @@ const ProfileNickname = ({
         onSuccess: (res) => {
           console.log("회원가입 성공!", res);
 
-          setTimeout(() => {
-            loginMutate({ email: userEmail, password: userPassword });
-            if (isLoginSuccess) {
-              router.replace("/home");
-            } else if (isLoginError) {
-              alert("로그인에 실패했습니다.");
-              router.replace("/login");
-              dispatch(clearRegisterData());
+          loginMutate(
+            { email: userEmail, password: userPassword },
+            {
+              onSuccess: () => {
+                router.replace("/home");
+              },
+              onError: () => {
+                alert("로그인에 실패했습니다.");
+                router.replace("/login");
+                dispatch(clearRegisterData());
+              },
             }
-          }, 300);
+          );
         },
         onError: (err) => {
           console.error("회원가입 실패", err);
