@@ -50,6 +50,7 @@ sms:
   cool:
     sms-key : ${COOL_SMS_KEY}
     sms-scret-key : ${COOL_SMS_SECRET_KEY}
+    phone-number : ${COOL_SMS_FROM_PHONE}
 
 ssafy :
   finance :
