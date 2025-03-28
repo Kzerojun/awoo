@@ -34,6 +34,7 @@ interface UserInfo {
   birthDate: string;
   profileImage: string;
   paymentRegister: boolean;
+  walkGrade: number;
 }
 
 // 프로필 수정 interface
