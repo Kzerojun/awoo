@@ -23,7 +23,7 @@ public class PetController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiUtils.ApiResult<RegisterPetResponse>  registerPet(@RequestHeader("X-User-Id") Integer memberId,
                                                                 @RequestPart(value = "requestDto") RegisterPetRequest request,
-                                                                @RequestPart(value = "profileImage") MultipartFile profileImage ){
+                                                                @RequestPart(value = "profileImage", required = false) MultipartFile profileImage){
         return ApiUtils.success(petServiceFacade.registerPet(request, profileImage, memberId));
     }
 
@@ -39,8 +39,11 @@ public class PetController {
 
 
     @PutMapping("/{petId}")
-    public ApiUtils.ApiResult<ModifyPetResponse> modifyPet(@RequestHeader("X-User-Id") Integer memberId, @PathVariable Integer petId, @RequestBody ModifyPetRequest request) {
-        return ApiUtils.success(petServiceFacade.modifyPet(request, petId , memberId));
+    public ApiUtils.ApiResult<ModifyPetResponse> modifyPet(@RequestHeader("X-User-Id") Integer memberId,
+                                                           @PathVariable Integer petId,
+                                                           @RequestPart(value = "requestDto") ModifyPetRequest request,
+                                                           @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        return ApiUtils.success(petServiceFacade.modifyPet(request, profileImage, petId , memberId));
     }
 
 

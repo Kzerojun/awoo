@@ -49,8 +49,10 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     }
 
     @Override
-    public ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest, final Integer petId, final Integer memberId) {
-        Pet modifyEntity = modifyPetService.modifyPet(modifyPetRequest.toCommand(petId));
+    public ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest,
+                                       final MultipartFile profileImage,
+                                       final Integer petId, final Integer memberId) {
+        Pet modifyEntity = modifyPetService.modifyPet(modifyPetRequest.toCommand(profileImage, petId));
         return mapper.modifyPet(modifyEntity);
     }
 

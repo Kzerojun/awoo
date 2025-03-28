@@ -16,7 +16,7 @@ public interface PetServiceFacade {
 
     SearchPetResponse searchPet(final Integer petId);
 
-    ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest, final Integer petId, Integer memberId);
+    ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest, final MultipartFile profileImage, final Integer petId, Integer memberId);
 
     RegisterWalkResponse registerWalk(final RegisterWalkRequest registerWalkRequest, final Integer petId, final Integer memberId);
 

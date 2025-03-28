@@ -23,6 +23,7 @@ public class RegisterPetRequest {
 
     public RegisterPetCommand toCommand(Integer memberId, MultipartFile profileImage) {
         validate();
+        System.out.println(profileImage);
         return new RegisterPetCommand(
                 PetCommand.builder()
                         .memberId(memberId)
