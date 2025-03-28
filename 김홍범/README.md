@@ -1310,3 +1310,61 @@ Redux는 다음과 같은 핵심 구성 요소로 이루어져 있습니다:
 이러한 최신 도구와 패턴은 Redux의 복잡성을 크게 줄이고, 더 간결하고 유지보수하기 쉬운 코드를 작성할 수 있게 도와줍니다.
 
 </details>
+
+<details>
+<summary><strong>0328</strong></summary>
+
+# Docker 컨테이너 타임존(Timezone) 설정 방법
+
+> Docker 컨테이너는 기본적으로 UTC를 사용하지만, 로그 분석이나 지역 특화 서비스 운영을 위해 특정 지역 시간대 설정이 필요합니다.
+
+### 일반적인 Linux 컨테이너 (Ubuntu/Debian)
+
+```dockerfile
+# 타임존 패키지 설치 및 설정
+ENV TZ=Asia/Seoul
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+```
+
+### Alpine 기반 이미지
+
+```dockerfile
+# 경량 Alpine에서는 tzdata 패키지 별도 설치 필요
+ENV TZ=Asia/Seoul
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+```
+
+### Java 애플리케이션
+
+```dockerfile
+# OS 레벨 + JVM 레벨 설정 모두 필요
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ENTRYPOINT ["java", "-Duser.timezone=Asia/Seoul", "-jar", "app.jar"]
+```
+
+### 런타임 설정 방법
+
+```bash
+# 환경변수로 설정
+docker run -e TZ=Asia/Seoul ...
+
+# 호스트 타임존 파일 마운트
+docker run -v /etc/localtime:/etc/localtime:ro ...
+```
+
+### 설정 확인하기
+
+```bash
+docker exec <컨테이너_이름> date
+docker exec <컨테이너_이름> cat /etc/timezone
+```
+
+적절한 타임존 설정으로 로그 타임스탬프와 시간 관련 기능들이 의도한 대로 동작하게 됩니다.
+
+</details>
