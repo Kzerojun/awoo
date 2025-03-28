@@ -4,21 +4,12 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import basicPet from "../../../../../public/images/pet-avatars/petava_basic.png";
-
-interface Pet {
-  petId: number;
-  memberId: number;
-  name: string;
-  profileImage: string | null;
-  breed: string;
-  age: number;
-  savingId: number;
-}
+import { PetInterface } from "@/lib/slices/petSlice";
 
 interface PetCardProps {
-  pet: Pet;
+  pet: PetInterface;
   clickable?: boolean;
-  onSelect?: (petId: number) => void;
+  onSelect?: (pet: PetInterface) => void;
   selected?: boolean;
 }
 
@@ -31,7 +22,7 @@ const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardP
     if (clickable) {
       router.push(`/my/pet/detail/${petId}`);
     } else {
-      onSelect?.(petId);
+      onSelect?.(pet);
     }
   };
 
@@ -44,9 +35,21 @@ const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardP
       {/* 강아지 이미지 */}
       <div>
         {petProfileImage === null || petProfileImage === "" ? (
-          <Image src={basicPet} alt="펫 기본 이미지" className="w-12 h-12 rounded-full" />
+          <Image
+            src={basicPet}
+            alt="펫 기본 이미지"
+            width={45}
+            height={45}
+            className="rounded-full"
+          />
         ) : (
-          <Image src={petProfileImage} alt="펫 이미지" className="w-12 h-12 rounded-full" />
+          <Image
+            src={petProfileImage}
+            alt="펫 이미지"
+            width={45}
+            height={45}
+            className="rounded-full"
+          />
         )}
       </div>
       {/* 강아지 이름 */}
