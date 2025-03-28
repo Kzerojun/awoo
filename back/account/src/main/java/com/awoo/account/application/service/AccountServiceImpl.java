@@ -1,9 +1,6 @@
 package com.awoo.account.application.service;
 
-import com.awoo.account.application.command.CreateAccountCommand;
-import com.awoo.account.application.command.TransactionsCommand;
-import com.awoo.account.application.command.TransferCommand;
-import com.awoo.account.application.command.WriteMemoCommand;
+import com.awoo.account.application.command.*;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
@@ -117,6 +114,22 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         SSAFYWriteMemoApiClient.writeMemo(request);
+    }
+
+    @Transactional
+    public void deleteAccount(String memberId, DeleteAccountCommand command) {
+        //SSAFY 계좌 해지 요청 생성
+        SSAFYDeleteAccountRequest request = SSAFYDeleteAccountRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.DELETE_ACCOUNT))
+                .accountNo(command.accountNo())
+                .refundAccountNo(command.refundAccountNo())
+                .build();
+
+        SSAFYApiClient.deleteAccount(request);
+
+        //DB 정보 수정
+        AccountEntity account = accountRepository.findByAccountNumber(command.accountNo());
+        account.markDeleted();
     }
 
 }

@@ -107,9 +107,9 @@ public class Member extends BaseEntity {
     }
 
     public void changeWalkCount() {
-        if(++this.walkCount >= 40) {
+        if(++this.walkCount >= 210) {
             this.walkGrade = 3;
-        }else if(this.walkCount >= 20) {
+        }else if(this.walkCount >= 60) {
             this.walkGrade = 2;
         }
     }

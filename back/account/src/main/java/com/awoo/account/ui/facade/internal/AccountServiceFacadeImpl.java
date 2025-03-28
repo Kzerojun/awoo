@@ -51,5 +51,7 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
         accountService.writeMemo(memberId, command);
     }
 
+    public void deleteAccount(String memberId, DeleteAccountCommand command) { accountService.deleteAccount(memberId, command); }
+
 
 }

@@ -22,4 +22,6 @@ public interface AccountServiceFacade {
     boolean confirmPassword(String accountNo, String password);
 
     void writeMemo(String memberId, WriteMemoCommand command);
+
+    void deleteAccount(String memberId, DeleteAccountCommand command);
 }

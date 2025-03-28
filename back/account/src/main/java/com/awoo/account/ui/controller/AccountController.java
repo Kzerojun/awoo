@@ -92,5 +92,15 @@ public class AccountController {
         }
     }
 
-
+    @DeleteMapping
+    public ApiUtils.ApiResult<?> deleteAccount(@RequestHeader("X-User-Id") String memberId,
+                                               @RequestBody DeleteAccountRequest request){
+        try{
+            DeleteAccountCommand command = request.toCommand();
+            accountServiceFacade.deleteAccount(memberId, command);
+            return ApiUtils.success("계좌 정보가 삭제되었습니다.");
+        }catch (Exception e){
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
