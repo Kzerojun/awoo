@@ -32,6 +32,7 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
             birthDate: getUserData.birthDate,
             profileImage: getUserData.profileImage,
             paymentRegister: getUserData.paymentRegister,
+            walkGrade: getUserData.walkGrade,
             accessToken: accessToken,
           })
         );
