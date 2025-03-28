@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -122,7 +120,7 @@ public class MemberServiceImpl implements MemberService {
                 .birthDate(member.getBirthDate().getValue().toString())
                 .profileImage("https://c209awoo.s3.us-east-2.amazonaws.com/" + member.getProfileImage())
                 .paymentRegister(member.isPaymentRegister())
-                .walkGrade(member.getWalkGrade())
+//                .walkGrade(member.getWalkGrade())
                 .build();
     }
 
@@ -175,12 +173,12 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    public void updateWalkCount(List<Integer> memberIdList) {
-        for (Integer memberId : memberIdList) {
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
-            member.changeWalkCount();
-        }
-    }
+//    public void updateWalkCount(List<Integer> memberIdList) {
+//        for (Integer memberId : memberIdList) {
+//            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+//            member.changeWalkCount();
+//        }
+//    }
 
     @Transactional
     public void deleteMember(String memberId) {
