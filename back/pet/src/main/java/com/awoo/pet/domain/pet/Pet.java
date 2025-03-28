@@ -44,9 +44,12 @@ public class Pet {
 
     public void modifyPet(final ModifyPetCommand command){
         this.name = command.name();
-        this.profileImage = command.profileImage();
         this.breed = command.breed();
         this.age = command.age();
+    }
+
+    public void modifyPetProfile(final String profileImage){
+        this.profileImage = profileImage;
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -17,12 +18,12 @@ import lombok.NoArgsConstructor;
 public class RegisterPetRequest {
 
     private String name;
-    private String profileImage;
     private String breed;
     private int age;
 
-    public RegisterPetCommand toCommand(Integer memberId) {
+    public RegisterPetCommand toCommand(Integer memberId, MultipartFile profileImage) {
         validate();
+        System.out.println(profileImage);
         return new RegisterPetCommand(
                 PetCommand.builder()
                         .memberId(memberId)

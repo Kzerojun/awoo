@@ -1,5 +1,6 @@
 package com.awoo.pet.application.impl;
 
+import com.awoo.pet.application.AwsS3Service;
 import com.awoo.pet.application.RegisterPetService;
 import com.awoo.pet.application.command.RegisterPetCommand;
 import com.awoo.pet.application.exception.ApplicationErrorCode;
@@ -15,12 +16,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RegisterPetServiceImpl implements RegisterPetService {
 
+    private final AwsS3Service awsS3Service;
     private final PetFactory petFactory;
     private final PetRepository petRepository;
 
     @Override
     public Integer registerPet(final RegisterPetCommand command) {
-        Pet entity = petFactory.registerPetEntity(command);
+
+        String profileImageUrl = null;
+        if(command.petCommand().profileImage() != null) {
+            profileImageUrl = awsS3Service.upload(command.petCommand().profileImage());
+        }
+
+        Pet entity = petFactory.registerPetEntity(command, profileImageUrl);
         try{
             petRepository.registerPet(entity);
         }catch (Exception e){
