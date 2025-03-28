@@ -3,6 +3,7 @@ package com.awoo.account.application.service;
 import com.awoo.account.application.command.*;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
+import com.awoo.account.domain.AccountType;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
 import com.awoo.account.infra.ssafyfinance.SSAFYWriteMemoApiClient;
 import com.awoo.account.infra.ssafyfinance.request.*;
@@ -41,7 +42,7 @@ public class AccountServiceImpl implements AccountService{
         //응답에서의 계좌 번호 암호화
         String encodedAccountNo = aesUtil.encrypt(fetchAccountResponse.REC().accountNo());
 
-        //응답에서의 계좌 비밀번호 암호화
+        //요청에서의 계좌 비밀번호 암호화
         String encodedPassword = aesUtil.encrypt(command.password());
 
         AccountEntity account = AccountEntity.builder()
@@ -50,6 +51,7 @@ public class AccountServiceImpl implements AccountService{
                 .accountNumber(encodedAccountNo)
                 .password(encodedPassword)
                 .conditionsAgreement(command.conditionsAgreement())
+                .accountType(AccountType.INTERNAL)
                 .build();
 
         // DB 저장

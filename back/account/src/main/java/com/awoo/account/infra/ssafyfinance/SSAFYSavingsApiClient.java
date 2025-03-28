@@ -3,10 +3,7 @@ package com.awoo.account.infra.ssafyfinance;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCHANRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateSavingAccountRequest;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYEarlyInterestPayResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYISPaymentResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYInterestPayResponse;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYSavingAccountListResponse;
+import com.awoo.account.infra.ssafyfinance.response.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface SSAFYSavingsApiClient {
 
     @PostMapping("/createAccount")
-    void createSavingAccount(@RequestBody SSAFYCreateSavingAccountRequest request);
+    SSAFYCreateSavingAccountResponse createSavingAccount(@RequestBody SSAFYCreateSavingAccountRequest request);
 
     @PostMapping("/inquireAccountList")
     SSAFYSavingAccountListResponse getSavingAccountList(@RequestBody SSAFYCommonHeaderRequest request);
