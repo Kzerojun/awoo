@@ -1,4 +1,7 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Button from "../../../../common/ui/Button";
+
 interface AccountCompleteProps {
   title: string;
   description: string;
@@ -9,6 +12,11 @@ interface AccountCompleteProps {
 }
 
 export default function AccountComplete({ title, description, info }: AccountCompleteProps) {
+  const router = useRouter();
+
+  const handleGoToMyAccounts = () => {
+    router.push("/home/myaccount"); // 실제 경로에 맞게 수정 가능
+  };
   return (
     <div className="flex flex-col items-center justify-start pt-20 px-6 text-center gap-1">
       <Image
@@ -28,6 +36,10 @@ export default function AccountComplete({ title, description, info }: AccountCom
             <span>{value}</span>
           </div>
         ))}
+      </div>
+      {/* 확인 버튼 */}
+      <div className="mt-12 w-full max-w-xs">
+        <Button className="w-full" text="확인" onClick={handleGoToMyAccounts}></Button>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export const store = configureStore({
     userAction: userActionReducer,
     user: userReducer,
     password: passwordReducer, // 보안 키패드 관련 리듀서
-    account: accountReducer,
+    account: accountReducer, // 계좌 개설 관련 리듀서
   },
   devTools: process.env.NODE_ENV !== "production",
 });

@@ -1,5 +1,3 @@
-// src/store/slices/passwordSlice.ts
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // 비밀번호 상태 타입 정의
