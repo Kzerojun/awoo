@@ -3,6 +3,10 @@ FROM openjdk:17-jdk
 ARG SERVICE_NAME
 ARG JAR_FILE=${SERVICE_NAME}/build/libs/*.jar
 
+# 타임존 설정
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 WORKDIR /app
 
 # JAR 파일 복사

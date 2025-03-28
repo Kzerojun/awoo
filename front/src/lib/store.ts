@@ -10,6 +10,7 @@ import userReducer from "./slices/userSlice"; // 유저 정보
 import passwordReducer from "./slices/passwordSlice";
 import accountReducer from "./slices/accountSlice";
 import paymentReducer from "./slices/paymentSlice";
+import profileReducer from "./slices/profileSlice";
 
 // Redux 스토어 생성
 export const store = configureStore({
@@ -23,6 +24,7 @@ export const store = configureStore({
     password: passwordReducer, // 보안 키패드 관련 리듀서
     account: accountReducer, // 계좌 개설 관련 리듀서
     payment: paymentReducer, // 멍페이 관련 리듀서
+    profile: profileReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });

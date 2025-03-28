@@ -1,4 +1,9 @@
 FROM node:18-alpine AS base
+# 기본 이미지에 timezone 설정
+ENV TZ=Asia/Seoul
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 # 1. 빌드 환경 설정
 FROM base AS builder
