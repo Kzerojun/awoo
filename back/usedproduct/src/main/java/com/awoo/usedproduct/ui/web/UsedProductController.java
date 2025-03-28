@@ -8,7 +8,11 @@ import com.awoo.usedproduct.ui.facade.dto.request.ModifyUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.request.RegisterUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.response.ModifyUsedProductResponse;
 import com.awoo.usedproduct.ui.facade.dto.response.RegisterUsedProductResponse;
+import com.awoo.usedproduct.ui.facade.dto.response.UsedProductsResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +41,13 @@ public class UsedProductController {
                                                                            @PathVariable Integer usedProductId) {
         ModifyUsedProductCommand command = request.toCommand(userId, usedProductId, images);
         ModifyUsedProductResponse response = usedProductServiceFacade.modifyUsedProduct(command);
+        return ApiUtils.success(response);
+    }
+
+    @GetMapping
+    public ApiUtils.ApiResult<UsedProductsResponse> fetchUsedProducts(@PageableDefault(size = 20, sort = "usedProductId", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        UsedProductsResponse response = usedProductServiceFacade.fetchUsedProducts(pageable);
         return ApiUtils.success(response);
     }
 }
