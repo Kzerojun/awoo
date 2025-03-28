@@ -1,19 +1,13 @@
-import { useMutation } from "@tanstack/react-query";
-// import { getPetList } from "@/api/pet/pet";
-// import { useAppDispatch } from "@/lib/store";
-// import { setUserData } from "@/lib/slices/userSlice";
+import { useQuery } from "@tanstack/react-query";
+import { getPetList } from "@/api/pet/pet";
 
-// export const usePetList = () => {
-//   const dispatch = useAppDispatch();
-//   return useMutation({
-//     mutationFn: getPetList,
-//     onSuccess: (res) => {
-//       console.log("반려견 목록 조회 성공", res);
-//       dispatch(
-//         setUserData({
-//           petList: res,
-//         })
-//       );
-//     },
-//   });
-// };
+export const usePetList = () => {
+  return useQuery({
+    queryKey: ["petList"],
+    queryFn: getPetList,
+    enabled: false, // 초기 자동 호출 방지
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+};
