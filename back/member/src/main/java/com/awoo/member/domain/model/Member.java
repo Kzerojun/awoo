@@ -1,6 +1,7 @@
 package com.awoo.member.domain.model;
 
 import com.awoo.member.domain.model.vo.*;
+import com.awoo.member.infra.BaseColumn.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor // JPA 기본 생성자 필요
 @Table(name = "members")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,7 @@ public class Member {
     @Column(name = "password", nullable = false, length = 128)
     private String password;
 
-    @Column(name = "user_key", nullable = true)
+    @Column(name = "user_key", nullable = false)
     private String userKey;
 
     @Embedded
@@ -54,6 +55,12 @@ public class Member {
     @Column(name = "payment_register")
     private boolean paymentRegister;
 
+    @Column(name = "walk_grade", nullable = false)
+    private Integer walkGrade;
+
+    @Column(name = "walk_count", nullable = false)
+    private Integer walkCount;
+
     @Builder // 빌더 패턴 추가
     public Member(Email email, String password, String userKey, Name name, BirthDate birthDate, Gender gender,
                   String phone, String profileImage, PrivacyAgreement privacyAgreement, String nickname, Provider provider) {
@@ -69,6 +76,8 @@ public class Member {
         this.nickname = nickname;
         this.provider = provider;
         this.paymentRegister = false;
+        this.walkGrade = 1;
+        this.walkCount = 0;
     }
 
     public void updateProfileImage(String newProfileImage) {
@@ -92,4 +101,16 @@ public class Member {
     }
 
     public void changePaymentRegister(boolean paymentRegister) {this.paymentRegister = paymentRegister;}
+
+    public void changeUserKey(String userKey) {
+        this.userKey = userKey;
+    }
+
+    public void changeWalkCount() {
+        if(++this.walkCount >= 40) {
+            this.walkGrade = 3;
+        }else if(this.walkCount >= 20) {
+            this.walkGrade = 2;
+        }
+    }
 }

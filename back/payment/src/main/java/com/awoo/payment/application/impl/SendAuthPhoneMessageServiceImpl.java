@@ -34,7 +34,7 @@ public class SendAuthPhoneMessageServiceImpl implements SendAuthPhoneMessageServ
 
         if(response.isSuccess()) {
             String authCode = generator.generateAuthNumber();
-            coolSms.sendMessage("01055617043",command.phone(),authCode);
+            coolSms.sendMessage(command.phone(),authCode);
             redisHandler.addAuthCode(command.phone(), authCode);
         }else {
             throw new MemberMismatchException(ApplicationErrorCode.MEMBER_MISS_MATCH);

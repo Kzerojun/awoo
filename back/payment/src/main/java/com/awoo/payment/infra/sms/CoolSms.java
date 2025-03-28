@@ -18,10 +18,14 @@ public class CoolSms {
     @Value("${sms.cool.sms-scret-key}")
     private String COOL_SMS_SECRET_KEY;
 
-    public void sendMessage(String fromPhoneNumber,String toPhoneNUmber ,String authCode) {
+    @Value("${sms.cool.phone-number}")
+    private String FROM_PHONE_NUMBER;
+
+
+    public void sendMessage(String toPhoneNUmber ,String authCode) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(COOL_SMS_KEY, COOL_SMS_SECRET_KEY, "https://api.coolsms.co.kr");
         Message message = new Message();
-        message.setFrom(fromPhoneNumber);
+        message.setFrom(FROM_PHONE_NUMBER);
         message.setTo(toPhoneNUmber);
 
         String text = "[AWOO] 인증코드 : " +authCode;

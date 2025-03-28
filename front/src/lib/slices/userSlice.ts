@@ -18,6 +18,7 @@ interface UserState {
   profileImage: string | null;
   petList: Pet[] | null;
   paymentRegister: boolean;
+  walkGrade: number | null;
   accessToken: string | null;
 }
 
@@ -30,6 +31,7 @@ const initialState: UserState = {
   profileImage: null,
   petList: [],
   paymentRegister: false,
+  walkGrade: null,
   accessToken: null,
 };
 

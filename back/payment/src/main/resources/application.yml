@@ -36,8 +36,9 @@ spring:
 
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${SPRING_REDIS_HOST}
+      port: ${SPRING_REDIS_PORT}
+      password: ${SPRING_REDIS_PASSWORD}
 
 eureka:
   client:
@@ -50,6 +51,7 @@ sms:
   cool:
     sms-key : ${COOL_SMS_KEY}
     sms-scret-key : ${COOL_SMS_SECRET_KEY}
+    phone-number : ${COOL_SMS_FROM_PHONE}
 
 ssafy :
   finance :
