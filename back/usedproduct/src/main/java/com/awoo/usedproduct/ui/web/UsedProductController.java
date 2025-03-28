@@ -1,5 +1,6 @@
 package com.awoo.usedproduct.ui.web;
 
+import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
@@ -7,10 +8,7 @@ import com.awoo.usedproduct.support.ApiUtils;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.request.ModifyUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.request.RegisterUsedProductRequest;
-import com.awoo.usedproduct.ui.facade.dto.response.LikeResponse;
-import com.awoo.usedproduct.ui.facade.dto.response.ModifyUsedProductResponse;
-import com.awoo.usedproduct.ui.facade.dto.response.RegisterUsedProductResponse;
-import com.awoo.usedproduct.ui.facade.dto.response.UsedProductsResponse;
+import com.awoo.usedproduct.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -62,6 +60,18 @@ public class UsedProductController {
                 .build();
 
         LikeResponse response = usedProductServiceFacade.like(command);
+        return ApiUtils.success(response);
+    }
+
+    @DeleteMapping("/{usedProductId}")
+    public ApiUtils.ApiResult<DeleteUsedProductResponse> deleteUsedProduct(@PathVariable(name = "usedProductId") Integer usedProductId,
+                                                  @RequestHeader("X-User-Id") String memberId){
+        DeleteUsedProductCommand command = DeleteUsedProductCommand.builder()
+                .userProductId(usedProductId)
+                .memberId(Integer.valueOf(memberId))
+                .build();
+
+        DeleteUsedProductResponse response = usedProductServiceFacade.delete(command);
         return ApiUtils.success(response);
     }
 }

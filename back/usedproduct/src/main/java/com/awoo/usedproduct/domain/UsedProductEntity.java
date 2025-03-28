@@ -63,6 +63,9 @@ public class UsedProductEntity {
     }
 
     public boolean canModify(Integer memberId){
+        System.out.println(this.memberId);
+        System.out.println(memberId);
+
         if(!this.memberId.equals(memberId)){
             throw new UnauthorizedModificationException(DomainExceptionErrorCode.UNAUTHORIZED_MODIFICATION);
         }
@@ -76,6 +79,7 @@ public class UsedProductEntity {
     public void increaseLikeCount(){
         this.likeCount++;
     }
+
 
     private void updateImages(List<String> imageUrls){
         this.images = imageUrls.stream()

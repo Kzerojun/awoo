@@ -1,18 +1,13 @@
 package com.awoo.usedproduct.ui.facade.internal;
 
-import com.awoo.usedproduct.application.LikeService;
-import com.awoo.usedproduct.application.ModifyUsedProductService;
-import com.awoo.usedproduct.application.QueryUsedProductsService;
-import com.awoo.usedproduct.application.RegisterUsedProductService;
+import com.awoo.usedproduct.application.*;
+import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
 import com.awoo.usedproduct.domain.UsedProductEntity;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
-import com.awoo.usedproduct.ui.facade.dto.response.LikeResponse;
-import com.awoo.usedproduct.ui.facade.dto.response.UsedProductsResponse;
-import com.awoo.usedproduct.ui.facade.dto.response.ModifyUsedProductResponse;
-import com.awoo.usedproduct.ui.facade.dto.response.RegisterUsedProductResponse;
+import com.awoo.usedproduct.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +20,7 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     private final RegisterUsedProductService registerUsedProductService;
     private final ModifyUsedProductService modifyUsedProductService;
     private final QueryUsedProductsService queryUsedProductsService;
+    private final DeleteUsedProductService deleteUsedProductService;
     private final LikeService likeService;
 
     @Override
@@ -50,5 +46,11 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public LikeResponse like(LikeCommand command) {
         boolean result = likeService.like(command);
         return new LikeResponse(result);
+    }
+
+    @Override
+    public DeleteUsedProductResponse delete(DeleteUsedProductCommand command) {
+        deleteUsedProductService.deleteUsedProduct(command);
+        return new DeleteUsedProductResponse("중고거래 삭제가 성공하였습니다.");
     }
 }
