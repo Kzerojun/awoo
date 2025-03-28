@@ -17,6 +17,7 @@ public class PetFactory {
                 .breed(command.petCommand().breed())
                 .age(command.petCommand().age())
                 .savingId(command.petCommand().savingId())
+                .savingLevel(command.petCommand().savingLevel())
                 .build();
     }
 }
