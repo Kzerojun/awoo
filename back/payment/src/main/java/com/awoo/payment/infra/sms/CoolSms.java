@@ -24,6 +24,7 @@ public class CoolSms {
 
     public void sendMessage(String toPhoneNUmber ,String authCode) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(COOL_SMS_KEY, COOL_SMS_SECRET_KEY, "https://api.coolsms.co.kr");
+        log.info("From Phone Number : {}",FROM_PHONE_NUMBER);
         Message message = new Message();
         message.setFrom(FROM_PHONE_NUMBER);
         message.setTo(toPhoneNUmber);
