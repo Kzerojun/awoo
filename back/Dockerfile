@@ -13,4 +13,4 @@ WORKDIR /app
 COPY ${JAR_FILE} app.jar
 
 # 컨테이너 실행시 자동으로 실행할 명령
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=Asia/Seoul", "-jar", "app.jar"]
