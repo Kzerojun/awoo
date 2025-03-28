@@ -18,6 +18,10 @@ public class AccountEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer memberId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_type", nullable = false)
+    private AccountType accountType;
+
     @Column(nullable = false, length = 3)
     private String bankCode;
 
@@ -32,12 +36,13 @@ public class AccountEntity extends BaseEntity {
 
     @Builder
     public AccountEntity(String accountNumber, String bankCode, Integer memberId,
-                         String password, boolean conditionsAgreement) {
+                         String password, boolean conditionsAgreement, AccountType accountType) {
         this.accountNumber = accountNumber;
         this.bankCode = bankCode;
         this.memberId = memberId;
         this.password = password;
         this.conditionsAgreement = conditionsAgreement;
+        this.accountType = accountType;
     }
 
 }
