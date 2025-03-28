@@ -3,6 +3,12 @@
 import { useKeypad } from "@/contexts/KeypadContent";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setActiveField, appendDigit, deleteLastDigit } from "@/lib/slices/passwordSlice";
+interface PasswordInputProps {
+  password: string;
+  confirmPassword: string;
+  setPassword: (val: string) => void;
+  setConfirmPassword: (val: string) => void;
+}
 
 export default function PasswordInput() {
   const dispatch = useAppDispatch();
