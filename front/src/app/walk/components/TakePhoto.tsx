@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setWalkData } from "@/lib/slices/walkSlice";
 import Image from "next/image";
 import dogPhoto from "../../../../public/icons/walking/dog_photo.svg";
+import cameraIcon from "../../../../public/icons/walking/cameraIcon.svg";
 
 import Button from "@/common/ui/Button";
 const TakePhoto = () => {
@@ -71,9 +72,9 @@ const TakePhoto = () => {
 
       dispatch(setWalkData({ photo: dataUrl }));
 
-      console.log(photoData);
       stopCamera();
       setTimeout(() => {
+        console.log(photoData);
         router.push("/walk/photo-check"); // Redux 업데이트 후 페이지 이동
       }, 100); // Redux 업데이트 후 약간의 지연을 추가
     }
@@ -85,7 +86,11 @@ const TakePhoto = () => {
   };
   return (
     <div className="flex flex-col items-center justify-center gap-5 h-full">
-      <div className="text-3xl">사진 촬영</div>
+      <div className="flex items-center justify-center gap-x-3">
+        <Image src={cameraIcon} alt="카메라 아이콘" width={35} height={35} />
+        <div className="text-xl">사진 촬영</div>
+      </div>
+
       <video
         ref={videoRef}
         autoPlay
@@ -98,7 +103,7 @@ const TakePhoto = () => {
         {!isCameraOn && (
           <div className="flex flex-col items-center justify-center gap-6">
             <span className="flex flex-col items-center justify-center gap-2">
-              <div className="text-2xl w-68 text-center">
+              <div className="text-xl w-68 text-center">
                 산책 종료, 아이들과 함께 사진을 찍어보세요!
               </div>
               <p>사진을 찍어 반려견과 추억을 쌓아보세요!</p>

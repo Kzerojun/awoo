@@ -3,6 +3,7 @@
 import PetCard from "./PetCard";
 import Button from "@/common/ui/Button";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/lib/store";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import dogIcon from "../../../../../public/icons/walking/dog.svg";
 import walkingIcon from "../../../../../public/icons/walking/walkingIcon.svg";
@@ -16,51 +17,57 @@ interface Pet {
   breed: string;
   age: number;
   savingId: number;
+  walkInMonth: number;
 }
 
 const PetList = () => {
   const router = useRouter();
-  const petList: Pet[] = [
-    {
-      petId: 1,
-      memberId: 1,
-      name: "멍멍이",
-      profileImage: null,
-      breed: "진돗개",
-      age: 1,
-      savingId: 0,
-    },
-    {
-      petId: 2,
-      memberId: 1,
-      name: "냠냠이",
-      profileImage: null,
-      breed: "푸들",
-      age: 16,
-      savingId: 0,
-    },
-    {
-      petId: 4,
-      memberId: 1,
-      name: "흰둥이",
-      profileImage: null,
-      breed: "말티즈",
-      age: 11,
-      savingId: 0,
-    },
-    {
-      petId: 5,
-      memberId: 1,
-      name: "덕진이",
-      profileImage: null,
-      breed: "말티즈",
-      age: 0,
-      savingId: 0,
-    },
-  ];
+  const petList = useAppSelector((state) => state.pet.petList);
+  // 목데이터
+  // const petList: Pet[] = [
+  //   {
+  //     petId: 1,
+  //     memberId: 1,
+  //     name: "멍멍이",
+  //     profileImage: null,
+  //     breed: "진돗개",
+  //     age: 1,
+  //     savingId: 0,
+  //     walkInMonth: 0,
+  //   },
+  //   {
+  //     petId: 2,
+  //     memberId: 1,
+  //     name: "냠냠이",
+  //     profileImage: null,
+  //     breed: "푸들",
+  //     age: 16,
+  //     savingId: 0,
+  //     walkInMonth: 1,
+  //   },
+  //   {
+  //     petId: 4,
+  //     memberId: 1,
+  //     name: "흰둥이",
+  //     profileImage: null,
+  //     breed: "말티즈",
+  //     age: 11,
+  //     savingId: 0,
+  //     walkInMonth: 2,
+  //   },
+  //   {
+  //     petId: 5,
+  //     memberId: 1,
+  //     name: "덕진이",
+  //     profileImage: null,
+  //     breed: "말티즈",
+  //     age: 0,
+  //     savingId: 0,
+  //     walkInMonth: 3,
+  //   },
+  // ];
 
   // 후에 useEffect 써서 반려견 별 한 달 산책횟수 조회
-  const walkNumber: number[] = [1, 2, 3, 4];
 
   const goToRegisterPet = () => {
     router.push("/my/pet/register");
@@ -77,9 +84,10 @@ const PetList = () => {
           </div>
 
           <div className="flex flex-col justify-center items-center gap-y-4">
-            {walkNumber.map((num, index) => (
-              <div key={index}>
-                {petList[index].name} : {num}회 /30
+            {petList.map((pet) => (
+              <div key={pet.petId}>
+                {/* {pet.name} : {pet.walkInMonth}회 /30 */}
+                {pet.name}
               </div>
             ))}
           </div>
