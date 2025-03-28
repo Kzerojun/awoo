@@ -3,14 +3,13 @@ package com.awoo.account.application.service;
 import com.awoo.account.application.command.CreateAccountCommand;
 import com.awoo.account.application.command.TransactionsCommand;
 import com.awoo.account.application.command.TransferCommand;
-import com.awoo.account.infra.ssafyfinance.response.*;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYTransferRequest;
+import com.awoo.account.application.command.WriteMemoCommand;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateAccountRequest;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYTransactionsRequest;
+import com.awoo.account.infra.ssafyfinance.SSAFYWriteMemoApiClient;
+import com.awoo.account.infra.ssafyfinance.request.*;
+import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
@@ -25,14 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService{
 
-//    private final MemberClient memberClient;
     private final SSAFYDemandDepositApiClient SSAFYApiClient;
+    private final SSAFYWriteMemoApiClient SSAFYWriteMemoApiClient;
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
     private final AccountRepository accountRepository;
 
     @Transactional
-    public void createAccount(String memberId, CreateAccountCommand command) throws Exception {
+    public void createAccount(String memberId, CreateAccountCommand command) {
         // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
@@ -102,4 +101,22 @@ public class AccountServiceImpl implements AccountService{
         SSAFYTransferResponse fetchAccountResponse = SSAFYApiClient.transfer(request);
         return fetchAccountResponse.REC();
     }
+
+    public boolean confirmPassword(String accountNo, String password) {
+        AccountEntity account = accountRepository.findByAccountNumber(aesUtil.encrypt(accountNo));
+        return aesUtil.decrypt(account.getPassword()).equals(password);
+    }
+
+    public void writeMemo(String memberId, WriteMemoCommand command) {
+        //SSAFY 거래내역 메모 요청 생성
+        SSAFYWriteMemoRequest request = SSAFYWriteMemoRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.WRITE_MEMO))
+                .accountNo(command.accountNo())
+                .transactionUniqueNo(command.transactionUniqueNo())
+                .transactionMemo(command.transactionMemo())
+                .build();
+
+        SSAFYWriteMemoApiClient.writeMemo(request);
+    }
+
 }

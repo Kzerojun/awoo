@@ -17,6 +17,7 @@ public enum SSAFYCode {
     TransactionLIST("inquireTransactionHistoryList"),
     //계좌이체
     Transfer("updateDemandDepositAccountTransfer"),
+    WRITE_MEMO("transactionMemo"),
 
     //적금계좌생성
     CREATE_SAVING_ACCOUNT("createAccount"),

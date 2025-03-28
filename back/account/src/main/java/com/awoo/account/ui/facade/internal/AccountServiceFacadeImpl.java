@@ -1,9 +1,6 @@
 package com.awoo.account.ui.facade.internal;
 
-import com.awoo.account.application.command.CreateAccountCommand;
-import com.awoo.account.application.command.DeductBalanceCommand;
-import com.awoo.account.application.command.TransactionsCommand;
-import com.awoo.account.application.command.TransferCommand;
+import com.awoo.account.application.command.*;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountResponseDto;
 import com.awoo.account.application.service.AccountService;
 import com.awoo.account.application.service.DeductBalanceService;
@@ -44,6 +41,14 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
 
     public List<SSAFYTransferREC> transfer(String memberId, TransferCommand command) {
         return accountService.transfer(memberId, command);
+    }
+
+    public boolean confirmPassword(String accountNo, String password) {
+        return accountService.confirmPassword(accountNo, password);
+    }
+
+    public void writeMemo(String memberId, WriteMemoCommand command) {
+        accountService.writeMemo(memberId, command);
     }
 
 
