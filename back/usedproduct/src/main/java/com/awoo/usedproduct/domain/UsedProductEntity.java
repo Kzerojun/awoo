@@ -69,11 +69,17 @@ public class UsedProductEntity {
         return true;
     }
 
+    public void decreaseLikeCount(){
+        this.likeCount--;
+    }
+
+    public void increaseLikeCount(){
+        this.likeCount++;
+    }
+
     private void updateImages(List<String> imageUrls){
         this.images = imageUrls.stream()
                 .map(UsedProductImage::new)
                 .toList();
     }
-
-
 }
