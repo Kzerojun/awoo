@@ -1,72 +1,68 @@
 "use client";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/lib/store";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
 import useLocationPermission from "../hooks/useLocationPermission";
-
+import { setCurrentWalkingDog } from "@/lib/slices/userActionSlice";
+import { PetInterface } from "@/lib/slices/petSlice";
 import Button from "@/common/ui/Button";
 
 import PetCard from "@/app/my/pet/components/PetCard";
 import paw from "../../../../public/icons/white_paw.svg";
-import { useState } from "react";
-interface Pet {
-  petId: number;
-  memberId: number;
-  name: string;
-  profileImage: string | null;
-  breed: string;
-  age: number;
-  savingId: number;
-}
 
 const SelectDog = () => {
   const route = useRouter();
-  //   const petList = useAppSelector((state) => state.user.petList);
+  const dispatch = useAppDispatch();
+  const petList = useAppSelector((state) => state.pet.petList);
+
   //   테스트를 위한 목데이터
-  const petList: Pet[] = [
-    {
-      petId: 1,
-      memberId: 101,
-      name: "콩이",
-      profileImage: null,
-      breed: "푸들",
-      age: 3,
-      savingId: 201,
-    },
-    // {
-    //   petId: 2,
-    //   memberId: 101,
-    //   name: "두부",
-    //   profileImage: null, // 프로필 이미지 없는 경우
-    //   breed: "말티즈",
-    //   age: 5,
-    //   savingId: 202,
-    // },
-    // {
-    //   petId: 3,
-    //   memberId: 101,
-    //   name: "뽀삐",
-    //   profileImage: "",
-    //   breed: "시바견",
-    //   age: 2,
-    //   savingId: 203,
-    // },
-  ];
+  // const petList: PetInterface[] = [
+  //   {
+  //     petId: 1,
+  //     memberId: 101,
+  //     name: "콩이",
+  //     profileImage: null,
+  //     breed: "푸들",
+  //     age: 3,
+  //     savingId: 201,
+  //     walkInMonth: 0,
+  //   },
+  // {
+  //   petId: 2,
+  //   memberId: 101,
+  //   name: "두부",
+  //   profileImage: null, // 프로필 이미지 없는 경우
+  //   breed: "말티즈",
+  //   age: 5,
+  //   savingId: 202,
+  // },
+  // {
+  //   petId: 3,
+  //   memberId: 101,
+  //   name: "뽀삐",
+  //   profileImage: "",
+  //   breed: "시바견",
+  //   age: 2,
+  //   savingId: 203,
+  // },
+  // ];
 
   const { requestPermission } = useLocationPermission();
-  const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
+  const [selectedPet, setSelectedPet] = useState<PetInterface | null>(null);
 
-  const handleSelectPet = (petId: number) => {
-    setSelectedPetId((prevId) => (prevId === petId ? null : petId));
+  const handleSelectPet = (pet: PetInterface) => {
+    setSelectedPet((prevPet) => (prevPet?.petId === pet.petId ? null : pet));
   };
 
   const goToWalkStart = () => {
-    if (selectedPetId == null) {
+    if (selectedPet == null) {
       alert("반려견을 선택해주세요!");
       return;
     }
+    console.log(selectedPet);
+    dispatch(setCurrentWalkingDog(selectedPet));
 
-    requestPermission();
-    route.push("/walk/start/walking");
+    route.push("/walk/start/guide");
   };
 
   return (
@@ -83,8 +79,7 @@ const SelectDog = () => {
             <span className="text-green">한 마리의 반려견</span>만 선택 가능합니다.
           </p>
         </div>
-        {/* 아직 반려견 등록을 안 해서 이미지로 잠시 대체 */}
-        {/* <Image src={dogList} alt="강아지 목록 예제 이미지" /> */}
+
         {petList.length !== 1 ? (
           <div className="w-60 flex flex-col justify-center gap-y-5">
             {petList?.map((pet) => (
@@ -92,8 +87,8 @@ const SelectDog = () => {
                 key={pet.petId}
                 pet={pet}
                 clickable={false}
-                onSelect={handleSelectPet}
-                selected={selectedPetId === pet.petId}
+                onSelect={() => handleSelectPet(pet)}
+                selected={selectedPet?.petId === pet.petId}
               />
             ))}
           </div>
@@ -104,15 +99,15 @@ const SelectDog = () => {
                 key={pet.petId}
                 pet={pet}
                 clickable={false}
-                onSelect={handleSelectPet}
-                selected={selectedPetId === pet.petId}
+                onSelect={() => handleSelectPet(pet)}
+                selected={selectedPet?.petId === pet.petId}
               />
             ))}
           </div>
         )}
 
         <Button
-          text="산책하기"
+          text="다음으로"
           backgroundColor="light-green"
           onClick={goToWalkStart}
           width="medium"
