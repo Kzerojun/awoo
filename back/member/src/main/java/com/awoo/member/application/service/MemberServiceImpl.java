@@ -182,5 +182,13 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    @Transactional
+    public void deleteMember(String memberId) {
+        Member member = memberRepository.findById(Integer.valueOf(memberId))
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        member.markDeleted();
+    }
+
 }
 

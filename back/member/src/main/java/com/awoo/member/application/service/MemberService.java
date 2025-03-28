@@ -31,5 +31,7 @@ public interface MemberService {
     void paymentRegister(Integer memberId);
 
     void updateWalkCount(List<Integer> memberIdList);
+
+    void deleteMember(String memberId);
 }
 
