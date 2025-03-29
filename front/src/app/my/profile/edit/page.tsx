@@ -264,36 +264,48 @@ export default function Edit() {
           <p className="text-sm text-gray-500 mt-2">프로필 사진 변경</p>
         </div>
 
-        {/* 닉네임 수정 영역 */}
+        {/* 닉네임 수정 영역 - 수정된 UI */}
         <div className="mb-8">
-          <label className="block text-gray-700 mb-2 font-medium">닉네임</label>
-          <div className="flex items-center gap-2">
+          <div className="flex justify-between items-center">
+            <label className="block text-gray-700 mb-2 font-medium">닉네임</label>
+            {isNicknameChanged && (
+              <button
+                onClick={checkNicknameDuplicate}
+                className={`px-2 py-1 rounded-md text-[12px] transition-all ${
+                  isValidNickname && !isNicknameChecked
+                    ? "bg-teal-500 text-white hover:bg-teal-600"
+                    : isNicknameChecked && isValidNickname
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-200 text-gray-500"
+                }`}
+                disabled={!isValidNickname || nicknameCheckMutation.isPending}
+              >
+                {nicknameCheckMutation.isPending
+                  ? "확인 중..."
+                  : isNicknameChecked && isValidNickname
+                    ? "확인 완료"
+                    : "중복 확인"}
+              </button>
+            )}
+          </div>
+          <div className="flex flex-col w-full">
             <input
               type="text"
               value={isLoading ? "" : nickname}
               onChange={handleNicknameChange}
-              className={`flex-1 px-3 py-3 border ${
+              className={`w-full px-3 py-3 border ${
                 isValidNickname ? "border-gray-300" : "border-red-500"
               } rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
               placeholder={isLoading ? "로딩 중..." : "닉네임을 입력하세요"}
               disabled={isLoading}
             />
-            {isNicknameChanged && (
-              <button
-                onClick={checkNicknameDuplicate}
-                className="px-3 py-3 bg-gray-200 text-gray-700 rounded-md whitespace-nowrap text-sm"
-                disabled={!isValidNickname || nicknameCheckMutation.isPending}
-              >
-                {nicknameCheckMutation.isPending ? "확인 중..." : "중복 확인"}
-              </button>
-            )}
+
+            <div className="flex justify-between items-center mt-2">
+              <p className={`text-xs ${isValidNickname ? "text-green-500" : "text-red-500"}`}>
+                {nicknameMessage || "다른 사용자에게 보여질 이름입니다."}
+              </p>
+            </div>
           </div>
-          {nicknameMessage && (
-            <p className={`text-xs mt-1 ${isValidNickname ? "text-green-500" : "text-red-500"}`}>
-              {nicknameMessage}
-            </p>
-          )}
-          <p className="text-xs text-gray-500 mt-1">다른 사용자에게 보여질 이름입니다.</p>
         </div>
 
         {/* 저장 버튼 */}

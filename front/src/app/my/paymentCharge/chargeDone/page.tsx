@@ -4,16 +4,23 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import TopBar from "@/common/ui/TopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 
 // 실제 컴포넌트 콘텐츠를 별도 컴포넌트로 분리
 function ChargeDoneContent() {
-  const [amount, setAmount] = useState<number>(10000); // 기본값 설정 (URL 파라미터에서 가져오기 전)
-  const [balance, setBalance] = useState<number>(3010000); // 기본값 설정
-  const [account, setAccount] = useState<string>("기업 1767"); // 기본값 설정
+  const [amount, setAmount] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
+  const [account, setAccount] = useState<string>("");
+  const [chargeDate, setChargeDate] = useState<string>("");
   const router = useRouter();
 
-  // URL 파라미터 처리는 클라이언트 컴포넌트에서만 처리하도록 수정
+  // URL 파라미터 처리
   useEffect(() => {
+    // 현재 날짜와 시간 설정
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    setChargeDate(formattedDate);
+
     // URLSearchParams를 사용해 URL 파라미터 가져오기
     const searchParams = new URLSearchParams(window.location.search);
 
@@ -47,10 +54,6 @@ function ChargeDoneContent() {
     }
   }, []);
 
-  // 현재 날짜와 시간 생성
-  const now = new Date();
-  const formattedDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-
   return (
     <div className="flex-1 p-6 flex flex-col pt-14">
       {/* 충전 완료 표시 */}
@@ -70,6 +73,10 @@ function ChargeDoneContent() {
         <div className="flex justify-between items-center py-2 pt-0">
           <p className="text-gray-600 text-sm">거래 후 잔액</p>
           <p className="font-medium">{balance.toLocaleString()}원</p>
+        </div>
+        <div className="flex justify-between items-center py-2 pt-0">
+          <p className="text-gray-600 text-sm">거래 일시</p>
+          <p className="font-medium">{chargeDate}</p>
         </div>
         <div className="border-t border-dashed border-gray-300"></div>
       </div>
