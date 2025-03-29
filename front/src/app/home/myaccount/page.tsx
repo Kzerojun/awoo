@@ -26,7 +26,7 @@ export default function AccountMinePage() {
       {/* 네비게이션 바 */}
       <Header />
 
-      <div className="px-4 py-2 flex flex-col gap-2">
+      <div className="px-4 py-2 flex flex-col gap-2 pt-16">
         {/* 입출금 계좌 */}
         <div className="bg-[#C9F5F1] rounded-xl p-4 shadow">
           <p className="text-sm ml-3 mt-1">AwOO 입출금계좌</p>

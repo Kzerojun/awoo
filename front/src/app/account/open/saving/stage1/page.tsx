@@ -7,6 +7,11 @@ import ProductIntro from "../../deposit/components/ProductIntro";
 import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep1 from "../components/ProductDetailStep1";
 import ProductDocs from "../components/ProductDocs";
+import { useRouter } from "next/navigation";
+import { setSavingStage } from "@/lib/slices/accountProgressSlice";
+import { useAppDispatch } from "@/lib/store";
+import { setAccountType } from "@/lib/slices/accountProgressSlice";
+
 const step1Reviews = [
   {
     text: "처음 시작인데 부담 없이 할 수 있어서 좋아요!",
@@ -23,6 +28,8 @@ const step1Reviews = [
 ];
 
 const Page = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <div className="container mx-auto max-w-lg py-6">
       <ProductSummary
@@ -35,8 +42,9 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
-          // 👉 가입 로직 or 라우팅 처리
-          console.log("가입하기 클릭됨!");
+          dispatch(setAccountType("saving"));
+          dispatch(setSavingStage(1)); // ← 1단계 세팅
+          router.push("/account/open/saving/agreement");
         }}
         width="long" // 버튼 길이
         textSize="medium" // 텍스트 크기
