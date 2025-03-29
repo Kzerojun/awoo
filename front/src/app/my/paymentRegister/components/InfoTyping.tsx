@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getUserInfo } from "@/api/user/auth";
+import { requestPhoneAuth } from "@/api/payment/payment";
+import { toast } from "react-toastify";
 
 interface InfoTypingFormProps {
   initialStep?: number;
@@ -15,6 +18,31 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 사용자 정보 저장
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    phone: "",
+  });
+
+  // 사용자 정보 가져오기
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getUserInfo();
+        setUserInfo({
+          name: data.name,
+          phone: data.phone,
+        });
+        console.log("사용자 정보 로드 완료:", data);
+      } catch (error) {
+        console.error("사용자 정보 로드 실패:", error);
+        toast.error("사용자 정보를 불러오는데 실패했습니다.");
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   // 키보드 표시 여부 감지
   useEffect(() => {
@@ -36,22 +64,45 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
       setIsSubmitting(true);
 
       try {
-        // 인증 요청 로직
-        console.log("인증 요청:", { name, phoneNumber });
+        // 입력값과 사용자 정보 비교
+        if (name.trim() !== userInfo.name) {
+          toast.error("입력한 이름이 회원 정보와 일치하지 않습니다.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        // 전화번호 형식 통일 (하이픈 제거)
+        const cleanedInputPhone = phoneNumber.replace(/-/g, "");
+        const cleanedUserPhone = userInfo.phone.replace(/-/g, "");
+
+        if (cleanedInputPhone !== cleanedUserPhone) {
+          toast.error("입력한 전화번호가 회원 정보와 일치하지 않습니다.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        // 인증 요청 API a호출
+        await requestPhoneAuth({
+          name: name.trim(),
+          phone: phoneNumber.trim(),
+        });
+
+        // 세션 스토리지에 전화번호 저장 (인증번호 검증에 필요)
+        sessionStorage.setItem("verification_phone", phoneNumber.trim());
+
+        console.log("인증 요청 성공:", { name, phoneNumber });
+        toast.success("인증번호가 발송되었습니다.");
 
         // 완료 콜백이 있으면 호출
         if (onComplete) {
           onComplete({ name, phoneNumber });
         }
 
-        // API 호출 시뮬레이션
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
         // 인증번호 입력 페이지로 이동
-        router.push("paymentRegister/certificateNumber");
+        router.push("/my/paymentRegister/certificateNumber");
       } catch (error) {
         console.error("인증 요청 오류:", error);
-        alert("인증 요청에 실패했습니다. 다시 시도해주세요.");
+        toast.error("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
       } finally {
         setIsSubmitting(false);
       }
@@ -94,7 +145,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
               value={phoneNumber}
               onChange={handlePhoneChange}
               className="w-full p-3 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-              placeholder="0101234****"
+              placeholder="01012345678"
               autoFocus
             />
             <div className="mt-4">
