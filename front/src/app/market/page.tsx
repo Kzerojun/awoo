@@ -8,7 +8,7 @@ import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import Button from "@/common/ui/Button";
 import { useRouter } from "next/navigation";
-import { getProductList } from "@/api/market/read/getList"; // ✅ 네가 만든 API import
+import { getProductList } from "@/api/market/read/getList"; 
 
 export default function MarketPage() {
   const [currentTab, setCurrentTab] = useState<MarketTab>("상품");
