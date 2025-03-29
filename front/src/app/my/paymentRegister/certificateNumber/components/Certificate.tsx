@@ -2,14 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
-import { BellIcon } from "@heroicons/react/24/outline";
+import { verifyPhoneAuth } from "@/api/payment/payment";
+import { toast } from "react-toastify";
 
 export default function Certificate() {
   const router = useRouter();
   const [certificateNumber, setCertificateNumber] = useState("");
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [remainingTime, setRemainingTime] = useState(180); // 3분
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 이전 화면에서 입력한 전화번호 저장
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  // 세션 스토리지에서 전화번호 가져오기
+  useEffect(() => {
+    const phone = sessionStorage.getItem("verification_phone");
+    if (phone) {
+      setPhoneNumber(phone);
+      console.log("저장된 전화번호 불러옴:", phone);
+    } else {
+      console.error("전화번호 정보를 찾을 수 없습니다");
+      toast.error("전화번호 정보를 찾을 수 없습니다. 이전 단계로 돌아가주세요.");
+    }
+  }, []);
 
   // 남은 시간 카운트다운
   useEffect(() => {
@@ -48,78 +64,121 @@ export default function Certificate() {
     setCertificateNumber(value);
   };
 
-  // 인증 확인 처리
-  const handleVerify = () => {
+  // 인증번호 확인 요청
+  const handleVerify = async () => {
     if (certificateNumber.length !== 6) {
-      alert("6자리 인증번호를 입력해주세요.");
+      toast.error("6자리 인증번호를 입력해주세요.");
       return;
     }
 
-    // 실제 구현에서는 API 호출로 인증번호 검증
-    console.log("인증번호 확인:", certificateNumber);
+    if (remainingTime <= 0) {
+      toast.error("인증 시간이 만료되었습니다. 다시 시도해주세요.");
+      return;
+    }
 
-    // 인증 성공 시 다음 단계로 이동
-    alert("인증이 완료되었습니다.");
-    router.push("/my/paymentRegister/paymentPassword"); // 완료 페이지로 이동
+    setIsSubmitting(true);
+
+    try {
+      // 전화번호 확인
+      if (!phoneNumber) {
+        toast.error("전화번호 정보가 없습니다. 이전 단계로 돌아가주세요.");
+        return;
+      }
+
+      // 인증번호 확인 API 호출 및 응답 저장
+      const response = await verifyPhoneAuth({
+        phone: phoneNumber,
+        authCode: certificateNumber,
+      });
+
+      console.log("인증번호 확인 성공", response);
+
+      // 응답에서 auth-token 추출하여 저장
+      if (response && response.response) {
+        // 응답 구조에 따라 경로 조정 필요
+        const authToken = response.response.token || response.response.authToken || "";
+
+        if (authToken) {
+          sessionStorage.setItem("phone_auth_token", authToken);
+          console.log("인증 토큰 저장됨:", authToken);
+        } else {
+          console.warn("응답에서 인증 토큰을 찾을 수 없습니다");
+        }
+      }
+
+      toast.success("휴대폰 인증이 완료되었습니다.");
+
+      // 인증 성공 시 세션 데이터 유지 (비밀번호 설정 완료 후 제거)
+      sessionStorage.setItem("phone_verified", "true");
+
+      // 인증 성공 시 다음 단계(비밀번호 설정)로 이동
+      router.push("/my/paymentRegister/paymentPassword");
+    } catch (error) {
+      console.error("인증번호 확인 실패:", error);
+      toast.error("인증번호가 올바르지 않습니다. 다시 확인해주세요.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // 테스트용 SMS 인증번호
-  const testSmsNumber = "123456";
+  // 인증번호 재전송 처리
+  const handleResendCode = async () => {
+    // 여기에 인증번호 재전송 로직 구현
+    toast.info("인증번호가 재전송되었습니다.");
+    // 타이머 재설정
+    setRemainingTime(180);
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+    <div className="flex flex-col min-h-[calc(70vh-56px)]">
+      {/* 입력 폼 - 상단 고정 */}
+      <div className="p-4">
+        <h2 className="text-lg font-bold mb-4">인증번호를 입력해 주세요</h2>
+        <input
+          type="text"
+          value={certificateNumber}
+          onChange={handleCertificateChange}
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+          placeholder="인증번호 6자리"
+          autoFocus
+          inputMode="numeric"
+          disabled={isSubmitting}
+        />
 
-      <div className="pt-14 flex flex-col min-h-[calc(70vh-56px)]">
-        {/* 입력 폼 - 상단 고정 */}
-        <div className="p-4">
-          <h2 className="text-lg font-bold mb-4">인증번호를 입력해 주세요</h2>
-          <input
-            type="text"
-            value={certificateNumber}
-            onChange={handleCertificateChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-            placeholder="인증번호 6자리"
-            autoFocus
-            inputMode="numeric"
-          />
-
-          {/* 남은 시간 표시 */}
-          {remainingTime > 0 && (
-            <p className="mt-2 text-right text-sm text-gray-500">남은 시간: {formatTime()}</p>
+        {/* 남은 시간 표시 */}
+        <div className="flex justify-between mt-2">
+          {remainingTime > 0 ? (
+            <p className="text-sm text-gray-500">남은 시간: {formatTime()}</p>
+          ) : (
+            <p className="text-sm text-red-500">인증 시간이 만료되었습니다.</p>
           )}
 
-          {/* 시간 만료 메시지 */}
-          {remainingTime <= 0 && (
-            <p className="mt-2 text-right text-sm text-red-500">
-              인증 시간이 만료되었습니다. 다시 시도해주세요.
-            </p>
-          )}
-        </div>
-
-        {/* 버튼 영역 - 키보드에 따라 위치 조정 */}
-        <div
-          className={`p-4 ${isKeyboardVisible ? "mt-auto" : "flex-grow flex items-center justify-center"}`}
-        >
+          {/* 인증번호 재전송 버튼 */}
           <button
-            onClick={handleVerify}
-            disabled={certificateNumber.length !== 6 || remainingTime <= 0}
-            className={`w-[180px] py-3 rounded-full ${
-              certificateNumber.length === 6 && remainingTime > 0
-                ? "bg-teal-500 text-white"
-                : "bg-gray-200 text-gray-500"
-            } font-medium transition-colors`}
+            onClick={handleResendCode}
+            className="text-sm text-teal-500"
+            disabled={isSubmitting}
           >
-            확인
+            인증번호 재전송
           </button>
         </div>
+      </div>
 
-        {/* 테스트용 SMS 메시지 표시 (실제 앱에서는 실제 SMS 수신됨) */}
-        <div className="fixed bottom-0 left-0 right-0 bg-gray-200 p-2 text-center text-sm">
-          메세지에서
-          <br />
-          {testSmsNumber}
-        </div>
+      {/* 버튼 영역 - 키보드에 따라 위치 조정 */}
+      <div
+        className={`p-4 ${isKeyboardVisible ? "mt-auto" : "flex-grow flex items-center justify-center"}`}
+      >
+        <button
+          onClick={handleVerify}
+          disabled={certificateNumber.length !== 6 || remainingTime <= 0 || isSubmitting}
+          className={`w-[180px] py-3 rounded-full ${
+            certificateNumber.length === 6 && remainingTime > 0 && !isSubmitting
+              ? "bg-teal-500 text-white"
+              : "bg-gray-200 text-gray-500"
+          } font-medium transition-colors`}
+        >
+          {isSubmitting ? "확인 중..." : "확인"}
+        </button>
       </div>
     </div>
   );

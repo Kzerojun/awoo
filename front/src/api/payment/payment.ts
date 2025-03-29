@@ -70,9 +70,34 @@ export const registerPayment = async ({ password }: PaymentPasswordPayload) => {
 // 멍페이 비밀번호 설정
 export const setPaymentPassword = async ({ password }: PaymentPasswordPayload) => {
   console.log("멍페이 비밀번호 설정 요청");
+
+  // 저장된 인증 토큰 가져오기
+  const authToken = sessionStorage.getItem("phone_auth_token");
+
+  if (!authToken) {
+    console.error("인증 토큰이 없습니다. 인증을 먼저 완료해주세요.");
+    throw new Error("인증 토큰이 없습니다");
+  }
+
   try {
-    const res = await axiosInstance.post("/payments/password", { password });
+    // auth-token 헤더 추가
+    const res = await axiosInstance.post(
+      "/payments/register",
+      { password },
+      {
+        headers: {
+          "auth-token": authToken,
+        },
+      }
+    );
+
     console.log("멍페이 비밀번호 설정 성공:", res.data);
+
+    // 성공 후 인증 관련 세션 스토리지 정리
+    sessionStorage.removeItem("phone_auth_token");
+    sessionStorage.removeItem("phone_verified");
+    sessionStorage.removeItem("verification_phone");
+
     return res.data;
   } catch (err) {
     console.error("멍페이 비밀번호 설정 실패:", err);
