@@ -63,17 +63,27 @@ public class UsedProductEntity {
     }
 
     public boolean canModify(Integer memberId){
+        System.out.println(this.memberId);
+        System.out.println(memberId);
+
         if(!this.memberId.equals(memberId)){
             throw new UnauthorizedModificationException(DomainExceptionErrorCode.UNAUTHORIZED_MODIFICATION);
         }
         return true;
     }
 
+    public void decreaseLikeCount(){
+        this.likeCount--;
+    }
+
+    public void increaseLikeCount(){
+        this.likeCount++;
+    }
+
+
     private void updateImages(List<String> imageUrls){
         this.images = imageUrls.stream()
                 .map(UsedProductImage::new)
                 .toList();
     }
-
-
 }

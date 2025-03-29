@@ -1,5 +1,6 @@
 package com.awoo.account.domain;
 
+import com.awoo.account.infra.BaseColumn.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import lombok.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AccountEntity {
+public class AccountEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +17,10 @@ public class AccountEntity {
 
     @Column(nullable = false)
     private Integer memberId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_type", nullable = false)
+    private AccountType accountType;
 
     @Column(nullable = false, length = 3)
     private String bankCode;
@@ -31,12 +36,13 @@ public class AccountEntity {
 
     @Builder
     public AccountEntity(String accountNumber, String bankCode, Integer memberId,
-                         String password, boolean conditionsAgreement) {
+                         String password, boolean conditionsAgreement, AccountType accountType) {
         this.accountNumber = accountNumber;
         this.bankCode = bankCode;
         this.memberId = memberId;
         this.password = password;
         this.conditionsAgreement = conditionsAgreement;
+        this.accountType = accountType;
     }
 
 }

@@ -124,7 +124,7 @@ const MapTraking = () => {
           positions &&
           positions.map(
             (pos, index) =>
-              index % 80 === 0 && (
+              index % 30 === 0 && (
                 <MapMarker
                   key={index}
                   position={{ lat: pos[0], lng: pos[1] }}

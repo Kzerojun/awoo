@@ -1,16 +1,13 @@
 package com.awoo.account.application.service;
 
-import com.awoo.account.application.command.CreateAccountCommand;
-import com.awoo.account.application.command.TransactionsCommand;
-import com.awoo.account.application.command.TransferCommand;
-import com.awoo.account.infra.ssafyfinance.response.*;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYTransferRequest;
+import com.awoo.account.application.command.*;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
+import com.awoo.account.domain.AccountType;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateAccountRequest;
-import com.awoo.account.infra.ssafyfinance.request.SSAFYTransactionsRequest;
+import com.awoo.account.infra.ssafyfinance.SSAFYWriteMemoApiClient;
+import com.awoo.account.infra.ssafyfinance.request.*;
+import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
@@ -25,14 +22,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService{
 
-//    private final MemberClient memberClient;
     private final SSAFYDemandDepositApiClient SSAFYApiClient;
+    private final SSAFYWriteMemoApiClient SSAFYWriteMemoApiClient;
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
     private final AccountRepository accountRepository;
 
     @Transactional
-    public void createAccount(String memberId, CreateAccountCommand command) throws Exception {
+    public void createAccount(String memberId, CreateAccountCommand command) {
         // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
@@ -45,7 +42,7 @@ public class AccountServiceImpl implements AccountService{
         //응답에서의 계좌 번호 암호화
         String encodedAccountNo = aesUtil.encrypt(fetchAccountResponse.REC().accountNo());
 
-        //응답에서의 계좌 비밀번호 암호화
+        //요청에서의 계좌 비밀번호 암호화
         String encodedPassword = aesUtil.encrypt(command.password());
 
         AccountEntity account = AccountEntity.builder()
@@ -54,6 +51,7 @@ public class AccountServiceImpl implements AccountService{
                 .accountNumber(encodedAccountNo)
                 .password(encodedPassword)
                 .conditionsAgreement(command.conditionsAgreement())
+                .accountType(AccountType.INTERNAL)
                 .build();
 
         // DB 저장
@@ -102,4 +100,38 @@ public class AccountServiceImpl implements AccountService{
         SSAFYTransferResponse fetchAccountResponse = SSAFYApiClient.transfer(request);
         return fetchAccountResponse.REC();
     }
+
+    public boolean confirmPassword(String accountNo, String password) {
+        AccountEntity account = accountRepository.findByAccountNumber(aesUtil.encrypt(accountNo));
+        return aesUtil.decrypt(account.getPassword()).equals(password);
+    }
+
+    public void writeMemo(String memberId, WriteMemoCommand command) {
+        //SSAFY 거래내역 메모 요청 생성
+        SSAFYWriteMemoRequest request = SSAFYWriteMemoRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.WRITE_MEMO))
+                .accountNo(command.accountNo())
+                .transactionUniqueNo(command.transactionUniqueNo())
+                .transactionMemo(command.transactionMemo())
+                .build();
+
+        SSAFYWriteMemoApiClient.writeMemo(request);
+    }
+
+    @Transactional
+    public void deleteAccount(String memberId, DeleteAccountCommand command) {
+        //SSAFY 계좌 해지 요청 생성
+        SSAFYDeleteAccountRequest request = SSAFYDeleteAccountRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.DELETE_ACCOUNT))
+                .accountNo(command.accountNo())
+                .refundAccountNo(command.refundAccountNo())
+                .build();
+
+        SSAFYApiClient.deleteAccount(request);
+
+        //DB 정보 수정
+        AccountEntity account = accountRepository.findByAccountNumber(command.accountNo());
+        account.markDeleted();
+    }
+
 }

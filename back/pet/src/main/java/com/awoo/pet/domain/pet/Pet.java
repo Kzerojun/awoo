@@ -31,8 +31,11 @@ public class Pet {
     @Column
     private int savingId;
 
+    @Column(nullable = false)
+    private int savingLevel = 0;
+
     @Builder
-    public Pet(Integer petId, int memberId, String name, String profileImage, String breed, int age, int savingId) {
+    public Pet(Integer petId, int memberId, String name, String profileImage, String breed, int age, int savingId, int savingLevel) {
         this.petId = petId;
         this.memberId = memberId;
         this.name = name;
@@ -40,13 +43,17 @@ public class Pet {
         this.breed = breed;
         this.age = age;
         this.savingId = savingId;
+        this.savingLevel = savingLevel;
     }
 
     public void modifyPet(final ModifyPetCommand command){
         this.name = command.name();
-        this.profileImage = command.profileImage();
         this.breed = command.breed();
         this.age = command.age();
+    }
+
+    public void modifyPetProfile(final String profileImage){
+        this.profileImage = profileImage;
     }
 
 }

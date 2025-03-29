@@ -27,4 +27,7 @@ public interface SSAFYDemandDepositApiClient {
     @PostMapping("/updateDemandDepositAccountTransfer")
     SSAFYTransferResponse transfer(@RequestBody SSAFYTransferRequest request);
 
+
+    @PostMapping("/deleteDemandDepositAccount")
+    void deleteAccount(@RequestBody SSAFYDeleteAccountRequest request);
 }

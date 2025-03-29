@@ -1,19 +1,15 @@
 package com.awoo.account.ui.controller;
 
-import com.awoo.account.application.command.CreateAccountCommand;
-import com.awoo.account.application.command.DeductBalanceCommand;
-import com.awoo.account.application.command.TransactionsCommand;
-import com.awoo.account.application.command.TransferCommand;
+import com.awoo.account.application.command.*;
 import com.awoo.account.support.ApiUtils;
 import com.awoo.account.ui.facade.AccountServiceFacade;
-import com.awoo.account.ui.facade.dto.request.CreateAccountRequest;
-import com.awoo.account.ui.facade.dto.request.DeductBalanceRequest;
-import com.awoo.account.ui.facade.dto.request.TransactionsRequest;
-import com.awoo.account.ui.facade.dto.request.TransferRequest;
+import com.awoo.account.ui.facade.dto.request.*;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -70,5 +66,41 @@ public class AccountController {
     public ApiUtils.ApiResult<DeductBalanceResponse> deductBalance(@RequestBody DeductBalanceRequest request) {
         DeductBalanceCommand command = request.toCommand();
         return ApiUtils.success(accountServiceFacade.deductBalance(command));
+    }
+
+    @PostMapping("/password")
+    public ApiUtils.ApiResult<?> confirmPassword(@RequestBody Map<String, String> request) {
+        try{
+            if (accountServiceFacade.confirmPassword(request.get("accountNo"), request.get("password"))) {
+                return ApiUtils.success("비밀번호 일치");
+            }
+            return ApiUtils.success("비밀번호가 일치하지 않습니다.");
+        }catch (Exception e){
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/memo")
+    public ApiUtils.ApiResult<?> writeMemo(@RequestHeader("X-User-Id") String memberId,
+                                           @RequestBody WriteMemoRequest request) {
+        try {
+            WriteMemoCommand command = request.toCommand();
+            accountServiceFacade.writeMemo(memberId, command);
+            return ApiUtils.success("메시지가 등록되었습니다.");
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping
+    public ApiUtils.ApiResult<?> deleteAccount(@RequestHeader("X-User-Id") String memberId,
+                                               @RequestBody DeleteAccountRequest request){
+        try{
+            DeleteAccountCommand command = request.toCommand();
+            accountServiceFacade.deleteAccount(memberId, command);
+            return ApiUtils.success("계좌 정보가 삭제되었습니다.");
+        }catch (Exception e){
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
     }
 }

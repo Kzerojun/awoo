@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Button from "@/common/ui/Button";
 
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setWalkData } from "@/lib/slices/walkSlice";
 
 import paw from "../../../../../public/icons/white_paw.svg";
@@ -39,8 +39,11 @@ const Walking = () => {
   const [displayElapsedTime, setDisplayElapsedTime] = useState<string>("0분 0초"); // 표시되는 시간
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const walkingDog = useAppSelector((state) => state.userAction.currentWalkingDog);
 
   useEffect(() => {
+    console.log(walkingDog);
+
     if (startTime) {
       setWalkStartTime(formatTime(startTime));
     }

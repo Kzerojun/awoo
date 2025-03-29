@@ -22,6 +22,9 @@ const useLocationTracking = () => {
       return;
     }
 
+    // 트래킹이 중지된 상태면 다 멈추기
+    // if (!isTracking) return;
+
     let prevPos: [number, number] | null = null;
 
     // 처음 위치 받아오기 (출발지점)
@@ -41,9 +44,12 @@ const useLocationTracking = () => {
     // 산책 시간 기록
     if (isTracking) {
       setStartTime(new Date());
-      timeRef.current = setInterval(() => {
-        setElapsedTime((prev) => prev + 1);
-      }, 1000);
+      // 2초 후부터 경과 시간 증가 시작
+      setTimeout(() => {
+        timeRef.current = setInterval(() => {
+          setElapsedTime((prev) => prev + 1);
+        }, 1000);
+      }, 2000);
 
       // 실시간 위치 추적 (watchPosition)
       watchIdRef.current = navigator.geolocation.watchPosition(

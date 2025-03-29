@@ -26,8 +26,8 @@ public class SecurityConfig {
 //                        .permitAll()
 
                         // 회원 수정 (PUT /api/members)은 인증 필요
-                        .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/members")
-                        .authenticated()
+//                        .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/members")
+//                        .authenticated()
 
                         // 그 외 모든 요청은 전부 허용(또는 필요에 따라 authenticated)
                         .anyRequest().permitAll()

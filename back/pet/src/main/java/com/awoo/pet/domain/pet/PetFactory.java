@@ -8,15 +8,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PetFactory {
 
-    public Pet registerPetEntity(final RegisterPetCommand command) {
-        // 유저 정보 확인하고
+    public Pet registerPetEntity(final RegisterPetCommand command, final String profileImageUrl) {
+
         return Pet.builder()
                 .memberId(command.petCommand().memberId())
                 .name(command.petCommand().name())
-                .profileImage(command.petCommand().profileImage())
+                .profileImage(profileImageUrl)
                 .breed(command.petCommand().breed())
                 .age(command.petCommand().age())
                 .savingId(command.petCommand().savingId())
+                .savingLevel(command.petCommand().savingLevel())
                 .build();
     }
 }

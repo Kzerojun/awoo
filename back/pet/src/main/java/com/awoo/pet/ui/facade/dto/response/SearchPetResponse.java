@@ -17,11 +17,18 @@ public class SearchPetResponse {
     private int savingId;
 
     public static SearchPetResponse fromEntity(Pet entity){
+
+        String profileUrl = null;
+
+        if(entity.getProfileImage() != null) {
+            profileUrl = "https://c209awoo.s3.us-east-2.amazonaws.com/" + entity.getProfileImage();
+        }
+
         return SearchPetResponse.builder()
                 .petId(entity.getPetId())
                 .memberId(entity.getMemberId())
                 .name(entity.getName())
-                .profileImage(entity.getProfileImage())
+                .profileImage(profileUrl)
                 .breed(entity.getBreed())
                 .age(entity.getAge())
                 .savingId(entity.getSavingId())

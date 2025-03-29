@@ -11,6 +11,7 @@ import com.awoo.pet.ui.facade.dto.response.*;
 import com.awoo.pet.ui.facade.internal.mapper.PetResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     private final PetResponseMapper mapper;
 
     @Override
-    public RegisterPetResponse registerPet(final RegisterPetRequest request, final Integer memberId) {
-        Integer petId = registerPetService.registerPet(request.toCommand(memberId));
+    public RegisterPetResponse registerPet(final RegisterPetRequest request, final MultipartFile profileImage, final Integer memberId) {
+        Integer petId = registerPetService.registerPet(request.toCommand(memberId, profileImage));
         Pet entity = searchPetService.searchPet(petId);
         return mapper.registerPet(entity);
     }
@@ -48,8 +49,10 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     }
 
     @Override
-    public ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest, final Integer petId, final Integer memberId) {
-        Pet modifyEntity = modifyPetService.modifyPet(modifyPetRequest.toCommand(petId));
+    public ModifyPetResponse modifyPet(final ModifyPetRequest modifyPetRequest,
+                                       final MultipartFile profileImage,
+                                       final Integer petId, final Integer memberId) {
+        Pet modifyEntity = modifyPetService.modifyPet(modifyPetRequest.toCommand(profileImage, petId));
         return mapper.modifyPet(modifyEntity);
     }
 

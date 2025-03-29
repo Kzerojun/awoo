@@ -1,9 +1,6 @@
 package com.awoo.account.ui.facade;
 
-import com.awoo.account.application.command.CreateAccountCommand;
-import com.awoo.account.application.command.DeductBalanceCommand;
-import com.awoo.account.application.command.TransactionsCommand;
-import com.awoo.account.application.command.TransferCommand;
+import com.awoo.account.application.command.*;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountResponseDto;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYTransferREC;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
@@ -21,4 +18,10 @@ public interface AccountServiceFacade {
     List<TransactionResponse> getTransactions(String memberId, TransactionsCommand command);
 
     List<SSAFYTransferREC> transfer(String memberId, TransferCommand command);
+
+    boolean confirmPassword(String accountNo, String password);
+
+    void writeMemo(String memberId, WriteMemoCommand command);
+
+    void deleteAccount(String memberId, DeleteAccountCommand command);
 }
