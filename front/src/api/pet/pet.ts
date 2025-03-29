@@ -52,8 +52,8 @@ export const getPetList = async (): Promise<PetInterface[] | null> => {
     const res = await axiosInstance.get("/pets");
     console.log("반려견 목록 조회 성공:", res.data.response.pet);
     return res.data.response.pets;
-  } catch (err) {
-    console.error("반려견 목록 조회 실패:", err);
+  } catch (err: any) {
+    console.error("반려견 목록 조회 실패:", err.response?.data || err.message || err);
     throw err;
   }
 };
