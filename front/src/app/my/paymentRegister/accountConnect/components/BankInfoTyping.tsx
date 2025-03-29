@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { requestOneWonTransfer } from "@/api/payment/payment";
+import { toast } from "react-toastify";
 import BankSelectorModal from "../../components/BankSelectorModal";
 
 interface BankInfoTypingProps {
@@ -13,6 +15,7 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
   const [selectedBank, setSelectedBank] = useState<string>("");
   const [accountNumber, setAccountNumber] = useState<string>("");
   const [showBankSelector, setShowBankSelector] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // 계좌번호 형식화 (하이픈 추가 등)
   const formatAccountNumber = (value: string) => {
@@ -33,25 +36,43 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
     setAccountNumber(formatted);
   };
 
-  // 계좌 인증 요청
-  const handleVerifyAccount = () => {
+  // 계좌 인증 요청 (1원 송금)
+  const handleVerifyAccount = async () => {
     if (!selectedBank) {
-      alert("은행을 선택해주세요.");
+      toast.error("은행을 선택해주세요.");
       return;
     }
 
     if (accountNumber.length < 10) {
-      alert("올바른 계좌번호를 입력해주세요.");
+      toast.error("올바른 계좌번호를 입력해주세요.");
       return;
     }
 
-    // 완료 콜백 호출
-    if (onComplete) {
-      onComplete({ bank: selectedBank, accountNumber });
-    } else {
-      // 기본 동작
-      console.log("계좌 정보:", { bank: selectedBank, accountNumber });
-      alert("계좌 인증이 요청되었습니다.");
+    setIsSubmitting(true);
+
+    try {
+      // 1원 송금 API 호출
+      const response = await requestOneWonTransfer({ accountNo: accountNumber });
+
+      console.log("1원 송금 요청 성공:", response);
+      toast.success("계좌로 1원이 송금되었습니다. 입금자명을 확인해주세요.");
+
+      // 계좌번호 세션 스토리지에 저장 (인증에 필요)
+      sessionStorage.setItem("verification_account", accountNumber);
+      sessionStorage.setItem("verification_bank", selectedBank);
+
+      // 완료 콜백 호출
+      if (onComplete) {
+        onComplete({ bank: selectedBank, accountNumber });
+      }
+
+      // 인증 페이지로 이동
+      router.push("/my/paymentRegister/accountCertificate");
+    } catch (error) {
+      console.error("1원 송금 요청 실패:", error);
+      toast.error("계좌 인증 요청에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -88,6 +109,7 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
           onChange={handleAccountNumberChange}
           className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-1 focus:ring-teal-500"
           placeholder="계좌번호를 입력해주세요"
+          disabled={isSubmitting}
         />
       </div>
 
@@ -95,18 +117,18 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
       <div className="mt-[60px] flex justify-center">
         <button
           onClick={handleVerifyAccount}
-          disabled={!selectedBank || accountNumber.length < 10}
+          disabled={!selectedBank || accountNumber.length < 10 || isSubmitting}
           className={`w-[180px] py-3 rounded-full ${
-            selectedBank && accountNumber.length >= 10
+            selectedBank && accountNumber.length >= 10 && !isSubmitting
               ? "bg-teal-500 text-white"
               : "bg-gray-200 text-gray-500"
           } font-medium transition-colors`}
         >
-          계좌인증요청
+          {isSubmitting ? "처리 중..." : "계좌인증요청"}
         </button>
       </div>
 
-      {/* 은행 선택 모달 컴포넌트 - banks 목록 제거 (컴포넌트 내부에서 제공) */}
+      {/* 은행 선택 모달 컴포넌트 */}
       <BankSelectorModal
         isOpen={showBankSelector}
         onClose={() => setShowBankSelector(false)}
