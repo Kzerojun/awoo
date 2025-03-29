@@ -15,4 +15,6 @@ public interface UsedProductRepository {
     Page<UsedProductEntity> findByStatusIn(List<Status> statuses, Pageable pageable);
 
     void delete(UsedProductEntity entity);
+
+    boolean existsById(Integer usedProductId);
 }
