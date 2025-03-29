@@ -4,12 +4,14 @@ import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
+import com.awoo.usedproduct.application.command.ReportCommand;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery.FetchUsedProductQueryBuilder;
 import com.awoo.usedproduct.support.ApiUtils;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.request.ModifyUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.request.RegisterUsedProductRequest;
+import com.awoo.usedproduct.ui.facade.dto.request.ReportUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -87,6 +89,15 @@ public class UsedProductController {
                 .memberId(memberIdInt)
                 .build();
         FetchUsedProductDetailResponse response = usedProductServiceFacade.fetchUsedProduct(query);
+        return ApiUtils.success(response);
+    }
+
+    @PostMapping("/{usedProductId}/reports")
+    public ApiUtils.ApiResult<ReportResponse> report(@PathVariable(name = "usedProductId") Integer usedProductId,
+            @RequestBody ReportUsedProductRequest request) {
+
+        ReportCommand command = request.toCommand(usedProductId);
+        ReportResponse response = usedProductServiceFacade.report(command);
         return ApiUtils.success(response);
     }
 }

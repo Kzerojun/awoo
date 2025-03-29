@@ -5,6 +5,7 @@ import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
+import com.awoo.usedproduct.application.command.ReportCommand;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.domain.UsedProductEntity;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
@@ -23,11 +24,18 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     private final QueryUsedProductsService queryUsedProductsService;
     private final DeleteUsedProductService deleteUsedProductService;
     private final LikeService likeService;
+    private final ReportService reportService;
 
     @Override
     public RegisterUsedProductResponse registerUsedProduct(RegisterUsedProductCommand command) {
         Integer usedProductId = registerUsedProductService.registerUsedProduct(command);
         return new RegisterUsedProductResponse(usedProductId);
+    }
+
+    @Override
+    public ReportResponse report(ReportCommand command) {
+        Integer reportId = reportService.report(command);
+        return new ReportResponse(reportId);
     }
 
     @Override
