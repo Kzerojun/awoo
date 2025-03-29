@@ -10,7 +10,9 @@ import userReducer from "./slices/userSlice"; // 유저 정보
 import passwordReducer from "./slices/passwordSlice";
 import accountReducer from "./slices/accountSlice";
 import paymentReducer from "./slices/paymentSlice";
-
+import savingReducer from "./slices/savingSlice";
+import savingPasswordReducer from "./slices/savingPasswordSlice";
+import accountProgressReducer from "./slices/accountProgressSlice";
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
@@ -21,8 +23,11 @@ export const store = configureStore({
     userAction: userActionReducer,
     user: userReducer,
     password: passwordReducer, // 보안 키패드 관련 리듀서
-    account: accountReducer, // 계좌 개설 관련 리듀서
+    account: accountReducer, // 입출금 계좌 개설 관련 리듀서
     payment: paymentReducer, // 멍페이 관련 리듀서
+    saving: savingReducer, // 적금 개설 관련 리듀서
+    savingPassword: savingPasswordReducer, // 적금 password 관련 리듀서
+    accountProgress: accountProgressReducer, // 계좌 개설 관련 리듀서 (사용자가 정확히 상품에 가입중인지 상태 분기)
   },
   devTools: process.env.NODE_ENV !== "production",
 });
