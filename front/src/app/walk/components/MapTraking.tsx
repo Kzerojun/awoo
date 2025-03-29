@@ -76,7 +76,7 @@ const MapTraking = () => {
           if (map) {
             mapRef.current = map;
           }
-        }} // ✅ `ref` 바인딩 방식 수정
+        }} // `ref` 바인딩 방식 수정
       >
         {/* 출발 위치 */}
         {isScriptLoaded && startPosition && (

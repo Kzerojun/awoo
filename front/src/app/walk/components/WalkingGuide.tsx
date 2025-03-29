@@ -9,7 +9,6 @@ import Image from "next/image";
 import basicDog from "../../../../public/images/pet-avatars/petava_basic.png";
 import checkMark from "../../../../public/icons/walking/CheckMark.svg";
 import backpack from "../../../../public/icons/walking/backpack.svg";
-import type { StaticImageData } from "next/image";
 import paw from "../../../../public/icons/white_paw.svg";
 
 const WalkingGuide = () => {
