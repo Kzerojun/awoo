@@ -23,7 +23,7 @@ const useLocationTracking = () => {
     }
 
     // 트래킹이 중지된 상태면 다 멈추기
-    if (!isTracking) return;
+    // if (!isTracking) return;
 
     let prevPos: [number, number] | null = null;
 
