@@ -4,6 +4,7 @@ import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
+import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
 import org.springframework.data.domain.Pageable;
 
@@ -14,6 +15,8 @@ public interface UsedProductServiceFacade {
     ModifyUsedProductResponse modifyUsedProduct(ModifyUsedProductCommand command);
 
     UsedProductsResponse fetchUsedProducts(Pageable pageable);
+
+    FetchUsedProductDetailResponse fetchUsedProduct(FetchUsedProductQuery query);
 
     LikeResponse like(LikeCommand command);
 

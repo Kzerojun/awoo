@@ -10,4 +10,6 @@ public interface LikeRepository {
 
     void delete(LikeEntity like);
 
+    boolean existsByUsedProductIdAndMemberId(Integer usedProductId, Integer memberId);
+
 }
