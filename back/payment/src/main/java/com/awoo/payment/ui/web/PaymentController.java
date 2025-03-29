@@ -113,4 +113,12 @@ public class PaymentController {
                 command);
         return ApiUtils.success(response);
     }
+
+    @GetMapping("/accounts")
+    public ApiUtils.ApiResult<FetchPaymentResponse> fetchAccount(
+            @RequestHeader("X-User-Id") String userId) {
+        FetchPaymentResponse response = paymentServiceFacade.fetchAccount(
+                Integer.valueOf(userId));
+        return ApiUtils.success(response);
+    }
 }

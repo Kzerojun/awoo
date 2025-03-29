@@ -41,6 +41,12 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     }
 
     @Override
+    public FetchPaymentResponse fetchAccount(Integer memberId) {
+        String account = queryPaymentService.fetchAccount(memberId);
+        return new FetchPaymentResponse(account);
+    }
+
+    @Override
     public ChargeBalanceResponse chargeBalance(ChargeBalanceCommand command) {
         chargeBalanceService.chargeBalance(command);
         return ChargeBalanceResponse.create();
