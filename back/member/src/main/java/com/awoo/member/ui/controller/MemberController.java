@@ -112,7 +112,6 @@ public class MemberController {
     //member Key 복호화 & 발행
     @GetMapping("/member-key")
     public ApiUtils.ApiResult<?> findUserKey(@RequestParam Integer memberId) throws Exception {
-
         return ApiUtils.success(FindMemberKeyResponse.create(memberService.getUserKey(memberId)));
 
     }

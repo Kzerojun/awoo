@@ -5,6 +5,7 @@ import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
+import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.domain.UsedProductEntity;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
@@ -39,7 +40,16 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public UsedProductsResponse fetchUsedProducts(Pageable pageable) {
         Page<UsedProductEntity> result = queryUsedProductsService.fetchUsedProducts(pageable);
         return UsedProductsResponse.fromPage(result);
+    }
 
+    @Override
+    public FetchUsedProductDetailResponse fetchUsedProduct(FetchUsedProductQuery query) {
+        UsedProductEntity usedProductEntity = queryUsedProductsService.fetchUsedProduct(query);
+        boolean liked = queryUsedProductsService.isLiked(query.usedProductId(),query.memberId());
+        FetchUsedProductDetailResponse response = FetchUsedProductDetailResponse.create(
+                usedProductEntity, liked);
+
+        return response;
     }
 
     @Override
@@ -53,4 +63,6 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
         deleteUsedProductService.deleteUsedProduct(command);
         return new DeleteUsedProductResponse("중고거래 삭제가 성공하였습니다.");
     }
+
+
 }

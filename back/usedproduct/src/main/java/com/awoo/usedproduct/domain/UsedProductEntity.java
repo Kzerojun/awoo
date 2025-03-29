@@ -80,6 +80,9 @@ public class UsedProductEntity {
         this.likeCount++;
     }
 
+    public void increaseViewCount() {
+        this.viewCount++;
+    }
 
     private void updateImages(List<String> imageUrls){
         this.images = imageUrls.stream()

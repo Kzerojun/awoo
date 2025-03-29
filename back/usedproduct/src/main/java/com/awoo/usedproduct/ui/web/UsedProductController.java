@@ -4,6 +4,8 @@ import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
 import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
+import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
+import com.awoo.usedproduct.application.query.FetchUsedProductQuery.FetchUsedProductQueryBuilder;
 import com.awoo.usedproduct.support.ApiUtils;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.request.ModifyUsedProductRequest;
@@ -72,6 +74,19 @@ public class UsedProductController {
                 .build();
 
         DeleteUsedProductResponse response = usedProductServiceFacade.delete(command);
+        return ApiUtils.success(response);
+    }
+    @GetMapping("/{usedProductId}")
+    public ApiUtils.ApiResult<FetchUsedProductDetailResponse> fetchUsedProduct(
+            @PathVariable(name = "usedProductId") Integer usedProductId,
+            @RequestHeader(value = "X-User-Id", required = false) String memberId) {
+        Integer memberIdInt = (memberId != null) ? Integer.valueOf(memberId) : null;
+
+        FetchUsedProductQuery query = FetchUsedProductQuery.builder()
+                .usedProductId(usedProductId)
+                .memberId(memberIdInt)
+                .build();
+        FetchUsedProductDetailResponse response = usedProductServiceFacade.fetchUsedProduct(query);
         return ApiUtils.success(response);
     }
 }
