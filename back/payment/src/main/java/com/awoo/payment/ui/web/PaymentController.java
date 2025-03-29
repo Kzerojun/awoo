@@ -3,6 +3,7 @@ package com.awoo.payment.ui.web;
 
 import com.awoo.payment.application.command.ChargeBalanceCommand;
 import com.awoo.payment.application.command.CheckAuthCodeCommand;
+import com.awoo.payment.application.command.VerifyPaymentPasswordCommand;
 import com.awoo.payment.application.command.RegisterPaymentCommand;
 import com.awoo.payment.application.command.RemitOneWonCommand;
 import com.awoo.payment.application.command.SendAuthPhoneMessageCommand;
@@ -12,6 +13,7 @@ import com.awoo.payment.support.ApiUtils;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
 import com.awoo.payment.ui.facade.dto.request.ChargePaymentBalanceRequest;
 import com.awoo.payment.ui.facade.dto.request.CheckAuthCodeRequest;
+import com.awoo.payment.ui.facade.dto.request.CheckPaymentPasswordRequest;
 import com.awoo.payment.ui.facade.dto.request.RegisterPaymentPasswordRequest;
 import com.awoo.payment.ui.facade.dto.request.RegisterPaymentRequest;
 import com.awoo.payment.ui.facade.dto.request.RemitOneWonRequest;
@@ -98,6 +100,17 @@ public class PaymentController {
 
         VerifyOneWonCommand command = request.toCommand(userId);
         VerifyOneWonResponse response = paymentServiceFacade.verifyOneWon(command);
+        return ApiUtils.success(response);
+    }
+
+    @PostMapping("/auth/password-verifications")
+    public ApiUtils.ApiResult<VerifyPaymentPasswordResponse> verifyPaymentPassword(
+            @RequestBody CheckPaymentPasswordRequest request,
+            @RequestHeader("X-User-Id") String userId) {
+
+        VerifyPaymentPasswordCommand command = request.toCommand(userId);
+        VerifyPaymentPasswordResponse response = paymentServiceFacade.verifyPassword(
+                command);
         return ApiUtils.success(response);
     }
 }

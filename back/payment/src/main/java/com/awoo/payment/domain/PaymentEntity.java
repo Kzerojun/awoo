@@ -44,4 +44,8 @@ public class PaymentEntity {
     public void registerAccount(String accountNo) {
         this.accountNo = accountNo;
     }
+
+    public boolean verifyPassword(String password) {
+		return this.password.equals(password);
+	}
 }

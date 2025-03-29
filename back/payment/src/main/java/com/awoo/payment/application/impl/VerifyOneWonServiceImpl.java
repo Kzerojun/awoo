@@ -18,6 +18,7 @@ import com.awoo.payment.support.SSAFYApiHelper;
 import com.awoo.payment.support.SSAFYCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class VerifyOneWonServiceImpl implements VerifyOneWonService {
 	private final PaymentRepository paymentRepository;
 
 	@Override
+	@Transactional
 	public void verifyOneWon(VerifyOneWonCommand command) {
 		ApiResult<FetchMemberKeyResponse> fetchMemberKeyResponse = memberClient.fetchMemberKey(
 				command.memberId());
