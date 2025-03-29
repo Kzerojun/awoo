@@ -11,10 +11,13 @@ import com.awoo.payment.infra.client.response.WithdrawResponse;
 import com.awoo.payment.infra.redis.RedisHandler;
 import com.awoo.payment.support.ApiUtils.ApiResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChargeBalanceServiceImpl implements ChargeBalanceService {
 
     private final RedisHandler redisHandler;
@@ -22,10 +25,12 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
     private final AccountClient accountClient;
 
     @Override
+    @Transactional
     public void chargeBalance(ChargeBalanceCommand command) {
 
         // 요청이 처리된적이 있는지 확인
        if((redisHandler.hasIdempotencyKey(command.idempotencyKey()))) {
+           log.info("중복된 API 처리 같은 응답 반응");
             return;
        }
 
@@ -41,6 +46,7 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
         ApiResult<WithdrawResponse> response = accountClient.withdraw(request);
 
         if (response.isSuccess()) {
+            log.info("게좌 잔액 충전{}", command.amount());
             paymentEntity.chargeBalance(command.amount());
         }
     }
