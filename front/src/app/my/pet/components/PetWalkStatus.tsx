@@ -21,7 +21,7 @@ const PetWalkStatus = ({ petId, name }: PetWalkStatusProps) => {
 
   return (
     <div>
-      {name}: {walkCountThisMonth}회 / 30
+      {name}: {walkCountThisMonth}회 / 30일
     </div>
   );
 };
