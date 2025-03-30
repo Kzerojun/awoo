@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-
+import { useRouter } from "next/navigation";
 import { PetInterface } from "@/lib/slices/petSlice";
 import Image from "next/image";
 import { useGetPetWalkingHistory } from "@/hooks/walk/useGetPetWalkingHistory";
@@ -11,6 +11,7 @@ import { changeCurrentPetDetailView } from "@/lib/slices/userActionSlice";
 
 const PetDetail = ({ pet }: { pet: PetInterface }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const currentView = useAppSelector((state) => state.userAction.currentPetDetailView);
   const { data: petWalkList, isLoading, isError } = useGetPetWalkingHistory(pet.petId);
   // 적금 개설 안 되어있으면 /account/open/saving 로 이동
@@ -44,6 +45,10 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
     const second = pad(date.getSeconds());
 
     return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`;
+  };
+
+  const goToUpdate = () => {
+    router.push(`/my/pet/detail/update/${pet.petId.toString()}`);
   };
 
   return (
@@ -99,13 +104,17 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
                 onClick={() => showWalkDetail(pet.petId)}
               />
               <div className="w-full flex justify-end mb-3">
-                <button className="rounded-2xl border-1 border-aqua w-20 h-8 text-sm text-custom-gray">
+                <button
+                  className="rounded-2xl border-1 border-aqua w-20 h-8 text-sm text-custom-gray"
+                  onClick={goToUpdate}
+                >
                   수정하기
                 </button>
               </div>
             </div>
           </div>
           {/* 적금 상품 */}
+          <div>반려견별 적금 상품</div>
         </>
       ) : (
         <>
