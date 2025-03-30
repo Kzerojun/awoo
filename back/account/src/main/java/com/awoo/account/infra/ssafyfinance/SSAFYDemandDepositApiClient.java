@@ -30,4 +30,8 @@ public interface SSAFYDemandDepositApiClient {
 
     @PostMapping("/deleteDemandDepositAccount")
     void deleteAccount(@RequestBody SSAFYDeleteAccountRequest request);
+
+    @PostMapping("/updateTransferLimit")
+    void changeLimit(@RequestBody SSAFYChangeLimitRequest request);
+
 }

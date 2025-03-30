@@ -17,6 +17,9 @@ public interface SSAFYSavingsApiClient {
     @PostMapping("/inquireAccountList")
     SSAFYSavingAccountListResponse getSavingAccountList(@RequestBody SSAFYCommonHeaderRequest request);
 
+    @PostMapping("/inquireAccount")
+    SSAFYSavingAccountResponse getSavingAccount(@RequestBody SSAFYCHANRequest request);
+
     @PostMapping("/inquireExpiryInterest")
     SSAFYInterestPayResponse getInterestPay(@RequestBody SSAFYCHANRequest request);
 

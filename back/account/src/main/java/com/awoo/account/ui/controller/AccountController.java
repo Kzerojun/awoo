@@ -103,4 +103,38 @@ public class AccountController {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/change-limit")
+    public ApiUtils.ApiResult<?> changeLimit(@RequestHeader("X-User-Id") String memberId,
+                                             @RequestBody ChangeLimitRequest request) {
+        try {
+            ChangeLimitCommand command = request.toCommand();
+            accountServiceFacade.changeLimit(memberId, command);
+            return ApiUtils.success("정상 처리되었습니다.");
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/openAccountAuth")
+    public ApiUtils.ApiResult<?> openAccountAuth(@RequestHeader("X-User-Id") String memberId,
+                                                 @RequestBody Map<String, String> request){
+        try {
+            accountServiceFacade.openAccountAuth(memberId, request.get("accountNo"));
+            return ApiUtils.success("정상 처리되었습니다.");
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/checkAuthCode")
+    public ApiUtils.ApiResult<?> checkAuthCode(@RequestHeader("X-User-Id") String memberId,
+                                                 @RequestBody Map<String, String> request){
+        try {
+            accountServiceFacade.checkAuthCode(memberId, request.get("accountNo"), request.get("authCode"));
+            return ApiUtils.success("정상 처리되었습니다.");
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
