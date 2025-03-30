@@ -6,7 +6,8 @@ public record CreateSavingAccount(String accountTypeUniqueNo,
                                   Long depositBalance,
                                   String withdrawalAccountNo,
                                   boolean conditionsAgreement,
-                                  String password) {
+                                  String password,
+                                  Integer petId) {
 
     public CreateSavingAccountCommand toCommand() {
         return CreateSavingAccountCommand.builder()
@@ -15,6 +16,7 @@ public record CreateSavingAccount(String accountTypeUniqueNo,
                 .withdrawalAccountNo(withdrawalAccountNo)
                 .conditionsAgreement(conditionsAgreement)
                 .password(password)
+                .petId(petId)
                 .build();
     }
 

@@ -4,6 +4,7 @@ import com.awoo.account.application.command.CreateSavingAccountCommand;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.domain.AccountType;
+import com.awoo.account.infra.Kafka.KafkaProducer;
 import com.awoo.account.infra.ssafyfinance.SSAFYSavingsApiClient;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCHANRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
@@ -20,7 +21,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class SavingServiceImpl implements SavingService{
     private final SSAFYSavingsApiClient SSAFYApiClient;
     private final AESUtil aesUtil;
     private final AccountRepository accountRepository;
+    private final KafkaProducer kafkaProducer;
     public void createSavingAccount(String memberId, CreateSavingAccountCommand command) {
         //SSAFY 적금 계좌 생성 요청 생성
         SSAFYCreateSavingAccountRequest request = SSAFYCreateSavingAccountRequest.builder()
@@ -55,10 +59,17 @@ public class SavingServiceImpl implements SavingService{
                 .password(encodedPassword)
                 .conditionsAgreement(command.conditionsAgreement())
                 .accountType(AccountType.SAVING)
+                .petId(command.petId())
                 .build();
 
         // DB 저장
         accountRepository.save(account);
+
+        //펫 서버에 saving-id 전달
+        Map<String, Integer> kafkaMessage = new HashMap<>();
+        kafkaMessage.put("petId", account.getPetId());
+        kafkaMessage.put("accountId", account.getAccountId());
+        kafkaProducer.send("create-saving", kafkaMessage);
     }
 
     public List<SavingAccountResponse> getSavingAccountList(String memberId) {
@@ -68,6 +79,23 @@ public class SavingServiceImpl implements SavingService{
                 .build();
 
         return SSAFYApiClient.getSavingAccountList(request).REC().list();
+    }
+
+    public SavingAccountResponse getSavingAccount(String memberId, Integer petId) {
+        //반려견 Id와 맵핑된 계좌 정보 조회
+        AccountEntity account = accountRepository.findByPetId(petId);
+
+        if (account == null) {  //해당 반려견으로 등록된 적금 계좌가 없는 경우
+            return null;
+        }
+
+        //SSAFY 적금 계좌 단건 조회 요청 생성
+        SSAFYCHANRequest request = SSAFYCHANRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.INQUIRE_SAVING_ACCOUNT))
+                .accountNo(account.getAccountNumber())
+                .build();
+
+        return SSAFYApiClient.getSavingAccount(request).REC();
     }
 
     public InterestPayResponse getInterestPay(String memberId, String accountNo) {

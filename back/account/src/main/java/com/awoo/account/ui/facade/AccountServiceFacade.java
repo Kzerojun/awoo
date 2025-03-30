@@ -24,4 +24,10 @@ public interface AccountServiceFacade {
     void writeMemo(String memberId, WriteMemoCommand command);
 
     void deleteAccount(String memberId, DeleteAccountCommand command);
+
+    void changeLimit(String memberId, ChangeLimitCommand command);
+
+    void openAccountAuth(String memberId, String accountNo);
+
+    void checkAuthCode(String memberId, String accountNo, String authCode);
 }

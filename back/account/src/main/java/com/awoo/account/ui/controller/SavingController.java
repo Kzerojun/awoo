@@ -30,12 +30,18 @@ public class SavingController {
     }
 
     @GetMapping
-    public ApiUtils.ApiResult<?> getSavingAccountList(@RequestHeader("X-User-Id") String memberId) {
-        try{
-            return ApiUtils.success(savingServiceFacade.getSavingAccountList(memberId));
+    public ApiUtils.ApiResult<?> getSavingAccount(@RequestHeader("X-User-Id") String memberId,
+                                                  @RequestParam(required = false) Integer petId) {
+
+        try {
+            if (petId == null) {
+                return ApiUtils.success(savingServiceFacade.getSavingAccountList(memberId));
+            }
+            return ApiUtils.success(savingServiceFacade.getSavingAccount(memberId, petId));
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @GetMapping("/termination")

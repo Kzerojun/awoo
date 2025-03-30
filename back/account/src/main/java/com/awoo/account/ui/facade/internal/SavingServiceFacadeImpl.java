@@ -26,6 +26,10 @@ public class SavingServiceFacadeImpl implements SavingServiceFacade {
         return savingService.getSavingAccountList(memberId);
     }
 
+    public SavingAccountResponse getSavingAccount(String memberId, Integer petId) {
+        return savingService.getSavingAccount(memberId, petId);
+    }
+
     public InterestPayResponse getInterestPay(String memberId, String accountNo) {
         return savingService.getInterestPay(memberId, accountNo);
     }

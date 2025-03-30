@@ -12,6 +12,7 @@ public interface SavingServiceFacade {
     void createSavingAccount(String memberId, CreateSavingAccountCommand command);
 
     List<SavingAccountResponse> getSavingAccountList(String memberId);
+    SavingAccountResponse getSavingAccount(String memberId, Integer petId);
 
     InterestPayResponse getInterestPay(String memberId, String accountNo);
 
@@ -20,4 +21,5 @@ public interface SavingServiceFacade {
     void deleteSavingAccount(String memberId, String accountNo);
 
     InquireSavingPaymentResponse inquireSavingPayment(String memberId, String accountNo);
+
 }

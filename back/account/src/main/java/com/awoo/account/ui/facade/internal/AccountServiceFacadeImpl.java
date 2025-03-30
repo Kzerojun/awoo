@@ -53,5 +53,17 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
 
     public void deleteAccount(String memberId, DeleteAccountCommand command) { accountService.deleteAccount(memberId, command); }
 
+    public void changeLimit(String memberId, ChangeLimitCommand command) {
+        accountService.changeLimit(memberId, command);
+    }
+
+    public void openAccountAuth(String memberId, String accountNo) {
+        accountService.openAccountAuth(memberId, accountNo);
+    }
+
+    public void checkAuthCode(String memberId, String accountNo, String authCode) {
+        accountService.checkAuthCode(memberId, accountNo, authCode);
+    }
+
 
 }

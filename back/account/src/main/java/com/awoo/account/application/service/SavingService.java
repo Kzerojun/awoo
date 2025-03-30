@@ -20,4 +20,6 @@ public interface SavingService {
     void deleteSavingAccount(String memberId, String accountNo);
 
     InquireSavingPaymentResponse InquireSavingPaymentResponse(String memberId, String accountNo);
+
+    SavingAccountResponse getSavingAccount(String memberId, Integer petId);
 }
