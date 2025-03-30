@@ -15,6 +15,10 @@ import {
 import clsx from "clsx";
 import DateSchedulePopup from "./DateSchedulePopup";
 import ScheduleModal from "./ScheduleModal";
+import { useRegisterSchedule } from "@/hooks/calendar/useRegisterSchedule";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useGetPetSchedule } from "@/hooks/calendar/useGetPetSchedule";
+import { useGetMemberSchedule } from "@/hooks/calendar/useGetMemberSchedule";
 
 type Event = {
   id: string;
@@ -25,6 +29,7 @@ type Event = {
   dog: string;
 };
 const Calendar = () => {
+  const queryClient = useQueryClient();
   const petList = useAppSelector((state) => state.pet.petList);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -33,6 +38,24 @@ const Calendar = () => {
   const [clickedDate, setClickedDate] = useState<string>("");
   const [showListModal, setShowListModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
+
+  // 반려견 or 전체 일정 선택
+  const [selectCalendar, setSelectCalendar] = useState<number>(0);
+
+  // 반려견 등록
+  const {
+    mutate: registerMutate,
+    isError: registerError,
+    isPending: registerPending,
+  } = useRegisterSchedule();
+
+  // 반려견별 일정 조회
+  // 조건 없이 모두 호출
+  const { data: memberScheduleData } = useGetMemberSchedule();
+  const { data: petScheduleData } = useGetPetSchedule(selectCalendar);
+
+  // 상황에 따라 선택
+  const activeScheduleData = selectCalendar === 0 ? memberScheduleData : petScheduleData;
 
   const start = startOfMonth(currentMonth);
   const end = endOfMonth(currentMonth);
@@ -54,21 +77,41 @@ const Calendar = () => {
     startDate: string;
     endDate: string;
   }) => {
-    setEvents([
-      ...events,
+    registerMutate(
       {
-        id: `${events.length + 1}`,
-        title: `${data.title}`,
-        startDate: data.startDate,
-        endDate: data.endDate,
+        petId: selectCalendar,
+        scheduleContent: data.title,
+        startTime: `${data.startDate}T00:00:00`,
+        endTime: `${data.endDate}T00:00:00`,
         color: data.color,
-        dog: `${data.dog}`,
       },
-    ]);
+      {
+        onSuccess: () => {
+          alert("일정이 등록되었어요!");
+          if (selectCalendar === 0) {
+            queryClient.invalidateQueries({ queryKey: ["getMemberSchedule"] });
+            setShowAddModal(false);
+          } else {
+            queryClient.invalidateQueries({ queryKey: ["getPetSchedule", selectCalendar] });
+            setShowAddModal(false);
+          }
+        },
+      }
+    );
   };
 
+  const transformedEvents: Event[] =
+    activeScheduleData?.map((item) => ({
+      id: String(item.calendarId),
+      title: item.scheduleContent,
+      startDate: item.startTime.slice(0, 10), // "yyyy-MM-dd"
+      endDate: item.endTime.slice(0, 10),
+      color: item.color || "#3b82f6", // 기본 색상 처리
+      dog: item.petName,
+    })) || [];
+
   const getEventsForDay = (dateStr: string) =>
-    events.filter((event) => {
+    transformedEvents.filter((event) => {
       return event.startDate <= dateStr && dateStr <= event.endDate;
     });
 
@@ -82,9 +125,18 @@ const Calendar = () => {
   return (
     <div className="p-4 mx-auto">
       <div className="flex items-center justify-center gap-x-5">
-        <button className="border-2 border-light-green rounded-2xl w-20 h-10">전체 일정</button>
+        <button
+          className="border-2 border-light-green rounded-2xl w-20 h-10"
+          onClick={() => setSelectCalendar(0)}
+        >
+          전체 일정
+        </button>
         {petList.map((pet) => (
-          <button key={pet.petId} className="border-2 border-light-green rounded-2xl w-20 h-10">
+          <button
+            key={pet.petId}
+            className="border-2 border-light-green rounded-2xl w-20 h-10"
+            onClick={() => setSelectCalendar(pet.petId)}
+          >
             {pet.name}
           </button>
         ))}
