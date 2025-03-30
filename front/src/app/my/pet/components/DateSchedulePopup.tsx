@@ -7,6 +7,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/solid";
 interface Schedule {
   id: string;
   title: string;
+  time: string;
   color: string;
   dog: string;
 }
@@ -58,9 +59,12 @@ const DateSchedulePopup = ({
                 {schedules.map((s) => (
                   <li key={s.id} className="flex items-center gap-2 text-sm">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }} />
-                    <div className="flex flex-col justify-center gap-y-2">
-                      <span className="flex-1">{s.title}</span>
-                      <span>{s.dog}</span>
+                    <div className="w-full flex flex-col justify-center">
+                      <div className=" flex items-center justify-between">
+                        <span className="flex-1">{s.title}</span>
+                        {s.dog !== "" && <span>{s.dog}</span>}
+                      </div>
+                      <span className="text-xs text-end">{s.time}</span>
                     </div>
                   </li>
                 ))}
