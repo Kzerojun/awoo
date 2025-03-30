@@ -30,6 +30,10 @@ const PetList = () => {
     router.push("/my/pet/register");
   };
 
+  const goToWalk = () => {
+    router.push("/walk/pre");
+  };
+
   return (
     <div className="flex flex-col items-center justify-center mt-2 bg-gray-50 ">
       {/* 산책 횟수 */}
@@ -48,7 +52,12 @@ const PetList = () => {
             ))}
           </div>
           <div className="mt-3">
-            <Button text="산책하러 가기" backgroundColor="green" width="medium" />
+            <Button
+              text="산책하러 가기"
+              backgroundColor="green"
+              width="medium"
+              onClick={goToWalk}
+            />
           </div>
         </div>
       </div>
