@@ -127,7 +127,6 @@ export const setPaymentPassword = async ({ password }: PaymentPasswordPayload) =
 
 // 멍페이 잔액 조회
 export const getPaymentBalance = async (): Promise<{
-  [x: string]: any;
   amount: number;
 }> => {
   console.log("멍페이 잔액 조회 요청");
@@ -155,7 +154,7 @@ export const getPaymentBalance = async (): Promise<{
 
     // API 응답 구조에 맞게 반환 형식 조정
     return {
-      amount: res.data?.response?.amount || 0,
+      amount: res.data?.response?.balance || 0,
     };
   } catch (err) {
     console.error("멍페이 잔액 조회 실패:", err);
@@ -171,12 +170,28 @@ export const chargePayment = async (amount: number) => {
   console.log("멍페이 충전 요청", { amount });
 
   try {
+    // UUID v4 형식의 Idempotency-Key 생성
+    const generateUUID = () => {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0,
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    };
+
+    const idempotencyKey = generateUUID();
+
     // 정확한 형식의 request body 구성
     const payload: ChargePaymentPayload = {
       amount: amount,
     };
 
-    const res = await axiosInstance.post("/payments/charges", payload);
+    const res = await axiosInstance.post("/payments/charges", payload, {
+      headers: {
+        "Idempotency-Key": idempotencyKey,
+      },
+    });
+
     console.log("멍페이 충전 성공:", res.data);
     return res.data;
   } catch (err) {
