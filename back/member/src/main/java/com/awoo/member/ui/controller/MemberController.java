@@ -124,7 +124,6 @@ public class MemberController {
     //member Key 복호화 & 발행
     @GetMapping("/member-key")
     public ApiUtils.ApiResult<?> findUserKey(@RequestParam Integer memberId) throws Exception {
-
         return ApiUtils.success(FindMemberKeyResponse.create(memberService.getUserKey(memberId)));
 
     }
@@ -158,5 +157,14 @@ public class MemberController {
         return ApiUtils.error("조회 실패", HttpStatus.BAD_REQUEST);
     }
 
+    @DeleteMapping
+    public ApiUtils.ApiResult<?> deleteMember(@RequestHeader("X-User-Id") String memberId) {
+        try {
+            memberService.deleteMember(memberId);
+            return ApiUtils.success("회원 탈퇴 처리되었습니다.");
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

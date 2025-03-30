@@ -3,8 +3,9 @@
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import Button from "@/common/ui/Button";
 import { PhoneIcon, BanknotesIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
-
+import { useRouter } from "next/navigation";
 export default function ReadyPage() {
+  const router = useRouter();
   return (
     <div>
       <CommonTopBar title="신청 전 확인사항" leftAction="back" rightAction="cancel" />
@@ -37,7 +38,7 @@ export default function ReadyPage() {
         <Button
           text="다음"
           onClick={() => {
-            "account/verify/";
+            router.push("/account/verify/phone");
           }}
         />
       </div>

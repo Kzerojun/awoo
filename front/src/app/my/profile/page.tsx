@@ -1,17 +1,34 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import TopBar from "@/common/ui/TopBar";
 import ProfilePicture from "./components/ProfilePicture";
 import UserInformation from "./components/UserInformation";
 import Link from "next/link";
-import Button from "@/common/ui/Button";
+import { clearUserData } from "@/lib/slices/userSlice"; // userSlice에서 clearUserData 액션 임포트
 
 export default function Profile() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  // 로그아웃 처리 함수
+  const handleLogout = () => {
+    // 로컬 스토리지에서 토큰 제거
+    localStorage.removeItem("accessToken");
+
+    // 리덕스 스토어 초기화
+    dispatch(clearUserData());
+
+    // 로그인 페이지로 리다이렉트
+    router.push("/login");
+  };
+
   return (
     <div className="flex flex-col items-center w-full h-full max-w-md mx-auto bg-[#FCFCFC]">
       <TopBar title="프로필" />
 
       {/* pt-14 추가하여 TopBar 높이만큼 상단 여백 확보 */}
-      <div className="w-full px-6 pt-14">
+      <div className="w-full px-6 pt-14 pb-8">
         <ProfilePicture />
         <UserInformation />
 
@@ -23,7 +40,10 @@ export default function Profile() {
           </Link>
 
           <div className="flex w-full gap-3">
-            <button className="flex-1 py-3 rounded-xl bg-white border border-gray-200 font-medium">
+            <button
+              className="flex-1 py-3 rounded-xl bg-white border border-gray-200 font-medium"
+              onClick={handleLogout}
+            >
               로그아웃
             </button>
             <Link href="/my/profile/withdraw" className="flex-1">

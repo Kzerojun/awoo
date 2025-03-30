@@ -55,11 +55,11 @@ public class Member extends BaseEntity {
     @Column(name = "payment_register")
     private boolean paymentRegister;
 
-    @Column(name = "walk_grade", nullable = false)
-    private Integer walkGrade;
-
-    @Column(name = "walk_count", nullable = false)
-    private Integer walkCount;
+//    @Column(name = "walk_grade", nullable = false)
+//    private Integer walkGrade;
+//
+//    @Column(name = "walk_count", nullable = false)
+//    private Integer walkCount;
 
     @Builder // 빌더 패턴 추가
     public Member(Email email, String password, String userKey, Name name, BirthDate birthDate, Gender gender,
@@ -76,8 +76,8 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
         this.provider = provider;
         this.paymentRegister = false;
-        this.walkGrade = 1;
-        this.walkCount = 0;
+//        this.walkGrade = 1;
+//        this.walkCount = 0;
     }
 
     public void updateProfileImage(String newProfileImage) {
@@ -106,11 +106,11 @@ public class Member extends BaseEntity {
         this.userKey = userKey;
     }
 
-    public void changeWalkCount() {
-        if(++this.walkCount >= 210) {
-            this.walkGrade = 3;
-        }else if(this.walkCount >= 60) {
-            this.walkGrade = 2;
-        }
-    }
+//    public void changeWalkCount() {
+//        if(++this.walkCount >= 210) {
+//            this.walkGrade = 3;
+//        }else if(this.walkCount >= 60) {
+//            this.walkGrade = 2;
+//        }
+//    }
 }

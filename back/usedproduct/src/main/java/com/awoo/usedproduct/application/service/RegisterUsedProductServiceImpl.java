@@ -25,7 +25,11 @@ public class RegisterUsedProductServiceImpl implements RegisterUsedProductServic
                 .map(s3Storage::uploadFile)
                 .toList();
 
-        UsedProductEntity usedProductEntity = usedProductFactory.create(command.memberId(), command.title(), command.content(), command.price(), imageUrls);
+        UsedProductEntity usedProductEntity = usedProductFactory.create(command.memberId(),
+                command.title(),
+                command.content(),
+                command.price(),
+                imageUrls);
         usedProductRepository.store(usedProductEntity);
         return usedProductEntity.getUsedProductId();
     }

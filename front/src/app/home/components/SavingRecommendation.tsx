@@ -1,8 +1,13 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 export default function SavingRecommendation() {
+  const router = useRouter();
   return (
-    <div className="p-4 py-8 bg-light-aqua rounded-lg shadow flex justify-between items-stretch h-full">
+    <div
+      className="p-4 py-8 bg-light-aqua rounded-lg shadow flex justify-between items-stretch h-full"
+      onClick={() => router.push("/account/open/saving/")} // 적금 상품 안내 페이지로 이동
+    >
       {/* 왼쪽 텍스트 영역 */}
       <div className="flex flex-col">
         <h2 className="text-m font-semibold">반려견과 함께하는 스마트 적금</h2>

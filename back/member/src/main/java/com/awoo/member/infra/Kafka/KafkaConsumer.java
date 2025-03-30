@@ -11,7 +11,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -38,15 +37,15 @@ public class KafkaConsumer {
         memberService.paymentRegister(map.get("memberId"));
     }
 
-    @KafkaListener(topics = "walk-success")
-    public void updateWalkCount(String kafkaMessage) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            List<Integer> memberIdList = objectMapper.readValue(kafkaMessage, new TypeReference<>() {});
-            memberService.updateWalkCount(memberIdList);
-        }catch (JsonProcessingException ex) {
-            ex.printStackTrace();
-        }
-    }
+//    @KafkaListener(topics = "walk-success")
+//    public void updateWalkCount(String kafkaMessage) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            List<Integer> memberIdList = objectMapper.readValue(kafkaMessage, new TypeReference<>() {});
+//            memberService.updateWalkCount(memberIdList);
+//        }catch (JsonProcessingException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
 }

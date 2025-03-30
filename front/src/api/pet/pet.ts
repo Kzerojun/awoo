@@ -1,7 +1,7 @@
 import axios from "axios";
 import urlToFile from "@/app/signup/hooks/useChangeFile";
 import axiosInstance from "../axiosInstance";
-import PetRegister from "@/app/my/pet/components/PetRegister";
+import { PetInterface } from "@/lib/slices/petSlice";
 
 // 반려견 등록 interface
 interface PetRegisterPayload {
@@ -10,8 +10,20 @@ interface PetRegisterPayload {
   selectedPetAvatar: string;
 }
 
-// 펫 목록 전체 조회 interface
-interface PetListPayload {}
+// 펫 목록 전체 조회 interface => 각각 PetInterface
+
+// petId
+interface PetIdPayload {
+  petId: number;
+}
+
+// 반려견 수정 interface
+interface UpdatePetDetail {
+  petId: number;
+  requestDto: Record<string, any>;
+  imageFile: File | null;
+  selectedPetAvatar: string;
+}
 
 // 반려견 등록
 export const registerPet = async ({
@@ -20,7 +32,7 @@ export const registerPet = async ({
   selectedPetAvatar,
 }: PetRegisterPayload) => {
   const formData = new FormData();
-  console.log("반려동물 요청 데이터");
+  console.log("반려동물 요청 데이터:", formData);
 
   formData.append(
     "requestDto",
@@ -46,4 +58,60 @@ export const registerPet = async ({
   }
 };
 
-export const getPetList = async ({}) => {};
+// 반려견 목록 조회
+
+export const getPetList = async (): Promise<PetInterface[] | null> => {
+  try {
+    const res = await axiosInstance.get("/pets");
+    console.log("반려견 목록 조회 성공:", res.data.response.pet);
+    return res.data.response.pets;
+  } catch (err: any) {
+    console.error("반려견 목록 조회 실패:", err.response?.data || err.message || err);
+    throw err;
+  }
+};
+
+// 반려견 상세 조회
+export const getPetDetail = async ({ petId }: PetIdPayload): Promise<PetInterface | null> => {
+  try {
+    const res = await axiosInstance.get(`/pets/${petId}`);
+    console.log("반려견 상세 조회 성공:", res.data.response);
+    return res.data.response;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+// 반려견 정보 수정
+export const updatePetDetail = async ({
+  petId,
+  requestDto,
+  imageFile,
+  selectedPetAvatar,
+}: UpdatePetDetail): Promise<PetInterface | null> => {
+  const formData = new FormData();
+
+  formData.append(
+    "requestDto",
+    new Blob([JSON.stringify(requestDto)], {
+      type: "application/json",
+    })
+  );
+
+  if (imageFile) {
+    formData.append("profileImage", imageFile);
+  } else if (!imageFile && selectedPetAvatar !== "") {
+    const file = await urlToFile(selectedPetAvatar, "default-avatar.jpg");
+    formData.append("profileImage", file);
+  }
+  console.log("반려동물 수정 데이터:", formData);
+
+  try {
+    const res = await axiosInstance.put(`/pets/${petId}`, formData);
+    console.log("반려견 수정 성공", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("반려견 수정 실패:", err);
+    throw err;
+  }
+};

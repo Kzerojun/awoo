@@ -5,18 +5,30 @@ import React from "react";
 import { MarketItem } from "../types/market";
 import { EyeIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-
-export default function MarketListItem({ id, image, title, time, price, views, chat }: MarketItem) {
+interface MarketListItemProps extends MarketItem {
+  onClick?: () => void;
+}
+export default function MarketListItem({
+  productId,
+  imageUrl,
+  title,
+  time,
+  price,
+  views,
+  chat,
+  onClick,
+}: MarketListItemProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/market/${id}`);
+    if (onClick) return onClick(); // ✅ 부모에서 넘긴 onClick 있으면 실행
+    router.push(`/market/${productId}`);
   };
   return (
     <div onClick={handleClick} className="flex gap-3 border-b  border-gray-200 pb-4">
       {/* 썸네일 */}
       <div className="w-24 h-24 relative flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
-        <Image src={image} alt={title} fill className="object-cover" />
+        <Image src={imageUrl} alt={title} fill className="object-cover" />
       </div>
 
       {/* 정보 */}

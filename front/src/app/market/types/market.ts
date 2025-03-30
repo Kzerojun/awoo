@@ -1,6 +1,6 @@
 export interface MarketItem {
-  id: number;
-  image: string;
+  productId: number;
+  imageUrl: string;
   title: string;
   time: string;
   price: string;

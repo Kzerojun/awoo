@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import RegisterInfo from "./RegisterInfo";
 import { useRegisterPet } from "@/hooks/pet/useRegisterPet";
+import { addPet } from "@/lib/slices/petSlice";
 import { useRouter } from "next/navigation";
 
 const defaultPetAvatars = [
@@ -19,6 +20,7 @@ const defaultPetAvatars = [
 
 const PetRegister = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [selectedPetAvatar, setSelectedPetAvatar] = useState<string>(defaultPetAvatars[0]);
@@ -35,7 +37,7 @@ const PetRegister = () => {
 
   // 반려견 이름
   const [petName, setPetName] = useState<string>("");
-  const [petAge, setPetAge] = useState<string>("");
+  const [petAgeString, setPetAgeString] = useState<string>("");
   const [breed, setBreed] = useState<string>("");
 
   // 사용자 앨범에서 선택할 때
@@ -59,29 +61,32 @@ const PetRegister = () => {
   const handleRegisterPet = () => {
     if (
       petName === "" ||
-      petAge === "" ||
+      petAgeString === "" ||
       breed === "" ||
       (imageFile === null && selectedPetAvatar === "")
     ) {
       alert("올바른 정보를 입력해주세요.");
       return;
     }
-
+    const petAge = Number(petAgeString);
     const requestDto = {
-      petName,
-      petAge,
-      breed,
+      name: petName,
+      breed: breed,
+      age: petAge,
     };
 
     registerPetMutate(
       { requestDto, imageFile, selectedPetAvatar },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          dispatch(addPet(data));
+          console.log(data);
           alert("반려견을 성공적으로 등록했습니다.");
           router.replace("/my/pet");
         },
-        onError: () => {
+        onError: (err) => {
           alert("반려견 등록에 실패했습니다.");
+          console.error("반려견 등록 실패:", err);
           return;
         },
       }
@@ -153,8 +158,8 @@ const PetRegister = () => {
       <RegisterInfo
         petName={petName}
         setPetName={setPetName}
-        petAge={petAge}
-        setPetAge={setPetAge}
+        petAge={petAgeString}
+        setPetAge={setPetAgeString}
         breed={breed}
         setBreed={setBreed}
       />

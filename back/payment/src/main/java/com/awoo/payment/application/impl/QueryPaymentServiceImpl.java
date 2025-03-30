@@ -17,4 +17,10 @@ public class QueryPaymentServiceImpl implements QueryPaymentService {
     public int fetchBalance(FetchBalanceQuery query) {
         return paymentRepository.findByMemberId(query.memberId()).orElseThrow(PaymentNotFoundException::new).getBalance();
     }
+
+    @Override
+    public String fetchAccount(Integer memberId) {
+        return paymentRepository.findByMemberId(memberId).orElseThrow(PaymentNotFoundException::new)
+                .getAccountNo();
+    }
 }

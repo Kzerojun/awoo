@@ -1,7 +1,9 @@
-import { error, time } from "console";
+"use client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
 const useLocationTracking = () => {
+  const router = useRouter();
   // 트래킹
   const [positions, setPositions] = useState<[number, number][]>([]);
   const [distance, setDistance] = useState<number>(0);
@@ -19,8 +21,12 @@ const useLocationTracking = () => {
   useEffect(() => {
     if (!("geolocation" in navigator)) {
       console.error("Geolocation이 지원되지 않습니다.");
+      router.push("/walk/pre");
       return;
     }
+
+    // 트래킹이 중지된 상태면 다 멈추기
+    if (!isTracking) return;
 
     let prevPos: [number, number] | null = null;
 
@@ -33,7 +39,12 @@ const useLocationTracking = () => {
           setStartPosition(initialPos); // 출발 지점 설정
           setPositions([initialPos]); // 지도에 표시할 위치 추가
         },
-        (error) => console.error("초기 위치 불러오기 오류:", JSON.stringify(error)),
+        (error) => {
+          console.error("초기 위치 불러오기 오류:", JSON.stringify(error));
+          alert("위치를 불러오지 못 했어요. 다시 시도해주세요.");
+          router.push("/walk/pre");
+          return;
+        },
         { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
       );
     }
@@ -41,9 +52,12 @@ const useLocationTracking = () => {
     // 산책 시간 기록
     if (isTracking) {
       setStartTime(new Date());
-      timeRef.current = setInterval(() => {
-        setElapsedTime((prev) => prev + 1);
-      }, 1000);
+      // 2초 후부터 경과 시간 증가 시작
+      setTimeout(() => {
+        timeRef.current = setInterval(() => {
+          setElapsedTime((prev) => prev + 1);
+        }, 1000);
+      }, 2000);
 
       // 실시간 위치 추적 (watchPosition)
       watchIdRef.current = navigator.geolocation.watchPosition(
@@ -85,7 +99,8 @@ const useLocationTracking = () => {
 
   // 트래킹 종료 함수
   const stopTracking = () => {
-    setEndTime(new Date()); // 종료 시간 기록
+    const now = new Date();
+    setEndTime(now); // 종료 시간 기록
     setIsTracking(false);
 
     if (watchIdRef.current !== null) {
@@ -97,6 +112,8 @@ const useLocationTracking = () => {
       clearInterval(timeRef.current);
       timeRef.current = null;
     }
+
+    return now;
   };
 
   return {

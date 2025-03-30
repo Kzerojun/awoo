@@ -44,4 +44,16 @@ public class PaymentEntity {
     public void registerAccount(String accountNo) {
         this.accountNo = accountNo;
     }
+
+    public boolean verifyPassword(String password) {
+		return this.password.equals(password);
+	}
+
+    public void transfer(Integer amount) {
+        if (this.balance < amount) {
+            throw new IllegalArgumentException("잔액이 충분하지 않습니다.");
+        }
+
+        this.balance -= amount;
+    }
 }

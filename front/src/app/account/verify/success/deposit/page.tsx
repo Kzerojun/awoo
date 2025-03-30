@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
-import Checkmark from "../../../../../public/icons/mypage/checkmark.svg";
-import AccountComplete from "../../open/components/AccountComplete";
+import Checkmark from "../../../../../../public/icons/mypage/checkmark.svg";
+import AccountComplete from "../../../open/components/AccountComplete";
 import Button from "@/common/ui/Button";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";

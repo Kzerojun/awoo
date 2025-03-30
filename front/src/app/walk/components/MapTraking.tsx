@@ -76,7 +76,7 @@ const MapTraking = () => {
           if (map) {
             mapRef.current = map;
           }
-        }} // ✅ `ref` 바인딩 방식 수정
+        }} // `ref` 바인딩 방식 수정
       >
         {/* 출발 위치 */}
         {isScriptLoaded && startPosition && (
@@ -124,7 +124,7 @@ const MapTraking = () => {
           positions &&
           positions.map(
             (pos, index) =>
-              index % 80 === 0 && (
+              index % 30 === 0 && (
                 <MapMarker
                   key={index}
                   position={{ lat: pos[0], lng: pos[1] }}

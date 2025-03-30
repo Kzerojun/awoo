@@ -6,13 +6,21 @@ interface NumberKeypadProps {
   onNumberPress: (num: number) => void;
   onBackspace: () => void;
   onClear?: () => void;
+  disabled?: boolean;
 }
 
-export default function NumberKeypad({ onNumberPress, onBackspace, onClear }: NumberKeypadProps) {
+export default function NumberKeypad({
+  onNumberPress,
+  onBackspace,
+  onClear,
+  disabled = false,
+}: NumberKeypadProps) {
   const [activeButton, setActiveButton] = useState<number | null>(null);
 
   // 숫자 버튼 클릭 처리
   const handleNumberPress = (num: number) => {
+    if (disabled) return;
+
     // 버튼 활성화 효과
     setActiveButton(num);
     setTimeout(() => setActiveButton(null), 200);
@@ -23,6 +31,8 @@ export default function NumberKeypad({ onNumberPress, onBackspace, onClear }: Nu
 
   // 백스페이스 처리
   const handleBackspace = () => {
+    if (disabled) return;
+
     // 버튼 활성화 효과
     setActiveButton(-1); // -1은 백스페이스를 의미
     setTimeout(() => setActiveButton(null), 200);
@@ -33,6 +43,8 @@ export default function NumberKeypad({ onNumberPress, onBackspace, onClear }: Nu
 
   // 취소 버튼 처리
   const handleClear = () => {
+    if (disabled) return;
+
     // 버튼 활성화 효과
     setActiveButton(-2); // -2는 취소를 의미
     setTimeout(() => setActiveButton(null), 200);
@@ -43,6 +55,22 @@ export default function NumberKeypad({ onNumberPress, onBackspace, onClear }: Nu
     }
   };
 
+  // 비활성화 스타일
+  const getButtonStyle = (buttonValue: number) => {
+    const isActive = activeButton === buttonValue;
+    const baseStyle = isActive
+      ? "bg-gray-300 transform scale-95"
+      : buttonValue === -2
+        ? "bg-gray-200 hover:bg-gray-300"
+        : "bg-white hover:bg-gray-100";
+
+    return `${baseStyle} ${
+      disabled
+        ? "opacity-50 cursor-not-allowed"
+        : "transition-all duration-150 active:bg-gray-300 active:transform active:scale-95"
+    }`;
+  };
+
   return (
     <div className="bg-gray-100 py-6">
       <div className="grid grid-cols-3 gap-2 px-2">
@@ -51,9 +79,8 @@ export default function NumberKeypad({ onNumberPress, onBackspace, onClear }: Nu
           <button
             key={num}
             onClick={() => handleNumberPress(num)}
-            className={`${
-              activeButton === num ? "bg-gray-300 transform scale-95" : "bg-white hover:bg-gray-100"
-            } py-3 rounded-md text-xl font-medium transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
+            disabled={disabled}
+            className={`${getButtonStyle(num)} py-3 rounded-md text-xl font-medium`}
           >
             {num}
           </button>
@@ -62,25 +89,22 @@ export default function NumberKeypad({ onNumberPress, onBackspace, onClear }: Nu
         {/* 하단 버튼들 */}
         <button
           onClick={handleClear}
-          className={`${
-            activeButton === -2 ? "bg-gray-300 transform scale-95" : "bg-gray-200 hover:bg-gray-300"
-          } py-3 rounded-md text-sm font-medium transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
+          disabled={disabled}
+          className={`${getButtonStyle(-2)} py-3 rounded-md text-sm font-medium`}
         >
           취소
         </button>
         <button
           onClick={() => handleNumberPress(0)}
-          className={`${
-            activeButton === 0 ? "bg-gray-300 transform scale-95" : "bg-white hover:bg-gray-100"
-          } py-3 rounded-md text-xl font-medium transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
+          disabled={disabled}
+          className={`${getButtonStyle(0)} py-3 rounded-md text-xl font-medium`}
         >
           0
         </button>
         <button
           onClick={handleBackspace}
-          className={`${
-            activeButton === -1 ? "bg-gray-300 transform scale-95" : "bg-white hover:bg-gray-100"
-          } py-3 rounded-md flex items-center justify-center transition-all duration-150 active:bg-gray-300 active:transform active:scale-95`}
+          disabled={disabled}
+          className={`${getButtonStyle(-1)} py-3 rounded-md flex items-center justify-center`}
         >
           <svg
             className="w-6 h-6 text-gray-600"

@@ -1,15 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import TopBar from "@/common/ui/TopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import Password from "./components/Password";
+import { setPaymentPassword } from "@/api/payment/payment";
+import { toast } from "react-toastify";
 
 export default function PaymentPassword() {
   const router = useRouter();
   const [step, setStep] = useState(1); // 1: 비밀번호 설정, 2: 비밀번호 확인
   const [firstPassword, setFirstPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 인증 상태 확인
+  useEffect(() => {
+    const isVerified = sessionStorage.getItem("phone_verified");
+
+    if (!isVerified) {
+      toast.error("휴대폰 인증이 필요합니다.");
+      router.push("/my/paymentRegister");
+    }
+  }, [router]);
 
   // 첫 번째 비밀번호 설정 완료 처리
   const handleFirstPasswordComplete = (password: string) => {
@@ -18,20 +31,32 @@ export default function PaymentPassword() {
   };
 
   // 두 번째 비밀번호 확인 완료 처리
-  const handleSecondPasswordComplete = (password: string) => {
-    if (password === firstPassword) {
-      // 비밀번호 일치 시 처리
-      console.log("비밀번호 설정 완료:", password);
-
-      // API 호출 등 비밀번호 저장 로직
-      alert("멍Pay 비밀번호가 설정되었습니다.");
-
-      // 다음 페이지로 이동 (예: 완료 페이지)
-      router.push("/my/paymentRegister/signupDone");
-    } else {
+  const handleSecondPasswordComplete = async (password: string) => {
+    if (password !== firstPassword) {
       // 비밀번호 불일치 시 처리
-      alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+      toast.error("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
       setStep(1); // 처음부터 다시 시작
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // 멍페이 비밀번호 설정 API 호출
+      await setPaymentPassword({ password });
+
+      console.log("멍페이 비밀번호 설정 완료");
+      toast.success("멍페이 비밀번호가 설정되었습니다.");
+
+      // 완료 페이지로 이동
+      router.push("/my/paymentRegister/signupDone");
+    } catch (error) {
+      console.error("멍페이 비밀번호 설정 실패:", error);
+      toast.error("비밀번호 설정에 실패했습니다. 다시 시도해주세요.");
+      // 오류 발생 시 첫 단계로 돌아가기
+      setStep(1);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -47,6 +72,7 @@ export default function PaymentPassword() {
             title="멍Pay에서 쓸"
             subtitle="비밀번호를 등록해 주세요"
             onComplete={handleFirstPasswordComplete}
+            disabled={isSubmitting}
           />
         ) : (
           // 비밀번호 확인 단계
@@ -56,6 +82,7 @@ export default function PaymentPassword() {
             subtitle="한번 더 입력해 주세요"
             isConfirm={true}
             onComplete={handleSecondPasswordComplete}
+            disabled={isSubmitting}
           />
         )}
       </div>

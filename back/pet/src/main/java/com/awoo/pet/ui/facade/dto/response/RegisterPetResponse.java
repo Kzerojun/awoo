@@ -1,6 +1,7 @@
 package com.awoo.pet.ui.facade.dto.response;
 
 import com.awoo.pet.domain.pet.Pet;
+import com.awoo.pet.domain.pet.PetSavingGrade;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,16 +16,25 @@ public class RegisterPetResponse {
     private String breed;
     private int age;
     private int savingId;
+    private String savingGrade;
 
-    public static RegisterPetResponse fromEntity(Pet entity){
+    public static RegisterPetResponse fromEntity(Pet entity) {
+
+        String profileUrl = null;
+
+        if(entity.getProfileImage() != null) {
+            profileUrl = "https://c209awoo.s3.us-east-2.amazonaws.com/" + entity.getProfileImage();
+        }
+
         return RegisterPetResponse.builder()
                 .petId(entity.getPetId())
                 .memberId(entity.getMemberId())
                 .name(entity.getName())
-                .profileImage(entity.getProfileImage())
+                .profileImage(profileUrl)
                 .breed(entity.getBreed())
                 .age(entity.getAge())
                 .savingId(entity.getSavingId())
+                .savingGrade(PetSavingGrade.ONE.getValue())
                 .build();
     }
 }

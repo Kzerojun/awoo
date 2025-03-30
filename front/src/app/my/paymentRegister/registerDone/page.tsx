@@ -1,13 +1,46 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Image from "next/image";
 import TopBar from "@/common/ui/TopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import check from "../../../../../public/icons/mypage/checkmark.svg";
+import { RootState } from "@/lib/store";
+import { getUserInfo } from "@/api/user/auth";
 
 export default function RegisterDone() {
   const router = useRouter();
+  const userState = useSelector((state: RootState) => state.user);
+  const [nickname, setNickname] = useState<string>(userState.nickname || "");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // 유저 정보 가져오기
+  useEffect(() => {
+    // Redux store에 닉네임이 이미 있으면 API 호출 건너뛰기
+    if (userState.nickname) {
+      setNickname(userState.nickname);
+      setIsLoading(false);
+      return;
+    }
+
+    // Redux store에 닉네임이 없으면 API 호출
+    const fetchUserInfo = async () => {
+      try {
+        setIsLoading(true);
+        const userInfo = await getUserInfo();
+        setNickname(userInfo.nickname);
+      } catch (error) {
+        console.error("사용자 정보를 가져오는 중 오류 발생:", error);
+        setNickname("사용자"); // 에러 시 기본값
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [userState]);
 
   // 마이페이지로 이동
   const handleGoToMyPage = () => {
@@ -25,7 +58,9 @@ export default function RegisterDone() {
         </div>
 
         {/* 성공 메시지 - 이름과 성공 메시지를 더 가깝게 배치 */}
-        <h2 className="text-2xl font-bold text-center mb-1">노리 아빠님</h2>
+        <h2 className="text-2xl font-bold text-center mb-1">
+          {isLoading ? "로딩 중..." : `${nickname}님`}
+        </h2>
         <p className="text-xl font-bold text-center text-teal-600 mb-8">계좌 인증을 성공했어요</p>
 
         {/* 안내 메시지 - 여백 조정 및 텍스트 스타일 개선 */}

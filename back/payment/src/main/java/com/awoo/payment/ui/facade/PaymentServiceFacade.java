@@ -21,4 +21,10 @@ public interface PaymentServiceFacade {
     RemitOneWonResponse remitOneWon(RemitOneWonCommand command);
 
     VerifyOneWonResponse verifyOneWon(VerifyOneWonCommand command);
+
+    VerifyPaymentPasswordResponse verifyPassword(VerifyPaymentPasswordCommand command);
+
+    FetchPaymentResponse fetchAccount(Integer memberId);
+
+    TransferAmountResponse transferAmount(TransferAmountCommand amountCommand);
 }

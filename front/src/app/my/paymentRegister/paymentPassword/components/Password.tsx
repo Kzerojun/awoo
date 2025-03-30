@@ -9,6 +9,7 @@ interface PasswordProps {
   subtitle?: string;
   length?: number;
   isConfirm?: boolean;
+  disabled?: boolean;
   onComplete?: (password: string) => void;
   key?: string; // key prop 추가 - 컴포넌트 리마운트를 위해
 }
@@ -18,6 +19,7 @@ export default function Password({
   subtitle = "비밀번호를 등록해 주세요",
   length = 6,
   isConfirm = false,
+  disabled = false,
   onComplete,
 }: PasswordProps) {
   const router = useRouter();
@@ -32,6 +34,8 @@ export default function Password({
 
   // 숫자 입력 처리
   const handleNumberInput = (num: number) => {
+    if (disabled) return;
+
     if (password.length < length) {
       const newPassword = password + num;
       setPassword(newPassword);
@@ -47,6 +51,8 @@ export default function Password({
 
   // 백스페이스 처리
   const handleBackspace = () => {
+    if (disabled) return;
+
     if (password.length > 0) {
       setPassword(password.slice(0, -1));
       setError("");
@@ -55,6 +61,8 @@ export default function Password({
 
   // 패스워드 초기화
   const handleClear = () => {
+    if (disabled) return;
+
     setPassword("");
     setError("");
   };
@@ -62,6 +70,8 @@ export default function Password({
   // 키보드 이벤트 핸들러 (숫자 키 입력 감지)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (disabled) return;
+
       // 숫자 키 감지 (0-9)
       if (e.key >= "0" && e.key <= "9") {
         handleNumberInput(parseInt(e.key));
@@ -80,7 +90,7 @@ export default function Password({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [password, length, onComplete]);
+  }, [password, length, onComplete, disabled]);
 
   return (
     <div className="flex flex-col h-[calc(107vh-56px)] bg-white">
@@ -108,6 +118,11 @@ export default function Password({
         <p className="text-gray-500 text-sm mt-2">
           {isConfirm ? "처음 입력한 비밀번호와 동일하게 입력해주세요" : "숫자 6자리를 입력해주세요"}
         </p>
+
+        {/* 처리 중 상태 표시 */}
+        {disabled && (
+          <p className="text-teal-500 text-sm mt-4">처리 중입니다. 잠시만 기다려주세요...</p>
+        )}
       </div>
 
       {/* 숫자 키패드 컴포넌트 */}
@@ -115,6 +130,7 @@ export default function Password({
         onNumberPress={handleNumberInput}
         onBackspace={handleBackspace}
         onClear={handleClear}
+        disabled={disabled}
       />
     </div>
   );

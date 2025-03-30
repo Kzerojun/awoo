@@ -5,4 +5,6 @@ import com.awoo.payment.application.query.FetchBalanceQuery;
 public interface QueryPaymentService {
 
     int fetchBalance(FetchBalanceQuery query);
+
+    String fetchAccount(Integer memberId);
 }

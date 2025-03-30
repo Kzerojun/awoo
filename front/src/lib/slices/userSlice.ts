@@ -7,6 +7,7 @@ interface Pet {
   breed: string;
   age: number;
   savingId: number;
+  walkGrade: number;
 }
 
 interface UserState {

@@ -21,6 +21,8 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final CheckAuthCodeService checkAuthCodeService;
     private final RemitOneWonService remitOnewonService;
     private final VerifyOneWonService verifyOneWonService;
+    private final VerifyPasswordService verifyPasswordService;
+    private final TransferAmountService transferAmountService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -37,6 +39,12 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     public FetchBalanceResponse fetchBalance(FetchBalanceQuery query) {
         int balance = queryPaymentService.fetchBalance(query);
         return FetchBalanceResponse.create(balance);
+    }
+
+    @Override
+    public FetchPaymentResponse fetchAccount(Integer memberId) {
+        String account = queryPaymentService.fetchAccount(memberId);
+        return new FetchPaymentResponse(account);
     }
 
     @Override
@@ -67,6 +75,18 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     public VerifyOneWonResponse verifyOneWon(VerifyOneWonCommand command) {
         verifyOneWonService.verifyOneWon(command);
         return VerifyOneWonResponse.create();
+    }
+
+    @Override
+    public VerifyPaymentPasswordResponse verifyPassword(VerifyPaymentPasswordCommand command) {
+        boolean result = verifyPasswordService.verifyPassword(command);
+        return new VerifyPaymentPasswordResponse(result);
+    }
+
+    @Override
+    public TransferAmountResponse transferAmount(TransferAmountCommand command) {
+        Integer transactionId = transferAmountService.transferAmount(command);
+        return new TransferAmountResponse(transactionId);
     }
 }
 
