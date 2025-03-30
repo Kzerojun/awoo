@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import useLocationPermission from "../hooks/useLocationPermission";
-import { setCurrentWalkingDog } from "@/lib/slices/userActionSlice";
+import { updateCurrentWalkingDog } from "@/lib/slices/walkSlice";
 import { PetInterface } from "@/lib/slices/petSlice";
 import Button from "@/common/ui/Button";
 
@@ -15,40 +15,12 @@ const SelectDog = () => {
   const dispatch = useAppDispatch();
   const petList = useAppSelector((state) => state.pet.petList);
 
-  //   테스트를 위한 목데이터
-  // const petList: PetInterface[] = [
-  //   {
-  //     petId: 1,
-  //     memberId: 101,
-  //     name: "콩이",
-  //     profileImage: null,
-  //     breed: "푸들",
-  //     age: 3,
-  //     savingId: 201,
-  //     walkInMonth: 0,
-  //   },
-  // {
-  //   petId: 2,
-  //   memberId: 101,
-  //   name: "두부",
-  //   profileImage: null, // 프로필 이미지 없는 경우
-  //   breed: "말티즈",
-  //   age: 5,
-  //   savingId: 202,
-  // },
-  // {
-  //   petId: 3,
-  //   memberId: 101,
-  //   name: "뽀삐",
-  //   profileImage: "",
-  //   breed: "시바견",
-  //   age: 2,
-  //   savingId: 203,
-  // },
-  // ];
-
   const { requestPermission } = useLocationPermission();
   const [selectedPet, setSelectedPet] = useState<PetInterface | null>(null);
+
+  useEffect(() => {
+    console.log("선택된 반려견:", selectedPet);
+  }, [selectedPet]);
 
   const handleSelectPet = (pet: PetInterface) => {
     setSelectedPet((prevPet) => (prevPet?.petId === pet.petId ? null : pet));
@@ -60,7 +32,7 @@ const SelectDog = () => {
       return;
     }
     console.log(selectedPet);
-    dispatch(setCurrentWalkingDog(selectedPet));
+    dispatch(updateCurrentWalkingDog(selectedPet));
 
     route.push("/walk/start/guide");
   };
