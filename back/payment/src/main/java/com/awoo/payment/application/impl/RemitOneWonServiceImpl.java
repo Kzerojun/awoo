@@ -3,7 +3,7 @@ package com.awoo.payment.application.impl;
 import com.awoo.payment.application.RemitOneWonService;
 import com.awoo.payment.application.command.RemitOneWonCommand;
 import com.awoo.payment.infra.client.MemberClient;
-import com.awoo.payment.infra.client.SSAFYClient;
+import com.awoo.payment.infra.client.SSAFYAuthClient;
 import com.awoo.payment.infra.client.request.SSAFYRemitOneWonRequest;
 import com.awoo.payment.infra.client.response.FetchMemberKeyResponse;
 import com.awoo.payment.support.ApiUtils.ApiResult;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class RemitOneWonServiceImpl implements RemitOneWonService {
 
 	private final MemberClient memberClient;
-	private final SSAFYClient ssafyClient;
+	private final SSAFYAuthClient ssafyAuthClient;
 	private final SSAFYApiHelper ssafyApiHelper;
 
 	@Override
@@ -37,7 +37,7 @@ public class RemitOneWonServiceImpl implements RemitOneWonService {
 					.accountNo(command.accountNo())
 					.authText("AWOO")
 					.build();
-			ssafyClient.remitOneWon(request);
+			ssafyAuthClient.remitOneWon(request);
 		}
 	}
 }

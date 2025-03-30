@@ -22,6 +22,7 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final RemitOneWonService remitOnewonService;
     private final VerifyOneWonService verifyOneWonService;
     private final VerifyPasswordService verifyPasswordService;
+    private final TransferAmountService transferAmountService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -80,6 +81,12 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     public VerifyPaymentPasswordResponse verifyPassword(VerifyPaymentPasswordCommand command) {
         boolean result = verifyPasswordService.verifyPassword(command);
         return new VerifyPaymentPasswordResponse(result);
+    }
+
+    @Override
+    public TransferAmountResponse transferAmount(TransferAmountCommand command) {
+        Integer transactionId = transferAmountService.transferAmount(command);
+        return new TransferAmountResponse(transactionId);
     }
 }
 
