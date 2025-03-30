@@ -47,6 +47,7 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     "/my/paymentCharge/chargeDone",
     "/walk/take-photo", // 산책 후 사진 찍는 페이지
     "/walk/end/check", // 산책 종료 페이지
+    "/main", // 메인 웹페이지
   ];
   const isMarketDetail = /^\/market\/[^\/]+$/.test(currentPath);
 
