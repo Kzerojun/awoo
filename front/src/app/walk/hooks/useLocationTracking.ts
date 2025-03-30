@@ -99,7 +99,8 @@ const useLocationTracking = () => {
 
   // 트래킹 종료 함수
   const stopTracking = () => {
-    setEndTime(new Date()); // 종료 시간 기록
+    const now = new Date();
+    setEndTime(now); // 종료 시간 기록
     setIsTracking(false);
 
     if (watchIdRef.current !== null) {
@@ -111,6 +112,8 @@ const useLocationTracking = () => {
       clearInterval(timeRef.current);
       timeRef.current = null;
     }
+
+    return now;
   };
 
   return {
