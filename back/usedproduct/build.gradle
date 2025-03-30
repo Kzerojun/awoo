@@ -48,6 +48,12 @@ dependencies {
     // AWS S3 의존성 추가
     implementation(platform("software.amazon.awssdk:bom:2.27.21"))
     implementation("software.amazon.awssdk:s3")
+
+    // Query Dsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 }
 
 dependencyManagement {
@@ -59,3 +65,23 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// 1. Q-Class를 생성할 디렉토리 경로 설정
+def querydslSrcDir = "build/generated/sources/annotationProcessor/java/main"
+
+
+//2. JavaCompile Task를 수행하는 경우 생성된 소스코드의 출력 디렉토리를 설정
+tasks.withType(JavaCompile).configureEach {
+    options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}
+
+//3. 소스 코드로 인식할 디렉토리에 Q-Class 파일을 추가. Q-Class가 JAVA의 클래스 처럼 취급됨.
+sourceSets {
+    main.java.srcDir querydslSrcDir
+}
+
+//4. Clean Task를 수행하는 경우 지정한 디렉토리를 삭제하도록 설정.
+clean {
+    delete file(querydslSrcDir)
+}
+

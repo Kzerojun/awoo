@@ -5,14 +5,17 @@ import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
 import com.awoo.usedproduct.application.command.ReportCommand;
+import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery.FetchUsedProductQueryBuilder;
+import com.awoo.usedproduct.domain.UsedProductStatus;
 import com.awoo.usedproduct.support.ApiUtils;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.request.ModifyUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.request.RegisterUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.request.ReportUsedProductRequest;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -98,6 +101,17 @@ public class UsedProductController {
 
         ReportCommand command = request.toCommand(usedProductId);
         ReportResponse response = usedProductServiceFacade.report(command);
+        return ApiUtils.success(response);
+    }
+
+    @GetMapping("/my-sales")
+    public ApiUtils.ApiResult<FetchMySalesResponse> fetchMySales(@RequestHeader("X-User-Id") String memberId,
+            @RequestParam(name="status") List<UsedProductStatus> status) {
+        FetchMySalesQuery query = FetchMySalesQuery.builder()
+                .status(status)
+                .memberId(Integer.valueOf(memberId))
+                .build();
+        FetchMySalesResponse response = usedProductServiceFacade.fetchMySales(query);
         return ApiUtils.success(response);
     }
 }

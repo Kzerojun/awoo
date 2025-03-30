@@ -12,7 +12,7 @@ public interface UsedProductRepository {
 
     Optional<UsedProductEntity> findById(Integer id);
 
-    Page<UsedProductEntity> findByStatusIn(List<Status> statuses, Pageable pageable);
+    Page<UsedProductEntity> findByUsedProductStatusIn(List<UsedProductStatus> usedProductStatuses, Pageable pageable);
 
     void delete(UsedProductEntity entity);
 

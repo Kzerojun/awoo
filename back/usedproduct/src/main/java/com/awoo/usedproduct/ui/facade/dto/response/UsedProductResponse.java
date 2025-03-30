@@ -1,9 +1,9 @@
 package com.awoo.usedproduct.ui.facade.dto.response;
 
-import com.awoo.usedproduct.domain.Status;
+import com.awoo.usedproduct.domain.UsedProductStatus;
 import com.awoo.usedproduct.domain.UsedProductEntity;
 
-public record UsedProductResponse(Integer productId, String title, String content, Integer price, Status status, int viewCount, int likeCount, String imageUrl) {
+public record UsedProductResponse(Integer productId, String title, String content, Integer price, UsedProductStatus usedProductStatus, int viewCount, int likeCount, String imageUrl) {
 
     public static UsedProductResponse fromEntity(UsedProductEntity entity) {
         String firstImageUrl = extractFirstImageUrl(entity);
@@ -13,7 +13,7 @@ public record UsedProductResponse(Integer productId, String title, String conten
                 entity.getTitle(),
                 entity.getContent(),
                 entity.getPrice(),
-                entity.getStatus(),
+                entity.getUsedProductStatus(),
                 entity.getViewCount(),
                 entity.getLikeCount(),
                 firstImageUrl

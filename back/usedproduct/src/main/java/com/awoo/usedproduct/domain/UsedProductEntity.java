@@ -3,17 +3,21 @@ package com.awoo.usedproduct.domain;
 import com.awoo.usedproduct.domain.exception.DomainExceptionErrorCode;
 import com.awoo.usedproduct.domain.exception.UnauthorizedModificationException;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "used-products")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public class UsedProductEntity {
 
     @Id
@@ -27,7 +31,10 @@ public class UsedProductEntity {
     private Integer price;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private UsedProductStatus usedProductStatus;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
 
     private int viewCount;
 
@@ -48,7 +55,7 @@ public class UsedProductEntity {
         this.content = content;
         this.price = price;
         this.memberId = memberId;
-        this.status = Status.SA;
+        this.usedProductStatus = UsedProductStatus.SA;
         this.viewCount = 0;
         this.likeCount = 0;
         this.images = images;
