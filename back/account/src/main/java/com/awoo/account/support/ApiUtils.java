@@ -1,5 +1,8 @@
 package com.awoo.account.support;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.http.HttpStatus;
@@ -25,7 +28,23 @@ public class ApiUtils {
      * @return 오류 상태와 에러 정보를 포함한 ApiResult 객체
      */
     public static ApiResult<?> error(Throwable throwable, HttpStatus status) {
-        return new ApiResult<>(false, null, new ApiError(throwable, status));
+        return new ApiResult<>(false, null, new ApiError(extractMessage(throwable), status));
+    }
+
+    private static String extractMessage(Throwable e) {
+        if (e instanceof FeignException feignEx) {
+            try {
+                String body = feignEx.contentUTF8();
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode json = mapper.readTree(body);
+                return json.has("responseMessage")
+                        ? json.get("responseMessage").asText()
+                        : "SSAFY 금융망 API에서 오류가 발생했습니다.";
+            } catch (Exception ex) {
+                return "Feign 응답 파싱 실패";
+            }
+        }
+        return e.getMessage();
     }
 
     /**

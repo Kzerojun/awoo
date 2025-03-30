@@ -4,8 +4,8 @@ import com.awoo.account.application.command.*;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.domain.AccountType;
+import com.awoo.account.infra.ssafyfinance.SSAFYCommonApiClient;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
-import com.awoo.account.infra.ssafyfinance.SSAFYWriteMemoApiClient;
 import com.awoo.account.infra.ssafyfinance.request.*;
 import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.util.AESUtil;
@@ -23,7 +23,7 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService{
 
     private final SSAFYDemandDepositApiClient SSAFYApiClient;
-    private final SSAFYWriteMemoApiClient SSAFYWriteMemoApiClient;
+    private final SSAFYCommonApiClient ssafyCommonApiClient;
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
     private final AccountRepository accountRepository;
@@ -115,7 +115,7 @@ public class AccountServiceImpl implements AccountService{
                 .transactionMemo(command.transactionMemo())
                 .build();
 
-        SSAFYWriteMemoApiClient.writeMemo(request);
+        ssafyCommonApiClient.writeMemo(request);
     }
 
     @Transactional
@@ -132,6 +132,41 @@ public class AccountServiceImpl implements AccountService{
         //DB 정보 수정
         AccountEntity account = accountRepository.findByAccountNumber(command.accountNo());
         account.markDeleted();
+    }
+
+    public void changeLimit(String memberId, ChangeLimitCommand command) {
+        //한도 변경 요청 생성
+        SSAFYChangeLimitRequest request = SSAFYChangeLimitRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CHANGE_LIMIT))
+                .accountNo(command.accountNo())
+                .oneTimeTransferLimit(command.oneTimeTransferLimit())
+                .dailyTransferLimit(command.dailyTransferLimit())
+                .build();
+
+        SSAFYApiClient.changeLimit(request);
+    }
+
+    public void openAccountAuth(String memberId, String accountNo) {
+        //1원 송금 요청 생성
+        SSAFYOpenAccountAuthRequest request = SSAFYOpenAccountAuthRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.OPEN_ACCOUNT_AUTH))
+                .accountNo(accountNo)
+                .authText("AwOO")
+                .build();
+
+        ssafyCommonApiClient.openAccountAuth(request);
+    }
+
+    public void checkAuthCode(String memberId, String accountNo, String authCode) {
+        //1원 검증 요청 생성
+        SSAFYCheckAuthCodeRequest request = SSAFYCheckAuthCodeRequest.builder()
+                .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CHECK_AUTH_CODE))
+                .accountNo(accountNo)
+                .authText("AwOO")
+                .authCode(authCode)
+                .build();
+
+        ssafyCommonApiClient.checkAuthCode(request);
     }
 
 }

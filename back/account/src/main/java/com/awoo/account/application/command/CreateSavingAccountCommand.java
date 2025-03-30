@@ -6,7 +6,8 @@ public record CreateSavingAccountCommand(String accountTypeUniqueNo,
                                          Long depositBalance,
                                          String withdrawalAccountNo,
                                          boolean conditionsAgreement,
-                                         String password) {
+                                         String password,
+                                         Integer petId) {
 
     @Builder
     public CreateSavingAccountCommand {

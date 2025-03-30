@@ -34,15 +34,19 @@ public class AccountEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean conditionsAgreement;
 
+    @Column(name = "pet_id")
+    private Integer petId;
+
     @Builder
     public AccountEntity(String accountNumber, String bankCode, Integer memberId,
-                         String password, boolean conditionsAgreement, AccountType accountType) {
+                         String password, boolean conditionsAgreement, AccountType accountType, Integer petId) {
         this.accountNumber = accountNumber;
         this.bankCode = bankCode;
         this.memberId = memberId;
         this.password = password;
         this.conditionsAgreement = conditionsAgreement;
         this.accountType = accountType;
+        this.petId = petId;
     }
 
 }
