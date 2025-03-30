@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { PetInterface } from "./petSlice";
 interface WalkState {
   startTime: string | null;
   endTime: string | null;
   totalTime: string | null;
   distance: number | null;
+  currentWalkingDog: PetInterface | null;
   photo?: string | null;
 }
 
@@ -13,6 +14,7 @@ const initialState: WalkState = {
   endTime: null,
   totalTime: null,
   distance: null,
+  currentWalkingDog: null,
   photo: null,
 };
 
@@ -23,9 +25,12 @@ const walkSlice = createSlice({
     setWalkData: (state, action: PayloadAction<Partial<WalkState>>) => {
       return { ...state, ...action.payload };
     },
+    updateCurrentWalkingDog: (state, action: PayloadAction<PetInterface>) => {
+      state.currentWalkingDog = action.payload;
+    },
     clearWalkData: () => initialState,
   },
 });
 
-export const { setWalkData, clearWalkData } = walkSlice.actions;
+export const { setWalkData, clearWalkData, updateCurrentWalkingDog } = walkSlice.actions;
 export default walkSlice.reducer;
