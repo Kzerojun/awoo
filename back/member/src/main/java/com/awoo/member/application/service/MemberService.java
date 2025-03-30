@@ -1,10 +1,9 @@
 package com.awoo.member.application.service;
 
-import com.awoo.member.application.dto.LoginRequestDto;
-import com.awoo.member.application.dto.MemberInfoResponseDto;
-import com.awoo.member.application.dto.MemberUpdateRequestDto;
-import com.awoo.member.application.dto.SignUpRequestDto;
+import com.awoo.member.application.dto.*;
 import com.awoo.member.ui.dto.CheckMemberRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -13,7 +12,9 @@ public interface MemberService {
 
     void signUp(SignUpRequestDto requestDto, MultipartFile profileImageFile) throws Exception;
 
-    String login(LoginRequestDto requestDto);
+    TokenResponseDto login(LoginRequestDto requestDto);
+
+    ResponseEntity<?> refreshToken(HttpServletRequest request);
 
     void updateMemberInfo(Integer memberId, MemberUpdateRequestDto requestDto, MultipartFile profileImageFile);
 

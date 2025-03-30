@@ -8,13 +8,21 @@ import com.awoo.member.domain.repository.MemberRepository;
 import com.awoo.member.infra.jwt.JwtTokenProvider;
 import com.awoo.member.infra.util.AESUtil;
 import com.awoo.member.ui.dto.CheckMemberRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -64,7 +72,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String login(LoginRequestDto requestDto) {
+    public TokenResponseDto login(LoginRequestDto requestDto) {
         // 1) 이메일로 회원 조회
         Member member = memberRepository.findByEmail(new Email(requestDto.getEmail()))
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
@@ -75,7 +83,53 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 3) JWT 토큰 발급
-        return jwtTokenProvider.createAccessToken(member.getId(), member.getEmail().getValue());
+        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getEmail().getValue());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getId(), member.getEmail().getValue());
+
+        return new TokenResponseDto(accessToken, refreshToken);
+    }
+
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        // 1. 쿠키에서 refreshToken 추출
+        String refreshToken = extractRefreshTokenFromCookies(request);
+        if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+            return ResponseEntity.status(401).body(Map.of("message", "유효하지 않은 리프레시 토큰입니다."));
+        }
+
+        // 2. 토큰에서 사용자 정보 추출
+        Integer memberId = jwtTokenProvider.getMemberIdFromToken(refreshToken);
+        String email = jwtTokenProvider.getEmailFromToken(refreshToken);
+
+        // 3. accessToken + 새로운 refreshToken 발급
+        String newAccessToken = jwtTokenProvider.createAccessToken(memberId, email);
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(memberId, email);
+
+        // 4. 새로운 refreshToken을 쿠키에 세팅
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", newRefreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken)
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(Map.of(
+                        "message", "accessToken & refreshToken 재발급 완료",
+                        "accessToken", newAccessToken
+                ));
+    }
+
+    private String extractRefreshTokenFromCookies(HttpServletRequest request) {
+        if (request.getCookies() == null) return null;
+
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
     }
 
     @Override

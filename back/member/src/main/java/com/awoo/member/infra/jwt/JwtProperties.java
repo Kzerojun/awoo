@@ -14,6 +14,7 @@ public class JwtProperties {
     private String secretKey;
     @Value("${jwt.access_expiration}")
     private long accessExpiration;
+    @Value("${jwt.refresh_expiration}")
     private long refreshExpiration;
 
 }

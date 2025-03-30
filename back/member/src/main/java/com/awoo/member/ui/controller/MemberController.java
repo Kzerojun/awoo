@@ -1,23 +1,19 @@
 package com.awoo.member.ui.controller;
 
-import com.awoo.member.application.dto.LoginRequestDto;
-import com.awoo.member.application.dto.MemberInfoResponseDto;
-import com.awoo.member.application.dto.MemberUpdateRequestDto;
-import com.awoo.member.application.dto.SignUpRequestDto;
+import com.awoo.member.application.dto.*;
 import com.awoo.member.application.service.MemberService;
 import com.awoo.member.infra.BaseColumn.RequestHeaderAuditorAware;
 import com.awoo.member.support.ApiUtils;
 import com.awoo.member.ui.dto.CheckMemberRequest;
 import com.awoo.member.ui.dto.CheckMemberResponse;
 import com.awoo.member.ui.dto.FindMemberKeyResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
 import java.util.Map;
 
 @RestController
@@ -46,16 +42,32 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<ApiUtils.ApiResult<?>> login(@RequestBody LoginRequestDto requestDto) {
         try {
-            String token = memberService.login(requestDto);
+            TokenResponseDto token = memberService.login(requestDto);
+
+            // 3. HttpOnly 쿠키로 refreshToken 설정
+            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", token.refreshToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(Duration.ofDays(7))
+                    .sameSite("Strict")
+                    .build();
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.accessToken())
+                    .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                     .body(ApiUtils.success(Map.of("message", "로그인 성공")));
+
         } catch (Exception e) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(ApiUtils.error(e, HttpStatus.BAD_REQUEST));
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiUtils.error(e, HttpStatus.UNAUTHORIZED));
         }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(HttpServletRequest request) {
+        return memberService.refreshToken(request);
     }
 
     //회원 정보 수정
