@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BellIcon } from "@heroicons/react/24/outline";
-
+import { RootState } from "@/lib/store";
+import { useSelector, UseSelector } from "react-redux";
 export default function Header() {
   const pathname = usePathname();
 
+  const userName = useSelector((state: RootState) => state.user.name);
   // ✅ 그룹별로 처리
   const isProductPage =
     (pathname.startsWith("/home") && pathname !== "/home/myaccount") ||
@@ -16,7 +18,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50 flex justify-between items-center p-4">
-      <h1 className="text-lg">이다은</h1>
+      <h1 className="text-lg">{userName ?? "사용자"}</h1>
       <nav className="flex space-x-4">
         <Link href="/home">
           <span className={`${isProductPage ? "text-black" : "text-gray-400"}`}>상품</span>
