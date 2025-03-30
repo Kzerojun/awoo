@@ -7,16 +7,22 @@ import { BellIcon } from "@heroicons/react/24/outline";
 
 // 실제 컴포넌트 콘텐츠를 별도 컴포넌트로 분리
 function CompleteSendContent() {
-  const [amount, setAmount] = useState<number>(1000); // 기본값 설정 (URL 파라미터에서 가져오기 전)
-  const [balance, setBalance] = useState<number>(2999000); // 기본값 설정
+  const [amount, setAmount] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
   const [receiverName, setReceiverName] = useState<string>("받는분");
-  const [bank, setBank] = useState<string>("농협");
-  const [accountNumber, setAccountNumber] = useState<string>("123654789");
+  const [bank, setBank] = useState<string>("");
+  const [accountNumber, setAccountNumber] = useState<string>("");
+  const [transactionId, setTransactionId] = useState<number | null>(null);
+  const [transactionDate, setTransactionDate] = useState<string>("");
   const router = useRouter();
 
   // URL 파라미터 처리는 클라이언트 컴포넌트에서만 처리하도록 수정
-  // useEffect에서 직접 window.location.search를 사용해 파라미터 처리
   useEffect(() => {
+    // 현재 날짜와 시간 생성
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    setTransactionDate(formattedDate);
+
     // URLSearchParams를 사용해 URL 파라미터 가져오기
     const searchParams = new URLSearchParams(window.location.search);
 
@@ -26,22 +32,15 @@ function CompleteSendContent() {
     const receiverNameParam = searchParams.get("receiverName");
     const bankParam = searchParams.get("bank");
     const accountNumberParam = searchParams.get("accountNumber");
+    const transactionIdParam = searchParams.get("transactionId");
 
     if (amountParam) setAmount(parseInt(amountParam));
     if (balanceParam) setBalance(parseInt(balanceParam));
     if (receiverNameParam) setReceiverName(receiverNameParam);
     if (bankParam) setBank(bankParam);
     if (accountNumberParam) setAccountNumber(accountNumberParam);
+    if (transactionIdParam) setTransactionId(parseInt(transactionIdParam));
   }, []);
-
-  // 현재 날짜와 시간 생성
-  const now = new Date();
-  const formattedDate = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-
-  // 확인 버튼 처리
-  const handleConfirm = () => {
-    router.push("/my"); // 홈 화면으로 이동
-  };
 
   return (
     <div className="flex-1 p-6 flex flex-col pt-14">
@@ -53,7 +52,7 @@ function CompleteSendContent() {
       </div>
 
       {/* 송금 정보 */}
-      <div className="mt-12 ">
+      <div className="mt-12">
         <div className="flex justify-between items-center py-3">
           <p className="text-gray-600 text-lg font-bold">{receiverName}</p>
           <p className="text-lg">
@@ -64,6 +63,16 @@ function CompleteSendContent() {
         <div className="flex justify-between items-center py-3">
           <p className="text-gray-600">거래 후 잔액</p>
           <p className="font-medium">{balance.toLocaleString()}원</p>
+        </div>
+        {transactionId && (
+          <div className="flex justify-between items-center py-3">
+            <p className="text-gray-600">거래 번호</p>
+            <p className="font-medium">{transactionId}</p>
+          </div>
+        )}
+        <div className="flex justify-between items-center py-3">
+          <p className="text-gray-600">거래 일시</p>
+          <p className="font-medium">{transactionDate}</p>
         </div>
       </div>
     </div>
