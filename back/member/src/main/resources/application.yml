@@ -30,6 +30,7 @@ spring:
 jwt :
   secret_key : ${JWT_SECRET_KEY}
   access_expiration : ${ACCESS_EXPIRATION}
+  refresh_expiration : ${REFRESH_EXPIRATION}
 
 aes :
   secret_key : ${AES_KEY}
