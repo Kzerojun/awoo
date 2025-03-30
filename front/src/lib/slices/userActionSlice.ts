@@ -7,6 +7,7 @@ interface UserActionState {
   currentWalkingSelectView: number;
   currentMyPetView: number;
   // currentWalkingDog: PetInterface | null;
+  currentPetDetailView: number;
   isGoingBack: boolean;
 }
 
@@ -15,6 +16,7 @@ const initialState: UserActionState = {
   currentWalkingSelectView: 0,
   currentMyPetView: 0,
   // currentWalkingDog: null,
+  currentPetDetailView: 1,
   isGoingBack: false,
 };
 
@@ -42,6 +44,9 @@ const userActionSlice = createSlice({
     // setCurrentWalkingDog: (state, action: PayloadAction<PetInterface>) => {
     //   state.currentWalkingDog = action.payload;
     // },
+    changeCurrentPetDetailView: (state, action: PayloadAction<number>) => {
+      state.currentPetDetailView = action.payload;
+    },
     markGoingBack: (state, action: PayloadAction<boolean>) => {
       state.isGoingBack = action.payload;
     },
@@ -55,6 +60,7 @@ export const {
   changeMyPetView,
   changeWalkingSelectView,
   // setCurrentWalkingDog,
+  changeCurrentPetDetailView,
   markGoingBack,
 } = userActionSlice.actions;
 export default userActionSlice.reducer;

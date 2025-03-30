@@ -207,7 +207,12 @@ const PetRegister = () => {
         )}
       </AnimatePresence>
 
-      <Button text="등록하기" backgroundColor="green" width="medium" onClick={handleRegisterPet} />
+      <Button
+        text={registerPetPending ? "등록 중.." : "등록하기"}
+        backgroundColor="green"
+        width="medium"
+        onClick={handleRegisterPet}
+      />
     </div>
   );
 };
