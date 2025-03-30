@@ -48,6 +48,21 @@ interface VerifyPasswordPayload {
   password: string;
 }
 
+// 멍페이 송금 interface
+interface TransferPaymentPayload {
+  amount: number;
+  receiverAccountNo: string;
+}
+
+// 멍페이 송금 응답 interface
+interface TransferPaymentResponse {
+  success: boolean;
+  response: {
+    transactionId: number;
+  };
+  error: any;
+}
+
 // 멍페이 핸드폰 인증 요청
 export const requestPhoneAuth = async ({ name, phone }: PhoneAuthPayload) => {
   console.log("멍페이 핸드폰 인증 요청", { name, phone });
@@ -285,5 +300,44 @@ export const verifyPaymentPassword = async ({
   } catch (err) {
     console.error("멍페이 비밀번호 검증 실패:", err);
     return false;
+  }
+};
+
+// 멍페이 송금
+export const transferPayment = async (
+  amount: number,
+  receiverAccountNo: string
+): Promise<TransferPaymentResponse> => {
+  console.log("멍페이 송금 요청", { amount, receiverAccountNo });
+
+  try {
+    // UUID v4 형식의 Idempotency-Key 생성
+    const generateUUID = () => {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0,
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    };
+
+    const idempotencyKey = generateUUID();
+
+    // 요청 본문 구성
+    const payload: TransferPaymentPayload = {
+      amount,
+      receiverAccountNo,
+    };
+
+    const res = await axiosInstance.post("/payments/transfers", payload, {
+      headers: {
+        "Idempotency-Key": idempotencyKey,
+      },
+    });
+
+    console.log("멍페이 송금 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("멍페이 송금 실패:", err);
+    throw err;
   }
 };

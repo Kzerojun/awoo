@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-// SendConfirmModal import 제거
 
 interface SendAmountModalProps {
   isOpen: boolean;
@@ -11,6 +10,7 @@ interface SendAmountModalProps {
     bank: string;
     accountNumber: string;
   };
+  balance: number; // 실제 잔액 추가
 }
 
 export default function SendAmountModal({
@@ -18,10 +18,9 @@ export default function SendAmountModal({
   onClose,
   onComplete,
   bankInfo,
+  balance,
 }: SendAmountModalProps) {
   const [amount, setAmount] = useState<string>("");
-  const [balance] = useState<number>(2000000); // 임시 잔액 (API에서 가져와야 함)
-  // 확인 모달 상태는 필요 없어짐
   const modalRef = useRef<HTMLDivElement>(null);
 
   // 모달이 닫힐 때 금액 초기화
@@ -55,6 +54,11 @@ export default function SendAmountModal({
     setAmount("");
   };
 
+  // 전액 입력 처리
+  const handleMaxAmount = () => {
+    setAmount(balance.toString());
+  };
+
   // 금액 형식화 (천 단위 콤마)
   const formatAmount = (value: string): string => {
     if (!value) return "0";
@@ -77,8 +81,6 @@ export default function SendAmountModal({
     onComplete(Number(amount));
   };
 
-  // 확인 모달 삭제로 이 함수도 필요 없어짐
-
   if (!isOpen) return null;
 
   return (
@@ -91,7 +93,9 @@ export default function SendAmountModal({
         >
           {/* 수신자 정보 */}
           <div className="p-6 bg-white">
-            <p className="text-gray-600 mb-1">농협 {bankInfo.accountNumber}</p>
+            <p className="text-gray-600 mb-1">
+              {bankInfo.bank} {bankInfo.accountNumber}
+            </p>
 
             {/* 금액 표시 */}
             <div className="flex items-center justify-between mt-2 mb-6">
@@ -114,7 +118,7 @@ export default function SendAmountModal({
               </div>
               <div className="border-t border-dashed border-gray-300"></div>
               <div className="flex items-center text-gray-600 justify-between py-2">
-                <p>송금 한도</p>
+                <p>멍페이 잔액</p>
                 <p className="font-medium">{balance.toLocaleString()}원</p>
               </div>
             </div>
@@ -122,9 +126,9 @@ export default function SendAmountModal({
             {/* 송금 버튼 */}
             <button
               onClick={handleConfirm}
-              disabled={!amount || Number(amount) <= 0}
+              disabled={!amount || Number(amount) <= 0 || Number(amount) > balance}
               className={`mt-4 w-full py-2 rounded-2xl ${
-                amount && Number(amount) > 0
+                amount && Number(amount) > 0 && Number(amount) <= balance
                   ? "bg-teal-500 text-white"
                   : "bg-gray-200 text-gray-500"
               } text-xl transition-colors`}
@@ -170,7 +174,7 @@ export default function SendAmountModal({
             <div className="grid grid-cols-3">
               <button
                 className="py-5 border-r border-gray-200 text-gray-500 hover:bg-gray-50 active:bg-gray-100"
-                onClick={handleClear}
+                onClick={handleMaxAmount}
               >
                 전액
               </button>
@@ -206,8 +210,6 @@ export default function SendAmountModal({
           </div>
         </div>
       </div>
-
-      {/* 확인 모달 제거 */}
     </>
   );
 }

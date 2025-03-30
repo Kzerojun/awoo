@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import TopBar from "@/common/ui/TopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import SendBankInfo from "./components/SendBankInfo";
 import SendAmountModal from "./components/SendAmountModal";
 import SendConfirmModal from "./components/SendConfirmModal";
+import { getPaymentBalance, transferPayment } from "@/api/payment/payment";
+import { toast } from "react-toastify";
 
 export default function PaymentSend() {
   const router = useRouter();
@@ -14,7 +16,29 @@ export default function PaymentSend() {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [bankInfo, setBankInfo] = useState<{ bank: string; accountNumber: string } | null>(null);
   const [amount, setAmount] = useState<number>(0);
-  const [balance, setBalance] = useState<number>(2999000); // 현재 잔액 - 실제로는 API에서 가져와야 함
+  const [balance, setBalance] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSending, setIsSending] = useState<boolean>(false);
+  const [transactionId, setTransactionId] = useState<number | null>(null);
+
+  // 컴포넌트 마운트 시 잔액 조회
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        setIsLoading(true);
+        const balanceResponse = await getPaymentBalance();
+        setBalance(balanceResponse.amount);
+      } catch (error) {
+        console.error("잔액 조회 실패:", error);
+        toast.error("잔액 정보를 불러오는데 실패했습니다.");
+        setBalance(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBalance();
+  }, []);
 
   // 계좌 정보 입력 완료 처리
   const handleBankInfoComplete = (data: { bank: string; accountNumber: string }) => {
@@ -38,22 +62,38 @@ export default function PaymentSend() {
   };
 
   // 최종 송금 처리
-  const handleSendComplete = () => {
-    console.log("송금 정보:", { ...bankInfo, amount });
+  const handleSendComplete = async (password: string) => {
+    if (!bankInfo) return;
 
-    // 실제로는 API 호출로 송금 처리 후 잔액 업데이트
-    const newBalance = balance - amount;
-    setBalance(newBalance);
+    try {
+      setIsSending(true);
 
-    // 송금 완료 페이지로 이동하면서 필요한 정보 URL 파라미터로 전달
-    if (bankInfo) {
-      router.push(
-        `/my/paymentSend/completeSend?amount=${amount}&balance=${newBalance}&bank=${bankInfo.bank}&accountNumber=${bankInfo.accountNumber}&receiverName=받는분`
-      );
+      // API 호출로 송금 처리
+      const response = await transferPayment(amount, bankInfo.accountNumber);
+
+      if (response.success) {
+        // 송금 성공
+        setTransactionId(response.response.transactionId);
+
+        // 새 잔액 계산 (실제로는 다시 잔액 조회 API를 호출하는 것이 좋을 수 있음)
+        const newBalance = balance - amount;
+        setBalance(newBalance);
+
+        // 송금 완료 페이지로 이동
+        router.push(
+          `/my/paymentSend/completeSend?amount=${amount}&balance=${newBalance}&bank=${bankInfo.bank}&accountNumber=${bankInfo.accountNumber}&receiverName=받는분&transactionId=${response.response.transactionId}`
+        );
+      } else {
+        // 송금 실패
+        toast.error(response.error?.message || "송금에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("송금 처리 중 오류 발생:", error);
+      toast.error("송금 처리 중 오류가 발생했습니다.");
+    } finally {
+      setIsSending(false);
+      setShowConfirmModal(false);
     }
-
-    // 송금 완료 후 모달 닫기
-    setShowConfirmModal(false);
   };
 
   // 금액 수정 처리
@@ -77,6 +117,7 @@ export default function PaymentSend() {
             onClose={() => setShowAmountModal(false)}
             onComplete={handleAmountComplete}
             bankInfo={bankInfo}
+            balance={balance}
           />
         )}
 
@@ -89,6 +130,7 @@ export default function PaymentSend() {
             onEdit={handleEditAmount}
             amount={amount}
             bankInfo={bankInfo}
+            isSending={isSending}
           />
         )}
       </div>

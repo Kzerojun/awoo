@@ -3,11 +3,13 @@
 import { useState, useRef, useEffect } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import NumericKeypad from "./NumericKeypad";
+import { verifyPaymentPassword } from "@/api/payment/payment";
+import { toast } from "react-toastify";
 
 interface ConfirmPasswordProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (password: string) => void;
   amount: number;
   receiverInfo: {
     name: string;
@@ -25,6 +27,7 @@ export default function ConfirmPassword({
 }: ConfirmPasswordProps) {
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorCount, setErrorCount] = useState<number>(0);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // 비밀번호 원 표시를 위한 배열
@@ -35,12 +38,13 @@ export default function ConfirmPassword({
     if (isOpen) {
       setPassword("");
       setIsLoading(false);
+      setErrorCount(0);
     }
   }, [isOpen]);
 
   // 숫자 입력 처리
   const handleNumberPress = (num: number) => {
-    if (password.length < 6) {
+    if (password.length < 6 && !isLoading) {
       const newPassword = password + num;
       setPassword(newPassword);
 
@@ -53,14 +57,9 @@ export default function ConfirmPassword({
 
   // 백스페이스 처리
   const handleBackspace = () => {
-    if (password.length > 0) {
+    if (password.length > 0 && !isLoading) {
       setPassword((prev) => prev.slice(0, -1));
     }
-  };
-
-  // 전체 지우기
-  const handleClear = () => {
-    setPassword("");
   };
 
   // 키패드 재배열 처리 - NumericKeypad 내부에서 처리하므로 빈 함수로 유지
@@ -69,20 +68,47 @@ export default function ConfirmPassword({
   };
 
   // 확인 버튼 처리
-  const handleConfirm = (pwd: string) => {
+  const handleConfirm = async (pwd: string) => {
+    if (isLoading) return;
+
     setIsLoading(true);
 
-    // 실제로는 API 호출로 비밀번호 검증 필요
-    setTimeout(() => {
+    try {
+      // API 호출로 비밀번호 검증
+      const isValid = await verifyPaymentPassword({ password: pwd });
+
+      if (isValid) {
+        // 비밀번호 검증 성공 - 부모 컴포넌트에 비밀번호 전달하며 확인 콜백 호출
+        onConfirm(pwd);
+        onClose();
+      } else {
+        // 비밀번호 검증 실패
+        handleVerificationFailure();
+      }
+    } catch (error) {
+      console.error("비밀번호 검증 중 오류 발생:", error);
+      handleVerificationFailure();
+    } finally {
       setIsLoading(false);
+    }
+  };
 
-      // 먼저 onConfirm 콜백 호출 - 이렇게 하면 부모 컴포넌트에서
-      // 정의한 송금 완료 로직(잔액 업데이트 및 라우팅)이 실행됨
-      onConfirm();
+  // 비밀번호 검증 실패 처리
+  const handleVerificationFailure = () => {
+    setErrorCount((prev) => prev + 1);
+    setPassword("");
 
-      // 비밀번호 모달 닫기
-      onClose();
-    }, 1000);
+    // 오류 메시지 표시
+    toast.error("비밀번호가 일치하지 않습니다.");
+
+    // 3회 이상 실패하면 모달 닫기
+    if (errorCount >= 2) {
+      // 현재 카운트 + 1로 판단하므로 2를 기준으로 함
+      toast.error("비밀번호 입력 횟수를 초과했습니다.");
+      setTimeout(() => {
+        onClose();
+      }, 1500);
+    }
   };
 
   if (!isOpen) return null;
@@ -103,6 +129,12 @@ export default function ConfirmPassword({
 
           <h2 className="text-2xl font-bold flex justify-center mb-5">멍Pay 비밀번호</h2>
 
+          {/* 송금 정보 요약 표시 */}
+          <p className="text-center text-gray-600 mb-4">
+            {receiverInfo.bank} {receiverInfo.accountNumber}에<br />
+            {amount.toLocaleString()}원을 보냅니다.
+          </p>
+
           {/* 비밀번호 입력 원형 UI */}
           <div className="flex justify-center space-x-4 my-3">
             {passwordCircles.map((_, index) => (
@@ -114,6 +146,13 @@ export default function ConfirmPassword({
               ></div>
             ))}
           </div>
+
+          {/* 오류 표시 */}
+          {errorCount > 0 && (
+            <p className="text-center text-red-500 text-sm mt-2">
+              비밀번호 불일치 ({errorCount}/3)
+            </p>
+          )}
 
           {/* 로딩 표시 */}
           {isLoading && (

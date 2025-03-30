@@ -7,13 +7,14 @@ import ConfirmPassword from "./ConfirmPassword";
 interface SendConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (password: string) => void;
   onEdit: () => void;
   amount: number;
   bankInfo: {
     bank: string;
     accountNumber: string;
   };
+  isSending: boolean;
 }
 
 export default function SendConfirmModal({
@@ -23,8 +24,8 @@ export default function SendConfirmModal({
   onEdit,
   amount,
   bankInfo,
+  isSending,
 }: SendConfirmModalProps) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -34,15 +35,10 @@ export default function SendConfirmModal({
   };
 
   // 비밀번호 확인 완료 후 처리
-  const handlePasswordConfirm = () => {
+  const handlePasswordConfirm = (password: string) => {
     setShowPasswordModal(false);
-    setIsLoading(true);
-
-    // 실제로는 API 호출을 여기서 할 것임
-    setTimeout(() => {
-      setIsLoading(false);
-      onConfirm();
-    }, 1500);
+    // 부모 컴포넌트에 비밀번호와 함께 확인 이벤트 전달
+    onConfirm(password);
   };
 
   // 비밀번호 모달 닫기
@@ -106,20 +102,16 @@ export default function SendConfirmModal({
               <p className="text-gray-500 text-sm">수수료</p>
               <p className="text-gray-800">무료</p>
             </div>
-            <div className="flex justify-between items-center">
-              <p className="text-gray-500 text-sm">보내는 분</p>
-              <p className="text-lg">김홍범</p>
-            </div>
           </div>
 
           {/* 버튼 영역 */}
           <div className="flex flex-col gap-3">
             <button
               onClick={handleSendMoney}
-              disabled={isLoading}
+              disabled={isSending}
               className="w-full py-3 rounded-2xl bg-teal-500 text-white text-lg font-medium flex items-center justify-center"
             >
-              {isLoading ? (
+              {isSending ? (
                 <>
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -148,7 +140,7 @@ export default function SendConfirmModal({
             </button>
             <button
               onClick={onClose}
-              disabled={isLoading}
+              disabled={isSending}
               className="w-full py-3 rounded-2xl border border-gray-300 text-gray-600 text-lg font-medium mb-4"
             >
               취소
