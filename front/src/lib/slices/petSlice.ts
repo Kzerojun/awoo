@@ -8,7 +8,9 @@ export interface PetInterface {
   breed: string;
   profileImage: string | null;
   savingId: number;
+  // TODO: 백엔드 완료되면 주석 풀기
   // walkInMonth: number;
+  // savingGrade: string
 }
 
 interface PetState {
