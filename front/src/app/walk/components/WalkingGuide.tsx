@@ -14,7 +14,7 @@ import paw from "../../../../public/icons/white_paw.svg";
 const WalkingGuide = () => {
   const { requestPermission } = useLocationPermission();
   const router = useRouter();
-  const walkingDog = useAppSelector((state) => state.userAction.currentWalkingDog);
+  const walkingDog = useAppSelector((state) => state.walk.currentWalkingDog);
   //   원래 코드
   const petProfile = walkingDog?.profileImage;
   const dogName = walkingDog?.name;
@@ -85,6 +85,7 @@ const WalkingGuide = () => {
             </div>
           </div>
         </div>
+        {/* TODO: 산책 안내 더 상세하게 안내멘트 적기 */}
 
         <div className="text-center">
           즐거운 산책과 함께 <br />

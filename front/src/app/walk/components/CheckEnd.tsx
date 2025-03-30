@@ -14,13 +14,27 @@ import pin from "../../../../public/icons/walking/map_pin.svg";
 import paw from "../../../../public/icons/white_paw.svg";
 import CongratulationsEffect from "./Congratulations";
 import WalkingWithDog from "./WalkingWithDog";
+import { useWalkingCount } from "@/hooks/walk/useWalkingCount";
 
 const CheckEnd = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const startTime = useAppSelector((state) => state.walk.startTime);
+  const endTime = useAppSelector((state) => state.walk.endTime);
+  const petId = useAppSelector((state) => state.walk.currentWalkingDog?.petId);
   const totalTime = useAppSelector((state) => state.walk.totalTime);
-  const distance = useAppSelector((state) => state.walk.distance);
+  // 0을 허용을 안 해서 만든 가짜 데이터
+  // TODO: 원래 데이터로 바꾸기
+  // const distance = useAppSelector((state) => state.walk.distance);
+  const distance: number = 3.2;
+
+  const {
+    mutate: walkingCountMutation,
+    isPending: walkingCountPending,
+    isSuccess: walkingCountSuccess,
+    isError: walkingCountError,
+  } = useWalkingCount();
 
   const [showCongratulations, setShowCongratulations] = useState<boolean>(false);
 
@@ -32,10 +46,44 @@ const CheckEnd = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const goToHome = () => {
-    setTimeout(() => {
-      router.push("/home");
-    }, 500);
+  const goToHome = async () => {
+    console.log(
+      "산책 데이터 확인",
+      "petID:",
+      petId,
+      "startTime",
+      startTime,
+      "endTime",
+      endTime,
+      "distance",
+      distance
+    );
+    if (!petId || !startTime || !endTime || distance == null) {
+      console.warn("산책 기록 누락: 필수 정보 누락");
+      alert("산책 기록이 누락되었습니다. 1:1 문의를 남겨주세요. \n 홈으로 이동합니다.");
+      setTimeout(() => {
+        router.replace("/home");
+      }, 1000);
+      return;
+    }
+    try {
+      await walkingCountMutation({
+        petId,
+        startTime,
+        endTime,
+        distance,
+      });
+
+      setTimeout(() => {
+        router.push("/home");
+      }, 500);
+    } catch (err) {
+      console.error("산책 기록 실패했음", err);
+      alert("산책 기록에 실패했습니다. 1:1 문의를 이용해주세요. \n 홈으로 이동합니다.");
+      setTimeout(() => {
+        router.push("/home");
+      }, 500);
+    }
   };
 
   return (
@@ -78,11 +126,12 @@ const CheckEnd = () => {
               <WalkingWithDog />
               <div className="absolute bottom-50">
                 <Button
-                  text="홈으로"
+                  text={walkingCountPending ? "저장 중.." : "산책 종료"}
                   onClick={goToHome}
                   backgroundColor="green"
                   img={paw}
                   width="medium"
+                  disabled={walkingCountPending}
                 />
               </div>
             </div>

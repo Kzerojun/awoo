@@ -39,7 +39,7 @@ const Walking = () => {
   const [displayElapsedTime, setDisplayElapsedTime] = useState<string>("0분 0초"); // 표시되는 시간
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const walkingDog = useAppSelector((state) => state.userAction.currentWalkingDog);
+  const walkingDog = useAppSelector((state) => state.walk.currentWalkingDog);
 
   useEffect(() => {
     console.log(walkingDog);
@@ -65,15 +65,15 @@ const Walking = () => {
 
   // 종료 버튼 누르면 기록 종료 + 시간 기록
   const handleStopTracking = () => {
-    stopTracking();
+    const end = stopTracking();
     setIsTrackingStopped(true);
     const totalTime = formatElapsedTime(elapsedTime); // 총 산책 시간
     setTotalWalkTime(totalTime);
 
     dispatch(
       setWalkData({
-        startTime: walkStartTime,
-        endTime: walkEndTime,
+        startTime: startTime?.toISOString(),
+        endTime: end.toISOString(),
         totalTime,
         distance: distance ? parseFloat(distance.toFixed(2)) : 0,
       })
@@ -107,7 +107,7 @@ const Walking = () => {
 
       {isTracking ? (
         <Button
-          text="산책 종료"
+          text="끝내기"
           img={paw}
           onClick={handleStopTracking}
           backgroundColor="light-green"
