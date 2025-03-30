@@ -21,5 +21,5 @@ public interface SavingService {
 
     InquireSavingPaymentResponse InquireSavingPaymentResponse(String memberId, String accountNo);
 
-    SavingAccountResponse getSavingAccount(String memberId, Integer petId);
+    SavingAccountResponse getSavingAccount(String memberId, Integer savingId);
 }

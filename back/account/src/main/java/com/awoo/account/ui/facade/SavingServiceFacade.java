@@ -12,7 +12,7 @@ public interface SavingServiceFacade {
     void createSavingAccount(String memberId, CreateSavingAccountCommand command);
 
     List<SavingAccountResponse> getSavingAccountList(String memberId);
-    SavingAccountResponse getSavingAccount(String memberId, Integer petId);
+    SavingAccountResponse getSavingAccount(String memberId, Integer savingId);
 
     InterestPayResponse getInterestPay(String memberId, String accountNo);
 

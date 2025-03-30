@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface JpaAccountRepository extends AccountRepository, JpaRepository<AccountEntity,Integer> {
 
     AccountEntity findByAccountNumber(String accountNo);
-    AccountEntity findByPetId(Integer petId);
+    AccountEntity findByAccountId(Integer accountId);
 
 }

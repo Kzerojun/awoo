@@ -81,18 +81,18 @@ public class SavingServiceImpl implements SavingService{
         return SSAFYApiClient.getSavingAccountList(request).REC().list();
     }
 
-    public SavingAccountResponse getSavingAccount(String memberId, Integer petId) {
+    public SavingAccountResponse getSavingAccount(String memberId, Integer savingId) {
         //반려견 Id와 맵핑된 계좌 정보 조회
-        AccountEntity account = accountRepository.findByPetId(petId);
+        AccountEntity account = accountRepository.findByAccountId(savingId);
 
-        if (account == null) {  //해당 반려견으로 등록된 적금 계좌가 없는 경우
+        if (account == null) {  //해당 적금 계좌가 없는 경우
             return null;
         }
 
         //SSAFY 적금 계좌 단건 조회 요청 생성
         SSAFYCHANRequest request = SSAFYCHANRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.INQUIRE_SAVING_ACCOUNT))
-                .accountNo(account.getAccountNumber())
+                .accountNo(aesUtil.decrypt(account.getAccountNumber()))
                 .build();
 
         return SSAFYApiClient.getSavingAccount(request).REC();
