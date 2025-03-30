@@ -6,10 +6,12 @@ import com.awoo.usedproduct.application.command.LikeCommand;
 import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
 import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
 import com.awoo.usedproduct.application.command.ReportCommand;
+import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.domain.UsedProductEntity;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,5 +74,9 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
         return new DeleteUsedProductResponse("중고거래 삭제가 성공하였습니다.");
     }
 
-
+    @Override
+    public FetchMySalesResponse fetchMySales(FetchMySalesQuery query) {
+        List<UsedProductEntity> usedProductEntities = queryUsedProductsService.fetchMySales(query);
+        return FetchMySalesResponse.fromEntity(usedProductEntities);
+    }
 }
