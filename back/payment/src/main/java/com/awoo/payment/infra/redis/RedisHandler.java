@@ -17,11 +17,12 @@ public class RedisHandler {
     }
 
     public String getValue(String idempotencyKey) {
-        return redisTemplate.opsForSet().pop(idempotencyKey).toString();
+        return redisTemplate.opsForValue().get(idempotencyKey).toString();
     }
 
-    public void addIdempotencyKey(String idempotencyKey) {
-        redisTemplate.opsForValue().set(idempotencyKey, "충전이 완료되었습니다.", 5, TimeUnit.MINUTES);
+
+    public void addIdempotencyKey(String idempotencyKey,Integer id) {
+        redisTemplate.opsForValue().set(idempotencyKey, String.valueOf(id), 5, TimeUnit.MINUTES);
     }
 
     public void addAuthCode(String phoneNumber, String authCode) {

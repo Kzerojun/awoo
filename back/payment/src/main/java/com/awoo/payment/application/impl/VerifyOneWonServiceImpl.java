@@ -9,7 +9,7 @@ import com.awoo.payment.application.exception.PaymentNotFoundException;
 import com.awoo.payment.domain.PaymentEntity;
 import com.awoo.payment.domain.PaymentRepository;
 import com.awoo.payment.infra.client.MemberClient;
-import com.awoo.payment.infra.client.SSAFYClient;
+import com.awoo.payment.infra.client.SSAFYAuthClient;
 import com.awoo.payment.infra.client.request.SSAFYVerifyOneWonRequest;
 import com.awoo.payment.infra.client.response.FetchMemberKeyResponse;
 import com.awoo.payment.infra.client.response.SSAFYVerifyOneWonResponse;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VerifyOneWonServiceImpl implements VerifyOneWonService {
 
 	private final SSAFYApiHelper ssafyApiHelper;
-	private final SSAFYClient ssafyClient;
+	private final SSAFYAuthClient ssafyAuthClient;
 	private final MemberClient memberClient;
 	private final PaymentRepository paymentRepository;
 
@@ -46,7 +46,7 @@ public class VerifyOneWonServiceImpl implements VerifyOneWonService {
 				.Header(ssafyApiHelper.createHeader(memberKey, SSAFYCode.ONE_WON_VERIFICATION))
 				.build();
 
-		SSAFYVerifyOneWonResponse ssafyVerifyOneWonResponse = ssafyClient.verifyOneWon(request);
+		SSAFYVerifyOneWonResponse ssafyVerifyOneWonResponse = ssafyAuthClient.verifyOneWon(request);
 		if (!ssafyVerifyOneWonResponse.REC().status().equals("SUCCESS")) {
 			throw new OneWonValidationException(ApplicationErrorCode.ONE_WON_INVALIDATION);
 		}
