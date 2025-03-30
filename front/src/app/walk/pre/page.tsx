@@ -10,6 +10,7 @@ import SelectDog from "../components/SelectDog";
 import { PetInterface } from "@/lib/slices/petSlice";
 import { usePetList } from "@/hooks/pet/usePetList";
 import { setPetList } from "@/lib/slices/petSlice";
+import WalkingLoading from "../components/WalkingLoading";
 
 const WalkPreSelectDogPage = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const WalkPreSelectDogPage = () => {
     isError: petListError,
   } = usePetList();
   // const petList = useAppSelector((state) => state.user.petList);
-  const [localPetList, setLocalPetList] = useState<PetInterface[] | null>(null);
+  const [localPetList, setLocalPetList] = useState<PetInterface[]>([]);
   // const currentView = 2; // 테스트를 위한 코드
   const currentView = useAppSelector((state) => state.userAction.currentWalkingSelectView);
   const petNum = localPetList?.length;
@@ -36,11 +37,10 @@ const WalkPreSelectDogPage = () => {
         if (result.isSuccess && result.data) {
           setLocalPetList(result.data);
           dispatch(setPetList(result.data));
-        }
-        if (petListError) {
+        } else {
           console.error("반려견 목록 조회 실패임요!");
           // TODO: 나중에 주석 해제
-          // dispatch(changeWalkingSelectView(1));
+          dispatch(changeWalkingSelectView(1));
         }
       } catch (err) {
         console.error("반려견 목록 조회 실패임요!", err);
@@ -60,6 +60,10 @@ const WalkPreSelectDogPage = () => {
       dispatch(changeWalkingSelectView(2));
     }
   }, [petNum, dispatch]);
+
+  if (petListIsLoading) {
+    return <WalkingLoading />;
+  }
 
   return (
     <>
