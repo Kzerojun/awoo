@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "SSAFY-SERVICE", url = "https://finopenapi.ssafy.io/ssafy/api/v1/edu/accountAuth")
-public interface SSAFYClient {
+public interface SSAFYAuthClient {
 
 	@PostMapping("/openAccountAuth")
 	SSAFYRemitOneWonResponse remitOneWon(@RequestBody SSAFYRemitOneWonRequest request);

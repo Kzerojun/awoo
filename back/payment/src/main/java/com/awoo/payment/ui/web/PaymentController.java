@@ -3,6 +3,7 @@ package com.awoo.payment.ui.web;
 
 import com.awoo.payment.application.command.ChargeBalanceCommand;
 import com.awoo.payment.application.command.CheckAuthCodeCommand;
+import com.awoo.payment.application.command.TransferAmountCommand;
 import com.awoo.payment.application.command.VerifyPaymentPasswordCommand;
 import com.awoo.payment.application.command.RegisterPaymentCommand;
 import com.awoo.payment.application.command.RemitOneWonCommand;
@@ -18,6 +19,7 @@ import com.awoo.payment.ui.facade.dto.request.RegisterPaymentPasswordRequest;
 import com.awoo.payment.ui.facade.dto.request.RegisterPaymentRequest;
 import com.awoo.payment.ui.facade.dto.request.RemitOneWonRequest;
 import com.awoo.payment.ui.facade.dto.request.SendAuthPhoneMessageRequest;
+import com.awoo.payment.ui.facade.dto.request.TransferAmountRequest;
 import com.awoo.payment.ui.facade.dto.request.VerifyOneWonRequest;
 import com.awoo.payment.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
@@ -119,6 +121,18 @@ public class PaymentController {
             @RequestHeader("X-User-Id") String userId) {
         FetchPaymentResponse response = paymentServiceFacade.fetchAccount(
                 Integer.valueOf(userId));
+        return ApiUtils.success(response);
+    }
+
+    @PostMapping("/transfers")
+    public ApiUtils.ApiResult<TransferAmountResponse> transferAmount(
+            @RequestBody TransferAmountRequest request,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestHeader("X-User-Id") String userId) {
+
+        TransferAmountCommand command = request.toCommand(userId,idempotencyKey);
+        TransferAmountResponse response = paymentServiceFacade.transferAmount(
+                command);
         return ApiUtils.success(response);
     }
 }

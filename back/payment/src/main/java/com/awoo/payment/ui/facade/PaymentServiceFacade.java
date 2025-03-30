@@ -25,4 +25,6 @@ public interface PaymentServiceFacade {
     VerifyPaymentPasswordResponse verifyPassword(VerifyPaymentPasswordCommand command);
 
     FetchPaymentResponse fetchAccount(Integer memberId);
+
+    TransferAmountResponse transferAmount(TransferAmountCommand amountCommand);
 }
