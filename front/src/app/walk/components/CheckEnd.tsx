@@ -12,6 +12,8 @@ import congra from "../../../../public/icons/walking/confetti-ball.svg";
 import clock from "../../../../public/icons/walking/clock.svg";
 import pin from "../../../../public/icons/walking/map_pin.svg";
 import paw from "../../../../public/icons/white_paw.svg";
+import CongratulationsEffect from "./Congratulations";
+import WalkingWithDog from "./WalkingWithDog";
 
 const CheckEnd = () => {
   const router = useRouter();
@@ -40,12 +42,7 @@ const CheckEnd = () => {
     <>
       {!showCongratulations ? (
         <div className="w-full h-full bg-gradient-to-b from-green-100 to-blue-100 fixed bottom-0">
-          <Lottie
-            animationData={congratulations}
-            loop={true}
-            autoPlay
-            style={{ width: 900, height: 900 }}
-          />
+          <CongratulationsEffect />
         </div>
       ) : (
         <div className="w-full h-full bg-gradient-to-b from-green-100 to-blue-100 py-20 fixed bottom-0">
@@ -78,12 +75,7 @@ const CheckEnd = () => {
               </div>
             </div>
             <div className="relative w-full flex items-center justify-center">
-              <Lottie
-                animationData={withDog}
-                loop={true}
-                autoPlay
-                style={{ width: 300, height: 300 }}
-              />
+              <WalkingWithDog />
               <div className="absolute bottom-50">
                 <Button
                   text="홈으로"
