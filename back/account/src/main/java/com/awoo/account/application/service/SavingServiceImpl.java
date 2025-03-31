@@ -68,8 +68,8 @@ public class SavingServiceImpl implements SavingService{
         //펫 서버에 saving-id 전달
         Map<String, Integer> kafkaMessage = new HashMap<>();
         kafkaMessage.put("petId", account.getPetId());
-        kafkaMessage.put("accountId", account.getAccountId());
-        kafkaProducer.send("create-saving", kafkaMessage);
+        kafkaMessage.put("savingId", account.getAccountId());
+        kafkaProducer.send("account.saving.created.v1", kafkaMessage);
     }
 
     public List<SavingAccountResponse> getSavingAccountList(String memberId) {
