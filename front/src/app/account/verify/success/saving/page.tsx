@@ -9,8 +9,11 @@ import AccountComplete from "../../../open/components/AccountComplete";
 import Button from "@/common/ui/Button";
 import { useAppSelector } from "@/lib/store";
 import { OpenSavingAccount } from "@/api/account/open/saving/openSaving";
+import { resetSaving } from "@/lib/slices/savingSlice";
+import { useDispatch, UseDispatch } from "react-redux";
 
 export default function SavingAccountVerifySuccessPage() {
+  const dispatch = useDispatch();
   const [showComplete, setShowComplete] = useState(false);
   const router = useRouter();
 
@@ -21,6 +24,7 @@ export default function SavingAccountVerifySuccessPage() {
     withdrawalAccountNo,
     conditionsAgreement,
     password,
+    petId,
   } = useAppSelector((state) => state.saving);
 
   // ✅ 확인 버튼 클릭 시 적금 계좌 개설 요청
@@ -32,8 +36,11 @@ export default function SavingAccountVerifySuccessPage() {
         withdrawalAccountNo,
         conditionsAgreement,
         password,
+        petId,
       });
       console.log("✅ 적금 계좌 개설 응답:", response);
+      // ✅ 성공 시 saving slice 초기화
+      dispatch(resetSaving());
       setShowComplete(true);
     } catch (error) {
       console.error("❌ 적금 계좌 개설 실패:", error);

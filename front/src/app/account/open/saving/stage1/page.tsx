@@ -43,8 +43,10 @@ const Page = () => {
         text="가입하기"
         onClick={() => {
           dispatch(setAccountType("saving"));
-          dispatch(setSavingStage(1)); // ← 1단계 세팅
-          router.push("/account/open/saving/agreement");
+          setTimeout(() => {
+            dispatch(setSavingStage(1));
+            router.push("/account/open/saving/agreement");
+          }, 0);
         }}
         width="long" // 버튼 길이
         textSize="medium" // 텍스트 크기
