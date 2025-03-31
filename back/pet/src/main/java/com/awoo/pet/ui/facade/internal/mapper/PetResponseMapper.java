@@ -6,6 +6,7 @@ import com.awoo.pet.ui.facade.dto.response.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class PetResponseMapper {
@@ -14,12 +15,12 @@ public class PetResponseMapper {
         return RegisterPetResponse.fromEntity(entity);
     }
 
-    public SearchPetListResponse searchPetList(final List<Pet> pets) {
+    public SearchPetListResponse searchPetList(final List<Map<String, Object>> pets) {
         return SearchPetListResponse.fromEntity(pets);
     }
 
-    public SearchPetResponse searchPet(final Pet entity) {
-        return SearchPetResponse.fromEntity(entity);
+    public SearchPetResponse searchPet(final Map<String, Object> petInfo) {
+        return SearchPetResponse.fromEntity(petInfo);
     }
 
     public ModifyPetResponse modifyPet(final Pet entity) {

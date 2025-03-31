@@ -56,10 +56,8 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public FetchUsedProductDetailResponse fetchUsedProduct(FetchUsedProductQuery query) {
         UsedProductEntity usedProductEntity = queryUsedProductsService.fetchUsedProduct(query);
         boolean liked = queryUsedProductsService.isLiked(query.usedProductId(),query.memberId());
-        FetchUsedProductDetailResponse response = FetchUsedProductDetailResponse.create(
-                usedProductEntity, liked);
-
-        return response;
+        return FetchUsedProductDetailResponse.create(
+                usedProductEntity, liked, query.memberId());
     }
 
     @Override

@@ -7,9 +7,9 @@ import java.util.List;
 
 public record FetchUsedProductDetailResponse(Integer usedProductId, String title, String content,
 											 Integer price, UsedProductStatus usedProductStatus, int viewCount,
-											 int likeCount, List<String> imageUrls, boolean isLiked
+											 int likeCount, List<String> imageUrls, boolean isLiked, boolean canModify
 ) {
-	public static FetchUsedProductDetailResponse create(UsedProductEntity usedProductEntity, boolean isLiked){
+	public static FetchUsedProductDetailResponse create(UsedProductEntity usedProductEntity, boolean isLiked, Integer memberId){
 		return new FetchUsedProductDetailResponse(
 				usedProductEntity.getUsedProductId(),
 				usedProductEntity.getTitle(),
@@ -20,7 +20,8 @@ public record FetchUsedProductDetailResponse(Integer usedProductId, String title
 				usedProductEntity.getLikeCount(),
 				usedProductEntity.getImages().stream()
 						.map(UsedProductImage::getImageUrl).toList(),
-				isLiked
+				isLiked,
+				usedProductEntity.hasPermission(memberId)
 		);
 	}
 

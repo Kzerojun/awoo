@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -27,25 +28,25 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     private final RegisterWalkService registerWalkService;
     private final SearchWalkService searchWalkService;
     private final SearchWalkListService searchWalkListService;
+    private final SearchWalkInMonthService searchWalkInMonthService;
     private final PetResponseMapper mapper;
 
     @Override
     public RegisterPetResponse registerPet(final RegisterPetRequest request, final MultipartFile profileImage, final Integer memberId) {
-        Integer petId = registerPetService.registerPet(request.toCommand(memberId, profileImage));
-        Pet entity = searchPetService.searchPet(petId);
-        return mapper.registerPet(entity);
+        Pet pet = registerPetService.registerPet(request.toCommand(memberId, profileImage));
+        return mapper.registerPet(pet);
     }
 
     @Override
     public SearchPetListResponse searchPetList(final Integer memberId) {
-        List<Pet> pets = searchPetListService.searchPetList(memberId);
+        List<Map<String, Object>> pets = searchPetListService.searchPetList(memberId);
         return mapper.searchPetList(pets);
     }
 
     @Override
     public SearchPetResponse searchPet(final Integer petId) {
-        Pet entity = searchPetService.searchPet(petId);
-        return mapper.searchPet(entity);
+        Map<String, Object> petInfo = searchPetService.searchPet(petId);
+        return mapper.searchPet(petInfo);
     }
 
     @Override
@@ -77,7 +78,8 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
 
     @Override
     public SearchWalkListResponse searchWalkListByPet(final Integer petId){
-        Pet pet = searchPetService.searchPet(petId);
+        Map<String, Object> petInfo = searchPetService.searchPet(petId);
+        Pet pet = (Pet)petInfo.get("pet");
         List<Walk> walks = searchWalkListService.searchWalkListByPet(pet.getPetId());
         return mapper.searchWalkList(walks);
     }
@@ -85,6 +87,12 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     @Override
     public SearchWalkListResponse searchWalkListByMember(final Integer memberId) {
         List<Walk> walks = searchWalkListService.searchWalkListByMember(memberId);
+        return mapper.searchWalkList(walks);
+    }
+
+    @Override
+    public SearchWalkListResponse searchWalkInMonthByPet(final Integer petId) {
+        List<Walk> walks = searchWalkInMonthService.searchWalkInMonth(petId);
         return mapper.searchWalkList(walks);
     }
 }

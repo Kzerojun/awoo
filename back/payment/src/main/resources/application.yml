@@ -56,3 +56,16 @@ sms:
 ssafy :
   finance :
     api_key : ${SSAFY_API_KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
