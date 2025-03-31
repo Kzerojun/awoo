@@ -9,6 +9,7 @@ interface SavingState {
   conditionsAgreement: boolean; // 동의 여부
   password: string; // 비밀번호
   savingStage: number; // 1|2|3 단계 구분
+  petId: number;
 }
 
 const initialState: SavingState = {
@@ -20,6 +21,7 @@ const initialState: SavingState = {
   withdrawalAccountName: "",
   withdrawalBankName: "",
   savingStage: 0,
+  petId: 0,
 };
 
 const savingSlice = createSlice({
@@ -55,6 +57,9 @@ const savingSlice = createSlice({
     setAccountTypeUniqueNo(state, action: PayloadAction<string>) {
       state.accountTypeUniqueNo = action.payload;
     },
+    setPetId(state, action: PayloadAction<number>) {
+      state.petId = action.payload;
+    },
   },
 });
 
@@ -67,6 +72,7 @@ export const {
   resetSaving,
   setAccountTypeUniqueNo,
   setSavingStage,
+  setPetId,
 } = savingSlice.actions;
 
 export default savingSlice.reducer;
