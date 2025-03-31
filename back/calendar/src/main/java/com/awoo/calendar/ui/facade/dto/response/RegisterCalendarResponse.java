@@ -17,6 +17,8 @@ public class RegisterCalendarResponse {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String color;
+    private String calendarType;
+    private String delYn;
 
 
     public static RegisterCalendarResponse fromEntity(Calendar calendar) {
@@ -27,6 +29,9 @@ public class RegisterCalendarResponse {
                 .scheduleContent(calendar.getScheduleContent())
                 .startTime(calendar.getStartTime())
                 .endTime(calendar.getEndTime())
+                .color(calendar.getColor())
+                .calendarType(calendar.getCalendarType().getValue())
+                .delYn(calendar.getDelYn())
                 .build();
     }
 }

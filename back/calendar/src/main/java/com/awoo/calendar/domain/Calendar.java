@@ -37,11 +37,14 @@ public class Calendar {
     @Column(nullable = false)
     private String color;
 
+    @Enumerated(EnumType.STRING)
+    private CalendarType calendarType;
+
     @Column(length = 1, nullable = false, columnDefinition = "CHAR(1)")
     private String delYn = "N";
 
     @Builder
-    public Calendar(Integer calendarId, int memberId, int petId, String scheduleContent, LocalDateTime startTime, LocalDateTime endTime, String color) {
+    public Calendar(Integer calendarId, int memberId, int petId, String scheduleContent, LocalDateTime startTime, LocalDateTime endTime, String color, CalendarType calendarType) {
         this.calendarId = calendarId;
         this.memberId = memberId;
         this.petId = petId;
@@ -49,6 +52,7 @@ public class Calendar {
         this.startTime = startTime;
         this.endTime = endTime;
         this.color = color;
+        this.calendarType = calendarType;
     }
 
     public void modify(final ModifyCalendarCommand command){
