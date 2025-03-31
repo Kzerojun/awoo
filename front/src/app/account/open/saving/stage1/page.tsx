@@ -46,7 +46,7 @@ const Page = () => {
         onClick={() => {
           // 리셋하고 시작
           dispatch(resetAccountProgress());
-          // 두 액션 모두 accountProgressSlice에서 가져온 것 사용
+          // 적금 상태 redux 업데이트
           dispatch(setAccountType("saving"));
           dispatch(setSavingStage(1));
 
@@ -65,7 +65,7 @@ const Page = () => {
         {/* 아이콘 + 소개 문구 */}
         <div className="mt-8">
           <ProductIntro
-            iconSrc="/icons/account/cash.svg" // 저장한 파일 경로에 맞춰 수정
+            iconSrc="/icons/account/cash.svg"
             altText="1단계 말티즈 강아지"
             description={[
               {

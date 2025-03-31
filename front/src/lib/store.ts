@@ -23,7 +23,7 @@ import petReducer from "./slices/petSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["saving", "savingPassword", "accountProgress", "account", "user", "pet"], // 필요한 애들만 넣기!
+  whitelist: ["saving", "savingPassword", "accountProgress", "account", "user", "pet"], // persist로 값을 관리할 필요가 있는 경우에 추가
 };
 
 const rootReducer = combineReducers({

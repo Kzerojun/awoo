@@ -42,7 +42,9 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
+          // 리셋 하고 시작
           dispatch(resetAccountProgress());
+
           dispatch(setAccountType("saving"));
           dispatch(setSavingStage(2)); // ← 2단계 세팅
           router.push("/account/open/saving/agreement");

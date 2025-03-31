@@ -46,6 +46,7 @@ const Page = () => {
         onClick={() => {
           // 리셋하고 시작
           dispatch(resetAccountProgress());
+
           dispatch(setAccountType("saving"));
           dispatch(setSavingStage(3));
           router.push("/account/open/saving/agreement");
