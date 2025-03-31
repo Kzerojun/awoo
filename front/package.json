@@ -36,6 +36,7 @@
     "react-redux": "^9.2.0",
     "react-swipeable": "^7.0.2",
     "react-toastify": "^11.0.5",
+    "redux-persist": "^6.0.0",
     "storybook": "^8.6.6"
   },
   "devDependencies": {
