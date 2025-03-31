@@ -9,6 +9,7 @@ import com.awoo.account.infra.ssafyfinance.SSAFYSavingsApiClient;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCHANRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
 import com.awoo.account.infra.ssafyfinance.request.SSAFYCreateSavingAccountRequest;
+import com.awoo.account.infra.ssafyfinance.request.SSAFYSavingAccountDto;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYCreateSavingAccountResponse;
 import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.SSAFYApiHelper;
@@ -21,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +75,44 @@ public class SavingServiceImpl implements SavingService{
     }
 
     public List<SavingAccountResponse> getSavingAccountList(String memberId) {
-        //SSAFY 적금 계좌 목록 요청 생성
         SSAFYCommonHeaderRequest request = SSAFYCommonHeaderRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.SAVING_ACCOUNT_LIST))
                 .build();
 
-        return SSAFYApiClient.getSavingAccountList(request).REC().list();
+        List<SSAFYSavingAccountDto> feignResponse = SSAFYApiClient.getSavingAccountList(request).REC().list();
+
+        List<AccountEntity> accounts = accountRepository.findAllByMemberIdAndAccountType(
+                Integer.valueOf(memberId),
+                AccountType.SAVING
+        );
+
+        Map<String, Integer> petIdMap = new HashMap<>();
+        for (AccountEntity account : accounts) {
+            String encrypted = account.getAccountNumber();
+            if (encrypted == null) continue;
+
+            String decrypted = aesUtil.decrypt(encrypted);
+            if (decrypted == null) continue;
+
+            petIdMap.put(decrypted, account.getPetId()); // petId는 null일 수 있음 → OK
+        }
+
+        List<SavingAccountResponse> result = new ArrayList<>();
+        for (SSAFYSavingAccountDto dto : feignResponse) {
+            String accountNo = dto.accountNo();
+            Integer petId = petIdMap.get(accountNo);
+
+            SavingAccountResponse response = SavingAccountResponse.from(dto, petId);
+            result.add(response);
+        }
+
+
+        return result;
     }
 
+
     public SavingAccountResponse getSavingAccount(String memberId, Integer savingId) {
-        //반려견 Id와 맵핑된 계좌 정보 조회
+        //적금Id로 계좌 정보 조회
         AccountEntity account = accountRepository.findByAccountId(savingId);
 
         if (account == null) {  //해당 적금 계좌가 없는 경우
@@ -95,7 +125,8 @@ public class SavingServiceImpl implements SavingService{
                 .accountNo(aesUtil.decrypt(account.getAccountNumber()))
                 .build();
 
-        return SSAFYApiClient.getSavingAccount(request).REC();
+        SSAFYSavingAccountDto dto = SSAFYApiClient.getSavingAccount(request).REC();
+        return SavingAccountResponse.from(dto, account.getPetId());
     }
 
     public InterestPayResponse getInterestPay(String memberId, String accountNo) {
