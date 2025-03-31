@@ -79,6 +79,10 @@ public class UsedProductEntity {
         return true;
     }
 
+    public boolean hasPermission(Integer memberId) {
+        return this.memberId.equals(memberId);
+    }
+
     public void decreaseLikeCount(){
         this.likeCount--;
     }
