@@ -33,7 +33,7 @@ public class AccountServiceImpl implements AccountService{
         // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
-                .accountTypeUniqueNo("999-1-2f9c2ea1789943")    //Test 계좌 상품 연결
+                .accountTypeUniqueNo("999-1-791c997dad0041")
                 .build();
 
         //SSAFY API 호출
@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService{
         SSAFYApiClient.deleteAccount(request);
 
         //DB 정보 수정
-        AccountEntity account = accountRepository.findByAccountNumber(command.accountNo());
+        AccountEntity account = accountRepository.findByAccountNumber(aesUtil.encrypt(command.accountNo()));
         account.markDeleted();
     }
 

@@ -39,7 +39,7 @@ public class AccountController {
     }
 
     //거래내역 조회
-    @GetMapping("/transactions")
+    @PostMapping("/transactions")
     public ApiUtils.ApiResult<?> getTransactions(@RequestHeader("X-User-Id") String memberId,
                                                  @RequestBody TransactionsRequest request) {
         TransactionsCommand command = request.toCommond();
