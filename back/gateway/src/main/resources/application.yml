@@ -18,7 +18,11 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: 'https://awoofinance.duckdns.org,http://localhost:3000,http://localhost:80'
+            allowedOrigins:
+              - "https://awoofinance.duckdns.org"
+              - "http://localhost:3000"
+              - "http://localhost:80"
+              - "http://localhost:8090"
             allowedMethods:
               - GET
               - POST
@@ -26,7 +30,9 @@ spring:
               - DELETE
             allowedHeaders: "*"
             allowCredentials: true
-            exposed-headers: 'Authorization'
+            exposed-headers: "Authorization"
+
+          '/api/used-products/**': {}  # 빈 객체를 넣으면 CORS 적용 안 함
 
       routes:
         - id: pet-service

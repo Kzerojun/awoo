@@ -1,11 +1,7 @@
 package com.awoo.usedproduct.ui.facade.internal;
 
 import com.awoo.usedproduct.application.*;
-import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
-import com.awoo.usedproduct.application.command.LikeCommand;
-import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
-import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
-import com.awoo.usedproduct.application.command.ReportCommand;
+import com.awoo.usedproduct.application.command.*;
 import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.domain.UsedProductEntity;
@@ -27,6 +23,8 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     private final DeleteUsedProductService deleteUsedProductService;
     private final LikeService likeService;
     private final ReportService reportService;
+    private final CreateRoomService createRoomService;
+    private final ChatMessageService chatMessageService;
 
     @Override
     public RegisterUsedProductResponse registerUsedProduct(RegisterUsedProductCommand command) {
@@ -76,5 +74,23 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public FetchMySalesResponse fetchMySales(FetchMySalesQuery query) {
         List<UsedProductEntity> usedProductEntities = queryUsedProductsService.fetchMySales(query);
         return FetchMySalesResponse.fromEntity(usedProductEntities);
+    }
+
+    @Override
+    public CreateRoomResponse createRoom(CreateChatRoomCommand command) {
+        Integer chatRoomId = createRoomService.createChatRoom(command);
+        return new CreateRoomResponse(chatRoomId);
+    }
+
+    @Override
+    public MessageResponse message(MessageCommand command) {
+        Integer messageId = chatMessageService.saveMessage(command);
+        return MessageResponse.builder()
+                .chatRoomId(command.chatRoomId())
+                .image(command.image())
+                .messageId(messageId)
+                .message(command.message())
+                .senderId(command.senderId())
+                .build();
     }
 }

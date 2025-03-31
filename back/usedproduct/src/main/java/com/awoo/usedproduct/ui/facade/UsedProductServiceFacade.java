@@ -1,10 +1,6 @@
 package com.awoo.usedproduct.ui.facade;
 
-import com.awoo.usedproduct.application.command.DeleteUsedProductCommand;
-import com.awoo.usedproduct.application.command.LikeCommand;
-import com.awoo.usedproduct.application.command.ModifyUsedProductCommand;
-import com.awoo.usedproduct.application.command.RegisterUsedProductCommand;
-import com.awoo.usedproduct.application.command.ReportCommand;
+import com.awoo.usedproduct.application.command.*;
 import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
@@ -28,4 +24,7 @@ public interface UsedProductServiceFacade {
 
     ReportResponse report(ReportCommand command);
 
+    CreateRoomResponse createRoom(CreateChatRoomCommand command);
+
+    MessageResponse message(MessageCommand command);
 }
