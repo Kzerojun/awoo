@@ -1368,3 +1368,84 @@ docker exec <컨테이너_이름> cat /etc/timezone
 적절한 타임존 설정으로 로그 타임스탬프와 시간 관련 기능들이 의도한 대로 동작하게 됩니다.
 
 </details>
+
+<details>
+<summary><strong>0331</strong></summary>
+
+# TIL: Idempotency-Key와 안전한 API 거래
+
+### Idempotency-Key란?
+
+> Idempotency-Key는 API 요청의 중복 처리를 방지하기 위한 HTTP 헤더입니다. "멱등성(idempotent)"이란 동일한 요청을 여러 번 수행해도 결과가 달라지지 않는 특성을 의미합니다. 예를 들어, 동일한 금액의 결제 요청이 네트워크 문제로 중복 전송되었을 때 실제로는 한 번만 처리되도록 보장하는 메커니즘입니다.
+
+### 왜 필요한가?
+
+결제, 송금, 충전과 같은 금융 거래에서 중복 처리는 심각한 문제를 일으킬 수 있습니다:
+
+1. `네트워크 불안정성`: 사용자가 결제 버튼을 클릭했으나 네트워크 오류로 응답을 받지 못해 다시 시도한 경우
+2. `다중 클릭`: 사용자가 실수로 버튼을 여러 번 클릭한 경우
+3. `자동 재시도`: 클라이언트 라이브러리가 요청 실패 시 자동으로 재시도하는 경우
+   이러한 상황에서 Idempotency-Key가 없다면 중복 결제나 중복 송금이 발생할 수 있습니다.
+
+### 어떻게 작동하는가?
+
+1. `고유 키 생성`: 클라이언트는 각 요청마다 고유한 UUID를 생성합니다.
+   ```javascript
+   const idempotencyKey = "d7c9e289-4b49-4eae-b871-a9f3c63e5a04";
+   ```
+2. `헤더에 포함`: 이 키를 HTTP 요청 헤더에 포함시킵니다.
+   ```javascript
+   headers: {
+     "Idempotency-Key": idempotencyKey
+   }
+   ```
+3. `서버 처리`: 서버는 이 키를 기반으로 요청을 식별합니다.
+
+- 해당 키로 첫 요청 시: 정상적으로 처리하고 키와 결과를 저장
+- 동일한 키로 재요청 시: 실제 처리를 건너뛰고 저장된 결과를 반환
+
+### 구현 시 고려사항
+
+1. `유효 기간`: Idempotency-Key의 유효 기간은 서비스 특성에 맞게 설정해야 합니다. 일반적으로 24시간 정도가 적절합니다.
+2. `저장소`: 키와 응답을 저장할 인프라가 필요합니다(Redis, 데이터베이스 등).
+3. `복구 가능성`: 서버 장애 시에도 Idempotency-Key 정보가 보존되어야 합니다.
+4. `클라이언트 측 관리`: 동일한 트랜잭션에는 항상 동일한 키를 사용하고, 새 트랜잭션에는 새 키를 생성해야 합니다.
+
+### 실제 사용 예시
+
+멍페이 충전과 송금에서의 사용:
+
+```javascript
+// 멍페이 충전 함수
+export const chargePayment = async (amount: number) => {
+  // UUID v4 형식 생성
+  const idempotencyKey = generateUUID();
+
+  try {
+    const res = await axiosInstance.post(
+      "/payments/charges",
+      { amount },
+      {
+        headers: { "Idempotency-Key": idempotencyKey },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("멍페이 충전 실패:", err);
+    throw err;
+  }
+};
+```
+
+### 주요 사용처
+
+- `결제 API`: Stripe, PayPal 등 대부분의 결제 시스템
+- `송금 API`: 은행 송금, 디지털 화폐 거래
+- `주문 시스템`: 전자상거래 주문 처리
+- `리소스 프로비저닝`: 클라우드 리소스 생성
+
+### 결론
+
+> Idempotency-Key는 금융 트랜잭션이나 중요한 API 작업에서 중복 실행을 방지하는 필수적인 메커니즘입니다. 사용자에게 안전한 거래 경험을 제공하면서도 백엔드 시스템을 보호하는 역할을 합니다. 특히 결제, 송금과 같은 금융 작업에서는 반드시 적용해야 하는 패턴입니다.
+
+</details>
