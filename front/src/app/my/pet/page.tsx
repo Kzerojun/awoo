@@ -40,6 +40,7 @@ const Pet = () => {
 
   useEffect(() => {
     if (petNum === 0) {
+      // if (petNum === 0 || localPetList === null) {
       // 현재 뷰를 1 (강아지 등록 유도 컴포넌트)
       dispatch(changeMyPetView(1));
     } else {

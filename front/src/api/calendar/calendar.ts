@@ -150,9 +150,13 @@ export const updateSchedule = async ({
 };
 
 // 일정 삭제
-// TODO: 백엔드 물어보기
-// export const deleteSchedule = async () => {
-//  try {
-//     const res = axiosInstance.delete(`/schedules/${}`)
-//  }
-// }
+export const deleteSchedule = async ({ calendarId }: CalendarIdPayload) => {
+  try {
+    const res = await axiosInstance.delete(`/calendars/${calendarId}`);
+    console.log("일정 삭제 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("일정 삭제 실패:", err);
+    throw err;
+  }
+};

@@ -6,11 +6,10 @@ export interface PetInterface {
   name: string;
   age: number;
   breed: string;
-  profileImage: string | null;
+  profileImage: string;
   savingId: number;
-  // TODO: 백엔드 완료되면 주석 풀기
-  // walkInMonth: number;
-  // savingGrade: string
+  walkInMonth: number;
+  savingGrade: string;
 }
 
 interface PetState {
