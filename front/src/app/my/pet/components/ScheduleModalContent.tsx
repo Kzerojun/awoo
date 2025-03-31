@@ -4,6 +4,7 @@ import React, { ChangeEvent, useState } from "react";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import ColorPicker from "./ColorPicker";
 import { set } from "date-fns";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 interface Props {
   title: string;
@@ -18,6 +19,8 @@ interface Props {
   setStartDate: (v: string) => void;
   endDate: string;
   setEndDate: (v: string) => void;
+  showDelete?: boolean;
+  onDelete?: () => void;
 }
 
 const ScheduleModalContent = ({
@@ -33,6 +36,8 @@ const ScheduleModalContent = ({
   endDate,
   setStartDate,
   setEndDate,
+  showDelete = false,
+  onDelete,
 }: Props) => {
   const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -42,7 +47,10 @@ const ScheduleModalContent = ({
   const [showColorModal, setShowColorModal] = useState<boolean>(false);
   return (
     <>
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-x-2">
+        <button>
+          <TrashIcon className="w-6 h-6 text-red-500" onClick={onDelete} />
+        </button>
         <button>
           <CheckIcon className="w-6 h-6 text-custom-gray" onClick={() => onSubmit()} />
         </button>
