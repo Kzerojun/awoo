@@ -44,7 +44,7 @@ public class SavingController {
 
     }
 
-    @GetMapping("/termination")
+    @PostMapping("/termination")
     public ApiUtils.ApiResult<?> getInterestPay(@RequestHeader("X-User-Id") String memberId,
                                                          @RequestBody Map<String, String> map) {
         String accountNo = map.get("accountNo");
@@ -55,7 +55,7 @@ public class SavingController {
         }
     }
 
-    @GetMapping("/termination-early")
+    @PostMapping("/termination-early")
     public ApiUtils.ApiResult<?> getEarlyInterestPay(@RequestHeader("X-User-Id") String memberId,
                                                 @RequestBody Map<String, String> map) {
         String accountNo = map.get("accountNo");
@@ -79,7 +79,7 @@ public class SavingController {
     }
 
     //적급 납입 회차 조회
-    @GetMapping("/inquirePayment")
+    @PostMapping("/inquirePayment")
     public ApiUtils.ApiResult<?> inquireSavingPayment(@RequestHeader("X-User-Id") String memberId,
                                                 @RequestBody Map<String, String> map) {
         String accountNo = map.get("accountNo");
