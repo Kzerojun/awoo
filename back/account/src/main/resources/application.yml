@@ -31,9 +31,3 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
-
-feign:
-  client:
-    config:
-      member-service:
-        url: ${member-service.url}
