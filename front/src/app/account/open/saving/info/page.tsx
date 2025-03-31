@@ -178,6 +178,23 @@ export default function SavingInfoPage() {
               만기 예상액: {expectedAmount.toLocaleString()}원 (예상 {months}개월)
             </p>
           )}
+          {/* 적립 시작 금액 */}
+          <div className="flex justify-between text-sm mt-2">
+            <span>적립 시작금액</span>
+            <span>{depositInput || "0"}원</span>
+          </div>
+
+          {/* 적립 방식 */}
+          <div className="flex justify-between text-sm">
+            <span>적립방식</span>
+            <span>정기로 입금</span>
+          </div>
+
+          {/* 만기 설정 */}
+          <div className="flex justify-between text-sm">
+            <span>만기 설정</span>
+            <span>만기시 자동해지</span>
+          </div>
 
           {/* 다음 버튼 */}
           <div className="flex justify-center mt-4">

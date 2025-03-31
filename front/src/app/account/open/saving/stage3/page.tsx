@@ -8,10 +8,12 @@ import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep3 from "../components/ProductDetailStep3";
 import ProductDocs from "../components/ProductDocs";
 import { useRouter } from "next/navigation";
-import { setSavingStage } from "@/lib/slices/accountProgressSlice";
 import { useAppDispatch } from "@/lib/store";
-import { setAccountType } from "@/lib/slices/accountProgressSlice";
-
+import {
+  setAccountType,
+  setSavingStage,
+  resetAccountProgress,
+} from "@/lib/slices/accountProgressSlice";
 const step3Reviews = [
   {
     text: "꾸준히 함께한 여정이 정말 뿌듯해요! 계속 이용할 계획입니다.",
@@ -42,8 +44,10 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
+          // 리셋하고 시작
+          dispatch(resetAccountProgress());
           dispatch(setAccountType("saving"));
-          dispatch(setSavingStage(2));
+          dispatch(setSavingStage(3));
           router.push("/account/open/saving/agreement");
         }}
         width="long"

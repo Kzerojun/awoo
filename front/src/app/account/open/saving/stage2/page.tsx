@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { setSavingStage } from "@/lib/slices/accountProgressSlice";
 import { useAppDispatch } from "@/lib/store";
 import { setAccountType } from "@/lib/slices/accountProgressSlice";
-
+import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
 const step2Reviews = [
   {
     text: "이제 산책이 루틴이 되었어요!",
@@ -42,6 +42,7 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
+          dispatch(resetAccountProgress());
           dispatch(setAccountType("saving"));
           dispatch(setSavingStage(2)); // ← 2단계 세팅
           router.push("/account/open/saving/agreement");

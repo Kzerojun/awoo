@@ -11,7 +11,8 @@ import { useAppSelector } from "@/lib/store";
 import { OpenSavingAccount } from "@/api/account/open/saving/openSaving";
 import { resetSaving } from "@/lib/slices/savingSlice";
 import { useDispatch, UseDispatch } from "react-redux";
-
+import { resetSavingPasswordState } from "@/lib/slices/savingPasswordSlice";
+import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
 export default function SavingAccountVerifySuccessPage() {
   const dispatch = useDispatch();
   const [showComplete, setShowComplete] = useState(false);
@@ -39,11 +40,22 @@ export default function SavingAccountVerifySuccessPage() {
         petId,
       });
       console.log("✅ 적금 계좌 개설 응답:", response);
-      // ✅ 성공 시 saving slice 초기화
+
+      if (!response.success) {
+        alert("적금 계좌 개설에 실패했습니다.");
+        return; // 바로 리턴해야 함
+      }
+
+      // 진짜 성공했을 때만
       dispatch(resetSaving());
+      dispatch(resetAccountProgress());
+      dispatch(resetSavingPasswordState());
       setShowComplete(true);
     } catch (error) {
       console.error("❌ 적금 계좌 개설 실패:", error);
+      dispatch(resetSaving());
+      dispatch(resetAccountProgress());
+      dispatch(resetSavingPasswordState());
       alert("적금 계좌 개설에 실패했습니다. 다시 시도해주세요.");
     }
   };
