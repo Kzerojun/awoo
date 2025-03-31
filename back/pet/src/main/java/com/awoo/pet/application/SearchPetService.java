@@ -2,7 +2,9 @@ package com.awoo.pet.application;
 
 import com.awoo.pet.domain.pet.Pet;
 
+import java.util.Map;
+
 public interface SearchPetService {
 
-    Pet searchPet(Integer petId);
+    Map<String, Object> searchPet(Integer petId);
 }

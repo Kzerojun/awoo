@@ -3,8 +3,9 @@ package com.awoo.pet.application;
 import com.awoo.pet.domain.pet.Pet;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SearchPetListService {
 
-    List<Pet> searchPetList(final Integer memberId);
+    List<Map<String, Object>> searchPetList(final Integer memberId);
 }
