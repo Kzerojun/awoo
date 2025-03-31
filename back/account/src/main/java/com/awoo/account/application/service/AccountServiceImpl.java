@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService{
         SSAFYApiClient.deleteAccount(request);
 
         //DB 정보 수정
-        AccountEntity account = accountRepository.findByAccountNumber(command.accountNo());
+        AccountEntity account = accountRepository.findByAccountNumber(aesUtil.encrypt(command.accountNo()));
         account.markDeleted();
     }
 
