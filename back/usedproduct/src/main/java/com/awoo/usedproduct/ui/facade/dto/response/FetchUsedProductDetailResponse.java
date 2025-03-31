@@ -21,7 +21,7 @@ public record FetchUsedProductDetailResponse(Integer usedProductId, String title
 				usedProductEntity.getImages().stream()
 						.map(UsedProductImage::getImageUrl).toList(),
 				isLiked,
-				usedProductEntity.canModify(memberId)
+				usedProductEntity.hasPermission(memberId)
 		);
 	}
 
