@@ -71,4 +71,10 @@ public class PetController {
     public ApiUtils.ApiResult<SearchWalkListResponse> searchWalkListByMember(@PathVariable Integer memberId){
         return ApiUtils.success(petServiceFacade.searchWalkListByMember(memberId));
     }
+
+
+    @GetMapping("/{petId}/walks/inMonth")
+    public ApiUtils.ApiResult<SearchWalkListResponse> searchWalkInMonthByPet(@PathVariable Integer petId){
+        return ApiUtils.success(petServiceFacade.searchWalkInMonthByPet(petId));
+    }
 }

@@ -21,7 +21,7 @@ public class RegisterPetServiceImpl implements RegisterPetService {
     private final PetRepository petRepository;
 
     @Override
-    public Integer registerPet(final RegisterPetCommand command) {
+    public Pet registerPet(final RegisterPetCommand command) {
 
         String profileImageUrl = null;
         if(command.petCommand().profileImage() != null) {
@@ -34,6 +34,6 @@ public class RegisterPetServiceImpl implements RegisterPetService {
         }catch (Exception e){
             throw new PetRegisterException(ApplicationErrorCode.PET_REGISTRATION_FAILED);
         }
-        return entity.getPetId();
+        return entity;
     }
 }

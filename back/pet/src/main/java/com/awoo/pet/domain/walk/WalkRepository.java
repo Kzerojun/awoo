@@ -12,4 +12,6 @@ public interface WalkRepository {
     List<Walk> searchWalkListByPet(Integer petId);
 
     List<Walk> searchWalkListByMember(Integer memberId);
+
+    List<Walk> searchWalkInMonth(Integer petId);
 }
