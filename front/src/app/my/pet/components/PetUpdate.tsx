@@ -69,7 +69,7 @@ const PetUpdate = ({ petId }: { petId: number }) => {
     setShowPetAvatarModal(false);
   };
 
-  // 반려견 등록
+  // 반려견 수정
   const handleUpdatePet = () => {
     if (
       petName === "" ||

@@ -50,7 +50,9 @@ export default function MainPage() {
             <div className="inline-block p-4 rounded-2xl border border-white bg-white shadow-lg">
               <QRCode value="https://awoofinance.duckdns.org" style={{ width: 140, height: 140 }} />
             </div>
-            <p className="text-xs text-white/70">QR 스캔 후 홈 화면에 추가하고,</p>
+            <p className="text-xs text-white/70">
+              QR 스캔 후 홈 화면에 추가하고, 어플을 이용해보세요!
+            </p>
           </div>
         </div>
 

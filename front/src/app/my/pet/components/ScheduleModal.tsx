@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ScheduleModalContent from "./ScheduleModalContent";
 import { toast } from "react-toastify";
+import { useAppSelector } from "@/lib/store";
 
 interface Props {
   isOpen: boolean;
@@ -19,10 +20,11 @@ interface Props {
 }
 
 const ScheduleModal = ({ isOpen, onClose, clickedDate, onSubmit }: Props) => {
+  const petList = useAppSelector((state) => state.pet.petList);
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("#968F8F");
   const [selectedDog, setSelectedDog] = useState("");
-  const dogList = ["몽몽이", "삼동이", "덕진이"];
+  const dogList = petList.map((pet) => pet.name);
   const [startDate, setStartDate] = useState(clickedDate);
   const [endDate, setEndDate] = useState(clickedDate);
 
@@ -46,6 +48,10 @@ const ScheduleModal = ({ isOpen, onClose, clickedDate, onSubmit }: Props) => {
   };
 
   const handleSubmit = () => {
+    if (!title || !selectedDog || !startDate || !endDate) {
+      toast.info("모든 정보를 입력해주세요!");
+      return;
+    }
     onSubmit({
       title,
       color,

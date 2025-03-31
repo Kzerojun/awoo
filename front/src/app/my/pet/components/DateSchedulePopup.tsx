@@ -1,11 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { C } from "vitest/dist/chunks/reporters.66aFHiyX.js";
+import ScheduleDetail from "./ScheduleDetail";
 
-interface Schedule {
-  id: string;
+export interface Schedule {
+  id: number;
   title: string;
   time: string;
   color: string;
@@ -20,6 +23,8 @@ interface Props {
   showDelete?: boolean;
   onToggleDelete?: () => void;
   onAddClick: () => void;
+  clickedDate: string;
+  onRefresh: () => void;
 }
 
 const DateSchedulePopup = ({
@@ -30,7 +35,11 @@ const DateSchedulePopup = ({
   showDelete = false,
   onToggleDelete,
   onAddClick,
+  clickedDate,
+  onRefresh,
 }: Props) => {
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -57,7 +66,11 @@ const DateSchedulePopup = ({
             <div className="flex-1 overflow-y-auto mt-5 px-1">
               <ul className="space-y-5 mb-3">
                 {schedules.map((s) => (
-                  <li key={s.id} className="flex items-center gap-2 text-sm">
+                  <li
+                    key={s.id}
+                    className="flex items-center gap-2 text-sm h-10 bg-amber-300 border-b-1 border-custom-gray"
+                    onClick={() => setSelectedSchedule(s)}
+                  >
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }} />
                     <div className="w-full flex flex-col justify-center">
                       <div className=" flex items-center justify-between">
@@ -81,6 +94,14 @@ const DateSchedulePopup = ({
                 <PlusCircleIcon className="text-green w-16 h-16" />
               </button>
             </div>
+
+            <ScheduleDetail
+              clickedDate={selectedSchedule?.time || clickedDate}
+              isOpen={!!selectedSchedule}
+              schedule={selectedSchedule}
+              onClose={() => setSelectedSchedule(null)}
+              onRefresh={onRefresh}
+            />
           </motion.div>
         </motion.div>
       )}

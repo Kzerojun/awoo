@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
@@ -13,7 +14,7 @@ public class SearchPetListResponse {
 
     private List<SearchPetResponse> pets;
 
-    public static SearchPetListResponse fromEntity(List<Pet> entities){
+    public static SearchPetListResponse fromEntity(List<Map<String, Object>> entities){
         return SearchPetListResponse.builder()
                 .pets(entities.stream().map(SearchPetResponse::fromEntity).collect(Collectors.toList()))
                 .build();
