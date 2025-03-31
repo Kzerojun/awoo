@@ -4,16 +4,31 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import Button from "@/common/ui/Button";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setPhoneVerified } from "@/lib/slices/accountSlice";
+import { requestAuthCode, verifyAuthCode } from "@/api/account/auth/phoneAuth";
+import { getUserInfo } from "@/api/user/auth";
 
 export default function PhoneVerifyPage() {
   const router = useRouter();
-
+  const { name } = useAppSelector((state) => state.user);
+  const [realName, setRealName] = useState<string | null>(name);
   const [phone, setPhone] = useState("");
   const [isRequested, setIsRequested] = useState(false);
   const [timer, setTimer] = useState(180); // 3분
   const [authCode, setAuthCode] = useState("");
+  const dispatch = useAppDispatch();
+
+  // ✅ 이름 fallback 가져오기
+  useEffect(() => {
+    const fetchName = async () => {
+      if (!name) {
+        const data = await getUserInfo();
+        setRealName(data.name);
+      }
+    };
+    fetchName();
+  }, [name]);
 
   // 전화번호 하이픈 포맷
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,34 +38,44 @@ export default function PhoneVerifyPage() {
   };
 
   // 인증 요청
-  const handleRequest = () => {
+  const handleRequest = async () => {
     if (phone.length < 9) return alert("번호를 정확히 입력해주세요.");
-    alert("인증번호가 전송되었습니다.");
-    setIsRequested(true);
-    setTimer(180);
+    if (!realName) return alert("이름 정보가 없습니다. 다시 로그인 해주세요.");
+
+    try {
+      await requestAuthCode(realName, `010${phone.replace(/-/g, "")}`);
+      alert("인증번호가 전송되었습니다.");
+      setIsRequested(true);
+      setTimer(180);
+    } catch (error) {
+      alert("인증번호 요청 실패");
+      console.error(error);
+    }
   };
 
-  const dispatch = useAppDispatch();
-
-  const handleVerify = () => {
+  // 인증번호 검증
+  const handleVerify = async () => {
     if (!authCode) return alert("인증번호를 입력해주세요.");
-
-    // ✅ Redux 상태 업데이트
-    dispatch(setPhoneVerified(true));
-    console.log("✅ 휴대폰 인증 Redux 저장 완료");
-
-    alert("인증되었습니다.");
-    router.push("/account/verify"); // 1원 송금으로 이동
+    try {
+      const { data } = await verifyAuthCode(`010${phone.replace(/-/g, "")}`, authCode);
+      if (data.success) {
+        localStorage.setItem("authToken", data.response.authToken);
+        dispatch(setPhoneVerified(true));
+        alert("인증되었습니다.");
+        router.push("/account/verify");
+      } else {
+        alert("인증 실패");
+      }
+    } catch (error) {
+      alert("인증번호 검증 실패");
+      console.error(error);
+    }
   };
 
   // 타이머
   useEffect(() => {
     if (!isRequested || timer <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
-
+    const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     return () => clearInterval(interval);
   }, [isRequested, timer]);
 
@@ -63,11 +88,8 @@ export default function PhoneVerifyPage() {
   return (
     <div>
       <CommonTopBar title="본인인증" leftAction="back" rightAction="cancel" />
-
       <div className="pt-16 px-6 flex flex-col gap-6">
         <h2 className="text-xl font-semibold">휴대폰 본인인증을 해주세요</h2>
-
-        {/* 동의 박스 */}
         <div className="border rounded-lg p-4 text-sm bg-white border-gray-300">
           <div className="font-semibold mb-2">[필수] 전체 동의</div>
           <ul className="space-y-1 text-gray-600">
@@ -78,9 +100,7 @@ export default function PhoneVerifyPage() {
           </ul>
         </div>
 
-        {/* 입력창 + 타이머 */}
         <div className="relative flex flex-col gap-3">
-          {/* 휴대폰 번호 입력 */}
           <div className="border border-gray-300 rounded-xl flex items-center px-4 py-3 bg-white gap-4">
             <select className="text-m focus:outline-none">
               <option value="010">010</option>
@@ -96,7 +116,6 @@ export default function PhoneVerifyPage() {
             />
           </div>
 
-          {/* 인증번호 입력 + 타이머 */}
           {isRequested && (
             <div className="border border-gray-300 rounded-xl flex items-center px-4 py-3 bg-white gap-4">
               <input
@@ -115,7 +134,6 @@ export default function PhoneVerifyPage() {
           )}
         </div>
 
-        {/* 하단 버튼 */}
         <div className="mt-16 flex justify-center">
           <Button
             text={isRequested ? "인증하기" : "요청"}
