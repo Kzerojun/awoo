@@ -37,3 +37,16 @@ feign:
     config:
       member-service:
         url: ${member-service.url}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
