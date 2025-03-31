@@ -6,7 +6,7 @@ export interface PetInterface {
   name: string;
   age: number;
   breed: string;
-  profileImage: string | null;
+  profileImage: string;
   savingId: number;
   walkInMonth: number;
   savingGrade: string;
