@@ -19,7 +19,7 @@ spring:
     password: ${PASSWORD}
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: awoofinance-kafka:9092
 
 aes :
   secret_key : ${AES_KEY}
@@ -49,7 +49,7 @@ management:
   endpoint:
     health:
       show-details: always
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
