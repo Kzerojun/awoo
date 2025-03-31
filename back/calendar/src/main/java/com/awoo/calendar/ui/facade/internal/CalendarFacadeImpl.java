@@ -21,6 +21,7 @@ public class CalendarFacadeImpl implements CalendarFacade {
     private final RegisterCalendarService registerCalendarService;
     private final SearchCalendarService searchCalendarService;
     private final SearchCalendarListService searchCalendarListService;
+    private final SearchCalendarListByPetService searchCalendarListByPetService;
     private final ModifyCalendarService modifyCalendarService;
     private final DeleteCalendarService deleteCalendarService;
     private final CalendarResponseMapper mapper;
@@ -40,6 +41,12 @@ public class CalendarFacadeImpl implements CalendarFacade {
     @Override
     public SearchCalendarListResponse searchCalendarList(final Integer memberId) {
         List<Map<String, Object>> calendarDataList = searchCalendarListService.searchCalendarList(memberId);
+        return mapper.searchCalendarList(calendarDataList);
+    }
+
+    @Override
+    public SearchCalendarListResponse searchCalendarListByPet(final Integer memberId, final Integer petId) {
+        List<Map<String, Object>> calendarDataList = searchCalendarListByPetService.searchCalendarListByPetService(memberId, petId);
         return mapper.searchCalendarList(calendarDataList);
     }
 

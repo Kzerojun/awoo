@@ -26,7 +26,7 @@ public class SearchCalendarServiceImpl implements SearchCalendarService {
     @Override
     public Map<String, Object> searchCalendar(Integer calendarId, Integer memberId) {
 
-        Calendar calendar = calendarRepository.searchCalendar(calendarId).orElseThrow(CalendarNotFoundException::new);
+        Calendar calendar = calendarRepository.searchCalendar(calendarId, "N").orElseThrow(CalendarNotFoundException::new);
 
         if(calendar.getMemberId() != memberId){
             throw new AccessDeniedException();

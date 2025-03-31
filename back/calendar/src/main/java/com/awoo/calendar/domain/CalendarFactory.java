@@ -16,6 +16,7 @@ public class CalendarFactory {
                 .startTime(command.calendarCommand().startTime())
                 .endTime(command.calendarCommand().endTime())
                 .color(command.calendarCommand().color())
+                .calendarType(CalendarType.NOMAL)
                 .build();
     }
 }

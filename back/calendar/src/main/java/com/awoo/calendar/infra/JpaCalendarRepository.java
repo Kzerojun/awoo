@@ -11,8 +11,11 @@ import java.util.Optional;
 @Repository
 public interface JpaCalendarRepository extends JpaRepository<Calendar, Integer>, CalendarRepository {
 
-    Optional<Calendar> findByCalendarId(Integer calendarId);
-    List<Calendar> findByMemberId(Integer memberId);
+    Optional<Calendar> findByCalendarIdAndDelYn(Integer calendarId, String delYn);
+
+    List<Calendar> findByMemberIdAndDelYn(int memberId, String delYn);
+
+    List<Calendar> findByPetIdAndDelYn(int petId, String delYn);
 
     @Override
     default void registerCalendar(Calendar calendar) {
@@ -21,13 +24,18 @@ public interface JpaCalendarRepository extends JpaRepository<Calendar, Integer>,
 
 
     @Override
-    default Optional<Calendar> searchCalendar(Integer calendarId) {
-        return findByCalendarId(calendarId);
+    default Optional<Calendar> searchCalendar(Integer calendarId, String delYn) {
+        return findByCalendarIdAndDelYn(calendarId, delYn);
     }
 
     @Override
-    default List<Calendar> searchCalendarList(Integer memberId) {
-        return findByMemberId(memberId);
+    default List<Calendar> searchCalendarList(Integer memberId, String delYn) {
+        return findByMemberIdAndDelYn(memberId, delYn);
+    }
+
+    @Override
+    default List<Calendar> searchCalendarListByPet(Integer petId, String delYn) {
+        return findByPetIdAndDelYn(petId, delYn);
     }
 
 
