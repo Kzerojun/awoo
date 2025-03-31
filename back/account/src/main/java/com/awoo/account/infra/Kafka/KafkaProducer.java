@@ -3,7 +3,10 @@ package com.awoo.account.infra.Kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +33,14 @@ public class KafkaProducer {
             log.error("Kafka message serialization failed", e);
         }
     }
+
+    @Bean
+    public NewTopic createSavingTopic() {
+        return TopicBuilder.name("account.saving.created.v1")
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
 
 }
