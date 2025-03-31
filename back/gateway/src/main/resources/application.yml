@@ -15,6 +15,8 @@ spring:
 
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
         cors-configurations:
           '[/**]':
@@ -32,8 +34,6 @@ spring:
             allowCredentials: true
             exposed-headers: "Authorization"
 
-          '/api/used-products/**': {}  # 빈 객체를 넣으면 CORS 적용 안 함
-
       routes:
         - id: pet-service
           uri: lb://pet
@@ -41,8 +41,8 @@ spring:
             - Path=/api/pets/**
           filters:
             - name: JwtAuthenticationFilter
-        - id : member-service
-          uri : lb://member
+        - id: member-service
+          uri: lb://member
           predicates:
             - Path=/api/members/**
           filters:
@@ -59,7 +59,7 @@ spring:
             - Path=/api/calendars/**
           filters:
             - name: JwtAuthenticationFilter
-        - id : account-service
+        - id: account-service
           uri: lb://account
           predicates:
             - Path=/api/accounts/**, /api/savings/**
@@ -72,6 +72,7 @@ spring:
           filters:
             - name: JwtAuthenticationFilter
 
+
       discovery:
         locator:
           enabled: true
@@ -82,10 +83,10 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
 
-jwt :
-  secret_key : ${JWT_SECRET_KEY}
-  access_expiration : ${ACCESS_EXPIRATION}
-  refresh_expiration : ${REFRESH_EXPIRATION}
+jwt:
+  secret_key: ${JWT_SECRET_KEY}
+  access_expiration: ${ACCESS_EXPIRATION}
+  refresh_expiration: ${REFRESH_EXPIRATION}
 
 
 logging:

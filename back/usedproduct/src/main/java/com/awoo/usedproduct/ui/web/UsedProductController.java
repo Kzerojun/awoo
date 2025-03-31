@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -125,9 +128,9 @@ public class UsedProductController {
         /pub/chat/rooms/{chatRoomId}
      */
     @MessageMapping("/chat/rooms/{chatRoomId}")
-    public void sendMessage(MessageRequest request,
-                            @RequestHeader("X-User-Id") String senderId,
-                            @PathVariable Integer chatRoomId) {
+    public void sendMessage(@Payload MessageRequest request,
+                            @Header("X-User-Id") String senderId,
+                            @DestinationVariable Integer chatRoomId) {
         MessageCommand command = request.toCommand(senderId, chatRoomId);
         MessageResponse response = usedProductServiceFacade.message(command);
 
