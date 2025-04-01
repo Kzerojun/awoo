@@ -5,12 +5,9 @@ import { useRouter } from "next/navigation";
 import Header from "@/app/home/components/Header";
 import { getInternalAccounts } from "@/api/account/open/saving/depositlist";
 import { getSavingList } from "@/api/account/open/saving/savingList";
-import { getPetList } from "@/api/pet/pet";
+import { getPetDetail } from "@/api/account/open/saving/petDetail";
 import { useDispatch } from "react-redux";
-import {
-  setSelectedSavingAccountNo,
-  resetSelectedSavingAccountNo,
-} from "@/lib/slices/savingAccountDetailSlice";
+import { setSelectedSavingId, resetSelectedSavingId } from "@/lib/slices/savingAccountDetailSlice";
 
 export default function AccountMinePage() {
   const router = useRouter();
@@ -18,44 +15,58 @@ export default function AccountMinePage() {
 
   const [deposit, setDeposit] = useState<any>(null);
   const [savingAccounts, setSavingAccounts] = useState<any[]>([]);
-  const [pets, setPets] = useState<any[]>([]);
 
+  // ✅ 입출금, 적금 계좌 조회
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const depositData = await getInternalAccounts();
-        const savingData = await getSavingList();
-        const petData = await getPetList();
-        console.log(depositData);
-        console.log(savingData);
-        console.log(petData);
+        const [depositData, savingData] = await Promise.all([
+          getInternalAccounts(),
+          getSavingList(),
+        ]);
         setDeposit(depositData);
         setSavingAccounts(savingData);
-        setPets(petData ?? []);
       } catch (error) {
         console.error("계좌 조회 실패", error);
       }
     };
     fetchData();
   }, []);
-  const handleSavingClick = (account: any) => {
-    dispatch(resetSelectedSavingAccountNo());
-    dispatch(setSelectedSavingAccountNo(account.accountNo));
-    router.push(`"/##"`); // 적금 상세로 이동 - 라우터 추가하기
+
+  // ✅ 적금 클릭 시 petDetail 통해 savingId 저장
+  const handleSavingClick = async (account: any) => {
+    try {
+      const petId = account.petId;
+      if (!petId) return alert("petId가 없습니다");
+
+      const petDetail = await getPetDetail(petId);
+      const savingId = petDetail?.savingId;
+      if (savingId === null || savingId === undefined) {
+        return alert("savingId가 없습니다");
+      }
+
+      dispatch(resetSelectedSavingId());
+      dispatch(setSelectedSavingId(savingId));
+
+      router.push(`/#`); // TODO: 적금 상세 페이지로 변경
+    } catch (err) {
+      console.error("pet 상세 조회 실패", err);
+    }
   };
+
   return (
     <div>
       <Header />
 
       <div className="px-4 py-2 flex flex-col gap-2 pt-16">
-        {/* 입출금 계좌 */}
+        {/* ✅ 입출금 계좌 */}
         <div
-          className="bg-[#C9F5F1] rounded-xl p-4 shadow"
-          onClick={() => router.push("/##")} // 입출금 상세로 이동 - 라우터 추가하기
+          className="bg-[#C9F5F1] rounded-xl p-4 shadow cursor-pointer"
+          onClick={() => router.push("/##")} // TODO: 입출금 상세 페이지로 변경
         >
           <p className="text-sm ml-3 mt-1">AwOO 입출금계좌</p>
           <p className="text-xl font-semibold mt-1 mb-3 ml-3">
-            {deposit && deposit.accountBalance
+            {deposit?.accountBalance !== undefined
               ? `${deposit.accountBalance.toLocaleString()}원`
               : "로딩중"}
           </p>
@@ -64,8 +75,8 @@ export default function AccountMinePage() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                router.push("/##");
-              }} // 이체 연결 예정
+                router.push("/##"); // TODO: 이체 페이지로 변경
+              }}
               className="text-xs text-black bg-[#B3D6D3] px-4 py-1.5 rounded-md"
             >
               이체
@@ -73,7 +84,7 @@ export default function AccountMinePage() {
           </div>
         </div>
 
-        {/* 적금 계좌 */}
+        {/* ✅ 적금 계좌 */}
         {savingAccounts.map((item, idx) => (
           <div
             key={item.savingAccountNo || idx}
