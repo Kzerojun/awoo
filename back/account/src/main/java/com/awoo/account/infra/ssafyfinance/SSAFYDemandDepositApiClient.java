@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "ssafy-finance-accounts-api", url = "https://finopenapi.ssafy.io/ssafy/api/v1/edu/demandDeposit")
 public interface SSAFYDemandDepositApiClient {
     @PostMapping("/createDemandDepositAccount")
-    SSAFYFetchAccountResponse createAccount(@RequestBody SSAFYCreateAccountRequest request);
+    SSAFYCreateAccountResponse createAccount(@RequestBody SSAFYCreateAccountRequest request);
 
     @PostMapping("/inquireDemandDepositAccountList")
     SSAFYAccountListResponse getAccountList(@RequestBody SSAFYCommonHeaderRequest request);
