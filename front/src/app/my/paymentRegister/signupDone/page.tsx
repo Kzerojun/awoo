@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import checkmark from "../../../../../public/icons/mypage/checkmark.svg";
 import Image from "next/image";
@@ -49,7 +49,7 @@ export default function SignUpDone() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="멍Pay" rightAction="bell" />
 
       <div className="flex flex-col items-center px-4 pt-14">
         {/* 메인 컨텐츠 - 고정된 간격을 사용하여 위치 조정 */}
