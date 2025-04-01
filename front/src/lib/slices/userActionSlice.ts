@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PetInterface } from "./petSlice";
 
-// 스택 구조를 기반으로 한 뒤로가기 구현
 interface UserActionState {
+  // 스택 구조를 기반으로 한 뒤로가기 구현
   historyStack: string[];
   currentWalkingSelectView: number;
   currentMyPetView: number;
@@ -67,6 +67,7 @@ export const {
   // setCurrentWalkingDog,
   changeCurrentPetDetailView,
   checkPasswordConfirm,
+
   markGoingBack,
 } = userActionSlice.actions;
 export default userActionSlice.reducer;
