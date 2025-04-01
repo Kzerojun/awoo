@@ -48,7 +48,7 @@ export default function AccountMinePage() {
       dispatch(resetSelectedSavingId());
       dispatch(setSelectedSavingId(savingId));
 
-      router.push(`/#`); // TODO: 적금 상세 페이지로 변경
+      router.push(`/account/my/saving`);
     } catch (err) {
       console.error("pet 상세 조회 실패", err);
     }
@@ -62,7 +62,7 @@ export default function AccountMinePage() {
         {/* ✅ 입출금 계좌 */}
         <div
           className="bg-[#C9F5F1] rounded-xl p-4 shadow cursor-pointer"
-          onClick={() => router.push("/##")} // TODO: 입출금 상세 페이지로 변경
+          onClick={() => router.push("/account/my/deposit")}
         >
           <p className="text-sm ml-3 mt-1">AwOO 입출금계좌</p>
           <p className="text-xl font-semibold mt-1 mb-3 ml-3">
