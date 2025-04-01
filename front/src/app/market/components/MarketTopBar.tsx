@@ -7,23 +7,21 @@ import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
+import { deleteProduct } from "@/api/market/delete/deleteProducts";
 
 interface MarketTopBarProps {
   title?: string;
-  authorId: string;
-  articleId: string;
+  canModify: boolean; // 수정, 삭제 권한
+  articleId: number;
 }
 
-const MarketTopBar = ({ title = "", authorId, articleId }: MarketTopBarProps) => {
+const MarketTopBar = ({ title = "", canModify, articleId }: MarketTopBarProps) => {
   const [showOptions, setShowOptions] = useState(false);
   const optionsRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
   const historyStack = useAppSelector((state) => state.userAction.historyStack);
-
-  const currentUserId = "u123"; // ✅ 로그인 유저 ID (임시 더미)
-  const isMine = authorId === currentUserId;
 
   const handleBack = () => {
     if (historyStack.length > 0) {
@@ -36,7 +34,6 @@ const MarketTopBar = ({ title = "", authorId, articleId }: MarketTopBarProps) =>
     }
   };
 
-  // ✅ 팝업 외 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (optionsRef.current && !optionsRef.current.contains(event.target as Node)) {
@@ -53,6 +50,17 @@ const MarketTopBar = ({ title = "", authorId, articleId }: MarketTopBarProps) =>
     };
   }, [showOptions]);
 
+  const handleDelete = async () => {
+    const confirmDelete = confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    try {
+      await deleteProduct(articleId);
+      alert("삭제되었습니다.");
+      router.push("/market");
+    } catch (error) {
+      alert("삭제 실패");
+    }
+  };
   return (
     <header className="fixed top-0 left-0 w-full h-14 bg-white flex items-center px-4 justify-between z-50 border-b border-gray-100">
       {/* 왼쪽 - 뒤로가기 */}
@@ -75,7 +83,7 @@ const MarketTopBar = ({ title = "", authorId, articleId }: MarketTopBarProps) =>
 
         {showOptions && (
           <div className="absolute right-0 -mt-1 w-28 bg-white border border-gray-200 rounded shadow-lg z-[9999]">
-            {isMine ? (
+            {canModify ? (
               <>
                 <button
                   onClick={() => {
@@ -91,10 +99,10 @@ const MarketTopBar = ({ title = "", authorId, articleId }: MarketTopBarProps) =>
                     setShowOptions(false);
                     const confirmDelete = confirm("정말 삭제하시겠습니까?");
                     if (confirmDelete) {
-                      alert("🗑 삭제 로직 예정");
+                      handleDelete();
                     }
                   }}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-2 text-sm text-error hover:bg-gray-100"
                 >
                   삭제하기
                 </button>
