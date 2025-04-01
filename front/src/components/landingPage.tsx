@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#0FC9BA] justify-center items-center">
+    <div className="fixed inset-0 overflow-hidden bg-[#0FC9BA] flex flex-col justify-center items-center">
       <div className="flex flex-col items-center w-full max-w-[250px]">
         <div className="self-start text-white text-xl">새로운</div>
         <div className="self-start text-white text-xl mb-3">

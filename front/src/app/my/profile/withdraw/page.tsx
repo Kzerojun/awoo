@@ -1,5 +1,5 @@
 "use client";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import Button from "@/common/ui/Button";
 import { useState } from "react";
 import Image from "next/image";
@@ -10,7 +10,7 @@ export default function Withdraw() {
 
   return (
     <div className="flex flex-col w-full h-full max-w-md mx-auto bg-[#FCFCFC] pt-14">
-      <TopBar title="탈퇴" />
+      <CommonTopBar title="탈퇴" />
 
       <div className="w-full px-6 py-6">
         {/* 상단 안내 문구 */}

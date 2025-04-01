@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import ProfilePicture from "./components/ProfilePicture";
 import UserInformation from "./components/UserInformation";
 import Link from "next/link";
@@ -25,7 +25,7 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col items-center w-full h-full max-w-md mx-auto bg-[#FCFCFC]">
-      <TopBar title="프로필" />
+      <CommonTopBar title="프로필" />
 
       {/* pt-14 추가하여 TopBar 높이만큼 상단 여백 확보 */}
       <div className="w-full px-6 pt-14 pb-8">

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "../../../common/ui/TopBar";
+import CommonTopBar from "../../../common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import ChargeAmount from "./components/ChargeAmount";
 import ConfirmChargePassword from "./components/ConfirmChargePassword";
@@ -135,7 +135,7 @@ export default function PaymentCharge() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <TopBar title="충전" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="충전" rightAction="bell" />
 
       {/* 메인 콘텐츠 */}
       <div className="flex-1 flex flex-col pt-14 px-4">
