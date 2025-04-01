@@ -1449,3 +1449,166 @@ export const chargePayment = async (amount: number) => {
 > Idempotency-Key는 금융 트랜잭션이나 중요한 API 작업에서 중복 실행을 방지하는 필수적인 메커니즘입니다. 사용자에게 안전한 거래 경험을 제공하면서도 백엔드 시스템을 보호하는 역할을 합니다. 특히 결제, 송금과 같은 금융 작업에서는 반드시 적용해야 하는 패턴입니다.
 
 </details>
+
+<details>
+<summary><strong>0401</strong></summary>
+
+# React Query (TanStack Query) TIL
+
+### 기본 개념과 설정
+
+> React Query는 서버 상태 관리를 위한 강력한 도구로, 데이터 fetching, 캐싱, 동기화, 업데이트를 효율적으로 처리합니다. 기존의 Redux나 다른 전역 상태 관리 라이브러리와 달리, React Query는 서버 데이터 관리에 특화되어 있습니다.
+
+```javascript
+// 설치
+// npm install @tanstack/react-query
+// 또는
+// yarn add @tanstack/react-query
+
+// 기본 설정
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <YourApp />
+    </QueryClientProvider>
+  );
+}
+```
+
+### 데이터 쿼리하기 (useQuery)
+
+`useQuery` 훅은 데이터를 가져오는 기본적인 방법을 제공합니다.
+
+```javascript
+import { useQuery } from "@tanstack/react-query";
+
+function Posts() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: async () => {
+      const response = await fetch("https://api.example.com/posts");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+  });
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>에러: {error.message}</div>;
+
+  return (
+    <ul>
+      {data.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+- `queryKey`: 쿼리 결과를 캐싱하고 참조하는 데 사용되는 고유 식별자
+- `queryFn`: 데이터를 가져오는 비동기 함수
+- `반환값`: data, isLoading, error 등의 상태 정보
+
+### 데이터 변이하기 (useMutation)
+
+useMutation은 서버 데이터를 생성/업데이트/삭제하는 데 사용됩니다.
+
+```javascript
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+function AddPost() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (newPost) => {
+      const response = await fetch("https://api.example.com/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPost),
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      // 성공 시 'posts' 쿼리 무효화하여 데이터 다시 가져오기
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const title = e.target.title.value;
+    const body = e.target.body.value;
+    mutation.mutate({ title, body });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="title" placeholder="제목" />
+      <textarea name="body" placeholder="내용" />
+      <button type="submit" disabled={mutation.isPending}>
+        {mutation.isPending ? "게시 중..." : "게시하기"}
+      </button>
+    </form>
+  );
+}
+```
+
+### 고급 기능: 쿼리 무효화 및 리패치
+
+React Query는 캐시된 데이터를 무효화하고 새로운 데이터를 가져오는 강력한 메커니즘을 제공합니다.
+
+```javascript
+// 특정 쿼리 무효화
+queryClient.invalidateQueries({ queryKey: ['posts'] });
+
+// 특정 ID의 쿼리만 무효화
+queryClient.invalidateQueries({ queryKey: ['post', 5] });
+
+// 접두어로 시작하는 모든 쿼리 무효화
+queryClient.invalidateQueries({ queryKey: ['posts'] });
+쿼리 옵션과 캐싱 전략
+React Query는 다양한 쿼리 옵션을 통해 캐싱 동작을 세밀하게 제어할 수 있습니다.
+javascript복사const { data } = useQuery({
+  queryKey: ['posts'],
+  queryFn: fetchPosts,
+  // 쿼리 옵션들
+  staleTime: 60000, // 데이터가 'stale'(오래된)로 간주되기 전 시간(ms)
+  cacheTime: 300000, // 미사용 쿼리가 캐시에서 제거되기까지 시간(ms)
+  retry: 3, // 실패 시 재시도 횟수
+  retryDelay: 1000, // 재시도 간 지연 시간(ms)
+  refetchOnWindowFocus: true, // 창 포커스 시 자동 리패치
+  refetchOnMount: true, // 컴포넌트 마운트 시 자동 리패치
+  refetchOnReconnect: true, // 네트워크 재연결 시 자동 리패치
+  enabled: isLoggedIn, // 조건부 쿼리 실행
+});
+```
+
+### 의존적 쿼리 (Dependent Queries)
+
+하나의 쿼리 결과에 따라 다른 쿼리가 실행되어야 하는 경우에 유용합니다.
+
+```javascript
+// 사용자 정보를 먼저 가져옴
+const { data: user } = useQuery({
+  queryKey: ["user", userId],
+  queryFn: () => fetchUser(userId),
+});
+
+// 사용자 정보가 있을 때만 프로젝트 정보 가져옴
+const { data: projects } = useQuery({
+  queryKey: ["projects", user?.id],
+  queryFn: () => fetchProjects(user.id),
+  // user가 있을 때만 활성화
+  enabled: !!user,
+});
+```
+
+React Query는 복잡한 서버 상태 관리를 간단하게 만들어주며, 데이터 동기화, 로딩 상태 관리, 에러 처리, 캐싱 등의 기능을 효율적으로 제공하는 강력한 라이브러리입니다.
+
+</details>
