@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service;
 public class CalendarFactory {
 
     public Calendar registerCalendarEntity(final RegisterCalendarCommand command) {
+
+        CalendarType temp = CalendarType.NOMAL;
+
+        if(command.calendarCommand().calendarType().equals(CalendarType.WALK)) {
+            temp = CalendarType.WALK;
+        }
+
         return Calendar.builder()
                 .memberId(command.calendarCommand().memberId())
                 .petId(command.calendarCommand().petId())
@@ -16,7 +23,7 @@ public class CalendarFactory {
                 .startTime(command.calendarCommand().startTime())
                 .endTime(command.calendarCommand().endTime())
                 .color(command.calendarCommand().color())
-                .calendarType(CalendarType.NOMAL)
+                .calendarType(temp)
                 .build();
     }
 }

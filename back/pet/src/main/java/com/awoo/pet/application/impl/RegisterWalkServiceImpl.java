@@ -40,11 +40,12 @@ public class RegisterWalkServiceImpl implements RegisterWalkService {
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        String date = entity.getStartTime().format(DateTimeFormatter.ofPattern("MM-dd"));
 
         Map<String, Object> kafkaMessage = new HashMap<>();
         kafkaMessage.put("petId", entity.getPetId());
         kafkaMessage.put("memberId", entity.getMemberId());
-        kafkaMessage.put("scheduleContent", pet.getName() + "와" + entity.getStartTime().getMonth() + "의 산책");
+        kafkaMessage.put("scheduleContent", date +" " + pet.getName() + "의 산책");
         kafkaMessage.put("startTime", entity.getStartTime().format(formatter));
         kafkaMessage.put("endTime", entity.getEndTime().format(formatter));
 
