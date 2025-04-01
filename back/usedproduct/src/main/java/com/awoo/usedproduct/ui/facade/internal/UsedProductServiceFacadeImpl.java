@@ -84,9 +84,9 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     }
 
     @Override
-    public MessageResponse message(MessageCommand command) {
+    public FetchMessageResponse message(MessageCommand command) {
         Integer messageId = chatMessageService.saveMessage(command);
-        return MessageResponse.builder()
+        return FetchMessageResponse.builder()
                 .chatRoomId(command.chatRoomId())
                 .image(command.image())
                 .messageId(messageId)
@@ -99,5 +99,16 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public ModifyUsedProductStatusResponse modifyStatus(ModifyUsedProductStatusCommand command) {
         Integer usedProductId = modifyStatusService.modifyStatus(command);
         return new ModifyUsedProductStatusResponse(usedProductId);
+    }
+
+
+    @Override
+    public FetchChatRoomsResponse fetchChatRooms(Integer memberId) {
+        return queryUsedProductsService.fetchChatRooms(memberId);
+    }
+
+    @Override
+    public FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId) {
+        return queryUsedProductsService.fetchChatMessages(memberId, chatRoomId);
     }
 }

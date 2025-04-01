@@ -26,7 +26,11 @@ public interface UsedProductServiceFacade {
 
     CreateRoomResponse createRoom(CreateChatRoomCommand command);
 
-    MessageResponse message(MessageCommand command);
+    FetchMessageResponse message(MessageCommand command);
 
     ModifyUsedProductStatusResponse modifyStatus(ModifyUsedProductStatusCommand command);
+
+    FetchChatRoomsResponse fetchChatRooms(Integer memberId);
+
+    FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId);
 }
