@@ -9,10 +9,37 @@ import ProfileInfo from "../components/ProfileInfo";
 import InfoStats from "../components/InfoStates";
 import DetailBottomBar from "../components/DetailBottomBar";
 
+import { createChatRoom } from "@/api/market/chat/createChatRoom";
+import { useRouter } from "next/navigation";
+import { chatSocket } from "@/socket/chatSocket";
+
 export default function MarketDetailPage() {
   const { id } = useParams() as { id: string };
   const [detail, setDetail] = useState<any>(null);
 
+  const router = useRouter();
+  const handleChatClick = async () => {
+    try {
+      const token = localStorage.getItem("accessToken"); // or redux에서 가져와도 됨
+      if (!token) {
+        alert("로그인이 필요합니다");
+        return;
+      }
+
+      // 1. 채팅방 생성
+      const res = await createChatRoom(detail.usedProductId);
+      const chatRoomId = res.response.chatRoomId;
+
+      // 2. 소켓 연결 및 구독
+      chatSocket.connect(token); // jwt로 소켓 연결
+      chatSocket.subscribe(chatRoomId); // 생성된 채팅방 구독
+
+      // 3. 채팅방 페이지로 이동
+      router.push(`/market/chat/${chatRoomId}`);
+    } catch (error) {
+      console.error("채팅방 생성 실패", error);
+    }
+  };
   useEffect(() => {
     const fetchDetail = async () => {
       try {
@@ -57,10 +84,7 @@ export default function MarketDetailPage() {
       <InfoStats views={detail.viewCount} chat={detail.likeCount} likes={0} />
 
       {/* ✅ 하단 액션바 */}
-      <DetailBottomBar
-        price={`${detail.price.toLocaleString()}원`}
-        onChatClick={() => alert("채팅하기")}
-      />
+      <DetailBottomBar price={`${detail.price.toLocaleString()}원`} onChatClick={handleChatClick} />
     </div>
   );
 }
