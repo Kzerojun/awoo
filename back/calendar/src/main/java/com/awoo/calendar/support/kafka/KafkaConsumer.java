@@ -23,7 +23,7 @@ public class KafkaConsumer {
     private final ObjectMapper objectMapper;
     private final RegisterCalendarService registerCalendarService;
 
-    @KafkaListener(topics = "pet.walk.register.v1")
+    @KafkaListener(topics = "pet.walk.register.v1", groupId = "pet-walk-group")
     public void consumeMessage(ConsumerRecord<String, String> record) {
         try {
             String message = record.value();
