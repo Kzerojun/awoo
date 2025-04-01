@@ -40,7 +40,7 @@ const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardP
             alt="펫 기본 이미지"
             width={45}
             height={45}
-            className="rounded-full"
+            className="rounded-full w-[45px] h-[45px]"
           />
         ) : (
           <Image
@@ -48,7 +48,7 @@ const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardP
             alt="펫 이미지"
             width={45}
             height={45}
-            className="rounded-full"
+            className="rounded-full w-[45px] h-[45px]"
           />
         )}
       </div>
