@@ -3,8 +3,16 @@ package com.awoo.pet.support.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -30,6 +38,23 @@ public class KafkaProducer {
         } catch (JsonProcessingException e) {
             log.error("Kafka message serialization failed", e);
         }
+    }
+
+    @Bean
+    public NewTopic createSavingTopic() {
+        return TopicBuilder.name("pet.walk.register.v1")
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public KafkaAdmin kafkaAdmin() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        KafkaAdmin admin = new KafkaAdmin(configs);
+        admin.setAutoCreate(false); // ← 이걸 추가하면 Spring 초기화 중 토픽 생성 방지 가능
+        return admin;
     }
 
 }
