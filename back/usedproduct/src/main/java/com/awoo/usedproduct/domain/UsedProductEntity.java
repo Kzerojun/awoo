@@ -79,6 +79,12 @@ public class UsedProductEntity {
         return true;
     }
 
+    public void modifyStatus(UsedProductStatus usedProductStatus, Integer memberId){
+        if (canModify(memberId)) {
+            this.usedProductStatus = usedProductStatus;
+        }
+    }
+
     public boolean hasPermission(Integer memberId) {
         return this.memberId.equals(memberId);
     }

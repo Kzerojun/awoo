@@ -25,6 +25,7 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     private final ReportService reportService;
     private final CreateRoomService createRoomService;
     private final ChatMessageService chatMessageService;
+    private final ModifyStatusService modifyStatusService;
 
     @Override
     public RegisterUsedProductResponse registerUsedProduct(RegisterUsedProductCommand command) {
@@ -92,5 +93,11 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
                 .message(command.message())
                 .senderId(command.senderId())
                 .build();
+    }
+
+    @Override
+    public ModifyUsedProductStatusResponse modifyStatus(ModifyUsedProductStatusCommand command) {
+        Integer usedProductId = modifyStatusService.modifyStatus(command);
+        return new ModifyUsedProductStatusResponse(usedProductId);
     }
 }

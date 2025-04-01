@@ -139,4 +139,14 @@ public class UsedProductController {
         );
     }
 
+    @PostMapping("/{usedProductId}/status")
+    public ApiUtils.ApiResult<ModifyUsedProductStatusResponse> modifyStatus(@RequestBody ModifyUsedProductStatusRequest request,
+                                                        @RequestHeader("X-User-Id") String memberId,
+                                                        @PathVariable(name = "usedProductId") Integer usedProductId) {
+
+        ModifyUsedProductStatusCommand command = request.toCommand(memberId, usedProductId);
+        ModifyUsedProductStatusResponse response = usedProductServiceFacade.modifyStatus(command);
+        return ApiUtils.success(response);
+    }
+
 }
