@@ -1,26 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface SavingAccountDetailState {
-  selectedSavingAccountNo: string | null; // 선택된 적금 계좌번호
+  selectedSavingId: number | null; // ✅ 변경
 }
 
 const initialState: SavingAccountDetailState = {
-  selectedSavingAccountNo: null,
+  selectedSavingId: null,
 };
 
 const savingAccountDetailSlice = createSlice({
   name: "savingAccountDetail",
   initialState,
   reducers: {
-    setSelectedSavingAccountNo(state, action: PayloadAction<string>) {
-      state.selectedSavingAccountNo = action.payload;
+    setSelectedSavingId(state, action: PayloadAction<number>) {
+      state.selectedSavingId = action.payload;
     },
-    resetSelectedSavingAccountNo(state) {
-      state.selectedSavingAccountNo = null;
+    resetSelectedSavingId(state) {
+      state.selectedSavingId = null;
     },
   },
 });
 
-export const { setSelectedSavingAccountNo, resetSelectedSavingAccountNo } =
-  savingAccountDetailSlice.actions;
+export const { setSelectedSavingId, resetSelectedSavingId } = savingAccountDetailSlice.actions;
 export default savingAccountDetailSlice.reducer;
