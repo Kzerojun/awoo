@@ -10,10 +10,10 @@ public class CalendarFactory {
 
     public Calendar registerCalendarEntity(final RegisterCalendarCommand command) {
 
-        CalendarType temp = CalendarType.NOMAL;
+        CalendarType temp = command.calendarCommand().calendarType();
 
-        if(command.calendarCommand().calendarType().equals(CalendarType.WALK)) {
-            temp = CalendarType.WALK;
+        if(temp == null) {
+            temp = CalendarType.NOMAL;
         }
 
         return Calendar.builder()
