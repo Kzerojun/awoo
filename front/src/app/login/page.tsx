@@ -15,12 +15,6 @@ export default function Login() {
     window.history.back();
   };
 
-  useEffect(() => {
-    toast.info("세션이 만료되었습니다. \n 토스트 미리보기 테스트입니다 🚀", {
-      className: "bg-white text-black font-medium rounded-lg shadow-md",
-    });
-  }, []);
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white gap-6">
       <Image src={logo} alt="로고 이미지" />
