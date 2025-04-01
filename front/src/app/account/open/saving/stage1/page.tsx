@@ -8,10 +8,12 @@ import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep1 from "../components/ProductDetailStep1";
 import ProductDocs from "../components/ProductDocs";
 import { useRouter } from "next/navigation";
-import { setSavingStage } from "@/lib/slices/accountProgressSlice";
 import { useAppDispatch } from "@/lib/store";
-import { setAccountType } from "@/lib/slices/accountProgressSlice";
-
+import {
+  setAccountType,
+  setSavingStage,
+  resetAccountProgress,
+} from "@/lib/slices/accountProgressSlice";
 const step1Reviews = [
   {
     text: "처음 시작인데 부담 없이 할 수 있어서 좋아요!",
@@ -42,21 +44,28 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
+          // 리셋하고 시작
+          dispatch(resetAccountProgress());
+          // 적금 상태 redux 업데이트
           dispatch(setAccountType("saving"));
-          dispatch(setSavingStage(1)); // ← 1단계 세팅
-          router.push("/account/open/saving/agreement");
+          dispatch(setSavingStage(1));
+
+          // 액션이 적용된 후 라우팅
+          setTimeout(() => {
+            router.push("/account/open/saving/agreement");
+          }, 100);
         }}
-        width="long" // 버튼 길이
-        textSize="medium" // 텍스트 크기
-        fontBold="base" // 글씨 굵기
-        backgroundColor="aqua" // 배경색
+        width="long"
+        textSize="medium"
+        fontBold="base"
+        backgroundColor="aqua"
         className="mx-auto"
       />
       <div className=" bg-gray-100 pb-18">
         {/* 아이콘 + 소개 문구 */}
         <div className="mt-8">
           <ProductIntro
-            iconSrc="/icons/account/cash.svg" // 저장한 파일 경로에 맞춰 수정
+            iconSrc="/icons/account/cash.svg"
             altText="1단계 말티즈 강아지"
             description={[
               {

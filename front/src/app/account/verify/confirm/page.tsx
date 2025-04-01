@@ -36,7 +36,7 @@ export default function AccountVerifyConfirmPage() {
 
     // ✅ 라우팅 분기
     if (accountType === "deposit") {
-      router.push("/account/open/deposit/complete");
+      router.push("/account/verify/success/deposit");
     } else if (accountType === "saving") {
       if (savingStage === 1) {
         router.push("/account/verify/success/saving");

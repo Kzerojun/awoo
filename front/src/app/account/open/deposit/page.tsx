@@ -7,9 +7,11 @@ import ProductDocs from "@/app/account/open/deposit/components/ProductDocs";
 import Button from "@/common/ui/Button";
 import ReviewSwiper from "./components/ReviewSwiper";
 import { useRouter } from "next/navigation";
-
+import { useDispatch, UseDispatch } from "react-redux";
+import { setAccountType } from "@/lib/slices/accountProgressSlice";
 const Page = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   return (
     <div className="container mx-auto max-w-lg py-6">
       {/* 상품 요약 정보 */}
@@ -40,6 +42,7 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
+          dispatch(setAccountType("deposit"));
           router.push("/account/open/deposit/agreement");
         }}
         width="long" // 버튼 길이
