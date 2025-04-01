@@ -10,7 +10,6 @@ const CheckPasswordPage = () => {
     <div>
       <CommonTopBar title="비밀번호 확인" />
       <main className="mt-14 ">
-        <div>비밀번호 확인 페이지</div>
         <CheckPassword onConfirm={handleCheck} />
       </main>
     </div>

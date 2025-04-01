@@ -23,7 +23,7 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorCount, setErrorCount] = useState<number>(0);
   const passwordStatus = useAppSelector((state) => state.userAction.checkPassword);
-  const [remainingTime, setRemainingTime] = useState<number>(0);
+
   // 비밀번호 원 표시를 위한 배열
   const passwordCircles = Array(4).fill(null);
 
@@ -129,7 +129,7 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
   };
 
   return (
-    <div className="mt-auto bg-white rounded-t-3xl overflow-hidden">
+    <div className="mt-25 bg-white rounded-t-3xl overflow-hidden">
       {/* 헤더 */}
       <div className="p-6 bg-white">
         {/* 자물쇠 아이콘 */}
@@ -140,7 +140,7 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
         <h2 className="text-2xl font-bold flex justify-center mb-5">계좌 비밀번호</h2>
 
         {/* 비밀번호 입력 원형 UI */}
-        <div className="flex justify-center space-x-4 my-3">
+        <div className="flex justify-center space-x-4 my-20">
           {passwordCircles.map((_, index) => (
             <div
               key={index}
@@ -186,12 +186,14 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
           10분 후 다시 시도해주세요.
         </div>
       ) : (
-        <NumericKeypad
-          onNumberPress={handleNumberPress}
-          onBackspace={handleBackspace}
-          onRearrange={handleRearrange}
-          isLoading={isLoading}
-        />
+        <div className="bottom-6 fixed left-0 right-0">
+          <NumericKeypad
+            onNumberPress={handleNumberPress}
+            onBackspace={handleBackspace}
+            onRearrange={handleRearrange}
+            isLoading={isLoading}
+          />
+        </div>
       )}
     </div>
   );

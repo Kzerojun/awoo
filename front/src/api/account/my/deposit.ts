@@ -14,7 +14,7 @@ interface CheckPasswordPayload {
 }
 
 // 내부계좌 응답
-interface DepositResponse {
+export interface DepositResponse {
   bankCode: string;
   bankName: string;
   userName: string;
@@ -39,7 +39,7 @@ interface TransactionPayload {
 }
 
 // 거래내역 목록 조회 응답
-interface TransactionResponse {
+export interface TransactionResponse {
   transactionUniqueNo: string;
   transactionDate: string;
   transactionTime: string;
@@ -62,7 +62,7 @@ interface TransferPayload {
 }
 
 // 계좌 이체 Response
-interface TransferResponse {
+export interface TransferResponse {
   transactionUniqueNo: string;
   accountNo: string;
   transactionDate: string;
