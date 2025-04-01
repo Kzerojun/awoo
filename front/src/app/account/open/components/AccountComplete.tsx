@@ -1,6 +1,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "../../../../common/ui/Button";
+import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 interface AccountCompleteProps {
   title: string;
@@ -13,7 +16,11 @@ interface AccountCompleteProps {
 
 export default function AccountComplete({ title, description, info }: AccountCompleteProps) {
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  // 페이지 진입 시 accountProgress 초기화
+  useEffect(() => {
+    dispatch(resetAccountProgress());
+  }, [dispatch]);
   const handleGoToMyAccounts = () => {
     router.push("/home/myaccount"); // 실제 경로에 맞게 수정 가능
   };

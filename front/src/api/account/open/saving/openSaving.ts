@@ -6,6 +6,7 @@ interface OpenSavingAccountPayload {
   withdrawalAccountNo: string;
   conditionsAgreement: boolean;
   password: string;
+  petId: number;
 }
 
 // 적금 계좌 개설 API
