@@ -1,9 +1,9 @@
-// store.ts
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+
 // 슬라이스 리듀서
 import counterReducer from "./slices/counterSlice";
 import walkReducer from "./slices/walkSlice";
@@ -19,12 +19,20 @@ import accountProgressReducer from "./slices/accountProgressSlice";
 import profileReducer from "./slices/profileSlice";
 import petReducer from "./slices/petSlice";
 import myDepositReducer from "./slices/myDepositSlice";
-
+import savingAccountDetailReducer from "./slices/savingAccountDetailSlice";
 // === ✅ Step 3 : persist 설정 ===
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["saving", "savingPassword", "accountProgress", "account", "user", "pet"], // persist로 값을 관리할 필요가 있는 경우에 추가
+  whitelist: [
+    "saving",
+    "savingPassword",
+    "accountProgress",
+    "account",
+    "user",
+    "pet",
+    "savingAccountDetail",
+  ], // persist로 값을 관리할 필요가 있는 경우에 추가
 };
 
 const rootReducer = combineReducers({
@@ -42,6 +50,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   pet: petReducer,
   myDeposit: myDepositReducer,
+  savingAccountDetail: savingAccountDetailReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
