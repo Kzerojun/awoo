@@ -5,17 +5,23 @@ import com.awoo.usedproduct.application.exception.ApplicationErrorCode;
 import com.awoo.usedproduct.application.exception.UsedProductNotFoundException;
 import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
-import com.awoo.usedproduct.domain.LikeRepository;
-import com.awoo.usedproduct.domain.UsedProductStatus;
-import com.awoo.usedproduct.domain.UsedProductEntity;
-import com.awoo.usedproduct.domain.UsedProductRepository;
+import com.awoo.usedproduct.domain.*;
+import com.awoo.usedproduct.infra.MemberClient;
+import com.awoo.usedproduct.infra.MemberNicknameResponse;
 import com.awoo.usedproduct.infra.querydsl.QueryDslUsedProductRepository;
+import com.awoo.usedproduct.support.ApiUtils;
+import com.awoo.usedproduct.ui.facade.dto.response.FetchChatMessagesResponse;
+import com.awoo.usedproduct.ui.facade.dto.response.FetchChatRoomResponse;
+import com.awoo.usedproduct.ui.facade.dto.response.FetchChatRoomsResponse;
+import com.awoo.usedproduct.ui.facade.dto.response.FetchMessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -25,7 +31,9 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
     private final UsedProductRepository usedProductRepository;
     private final LikeRepository likeRepository;
     private final QueryDslUsedProductRepository queryDslUsedProductRepository;
-
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final MemberClient memberClient;
 
     @Override
     public Page<UsedProductEntity> fetchUsedProducts(Pageable pageable) {
@@ -55,4 +63,43 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
         }
         return likeRepository.existsByUsedProductIdAndMemberId(usedProductId, memberId);
     }
+
+    @Override
+    public FetchChatRoomsResponse fetchChatRooms(Integer memberId) {
+        List<ChatRoomEntity> chatRoomEntities = chatRoomRepository.findBySellerIdOrBuyerId(memberId, memberId);
+
+        List<FetchChatRoomResponse> chatRoomResponses = chatRoomEntities.stream()
+                .map(chatRoom -> {
+                    Optional<ChatMessageEntity> chatMessage = chatMessageRepository.findFirstByChatRoomIdOrderByCreatedAtDesc(chatRoom.getChatRoomId());
+                    ApiUtils.ApiResult<MemberNicknameResponse> memberNickname = memberClient.fetchNickname(chatRoom.getSellerId());
+                    return new FetchChatRoomResponse(
+                            chatRoom.getChatRoomId(),
+                            chatRoom.getUsedProductId(),
+                            chatMessage.map(ChatMessageEntity::getMessage).orElse(null),
+                            chatMessage.map(ChatMessageEntity::getCreatedAt).orElse(null),
+                            memberNickname.getResponse().nickname()
+                    );
+                })
+                .toList();
+
+        return new FetchChatRoomsResponse(chatRoomResponses);
+    }
+
+    @Override
+    public FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId) {
+        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
+        List<FetchMessageResponse> fetchMessageResponse = chatMessageEntities.stream()
+                .map(chatMessage -> FetchMessageResponse.builder()
+                        .messageId(chatMessage.getChatMessageId())
+                        .senderId(chatMessage.getSenderId())
+                        .message(chatMessage.getMessage())
+                        .image(chatMessage.getImage())
+                        .chatRoomId(chatMessage.getChatRoomId())
+                        .createdAt(chatMessage.getCreatedAt())
+                        .build()
+                ).toList();
+
+        return new FetchChatMessagesResponse(fetchMessageResponse);
+    }
 }
+

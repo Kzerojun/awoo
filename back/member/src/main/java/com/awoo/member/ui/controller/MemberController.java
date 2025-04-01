@@ -9,6 +9,7 @@ import com.awoo.member.ui.dto.CheckMemberResponse;
 import com.awoo.member.ui.dto.FindMemberKeyResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -89,6 +91,7 @@ public class MemberController {
     @GetMapping
     public ApiUtils.ApiResult<?> getMemberInfo(@RequestHeader("X-User-Id") String memberId) {
         try {
+            log.info(memberId);
             MemberInfoResponseDto memberInfoResponseDto = memberService.getMemberInfo(Integer.valueOf(memberId));
             return ApiUtils.success(memberInfoResponseDto);
         } catch (Exception e) {

@@ -37,17 +37,17 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         //SSAFY API 호출
-        SSAFYFetchAccountResponse fetchAccountResponse = SSAFYApiClient.createAccount(request);
+        SSAFYCreateAccountResponse response = SSAFYApiClient.createAccount(request);
 
         //응답에서의 계좌 번호 암호화
-        String encodedAccountNo = aesUtil.encrypt(fetchAccountResponse.REC().accountNo());
+        String encodedAccountNo = aesUtil.encrypt(response.REC().accountNo());
 
         //요청에서의 계좌 비밀번호 암호화
         String encodedPassword = aesUtil.encrypt(command.password());
 
         AccountEntity account = AccountEntity.builder()
                 .memberId(Integer.valueOf(memberId))
-                .bankCode(fetchAccountResponse.REC().bankCode())
+                .bankCode(response.REC().bankCode())
                 .accountNumber(encodedAccountNo)
                 .password(encodedPassword)
                 .conditionsAgreement(command.conditionsAgreement())
