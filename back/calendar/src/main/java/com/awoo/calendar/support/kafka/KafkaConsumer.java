@@ -3,6 +3,7 @@ package com.awoo.calendar.support.kafka;
 import com.awoo.calendar.application.RegisterCalendarService;
 import com.awoo.calendar.application.command.RegisterCalendarCommand;
 import com.awoo.calendar.application.command.common.CalendarCommand;
+import com.awoo.calendar.domain.CalendarType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,13 +43,6 @@ public class KafkaConsumer {
             LocalDateTime startTime = LocalDateTime.parse((String) kafkaMessage.get("startTime"), formatter);
             LocalDateTime endTime = LocalDateTime.parse((String) kafkaMessage.get("endTime"), formatter);
 
-
-            log.info("🐶 Pet ID: {}", petId);
-            log.info("👤 Member ID: {}", memberId);
-            log.info("📆 Schedule: {}", scheduleContent);
-            log.info("⏳ Start Time: {}", startTime);
-            log.info("⏳ End Time: {}", endTime);
-
             // 여기서 받은 데이터를 활용하여 원하는 로직을 수행 가능!
 
             CalendarCommand command = CalendarCommand.builder()
@@ -58,6 +52,7 @@ public class KafkaConsumer {
                     .startTime(startTime)
                     .endTime(endTime)
                     .color("#00FF00")
+                    .calendarType(CalendarType.WALK)
                     .build();
             registerCalendarService.registerCalender(new RegisterCalendarCommand(command));
             log.info("✅ Calendar registered successfully: {}", command);
