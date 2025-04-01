@@ -30,7 +30,6 @@ public class KafkaProducer {
 
     // 메시지 전송 메서드
     public <T> void sendMessage(String topic, T payload) {
-        System.out.println("호출");
         try {
             String json = mapper.writeValueAsString(payload);
             kafkaTemplate.send(topic, json);

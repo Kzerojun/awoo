@@ -39,6 +39,10 @@ dependencies {
 
     //Feign Client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 dependencyManagement {
