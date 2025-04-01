@@ -685,3 +685,118 @@ let devPerson: Capt = {
 
 </details>
 </details>
+
+<details> <summary><strong>4주차</strong></summary>
+
+<details> <summary><strong>0324</strong></summary>
+
+## SWR
+- 데이터를 가져오기 위한 React Hooks
+- HTTP 캐시 무효 전략인 `stale-while-revalidate`에서 유래
+- SWR은 먼저 캐시(stale)로 부터 데이터를 반환 후, fetch 요청(revalidate)를 하고, 최종적으로 최신화된 데이터를 가져오는 전략
+
+### _React Query와 SWR의 차이_
+- ### 1. 기본 사용 방식
+- **Provider 사용**
+   - SWR: 별도의 Provider 없이 컴포넌트에서 바로 사용 가능. 설정이 간단해 초기에 프로젝트 구성시 빠르게 시작할 수 있다.
+   - React-Query: 반드시 `Provider`로 컴포넌트를 감싸야 한다. 애플리케이션 전체에 걸친 데이터 관리를 일관되게 해주며, 쿼리 상태를 더 잘 통합할 수 있게 돕는다.
+- ### 2. 데이터 관리와 처리
+- **데이터 관리와 처리**
+   - 데이터 전송 및 뮤테이션
+      - SWR: `useSWR()`는 기본적으로 데이터를 읽어오는(read) 사용되며, 데이터를 클라이언트 측에서 직접 변경할 때는 mutate() 함수를 사용.
+      - `mutate()`는 캐시된 데이터를 업데이트하고, 서버 요청 없이 클라이언트에서 즉시 데이터를 변경하는 데 사용
+      - ! 사용자가 특정 데이터를 업데이트하면 이를 즉시 화면에 반영하고, 나중에 서버와 동기화하는 방식!
+      - 이는 서버에 추가 요청을 보내기 전 UI를 빠르게 업데이트하는 데 유리. SWR 의 이 방식은 클라이언트 측에서 데이터가 자주 변경되거나, 서버 요청과 관계없이 빠른 UI 업데이트가 필요할 때 유리.
+      - React Query: `useMutation()`을 사용하여 서버와 직접 상호작용하여 데이터를 전송하고 변경
+      - 서버 상태를 동기화하고 관리하는 데 중점을 두기 때문에, 서버의 데이터를 변경하는 작업이 더 명확하게 처리
+      - 사용자가 특정 데이터를 업데이트하면, 서버로 직접 요청을 보내어 데이터를 변경하고, 성공 시 해당 쿼리 데이터를 다시 가져오도록 하여 클라이언트와 서버 간의 상태가 일관되게 유지되도록 한다.
+      - React Query는 서버의 상태를 일관되게 유지하고 데이터가 실제 서버와 동기화되도록 관리하는 데 최적화되어있다. 서버와의 통신이 중요한 대규모 애플리케이션에서 주로 사용
+
+- ### 3.성능 및 최적화
+- **렌더링 최적화**
+   - SWR: 쿼리마다 개별적으로 컴포넌트를 업데이트하기 때문에 쿼리 개수가 많으면 렌더링 성능이 떨어질 수 있다.
+   - React Query: 여러 컴포넌트가 동일한 쿼리를 사용할 경우, 한 번에 묶어서 업데이하여 성능이 더 뛰어나다. 이를 통해 리렌더링을 줄이고 성능 최적화를 달성할 수 있다.
+
+- **캐싱 및 Garbage Colletion**
+   - SWR: 자동으로 데이터를 캐싱하여 네트워크 요청을 줄일 수 있지만, 오래된 데이터(stale data)를 관리하는 방법이 부족. 데이터가 자주 업데이트 되지 않는 환경에서 적합하다.
+   - React Query: 캐싱에 대한 세밀한 제어 가능. 사용되지 않는 쿼리를 자동으로 Garbage Collection 할 수 있다. 데이터가 빈번하게 업데이트되는 환경에서 React Query가 더 유리
+
+</details>
+<details> <summary><strong>0325</strong></summary>
+
+
+
+</details>
+<details> <summary><strong>0326</strong></summary>
+
+
+
+
+</details>
+<details> <summary><strong>0327</strong></summary>
+
+
+
+</details>
+<details> <summary><strong>0328</strong></summary>
+
+
+</details>
+</details>
+
+<details> <summary><strong>5주차</strong></summary>
+
+<details> <summary><strong>0331</strong></summary>
+
+
+</details>
+<details> <summary><strong>0401</strong></summary>
+
+
+
+</details>
+<details> <summary><strong>0402</strong></summary>
+
+
+
+
+</details>
+<details> <summary><strong>0403</strong></summary>
+
+
+
+</details>
+<details> <summary><strong>0404</strong></summary>
+
+
+</details>
+</details>
+
+
+<details> <summary><strong>6주차</strong></summary>
+
+<details> <summary><strong>0407</strong></summary>
+
+
+</details>
+<details> <summary><strong>0408</strong></summary>
+
+
+
+</details>
+<details> <summary><strong>0409</strong></summary>
+
+
+
+
+</details>
+<details> <summary><strong>0410</strong></summary>
+
+
+
+</details>
+<details> <summary><strong>0411</strong></summary>
+
+
+</details>
+</details>
