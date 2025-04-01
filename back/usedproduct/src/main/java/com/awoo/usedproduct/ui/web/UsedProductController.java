@@ -3,13 +3,11 @@ package com.awoo.usedproduct.ui.web;
 import com.awoo.usedproduct.application.command.*;
 import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
-import com.awoo.usedproduct.application.query.FetchUsedProductQuery.FetchUsedProductQueryBuilder;
 import com.awoo.usedproduct.domain.UsedProductStatus;
 import com.awoo.usedproduct.support.ApiUtils;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.request.*;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -116,6 +114,21 @@ public class UsedProductController {
         return ApiUtils.success(response);
     }
 
+    @GetMapping("/chat-rooms")
+    public ApiUtils.ApiResult<FetchChatRoomsResponse> fetchChatRooms(@RequestHeader("X-User-Id") String memberId) {
+        FetchChatRoomsResponse response = usedProductServiceFacade.fetchChatRooms(Integer.valueOf(memberId));
+        return ApiUtils.success(response);
+    }
+
+
+    @GetMapping("/chat-rooms/{chatRoomId}")
+    public ApiUtils.ApiResult<FetchChatMessagesResponse> fetchChatRoom(@RequestHeader("X-User-Id") String memberId,
+                                                                    @PathVariable Integer chatRoomId) {
+
+        FetchChatMessagesResponse response = usedProductServiceFacade.fetchChatMessages(Integer.valueOf(memberId), chatRoomId);
+        return ApiUtils.success(response);
+    }
+
     @PostMapping("/chat-rooms")
     public ApiUtils.ApiResult<CreateRoomResponse> createChatRoom(@RequestBody CreateChatRoomRequest request,
                                                                      @RequestHeader("X-User-Id") String buyerId){
@@ -132,7 +145,7 @@ public class UsedProductController {
                             @Header("X-User-Id") String senderId,
                             @DestinationVariable Integer chatRoomId) {
         MessageCommand command = request.toCommand(senderId, chatRoomId);
-        MessageResponse response = usedProductServiceFacade.message(command);
+        FetchMessageResponse response = usedProductServiceFacade.message(command);
 
         messagingTemplate.convertAndSend(
                 "/sub/chat/rooms/" + chatRoomId, response
@@ -148,5 +161,7 @@ public class UsedProductController {
         ModifyUsedProductStatusResponse response = usedProductServiceFacade.modifyStatus(command);
         return ApiUtils.success(response);
     }
+
+
 
 }
