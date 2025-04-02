@@ -5,6 +5,7 @@ import com.awoo.usedproduct.application.command.MessageCommand;
 import com.awoo.usedproduct.domain.ChatMessageEntity;
 import com.awoo.usedproduct.domain.ChatMessageRepository;
 import com.awoo.usedproduct.infra.aws.S3Storage;
+import com.awoo.usedproduct.ui.facade.dto.response.FetchMessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final S3Storage s3Storage;
     @Override
-    public Integer saveMessage(MessageCommand command) {
+    public FetchMessageResponse saveMessage(MessageCommand command) {
         String imageUrl = null;
 
 
@@ -36,6 +37,15 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .image(imageUrl)
                 .build();
         chatMessageRepository.save(entity);
-        return entity.getChatMessageId();
+
+
+        return FetchMessageResponse.builder()
+                .chatRoomId(command.chatRoomId())
+                .image(imageUrl)
+                .messageId(entity.getChatMessageId())
+                .message(command.message())
+                .senderId(command.senderId())
+                .createdAt(entity.getCreatedAt())
+                .build();
     }
 }

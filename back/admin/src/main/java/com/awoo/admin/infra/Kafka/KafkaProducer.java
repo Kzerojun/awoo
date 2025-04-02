@@ -2,6 +2,9 @@ package com.awoo.admin.infra.Kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -30,6 +33,10 @@ public class KafkaProducer {
     // kafka에 메시지 전송
     public <T> void send(String topic, T payload) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new ParameterNamesModule());         // record 지원
+        mapper.registerModule(new JavaTimeModule());               // LocalDateTime 등 날짜 지원
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 날짜를 ISO 문자열로 직렬화
+
         try {
             String json = mapper.writeValueAsString(payload);
             kafkaTemplate.send(topic, json);

@@ -147,7 +147,7 @@ public class UsedProductController {
                             @Header(value = "X-User-Id",required = false) String senderId,
                             @DestinationVariable Integer chatRoomId) {
 
-        log.info("채팅 메시지 {}   채팅 룸 ID{}", request.message(), chatRoomId);
+        log.info("채팅 메시지 {}   채팅 룸 ID{} 채팅 이미지{}", request.message(), chatRoomId,request.image());
         MessageCommand command = request.toCommand(senderId, chatRoomId);
         FetchMessageResponse response = usedProductServiceFacade.message(command);
 
