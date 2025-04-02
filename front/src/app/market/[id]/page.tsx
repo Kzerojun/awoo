@@ -39,7 +39,7 @@ export default function MarketDetailPage() {
       });
 
       // 3. 채팅방 페이지로 이동
-      router.push(`/market/chat/${chatRoomId}`);
+      router.push(`/market/chat/${chatRoomId}?usedProductId=${detail.usedProductId}`);
     } catch (error) {
       console.error("채팅방 생성 실패", error);
     }
