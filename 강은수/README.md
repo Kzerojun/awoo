@@ -757,17 +757,90 @@ let devPerson: Capt = {
 </details>
 <details> <summary><strong>0326</strong></summary>
 
+## JavaScript 관련 
+### _Hoisting 이란?_
+- 인터프리트가 변수와 함수의 메모리 공간을 선언 전에 미리 할당하는 것을 의미. 
+- 변수나 함수의 선언이 해당 스코프의 최상단으로 끌어올려지는 동작
+   - 자바스크립트의 엔진이 코드를 실행하기 전에 변수나 함수 선언을 메모리에 먼저 등록하기 때문
+- var로 선언한 변수의 경우 호이스팅시 undefined로 변수를 초기화, 반면 let과 const로 선언한 변수의 경우 호이스팅시 변수를 초기화 하지 않음
+- `let`, `const` 는 호이스팅되지만, TDZ(Temporal Dead Zone)에 있어 초기화 전에는 접근하면 에러
+- 함수 선언문은 전체 호이스팅되기 때문에 호출 전에 사용 가능
 
+### _클로저란?_
+- 클로저는 함수가 선언될 당시의 외부 스코프를 기억하고, 그 스코프에 접근할 수 있는 함수.
+- **함수가 생성될 때의 렉시컬 환경 (Lexical Environment)을 계속 기억
+- 주로 데이터 은닉이나 상태 유지를 위해 사용
+```
+function outer() {
+  let count = 0;
+
+  return function inner() {
+    count++;
+    console.log(count);
+  };
+}
+
+const counter = outer(); 
+counter(); // 1
+counter(); // 2
+
+```
+- `outer` 함수가 실행되면 `count`라는 지역 변수 생성
+- `inner` 함수는 `count`를 참조.
+- `ounter()`가 실행되고 나면 원래는 `count`는 사라져야 하는데, `inner` 함수가  `count`를 참조하고 있어서 메모리에서 안 사라짐
+- 그래서 `counter()`를 호출할 때마다 `count`가 유지됨
+
+### _this 란?_
+- `this`는 함수가 호출될 때 결정되며, 호출 방식에 따라 달라진다.
+- 일반 함수에서는 전역 객체 (window), 메서드에서는 그 객체, 클래스에서는 인스턴스를 가리킨다. ES6 화살표 함수는 this를 바인딩하지 않고 상위 스코프의 `this`를 사용한다.
+
+### _ == vs === 의 차이점은?_
+- `==`는 타입을 강제 변환한 뒤 비교하고, `===`는 타입까지 정확하게 비교. 일반적으로 의도치 않은 타입변환을 막기 위해 `===` 사용을 권장
 
 
 </details>
 <details> <summary><strong>0327</strong></summary>
 
+## HTML / CSS 관련
+### _HTML5의 주요 특징은?_
+- 시맨틱 태그 (`<article>`, `<section>`, `<nav>` 등), 로컬 저장소 (`localStorage`,`sessionStorage`), 멀티미디어 지원(`audio`,`video`), 폼 개선 등이 포함
+
+### _Box Model_에 대해 설명
+- CSS Box Model은 요소를 박스처럼 구성하는 방식으로, `content -> padding -> border -> margin` 순서로 구성. 요소의 전체 크기는 이 네 가지 합으로 계산
+
+### _Position 속성 종류와 차이점?_
+- `static`: 기본 위치 (기준 없음)
+- `relative`: 자신의 원래 위치 기준으로 이동
+- `absolute`: 가장 가까운 `relative/absolute` 조상 기준 위치
+- `fixed`: 브라우저 뷰포트를 기준으로 고정
+- `sticky`: 스크롤에 따라 `relative -> fixed`로 바뀜
+
+### _inline, block, inline-block 의 차이는?_
+| 속성                | 렌더링 공간 | 화면에 표시 여부 | 상호작용 가능 |
+|---------------------|--------------|-------------------|----------------|
+| `display: none`     | ❌           | ❌                | ❌             |
+| `visibility: hidden`| ✅           | ❌                | ❌             |
 
 
 </details>
 <details> <summary><strong>0328</strong></summary>
+## ⚛️ React 관련
+### _React의 주요 특징_
+- 선언형 UI, 컴포넌트 기반 구조, Virtual DOM을 통한 효울적인 렌더링, 상태 관리의 유연성 등
 
+### _useEffect의 동작 방식은?_
+- `useEffect`는 컴포넌트 렌더링 이후 실행되며, 의존성 배열을 기반으로 특정 상태나 props가 바뀔 때만 실행되도록 제어할 수 있다. 클린업 함수를 반환하면 언마운트 또는 재샐행 전에 정리작업 가능
+
+### _useEffect에서 의존성 배열이 빈 배열이면 어떤 의미?_
+- 빈 배열(`[]`)을 넣으면 `컴포넌트가 처음 마운트될 때 한 번만 실행`된다.
+- `componentDidMount`와 비슷한 역할을 하며, 언마운트 처리를 위해 `return`을 사용
+
+### _React에서 불필요한 렌더링을 막는 방법은?_
+- React.memo로 컴포넌트 메모이제이션
+- useMemo, useCallback 사용
+- props 비교 최적화 (areEqual)
+- 리스트에서 key 잘 지정
+- 상태를 최소한의 범위로 나눠서 관리
 
 </details>
 </details>
