@@ -1,4 +1,3 @@
-// src/socket/chatSocket.ts
 import SockJS from "sockjs-client";
 import { Client, IMessage } from "@stomp/stompjs";
 
@@ -42,19 +41,14 @@ class ChatSocket {
     const token = localStorage.getItem("accessToken");
     console.log(`메시지 전송: ${message}`);
 
-    // const userId = useSelector((state: RootState) => state.user.userId); // userId를 Redux에서 가져옵니다.
-
-    // if (!userId) {
-    //   console.error("User ID is missing. Cannot send message.");
-    //   return;
-    // }
     // ✅ image 기본 null 적용
     this.stompClient.publish({
       destination: `/pub/chat/rooms/${roomId}`,
       headers: {
         Authorization: `${token}`, // 인증용
+        "X-User-Id": "1", // 멤버 ID 하드코딩 해서 테스트 완료 - memberid 로 받아서 수정 예정
       },
-      body: JSON.stringify({ message: "dfdfd", image: "" }),
+      body: JSON.stringify({ message, image, senderId: Number(1) }),
     });
     console.log("🚀 메시지 발송");
   }
