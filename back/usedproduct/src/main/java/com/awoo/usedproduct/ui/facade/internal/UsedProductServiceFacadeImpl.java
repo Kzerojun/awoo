@@ -85,14 +85,7 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
 
     @Override
     public FetchMessageResponse message(MessageCommand command) {
-        Integer messageId = chatMessageService.saveMessage(command);
-        return FetchMessageResponse.builder()
-                .chatRoomId(command.chatRoomId())
-                .image(command.image())
-                .messageId(messageId)
-                .message(command.message())
-                .senderId(command.senderId())
-                .build();
+        return chatMessageService.saveMessage(command);
     }
 
     @Override
