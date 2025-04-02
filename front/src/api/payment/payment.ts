@@ -63,6 +63,11 @@ interface TransferPaymentResponse {
   error: any;
 }
 
+// 멍페이 안심 결제 interface
+interface SafeTransferPaymentPayload {
+  amount: number;
+}
+
 // 멍페이 핸드폰 인증 요청
 export const requestPhoneAuth = async ({ name, phone }: PhoneAuthPayload) => {
   console.log("멍페이 핸드폰 인증 요청", { name, phone });
@@ -338,6 +343,41 @@ export const transferPayment = async (
     return res.data;
   } catch (err) {
     console.error("멍페이 송금 실패:", err);
+    throw err;
+  }
+};
+
+// 멍페이 안심 결제
+export const makeSafePayment = async (amount: number) => {
+  console.log("멍페이 안심 결제 요청", { amount });
+
+  try {
+    // UUID v4 형식의 Idempotency-Key 생성
+    const generateUUID = () => {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0,
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    };
+
+    const idempotencyKey = generateUUID();
+
+    // 요청 본문 구성
+    const payload: SafeTransferPaymentPayload = {
+      amount,
+    };
+
+    const res = await axiosInstance.post("/payments/safe-pays", payload, {
+      headers: {
+        "Idempotency-Key": idempotencyKey,
+      },
+    });
+
+    console.log("멍페이 안심 결제 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("멍페이 안심 결제 실패:", err);
     throw err;
   }
 };
