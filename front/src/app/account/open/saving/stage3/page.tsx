@@ -7,7 +7,13 @@ import ProductIntro from "../../deposit/components/ProductIntro";
 import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep3 from "../components/ProductDetailStep3";
 import ProductDocs from "../components/ProductDocs";
-
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/store";
+import {
+  setAccountType,
+  setSavingStage,
+  resetAccountProgress,
+} from "@/lib/slices/accountProgressSlice";
 const step3Reviews = [
   {
     text: "꾸준히 함께한 여정이 정말 뿌듯해요! 계속 이용할 계획입니다.",
@@ -24,6 +30,8 @@ const step3Reviews = [
 ];
 
 const Page = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <div className="container mx-auto max-w-lg py-6">
       <ProductSummary
@@ -36,7 +44,12 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
-          console.log("가입하기 클릭됨!");
+          // 리셋하고 시작
+          dispatch(resetAccountProgress());
+
+          dispatch(setAccountType("saving"));
+          dispatch(setSavingStage(3));
+          router.push("/account/open/saving/agreement");
         }}
         width="long"
         textSize="medium"

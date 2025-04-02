@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PetInterface } from "./petSlice";
 
-// 스택 구조를 기반으로 한 뒤로가기 구현
 interface UserActionState {
+  // 스택 구조를 기반으로 한 뒤로가기 구현
   historyStack: string[];
   currentWalkingSelectView: number;
   currentMyPetView: number;
   // currentWalkingDog: PetInterface | null;
   currentPetDetailView: number;
   isGoingBack: boolean;
+  checkPassword: boolean;
 }
 
 const initialState: UserActionState = {
@@ -18,6 +19,7 @@ const initialState: UserActionState = {
   // currentWalkingDog: null,
   currentPetDetailView: 1,
   isGoingBack: false,
+  checkPassword: true,
 };
 
 const userActionSlice = createSlice({
@@ -47,6 +49,9 @@ const userActionSlice = createSlice({
     changeCurrentPetDetailView: (state, action: PayloadAction<number>) => {
       state.currentPetDetailView = action.payload;
     },
+    checkPasswordConfirm: (state, action: PayloadAction<boolean>) => {
+      state.checkPassword = action.payload;
+    },
     markGoingBack: (state, action: PayloadAction<boolean>) => {
       state.isGoingBack = action.payload;
     },
@@ -61,6 +66,8 @@ export const {
   changeWalkingSelectView,
   // setCurrentWalkingDog,
   changeCurrentPetDetailView,
+  checkPasswordConfirm,
+
   markGoingBack,
 } = userActionSlice.actions;
 export default userActionSlice.reducer;

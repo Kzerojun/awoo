@@ -32,6 +32,12 @@ public class CalendarController {
         return ApiUtils.success(calendarFacade.searchCalendarList(memberId));
     }
 
+    @GetMapping("/pets/{petId}")
+    public ApiUtils.ApiResult<SearchCalendarListResponse> searchCalendarListByPet(@RequestHeader("X-User-Id") Integer memberId,
+                                                                                  @PathVariable Integer petId){
+        return ApiUtils.success(calendarFacade.searchCalendarListByPet(memberId, petId));
+    }
+
     @PutMapping("/{calendarId}")
     public ApiUtils.ApiResult<ModifyCalendarResponse> modifyCalendar(@RequestHeader("X-User-Id") Integer memberId,
                                                                      @PathVariable Integer calendarId,

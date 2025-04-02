@@ -9,8 +9,12 @@ import AccountComplete from "../../../open/components/AccountComplete";
 import Button from "@/common/ui/Button";
 import { useAppSelector } from "@/lib/store";
 import { OpenSavingAccount } from "@/api/account/open/saving/openSaving";
-
+import { resetSaving } from "@/lib/slices/savingSlice";
+import { useDispatch, UseDispatch } from "react-redux";
+import { resetSavingPasswordState } from "@/lib/slices/savingPasswordSlice";
+import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
 export default function SavingAccountVerifySuccessPage() {
+  const dispatch = useDispatch();
   const [showComplete, setShowComplete] = useState(false);
   const router = useRouter();
 
@@ -21,6 +25,7 @@ export default function SavingAccountVerifySuccessPage() {
     withdrawalAccountNo,
     conditionsAgreement,
     password,
+    petId,
   } = useAppSelector((state) => state.saving);
 
   // ✅ 확인 버튼 클릭 시 적금 계좌 개설 요청
@@ -32,11 +37,29 @@ export default function SavingAccountVerifySuccessPage() {
         withdrawalAccountNo,
         conditionsAgreement,
         password,
+        petId,
       });
       console.log("✅ 적금 계좌 개설 응답:", response);
+
+      // 백엔드 응답에 맞춰서 필터링
+      if (!response.success) {
+        alert("적금 계좌 개설에 실패했습니다.");
+        return; // 바로 리턴해야 함
+      }
+
+      // 진짜 성공했을 때 실행되는 코드
+      // 리셋 - 개설 끝난 경우 redux 업데이트
+      dispatch(resetSaving());
+      dispatch(resetAccountProgress());
+      dispatch(resetSavingPasswordState());
       setShowComplete(true);
     } catch (error) {
       console.error("❌ 적금 계좌 개설 실패:", error);
+      // 개설 실패한 경우 redux 마찬가지로 리셋하여 업데이트
+      // 추후에 저장된 정보로 다시 시도하게 할지 리팩토링 예정
+      dispatch(resetSaving());
+      dispatch(resetAccountProgress());
+      dispatch(resetSavingPasswordState());
       alert("적금 계좌 개설에 실패했습니다. 다시 시도해주세요.");
     }
   };

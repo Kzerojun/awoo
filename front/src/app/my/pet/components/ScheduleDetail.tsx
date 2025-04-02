@@ -136,7 +136,7 @@ const ScheduleDetail = ({ clickedDate, isOpen, schedule, onClose, onRefresh }: P
           onClick={resetSetting}
         >
           <motion.div
-            className="w-full bg-white rounded-t-2xl p-4 pb-8 mb-[54px]"
+            className="w-full bg-white rounded-t-2xl p-4 pb-8 mb-[52px]"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}

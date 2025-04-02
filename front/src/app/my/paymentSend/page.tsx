@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import SendBankInfo from "./components/SendBankInfo";
 import SendAmountModal from "./components/SendAmountModal";
@@ -105,7 +105,7 @@ export default function PaymentSend() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <TopBar title="송금" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="송금" rightAction="bell" />
 
       <div className="pt-14 flex-1 flex flex-col">
         <SendBankInfo onComplete={handleBankInfoComplete} />

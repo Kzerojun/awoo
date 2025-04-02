@@ -1,10 +1,10 @@
 "use client";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 
 export default function Favorite() {
   return (
     <>
-      <TopBar title="관심 상품" />
+      <CommonTopBar title="관심 상품" />
       <div>favorite</div>
     </>
   );

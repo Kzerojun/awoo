@@ -34,6 +34,22 @@ spring:
         use_sql_comments: true
     defer-datasource-initialization: true
 
+  kafka:
+    producer:
+      bootstrap-servers: j12c209.p.ssafy.io:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      bootstrap-servers: j12c209.p.ssafy.io:9092
+      group-id: payment
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.use.type.headers: false  # 헤더 타입 정보 무시
+        spring.json.value.default.type: com.awoo.payment.ui.listener.event.UsedProductSoldOutBySafeEvent
+        spring.json.trusted.packages: "*"  # 신뢰할 패키지
+
   data:
     redis:
       host: ${SPRING_REDIS_HOST}

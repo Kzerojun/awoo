@@ -1,55 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import AgreementSection from "../../deposit/agreement/components/AgreementSection"; // 기존 컴포넌트 그대로 사용
+import AgreementSection from "../../deposit/agreement/components/AgreementSection";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import { useRouter } from "next/navigation";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Button from "@/common/ui/Button";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { setConditionsAgreement } from "@/lib/slices/savingSlice";
 
-const SavingAgreementPage = () => {
+const agreementItems = [
+  "적립식예금 약관",
+  "AwOO은행 정기적금 특약",
+  "비과세종합저축 특약",
+  "중요사항 설명 안내",
+  "불이익사항 안내",
+  "금융소비자 권리사항 안내",
+];
+
+export default function SavingAgreementPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { conditionsAgreement } = useAppSelector((state) => state.saving);
 
-  const agreementItems = [
-    "적립식예금 약관",
-    "AwOO은행 정기적금 특약",
-    "비과세종합저축 특약",
-    "중요사항 설명 안내",
-    "불이익사항 안내",
-    "금융소비자 권리사항 안내",
-  ];
-
+  // 체크박스 상태 (상품설명서 + 6개 약관 = 총 7개)
   const [checkedList, setCheckedList] = useState<boolean[]>(
-    Array(agreementItems.length + 1).fill(false) // 상품설명서 포함
+    Array(agreementItems.length + 1).fill(false)
   );
   const [showWarning, setShowWarning] = useState(false);
 
+  // ✅ 개별 체크
   const toggleCheck = (index: number) => {
     const updated = [...checkedList];
     updated[index] = !updated[index];
     setCheckedList(updated);
     setShowWarning(false);
+    dispatch(setConditionsAgreement(updated.every(Boolean)));
   };
 
+  // ✅ 묶음 체크 (section용)
   const toggleSection = (indexes: number[]) => {
     const updated = [...checkedList];
-    const allChecked = indexes.every((i) => checkedList[i]);
+    const allCheckedSection = indexes.every((i) => checkedList[i]);
 
     indexes.forEach((i) => {
-      updated[i] = !allChecked;
+      updated[i] = !allCheckedSection;
     });
 
     setCheckedList(updated);
     setShowWarning(false);
+    dispatch(setConditionsAgreement(updated.every(Boolean)));
   };
 
   const handleNextClick = () => {
-    const allChecked = checkedList.every(Boolean);
-    if (!allChecked) {
+    if (!conditionsAgreement) {
       setShowWarning(true);
       return;
     }
-    // ✅ 적금 상품 상세로 이동
     router.push("/account/open/saving/info");
   };
 
@@ -101,20 +108,16 @@ const SavingAgreementPage = () => {
         </p>
       )}
 
+      {/* 다음 버튼 */}
       <Button
         text="다음"
         width="long"
         textSize="medium"
         fontBold="base"
-        className={`w-full mt-6 py-3 text-center ${
-          checkedList.every(Boolean)
-            ? "bg-aqua text-white"
-            : "bg-gray-300 text-white cursor-not-allowed"
-        }`}
+        className="w-full mt-6 py-3 text-center"
+        disabled={!conditionsAgreement}
         onClick={handleNextClick}
       />
     </div>
   );
-};
-
-export default SavingAgreementPage;
+}

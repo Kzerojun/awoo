@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import Certificate, { CertificateRef } from "./components/Certificate";
 import { verifyOneWonTransfer } from "@/api/payment/payment";
@@ -83,7 +83,7 @@ export default function AccountCertificate() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <TopBar title="계좌 연결" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="계좌 연결" rightAction="bell" />
 
       <div className="pt-14 flex-1 flex flex-col">
         <Certificate

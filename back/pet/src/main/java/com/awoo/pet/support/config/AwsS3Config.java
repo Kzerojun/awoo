@@ -1,4 +1,4 @@
-package com.awoo.pet.support;
+package com.awoo.pet.support.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

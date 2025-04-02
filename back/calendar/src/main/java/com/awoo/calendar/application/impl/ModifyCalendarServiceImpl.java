@@ -20,7 +20,7 @@ public class ModifyCalendarServiceImpl implements ModifyCalendarService {
     @Override
     @Transactional
     public Calendar modifyCalendar(final ModifyCalendarCommand command) {
-        Calendar calendar = calendarRepository.searchCalendar(command.calendarId()).orElseThrow(CalendarNotFoundException::new);
+        Calendar calendar = calendarRepository.searchCalendar(command.calendarId(), "N").orElseThrow(CalendarNotFoundException::new);
 
         if(calendar.getMemberId() != command.memberId()){
             throw new AccessDeniedException();

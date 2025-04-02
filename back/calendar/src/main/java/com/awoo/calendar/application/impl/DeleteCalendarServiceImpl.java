@@ -21,7 +21,7 @@ public class DeleteCalendarServiceImpl implements DeleteCalendarService {
     @Transactional
     public Integer deleteCalendar(Integer calendarId, Integer memberId) {
 
-        Calendar calendar = calendarRepository.searchCalendar(calendarId).orElseThrow(CalendarNotFoundException::new);
+        Calendar calendar = calendarRepository.searchCalendar(calendarId, "N").orElseThrow(CalendarNotFoundException::new);
 
         if(calendar.getMemberId() != memberId){
             throw new AccessDeniedException();

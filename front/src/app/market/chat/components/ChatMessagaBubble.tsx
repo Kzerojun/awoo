@@ -2,6 +2,7 @@ interface Props {
   sender: "me" | "partner";
   content: string;
   time: string;
+  image?: string | null;
 }
 
 export default function ChatMessageBubble({ sender, content, time }: Props) {

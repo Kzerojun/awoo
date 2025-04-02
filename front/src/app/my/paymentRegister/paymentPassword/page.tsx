@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import Password from "./components/Password";
 import { setPaymentPassword } from "@/api/payment/payment";
@@ -62,7 +62,7 @@ export default function PaymentPassword() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="멍Pay" rightAction="bell" />
 
       <div className="pt-1">
         {step === 1 ? (

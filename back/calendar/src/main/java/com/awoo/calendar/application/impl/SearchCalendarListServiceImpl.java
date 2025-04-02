@@ -34,7 +34,7 @@ public class SearchCalendarListServiceImpl implements SearchCalendarListService 
             petInfo.put((Integer) pet.get("petId"), pet);
         }
 
-        List<Calendar> myCalendarList = calendarRepository.searchCalendarList(memberId);
+        List<Calendar> myCalendarList = calendarRepository.searchCalendarList(memberId , "N");
 
         List<Map<String, Object>> result = new ArrayList<>();
 

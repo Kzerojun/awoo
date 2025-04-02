@@ -1,13 +1,17 @@
 "use client";
 
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 import TransactionList from "./TransactionList";
+import { DepositResponse } from "@/api/account/my/deposit";
 
-const DepositBottom = () => {
+interface Props {
+  deposit: DepositResponse;
+}
+
+const DepositBottom = ({ deposit }: Props) => {
   return (
-    <div className="h-2/3 w-full flex flex-col items-center justify-center ">
+    <div className="flex-1 w-full flex flex-col ">
       {/* <div>계좌 조회 아랫부분</div> */}
       <TransactionList />
     </div>

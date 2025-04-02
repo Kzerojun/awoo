@@ -12,6 +12,8 @@ public interface CalendarFacade {
 
     SearchCalendarListResponse searchCalendarList(final Integer memberId);
 
+    SearchCalendarListResponse searchCalendarListByPet(final Integer petId, final Integer memberId);
+
     ModifyCalendarResponse modifyCalendar(final ModifyCalendarRequest request, final Integer calendarId, final Integer memberId);
 
     DeleteCalendarResponse deleteCalendar(final Integer calendarId, final Integer memberId);

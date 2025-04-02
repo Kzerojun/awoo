@@ -7,7 +7,11 @@ import ProductIntro from "../../deposit/components/ProductIntro";
 import UserReview from "@/app/account/open/saving/components/UserReview";
 import ProductDetailsStep2 from "../components/ProductDetailStep2";
 import ProductDocs from "../components/ProductDocs";
-
+import { useRouter } from "next/navigation";
+import { setSavingStage } from "@/lib/slices/accountProgressSlice";
+import { useAppDispatch } from "@/lib/store";
+import { setAccountType } from "@/lib/slices/accountProgressSlice";
+import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
 const step2Reviews = [
   {
     text: "이제 산책이 루틴이 되었어요!",
@@ -24,6 +28,8 @@ const step2Reviews = [
 ];
 
 const Page = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <div className="container mx-auto max-w-lg py-6">
       <ProductSummary
@@ -36,7 +42,12 @@ const Page = () => {
       <Button
         text="가입하기"
         onClick={() => {
-          console.log("가입하기 클릭됨!");
+          // 리셋 하고 시작
+          dispatch(resetAccountProgress());
+
+          dispatch(setAccountType("saving"));
+          dispatch(setSavingStage(2)); // ← 2단계 세팅
+          router.push("/account/open/saving/agreement");
         }}
         width="long"
         textSize="medium"

@@ -62,13 +62,13 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
               alt="프로필 이미지"
               width={100}
               height={100}
-              className="rounded-full"
+              className="rounded-full w-[100px] h-[100px]"
             />
 
             <div className="mb-3 text-lg">{pet.name}</div>
           </div>
           {/* 하단 */}
-          <div className="w-72 border-b-2 border-custom-gray flex flex-col justify-center items-center">
+          <div className="w-72 border-b-2 border-custom-gray flex flex-col justify-center items-center gap-y-3">
             <div className="flex flex-col justify-center gap-y-5">
               {/* 나이 */}
               <div className="flex items-center gap-x-10">
@@ -84,7 +84,7 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
             {/* 산책 기록 */}
             <div className="flex flex-col items-center justify-center gap-y-3">
               <div className="flex items-center justify-center gap-x-3">
-                <Image src={walkingIcon} alt="산책 아이콘" className="w-8 h-8" />
+                {/* <Image src={walkingIcon} alt="산책 아이콘" className="w-8 h-8" /> */}
                 <div className="text-lg">이번 달 산책 기록</div>
               </div>
 

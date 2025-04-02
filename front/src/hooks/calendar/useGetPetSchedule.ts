@@ -5,7 +5,7 @@ export const useGetPetSchedule = (petId: number) => {
   return useQuery({
     queryKey: ["getPetSchedule", petId],
     queryFn: () => getPetSchedule({ petId }),
-    enabled: !!petId,
+    enabled: !!petId && petId > 0,
     retry: 1,
     refetchOnWindowFocus: false,
   });

@@ -29,7 +29,6 @@ type Event = {
   dog: string;
 };
 const Calendar = () => {
-  const queryClient = useQueryClient();
   const petList = useAppSelector((state) => state.pet.petList);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -59,12 +58,16 @@ const Calendar = () => {
 
   const handleCalendarChange = (id: number) => {
     setSelectCalendar(id);
-    if (id === 0) {
+  };
+
+  useEffect(() => {
+    if (selectCalendar === 0) {
       refetchMemberSchedule();
-    } else {
+    } else if (selectCalendar > 0) {
       refetchPetSchedule();
     }
-  };
+  }, [selectCalendar]);
+
   const start = startOfMonth(currentMonth);
   const end = endOfMonth(currentMonth);
   const days = eachDayOfInterval({ start, end });
@@ -153,8 +156,8 @@ const Calendar = () => {
   };
 
   return (
-    <div className="p-4 mx-auto">
-      <div className="flex items-center justify-center gap-x-5">
+    <div className="p-4 mx-auto flex flex-col justify-center gap-y-5">
+      <div className="flex items-center justify-center gap-x-5 mt-3">
         <button
           className={`text-sm border-2 rounded-2xl w-20 h-10 ${
             selectCalendar === 0
@@ -213,12 +216,12 @@ const Calendar = () => {
               <div
                 key={dateStr}
                 className={clsx(
-                  "h-14 p-1 flex flex-col justify-between rounded-lg cursor-pointer border hover:bg-gray-100 transition",
-                  isCurrent && "bg-yellow-100 border-yellow-400"
+                  "h-14 p-1 flex flex-col justify-between rounded-lg cursor-pointer border-1 border-gray-300 hover:bg-gray-100 transition",
+                  isCurrent && "bg-light-aqua border-aqua"
                 )}
                 onClick={() => handleDateClick(dateStr)}
               >
-                <div className="text-right pr-1 text-gray-700 text-sm">{dayNum}</div>
+                <div className="text-right pr-1 text-gray-500 text-sm">{dayNum}</div>
 
                 {hasEvents && (
                   <div className="flex items-center justify-center gap-1 text-xs text-gray-600 mt-1">

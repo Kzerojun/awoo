@@ -1,22 +1,10 @@
 "use client";
 
 import React from "react";
-
-interface TransactionObject {
-  transactionUniqueNo: string;
-  transactionDate: string;
-  transactionTime: string;
-  transactionType: string;
-  transactionTypeName: string;
-  transactionAccountNo: string;
-  transactionBalance: string;
-  transactionAfterBalance: string;
-  transactionSummary: string;
-  transactionMemo: string;
-}
+import { TransactionResponse } from "@/api/account/my/deposit";
 
 interface TransactionDetailProps {
-  transaction: TransactionObject | null;
+  transaction: TransactionResponse | null;
 }
 
 const TransactionDetail = ({ transaction }: TransactionDetailProps) => {

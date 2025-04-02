@@ -1,6 +1,6 @@
 "use client";
 
-import TopBar from "../../../common/ui/TopBar";
+import CommonTopBar from "../../../common/ui/TopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import InfoTyping from "./components/InfoTyping";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ export default function PaymentRegister() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="멍Pay" rightAction="bell" />
 
       <div className="pt-14">
         <InfoTyping onComplete={handleRegistrationComplete} />

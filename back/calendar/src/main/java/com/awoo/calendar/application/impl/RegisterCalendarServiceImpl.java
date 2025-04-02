@@ -31,6 +31,7 @@ public class RegisterCalendarServiceImpl implements RegisterCalendarService {
         }
 
         Calendar calendar = calendarFactory.registerCalendarEntity(command);
+        System.out.println(calendar.getCalendarType());
 
         try{
             calendarRepository.registerCalendar(calendar);

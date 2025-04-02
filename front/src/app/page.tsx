@@ -30,20 +30,22 @@ export default function Home() {
 
   // 메인 페이지 표시
   return (
-    <div className="relative min-h-screen bg-white">
+    <div className="fixed inset-0 overflow-hidden bg-white">
       {/* 메인 컨텐츠 - 중앙 정렬 */}
-      <main className="flex flex-col items-center justify-center h-full min-h-[calc(100vh-3rem)]">
+      <main className="flex flex-col items-center justify-center h-full">
         <div className="flex items-center space-x-2">
           <h1 className="text-4xl font-bold text-center">AwOO</h1>
         </div>
         <p className="text-gray-500 mt-2">새로운 발자국 금융 라이프</p>
 
-        <Button
-          text="로그인 하러가기"
-          backgroundColor="aqua"
-          fontColor="white"
-          onClick={goToLogin}
-        />
+        <div className="mt-8">
+          <Button
+            text="로그인 하러가기"
+            backgroundColor="aqua"
+            fontColor="white"
+            onClick={goToLogin}
+          />
+        </div>
       </main>
     </div>
   );

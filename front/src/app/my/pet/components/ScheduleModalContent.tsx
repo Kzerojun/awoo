@@ -80,6 +80,7 @@ const ScheduleModalContent = ({
             id="selectedDog"
             value={selectedDog}
             onChange={(e) => setSelectedDog(e.target.value)}
+            className="focus:outline-none"
           >
             <option className="text-custom-gray" value="" disabled>
               강아지 선택
