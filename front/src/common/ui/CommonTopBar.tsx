@@ -15,7 +15,8 @@ interface CommonTopBarProps {
   title: string;
   leftAction?: "back" | "close";
   rightAction?: "bell" | "none" | "cancel" | "setting";
-  backColor?: "white" | "aqua";
+  backColor?: "white" | "aqua" | "green";
+  textColor?: "white" | "black";
   onClose?: () => void;
   onBellClick?: () => void;
   onSettingClick?: () => void;
@@ -26,6 +27,7 @@ const CommonTopBar = ({
   leftAction = "back",
   rightAction = "none",
   backColor = "white",
+  textColor = "black",
   onClose,
   onBellClick,
   onSettingClick,
@@ -45,6 +47,12 @@ const CommonTopBar = ({
   interface backColorTypes {
     white: string;
     aqua: string;
+    green: string;
+  }
+
+  interface textColorTypes {
+    white: string;
+    black: string;
   }
 
   const leftActionTypes: leftActionTypes = {
@@ -56,12 +64,18 @@ const CommonTopBar = ({
     bell: <BellIcon className="h-6 w-6" />,
     none: null,
     cancel: <span className="text-sm ">취소</span>,
-    setting: <Cog6ToothIcon className="h-6 w-6 text-black" />,
+    setting: <Cog6ToothIcon className="h-6 w-6" />,
   };
 
   const backColorTypes: backColorTypes = {
     white: "bg-white",
     aqua: "bg-aqua",
+    green: "bg-green",
+  };
+
+  const textColorTypes: textColorTypes = {
+    white: "text-white",
+    black: "text-black",
   };
 
   const router = useRouter();
@@ -110,19 +124,23 @@ const CommonTopBar = ({
     >
       {/* 왼쪽 버튼 */}
 
-      <button onClick={handleLeftClick} className="text-gray-500">
+      <button onClick={handleLeftClick} className={`${textColorTypes[textColor]}`}>
         {leftActionTypes[leftAction]}
       </button>
 
       {/* 중앙 제목 title 필수 */}
       {title && (
-        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg font-medium text-custom-black leading-tight">
+        <h1
+          className={`absolute left-1/2 transform -translate-x-1/2 text-lg font-medium ${textColorTypes[textColor]} leading-tight`}
+        >
           {title}
         </h1>
       )}
 
       {/* 우측 버튼 */}
-      <button onClick={handleRightClick}>{rightActionTypes[rightAction]}</button>
+      <button onClick={handleRightClick} className={`${textColorTypes[textColor]}`}>
+        {rightActionTypes[rightAction]}
+      </button>
     </header>
   );
 };

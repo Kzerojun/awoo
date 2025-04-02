@@ -56,4 +56,8 @@ public class Pet {
         this.profileImage = profileImage;
     }
 
+    public void registerSavingId(final Integer savingId) {
+        this.savingId = savingId;
+    }
+
 }

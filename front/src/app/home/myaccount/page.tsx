@@ -7,7 +7,13 @@ import { getInternalAccounts } from "@/api/account/open/saving/depositlist";
 import { getSavingList } from "@/api/account/open/saving/savingList";
 import { getPetDetail } from "@/api/account/open/saving/petDetail";
 import { useDispatch } from "react-redux";
-import { setSelectedSavingId, resetSelectedSavingId } from "@/lib/slices/savingAccountDetailSlice";
+import {
+  setSelectedSavingId,
+  resetSavingAccountDetailSlice,
+  changeSelectedSavingAccountNo,
+  changeSelectedDepositAccountNo,
+} from "@/lib/slices/savingAccountDetailSlice";
+import { changeClickedAccount } from "@/lib/slices/savingAccountDetailSlice";
 
 export default function AccountMinePage() {
   const router = useRouter();
@@ -24,6 +30,7 @@ export default function AccountMinePage() {
           getInternalAccounts(),
           getSavingList(),
         ]);
+        dispatch(resetSavingAccountDetailSlice());
         setDeposit(depositData);
         setSavingAccounts(savingData);
       } catch (error) {
@@ -32,6 +39,28 @@ export default function AccountMinePage() {
     };
     fetchData();
   }, []);
+
+  // 내부 계좌 클릭 시
+  const goToDepositCheckPassword = () => {
+    if (!deposit) {
+      alert("예금 계좌 정보를 불러올 수 없습니다.");
+      return;
+    }
+    dispatch(changeClickedAccount("deposit"));
+    dispatch(changeSelectedDepositAccountNo(deposit.accountNo));
+    router.replace("/account/my/check-password");
+  };
+
+  // 계좌이체 클릭 시
+  const goToTransferCheckPassword = () => {
+    if (!deposit) {
+      alert("예금 계좌 정보를 불러올 수 없습니다.");
+      return;
+    }
+    dispatch(changeClickedAccount("transfer"));
+    dispatch(changeSelectedDepositAccountNo(deposit.accountNo));
+    router.replace("/account/my/check-password");
+  };
 
   // ✅ 적금 클릭 시 petDetail 통해 savingId 저장
   const handleSavingClick = async (account: any) => {
@@ -45,10 +74,12 @@ export default function AccountMinePage() {
         return alert("savingId가 없습니다");
       }
 
-      dispatch(resetSelectedSavingId());
+      dispatch(resetSavingAccountDetailSlice());
       dispatch(setSelectedSavingId(savingId));
+      dispatch(changeClickedAccount("saving"));
+      dispatch(changeSelectedSavingAccountNo(account.accountNo));
 
-      router.push(`/#`); // TODO: 적금 상세 페이지로 변경
+      router.replace(`/account/my/check-password`);
     } catch (err) {
       console.error("pet 상세 조회 실패", err);
     }
@@ -62,7 +93,7 @@ export default function AccountMinePage() {
         {/* ✅ 입출금 계좌 */}
         <div
           className="bg-[#C9F5F1] rounded-xl p-4 shadow cursor-pointer"
-          onClick={() => router.push("/##")} // TODO: 입출금 상세 페이지로 변경
+          onClick={goToDepositCheckPassword}
         >
           <p className="text-sm ml-3 mt-1">AwOO 입출금계좌</p>
           <p className="text-xl font-semibold mt-1 mb-3 ml-3">
@@ -75,7 +106,7 @@ export default function AccountMinePage() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                router.push("/##"); // TODO: 이체 페이지로 변경
+                goToTransferCheckPassword();
               }}
               className="text-xs text-black bg-[#B3D6D3] px-4 py-1.5 rounded-md"
             >

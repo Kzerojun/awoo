@@ -27,6 +27,8 @@ interface ScheduleResponse {
   startTime: string;
   endTime: string;
   color: string;
+  calendarType: string;
+  delYn: string;
 }
 
 // 일정 등록 interface
@@ -101,7 +103,10 @@ export const getMemberSchedule = async (): Promise<ScheduleResponse[]> => {
 // 일정 조회 (반려견별)
 export const getPetSchedule = async ({ petId }: PetIdPayload): Promise<ScheduleResponse[]> => {
   try {
-    const res = await axiosInstance.get<ApiResponse<CalendarListResponse>>(`/calendars/${petId}`);
+    const res = await axiosInstance.get<ApiResponse<CalendarListResponse>>(
+      `/calendars/pets/${petId}`
+    );
+    console.log("요청 보내는 petId:", petId);
     console.log("반려견별 일정 전체 조회 성공:", res.data.response.calendarList);
     return res.data.response.calendarList;
   } catch (err) {

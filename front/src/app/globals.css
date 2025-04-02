@@ -152,3 +152,34 @@
     }
   }
 }
+
+@layer utilities {
+  @keyframes jump {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-jump {
+    animation: jump 1.2s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+  .delay-400 {
+    animation-delay: 0.4s;
+  }
+}

@@ -9,6 +9,7 @@ import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.request.*;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/used-products")
+@Slf4j
 public class UsedProductController {
 
     private final UsedProductServiceFacade usedProductServiceFacade;
@@ -142,8 +144,10 @@ public class UsedProductController {
      */
     @MessageMapping("/chat/rooms/{chatRoomId}")
     public void sendMessage(@Payload MessageRequest request,
-                            @Header("X-User-Id") String senderId,
+                            @Header(value = "X-User-Id",required = false) String senderId,
                             @DestinationVariable Integer chatRoomId) {
+
+        log.info("채팅 메시지 {}   채팅 룸 ID{}", request.message(), chatRoomId);
         MessageCommand command = request.toCommand(senderId, chatRoomId);
         FetchMessageResponse response = usedProductServiceFacade.message(command);
 

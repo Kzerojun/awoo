@@ -71,6 +71,10 @@ spring:
             - Path=/api/used-products/**
           filters:
             - name: JwtAuthenticationFilter
+        - id: admin-service
+          uri: lb://admin
+          predicates :
+            - Path=/api/admin/**
 
 
       discovery:
@@ -102,7 +106,7 @@ management:
   endpoint:
     health:
       show-details: always
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true

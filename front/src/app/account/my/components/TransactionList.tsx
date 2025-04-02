@@ -1,5 +1,5 @@
 "use client";
-import { DepositDetail, DepositContent } from "./MockDeposit";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -67,7 +67,7 @@ const TransactionList = () => {
   }, []);
 
   // 계좌 개설일
-  // const createDate = DepositContent[0].accountCreatedDate;
+
   const formattedStartDate = `${createDate?.slice(0, 4)}-${createDate?.slice(4, 6)}-${createDate?.slice(6, 8)}`;
   const formattedTodayStr = today.toISOString().slice(0, 10); // 2025-03-27
 
@@ -110,7 +110,7 @@ const TransactionList = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="h-[8%] w-ful flex items-center justify-between border-b-1 border-custom-gray text-sm">
+      <div className="h-[10%] w-ful flex items-center justify-between border-b-1 border-gray-200 text-sm">
         <div className="w-[80%] flex justify-between mx-2">
           <input
             type="date"
@@ -140,7 +140,7 @@ const TransactionList = () => {
         {transactionHistory.map((transaction) => (
           <div
             key={transaction.transactionUniqueNo}
-            className="w-full p-3 flex items-start justify-between border-b-1 border-custom-gray"
+            className="w-full p-3 flex items-start justify-between border-b-1 border-gray-200"
             onClick={() => showDetail(transaction)}
           >
             {/* 거래 날짜와 요약 */}

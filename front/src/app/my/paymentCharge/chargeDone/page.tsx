@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 
@@ -121,7 +121,7 @@ export default function ChargeDone() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <TopBar title="충전" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="충전" rightAction="bell" />
 
       {/* Suspense로 감싸서 클라이언트 컴포넌트 렌더링 */}
       <Suspense fallback={<LoadingState />}>
