@@ -7,6 +7,14 @@ spring:
   application:
     name: USED-PRODUCT-SERVICE
 
+  kafka:
+    bootstrap-servers: j12c209.p.ssafy.io:9092
+    consumer:
+      group-id: "used-product"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
   jpa:
     generate-ddl: true
     hibernate:

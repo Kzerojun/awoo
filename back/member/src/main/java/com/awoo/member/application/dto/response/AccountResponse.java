@@ -1,4 +1,4 @@
-package com.awoo.member.application.dto;
+package com.awoo.member.application.dto.response;
 
 public record AccountResponse(String backCode,
                               String bankName,

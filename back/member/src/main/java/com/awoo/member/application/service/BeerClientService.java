@@ -1,7 +1,7 @@
 package com.awoo.member.application.service;
 
-import com.awoo.member.application.dto.UserKeyRequestDto;
-import com.awoo.member.application.dto.UserKeyResponseDto;
+import com.awoo.member.application.dto.request.UserKeyRequestDto;
+import com.awoo.member.application.dto.response.UserKeyResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
