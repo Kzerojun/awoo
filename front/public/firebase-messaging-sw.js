@@ -2,11 +2,11 @@ importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js");
 
 firebase.initializeApp({
-  apiKey: "여기_너_API_KEY",
-  authDomain: "너_authDomain",
-  projectId: "너_projectId",
-  messagingSenderId: "너_messagingSenderId",
-  appId: "너_appId",
+  apiKey: "AIzaSyB7GPu9vQL0VxeJllUUFu2-ATf2HruhBqE",
+  authDomain: "awoo-2c8de.firebaseapp.com",
+  projectId: "awoo-2c8de",
+  messagingSenderId: "127681937004",
+  appId: "1:127681937004:web:1e4f9c45486abba974e249",
 });
 
 const messaging = firebase.messaging();
