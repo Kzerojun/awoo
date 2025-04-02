@@ -5,6 +5,12 @@ import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { pushPath, markGoingBack } from "@/lib/slices/userActionSlice";
 
+const EXCLUDED_PATHS = [
+  "/account/my/deposit/manage",
+  "/account/my/deposit/transfer",
+  "/account/my/check-password",
+];
+
 export const useTrackRouteChange = () => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
@@ -19,8 +25,15 @@ export const useTrackRouteChange = () => {
   }, [isGoingBack]);
 
   useEffect(() => {
-    if (!isGoingBackRef.current && prevPathRef.current && prevPathRef.current !== pathname) {
-      dispatch(pushPath(prevPathRef.current));
+    const prevPath = prevPathRef.current;
+    const shouldPush =
+      !isGoingBackRef.current &&
+      prevPath &&
+      prevPath !== pathname &&
+      !EXCLUDED_PATHS.includes(prevPath);
+
+    if (shouldPush) {
+      dispatch(pushPath(prevPath));
     }
 
     dispatch(markGoingBack(false));

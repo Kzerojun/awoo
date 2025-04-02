@@ -3,12 +3,15 @@
 import React, { useState, ChangeEvent } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import Button from "@/common/ui/Button";
-import { changeTransferData } from "@/lib/slices/transferSlice";
+import { changeTransferData, clearTransferData } from "@/lib/slices/transferSlice";
 import TransferModal from "./TransferModal";
 import CheckPasswordModal from "./CheckPasswordModal";
+import { useAccountTransfer } from "@/hooks/account/deposit/useAccountTransfer";
 
 const TransferStep3 = () => {
   const dispatch = useAppDispatch();
+  const { mutate: transferMutation, isPending: transferPending } = useAccountTransfer();
+
   const depositAccountNo = useAppSelector((state) => state.transfer.depositAccountNo);
   const withdrawalTransactionSummary = useAppSelector(
     (state) => state.transfer.withdrawalTransactionSummary
@@ -69,7 +72,39 @@ const TransferStep3 = () => {
     setShowCheckPasswordModal(true);
   };
 
-  const handleTransfer = () => {};
+  const handleTransfer = () => {
+    if (
+      !depositAccountNo ||
+      !depositTransactionSummary ||
+      !transactionBalance ||
+      !accountNo ||
+      !withdrawalTransactionSummary
+    ) {
+      alert("계좌이체에 실패했습니다.");
+      return;
+    }
+    setShowCheckPasswordModal(false);
+    transferMutation(
+      {
+        depositAccountNo: depositAccountNo,
+        depositTransactionSummary: depositTransactionSummary,
+        transactionBalance: String(transactionBalance),
+        withdrawalAccountNo: accountNo,
+        withdrawalTransactionSummary: withdrawalTransactionSummary,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("계좌이체 성공", data);
+          dispatch(changeTransferData({ transferStep: 4, transferResponse: data }));
+        },
+        onError: (err) => {
+          console.error("계좌이체 실패:", err);
+          alert("계좌이체에 실패했습니다. 다시 시도해주세요.");
+          return;
+        },
+      }
+    );
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-between ">
@@ -94,7 +129,7 @@ const TransferStep3 = () => {
           <input
             type="text"
             placeholder={` ${userName ? userName : ""}`}
-            className="text-end"
+            className="text-end focus:outline-none"
             onChange={handleWriteTransactionSummary}
           />
         </div>
@@ -104,7 +139,7 @@ const TransferStep3 = () => {
           <input
             type="text"
             placeholder="미입력시 수취인명"
-            className="text-end"
+            className="text-end focus:outline-none"
             onChange={handleWriteMySummary}
           />
         </div>

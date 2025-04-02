@@ -1,18 +1,62 @@
 "use client";
 
-import React from "react";
+import React, { useState, ChangeEvent } from "react";
 import { TransactionResponse } from "@/api/account/my/deposit";
+import { usePostTransactionMemo } from "@/hooks/account/deposit/usePostTransactionMemo";
+import Button from "@/common/ui/Button";
+import { useAppSelector } from "@/lib/store";
 
 interface TransactionDetailProps {
   transaction: TransactionResponse | null;
+  onClose: () => void;
+  onUpdate: () => void;
 }
 
-const TransactionDetail = ({ transaction }: TransactionDetailProps) => {
+const TransactionDetail = ({ transaction, onClose, onUpdate }: TransactionDetailProps) => {
+  const { mutate: memoMutation, isPending: memoPending } = usePostTransactionMemo();
+  // 계좌번호
+  const accountNo = useAppSelector((state) => state.myDeposit.deposit?.accountNo);
+  // 거래 고유 번호
+  const transactionUniqueNo = transaction?.transactionUniqueNo;
+
   const formattedDate = `${transaction?.transactionDate.slice(0, 4)}.${transaction?.transactionDate.slice(4, 6)}.${transaction?.transactionDate.slice(6, 8)}`;
   const formattedTime = `${transaction?.transactionTime.slice(0, 2)}:${transaction?.transactionTime.slice(2, 4)}:${transaction?.transactionTime.slice(4, 6)}`;
   const formattedTransacttionBalance = `${Number(transaction?.transactionBalance).toLocaleString("ko-KR")}`;
   const formattedTransacttionAfterBalance = `${Number(transaction?.transactionAfterBalance).toLocaleString("ko-KR")}`;
   const formattedTransactionAccountNo = `${transaction?.transactionAccountNo.replace(/(\d{4})(?=\d)/g, "$1-")}`;
+  const transactionMemo = transaction?.transactionMemo;
+
+  // 메모 내용
+  const [postTransactionMemo, setPostTransactionMemo] = useState<string>("");
+
+  const handleMemo = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPostTransactionMemo(value);
+  };
+
+  const handlePostMemo = () => {
+    if (transaction && postTransactionMemo && accountNo && transactionUniqueNo) {
+      memoMutation(
+        { accountNo, transactionMemo: postTransactionMemo, transactionUniqueNo },
+        {
+          onSuccess: (data) => {
+            console.log("거래 내역 메모 성공");
+            onUpdate();
+            onClose();
+          },
+          onError: (err) => {
+            console.error("거래 내역 메모 실패:", err);
+            alert("다시 시도하세요.");
+            onClose();
+          },
+        }
+      );
+    } else {
+      alert("다시 시도하세요.");
+      onClose();
+      return;
+    }
+  };
 
   if (!transaction) {
     return null;
@@ -22,11 +66,30 @@ const TransactionDetail = ({ transaction }: TransactionDetailProps) => {
     <div className="flex flex-col items-start justify-center py-3 w-full ">
       {/* 상단 */}
       {/* 거래 요약 */}
-      <div className="w-full border-b-1 border-custom-gray py-1 text-2xl font-bold">
-        {transaction.transactionSummary}
+      <div className="w-full border-b-1 border-gray-300 py-1 flex flex-col justify-center gap-y-3">
+        <div className="w-full text-2xl font-bold">{transaction.transactionSummary}</div>
+        {transactionMemo ? (
+          <div className="text-gray-500">{transaction.transactionMemo}</div>
+        ) : (
+          <div className="w-full">
+            <input
+              type="text"
+              placeholder="메모를 입력하세요... (최대 20자)"
+              className="w-full text-gray-400 text-sm focus:outline-none"
+              onChange={handleMemo}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); // 폼 제출 방지
+                  handlePostMemo();
+                }
+              }}
+              maxLength={20}
+            />
+          </div>
+        )}
       </div>
       {/* 거래시간 & 거래구분 */}
-      <div className="w-full py-5 border-b-1 border-custom-gray flex flex-col justify-center gap-y-3">
+      <div className="w-full py-5 border-b-1 border-gray-300 flex flex-col justify-center gap-y-3">
         {/* 거래시간 */}
         <div className=" flex items-center justify-between">
           <span>거래시간</span>
@@ -77,6 +140,9 @@ const TransactionDetail = ({ transaction }: TransactionDetailProps) => {
             <span>{formattedTransactionAccountNo}</span>
           </div>
         )}
+      </div>
+      <div className="mx-auto">
+        <Button text="확인" onClick={onClose} className="w-80" />
       </div>
     </div>
   );
