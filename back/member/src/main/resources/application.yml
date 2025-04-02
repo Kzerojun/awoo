@@ -5,7 +5,6 @@ spring:
   application:
     name: member
 
-
   jpa:
     generate-ddl: true
     hibernate:
@@ -26,6 +25,15 @@ spring:
     url: ${DB_URL}
     username: ${USER_NAME}
     password: ${PASSWORD}
+
+  kafka:
+    bootstrap-servers: j12c209.p.ssafy.io:9092
+    consumer:
+      group-id: member-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
 
 jwt :
   secret_key : ${JWT_SECRET_KEY}
@@ -67,7 +75,7 @@ management:
   endpoint:
     health:
       show-details: always
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
