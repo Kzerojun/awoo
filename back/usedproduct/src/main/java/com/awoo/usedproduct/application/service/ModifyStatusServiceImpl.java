@@ -30,6 +30,9 @@ public class ModifyStatusServiceImpl implements ModifyStatusService {
             usedProductEntity.modifyStatus(command.status(), command.memberId());
         }
 
+
+        usedProductEntity.modifyStatusBySafe(command.status());
+
         if (command.status().equals(UsedProductStatus.SO) && command.paymentType().equals(PaymentType.SAFE)) {
             UsedProductSoldOutBySafeEvent event = UsedProductSoldOutBySafeEvent.builder()
                     .price(usedProductEntity.getPrice())
@@ -37,7 +40,6 @@ public class ModifyStatusServiceImpl implements ModifyStatusService {
                     .buyerId(command.memberId())
                     .build();
             kafkaProducer.sendKafkaMessage(KafkaTopic.USED_PRODUCT_SAFE_SOLD,event);
-            usedProductEntity.modifyStatusBySafe(command.status());
         }
 
         return usedProductEntity.getUsedProductId();
