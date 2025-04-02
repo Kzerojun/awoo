@@ -22,7 +22,6 @@ import myDepositReducer from "./slices/myDepositSlice";
 import savingAccountDetailReducer from "./slices/savingAccountDetailSlice";
 import chatReducer from "./slices/chatSlice";
 import transferReducer from "./slices/transferSlice";
-
 import memberIdReducer from "./slices/memberIdSlice";
 
 // === ✅ Step 3 : persist 설정 ===
