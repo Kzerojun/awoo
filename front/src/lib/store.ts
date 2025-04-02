@@ -35,7 +35,7 @@ const persistConfig = {
     "user",
     "pet",
     "savingAccountDetail",
-    "memberIdReducer",
+    "memberId",
   ], // persist로 값을 관리할 필요가 있는 경우에 추가
 };
 

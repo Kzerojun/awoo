@@ -4,8 +4,8 @@ import { Client, IMessage } from "@stomp/stompjs";
 class ChatSocket {
   private stompClient: Client | null = null;
 
-  // src/socket/chatSocket.ts
   connect(token: string, roomId: number, callback: (message: IMessage) => void) {
+    // 이미 연결되어있으면 재연결 안함
     if (this.stompClient && this.stompClient.connected) return;
 
     const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_BASE_URL}/used-products/ws`);
@@ -36,7 +36,7 @@ class ChatSocket {
     console.log("✅ 채팅방 구독 완료 - roomId:", roomId);
   }
 
-  send(roomId: number, message: string, image: string | null = null) {
+  send(roomId: number, message: string, memberId: number, image: string | null = null) {
     if (!this.stompClient || !this.stompClient.connected) return;
     const token = localStorage.getItem("accessToken");
     console.log(`메시지 전송: ${message}`);
@@ -45,10 +45,10 @@ class ChatSocket {
     this.stompClient.publish({
       destination: `/pub/chat/rooms/${roomId}`,
       headers: {
-        Authorization: `${token}`, // 인증용
-        "X-User-Id": "1", // 멤버 ID 하드코딩 해서 테스트 완료 - memberid 로 받아서 수정 예정
+        Authorization: `${token}`,
+        "X-User-Id": String(memberId),
       },
-      body: JSON.stringify({ message, image, senderId: Number(1) }),
+      body: JSON.stringify({ message, image, senderId: memberId }),
     });
     console.log("🚀 메시지 발송");
   }
