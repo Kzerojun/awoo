@@ -1,6 +1,10 @@
 package com.awoo.member.application.service;
 
-import com.awoo.member.application.dto.*;
+import com.awoo.member.application.dto.request.LoginRequestDto;
+import com.awoo.member.application.dto.request.SignUpRequestDto;
+import com.awoo.member.application.dto.response.MemberInfoResponseDto;
+import com.awoo.member.application.dto.response.MemberUpdateRequestDto;
+import com.awoo.member.application.dto.response.TokenResponseDto;
 import com.awoo.member.ui.dto.CheckMemberRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
