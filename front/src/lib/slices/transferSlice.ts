@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { DepositResponse } from "@/api/account/my/deposit";
 
 interface TransferState {
   depositAccountNo: string;
@@ -9,6 +10,7 @@ interface TransferState {
   transactionMemo: string;
   transactionUniqueNo: string;
   transferStep: number;
+  myDeposit?: DepositResponse;
 }
 
 const initialState: TransferState = {

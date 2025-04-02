@@ -54,6 +54,7 @@ const rootReducer = combineReducers({
   pet: petReducer,
   myDeposit: myDepositReducer,
   savingAccountDetail: savingAccountDetailReducer,
+  transfer: transferReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
