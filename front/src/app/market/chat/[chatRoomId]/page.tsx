@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { chatSocket } from "@/socket/chatSocket";
 import ChatRoomHeader from "../../chat/components/ChatRoomHeader";
@@ -24,6 +24,8 @@ export default function ChatRoomPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
 
+  const searchParams = useSearchParams();
+  const usedProductId = searchParams.get("usedProductId");
   // --------------------------
   // ✅ 과거 메시지 + 소켓 연결
   // --------------------------
@@ -63,7 +65,7 @@ export default function ChatRoomPage() {
   // --------------------------
   return (
     <div className="flex flex-col h-screen bg-gray-50 relative">
-      <ChatRoomHeader />
+      <ChatRoomHeader usedProductId={usedProductId ? Number(usedProductId) : null} />
 
       {/* 채팅 내용 */}
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
