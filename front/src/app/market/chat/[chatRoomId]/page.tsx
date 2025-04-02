@@ -36,17 +36,15 @@ export default function ChatRoomPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  // 이미지 base64 변환 함수
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
         if (typeof reader.result === "string") {
-          console.log(reader.result);
           resolve(reader.result);
         } else {
-          reject("Base64 변환 실패: reader.result가 null 또는 잘못된 타입");
+          reject("Base64 변환 실패");
         }
       };
       reader.onerror = (error) => reject(error);
@@ -76,7 +74,7 @@ export default function ChatRoomPage() {
             image: msg.image,
             chatRoomId: Number(chatRoomId),
           }))
-          .reverse(); // ← 이거 추가
+          .reverse();
 
         setMessages(pastMessages);
 
@@ -85,14 +83,12 @@ export default function ChatRoomPage() {
             ? JSON.parse(new TextDecoder().decode((message as any).binaryBody))
             : JSON.parse(message.body);
 
-          console.log("수신된 메시지 내용:", body); // 디버깅을 위해 추가
-
           const fixedMessage: MessageType = {
             messageId: Date.now(),
             senderId: body.senderId ?? 0,
             message: body.message ?? "",
             createdAt: body.createdAt ?? new Date().toISOString(),
-            image: body.image ?? null, // 여기서 이미지 URL을 받는지 확인
+            image: body.image ?? null,
             chatRoomId: Number(chatRoomId),
           };
 
@@ -112,13 +108,10 @@ export default function ChatRoomPage() {
   const handleSendMessage = (text: string) => {
     if (!text.trim() && selectedImages.length === 0) return;
 
-    const base64Images =
-      selectedImages.length > 0
-        ? selectedImages[0].split(",")[1] // ⭐ base64만 추출
-        : null;
-    console.log("🔥 base64 변환된 이미지:", base64Images);
+    const base64Image = selectedImages.length > 0 ? selectedImages[0].split(",")[1] : null;
 
-    chatSocket.send(Number(chatRoomId), text, memberId, base64Images);
+    // 👉 text, image 둘 다 한번에 보낸다
+    chatSocket.send(Number(chatRoomId), text, memberId, base64Image);
 
     setSelectedImages([]);
     setShowActions(false);
@@ -127,9 +120,7 @@ export default function ChatRoomPage() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-
     const base64Images = await Promise.all(Array.from(files).map((file) => fileToBase64(file)));
-
     setSelectedImages((prev) => [...prev, ...base64Images]);
     setShowActions(false);
   };
@@ -146,17 +137,14 @@ export default function ChatRoomPage() {
   return (
     <div className="flex flex-col h-screen bg-gray-50 relative">
       <ChatRoomHeader usedProductId={usedProductId ? Number(usedProductId) : null} />
-
-      <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto px-4 py-2 space-y-2 pb-24">
+      <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto px-4 py-2 space-y-2">
         {messages.length > 0 ? (
           (() => {
             let lastDate = "";
-
             return messages.map((msg) => {
               const msgDate = msg.createdAt.slice(0, 10);
               const isNewDate = msgDate !== lastDate;
               lastDate = msgDate;
-
               return (
                 <div key={msg.messageId}>
                   {isNewDate && <DayDivider date={formatDate(msg.createdAt)} />}
@@ -177,68 +165,66 @@ export default function ChatRoomPage() {
         )}
       </div>
 
-      {selectedImages.length > 0 && (
-        <div className="bg-white py-2 border-t flex space-x-2 overflow-x-auto px-4 z-10">
-          {selectedImages.map((src, idx) => (
-            <div key={idx} className="relative flex-shrink-0">
-              <img src={src} alt="preview" className="w-16 h-16 object-cover rounded" />
-              <button
-                onClick={() => handleRemoveImage(idx)}
-                className="absolute top-0 right-0 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* 입력창 + 액션바 묶기 */}
+      <div className="sticky bottom-0 bg-white flex flex-col z-20 pb-0.5">
+        {/* 선택된 이미지 프리뷰 */}
+        {selectedImages.length > 0 && (
+          <div className="bg-white py-2 border-t flex space-x-2 overflow-x-auto px-4">
+            {selectedImages.map((src, idx) => (
+              <div key={idx} className="relative flex-shrink-0">
+                <img src={src} alt="preview" className="w-16 h-16 object-cover rounded" />
+                <button
+                  onClick={() => handleRemoveImage(idx)}
+                  className="absolute top-0 right-0 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
-      {/* 입력창 */}
-      <div className="sticky bottom-0 bg-white flex flex-col z-20">
         <ChatInputBox
           onToggleActions={() => setShowActions(!showActions)}
           onSendMessage={handleSendMessage}
           isImageSelected={selectedImages.length > 0}
         />
+
+        {/* 아래쪽에 붙는 액션바 */}
+        {showActions && (
+          <div className="w-full bg-white py-4 flex justify-around border-t">
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col items-center space-y-1 cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                🖼️
+              </div>
+              <span className="text-xs">앨범</span>
+            </div>
+
+            <div
+              onClick={() => cameraInputRef.current?.click()}
+              className="flex flex-col items-center space-y-1 cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                📷
+              </div>
+              <span className="text-xs">카메라</span>
+            </div>
+
+            <div
+              onClick={handleSendMoneyClick}
+              className="flex flex-col items-center space-y-1 cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                💸
+              </div>
+              <span className="text-xs">송금</span>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* 액션바 (하단 입력창 위에 밀착) */}
-      {showActions && (
-        <div className="w-full bg-white py-4 flex justify-around border-t absolute bottom-[56px] left-0">
-          <div
-            onClick={() => {
-              console.log("앨범 클릭됨");
-              fileInputRef.current?.click();
-            }}
-            className="flex flex-col items-center space-y-1 cursor-pointer"
-          >
-            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-              🖼️
-            </div>
-            <span className="text-xs">앨범</span>
-          </div>
-
-          <div
-            onClick={() => cameraInputRef.current?.click()}
-            className="flex flex-col items-center space-y-1 cursor-pointer"
-          >
-            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-              📷
-            </div>
-            <span className="text-xs">카메라</span>
-          </div>
-
-          <div
-            onClick={handleSendMoneyClick}
-            className="flex flex-col items-center space-y-1 cursor-pointer"
-          >
-            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-              💸
-            </div>
-            <span className="text-xs">송금</span>
-          </div>
-        </div>
-      )}
 
       <input
         ref={fileInputRef}
@@ -246,10 +232,7 @@ export default function ChatRoomPage() {
         accept="image/*"
         hidden
         multiple
-        onChange={(e) => {
-          console.log("✅ 파일 변경 발생", e.target.files);
-          handleFileChange(e);
-        }}
+        onChange={handleFileChange}
       />
       <input
         ref={cameraInputRef}
@@ -257,10 +240,7 @@ export default function ChatRoomPage() {
         accept="image/*"
         capture="environment"
         hidden
-        onChange={(e) => {
-          console.log("✅ 파일 변경 발생", e.target.files);
-          handleFileChange(e);
-        }}
+        onChange={handleFileChange}
       />
 
       <PaymentSelectModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
