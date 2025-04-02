@@ -1,3 +1,5 @@
+import { formatTime } from "@/utils/formatTime";
+
 interface Props {
   sender: "me" | "partner";
   content: string;
@@ -7,20 +9,30 @@ interface Props {
 
 export default function ChatMessageBubble({ sender, content, time }: Props) {
   const isMe = sender === "me";
+
   return (
-    <div className={`flex ${isMe ? "justify-end" : "justify-start"} px-2`}>
-      <div className="flex flex-col space-y-1">
+    <div className={`flex ${isMe ? "justify-end" : "justify-start"} w-full`}>
+      <div className={`flex items-end gap-2 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
+        {/* 💬 말풍선 */}
         <div
           className={`
-            max-w-[240px] px-3 py-2 rounded-2xl text-sm break-words
+            px-3 py-2 
+            rounded-2xl 
+            text-sm 
+            whitespace-pre-wrap 
+            break-words 
             ${isMe ? "bg-aqua text-white rounded-br-none" : "bg-white border rounded-bl-none"}
           `}
+          style={{
+            maxWidth: "90%", // 최대 70%
+            wordBreak: "break-word", // 강제 줄바꿈
+          }}
         >
           {content}
         </div>
-        <div className={`text-[10px] text-gray-400 ${isMe ? "text-right" : "text-left"}`}>
-          {time}
-        </div>
+
+        {/* 🕐 시간 */}
+        <span className="text-[10px] text-gray-400 mb-0.5">{formatTime(time)}</span>
       </div>
     </div>
   );
