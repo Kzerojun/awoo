@@ -13,6 +13,7 @@ import { useAppSelector } from "@/lib/store";
 import DayDivider from "../components/DayDivider";
 import { formatDate } from "@/utils/formatDate";
 
+// 채팅 메시지 타입 정의
 interface MessageType {
   messageId: number;
   senderId: number;
@@ -23,19 +24,22 @@ interface MessageType {
 }
 
 export default function ChatRoomPage() {
+  // 📌 파라미터로부터 채팅방 ID 및 상품 ID 가져오기
   const { chatRoomId } = useParams() as { chatRoomId: string };
   const searchParams = useSearchParams();
   const usedProductId = searchParams.get("usedProductId");
 
-  const [showActions, setShowActions] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [messages, setMessages] = useState<MessageType[]>([]);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const memberId = useAppSelector((state) => state.memberId.memberId);
+  // 📌 채팅창 상태 관리
+  const [showActions, setShowActions] = useState(false); // 액션바(앨범, 카메라, 송금) 열림 여부
+  const [showPaymentModal, setShowPaymentModal] = useState(false); // 송금 모달 열림 여부
+  const [messages, setMessages] = useState<MessageType[]>([]); // 채팅 메시지 리스트
+  const [selectedImages, setSelectedImages] = useState<string[]>([]); // 선택된 이미지들
+  const memberId = useAppSelector((state) => state.memberId.memberId); // 내 사용자 ID
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
+  // 📌 이미지 파일 -> Base64 변환 함수
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -50,13 +54,14 @@ export default function ChatRoomPage() {
       reader.onerror = (error) => reject(error);
     });
   };
-
+  // ✅ 메시지가 업데이트될 때마다 스크롤 하단 고정
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
+  // ✅ 채팅 기록 불러오기 & 소켓 연결
   useEffect(() => {
     if (!memberId || memberId === 0) return;
     const token = localStorage.getItem("accessToken");
@@ -64,6 +69,7 @@ export default function ChatRoomPage() {
 
     const fetchMessagesAndConnect = async () => {
       try {
+        // 🔄 과거 채팅 로딩
         const res = await axiosInstance.get(`/used-products/chat-rooms/${chatRoomId}`);
         const pastMessages: MessageType[] = res.data.response.chatMessages
           .map((msg: any) => ({
@@ -78,6 +84,7 @@ export default function ChatRoomPage() {
 
         setMessages(pastMessages);
 
+        // ✅ 소켓 연결 및 수신 이벤트 등록
         chatSocket.connect(token, Number(chatRoomId), (message: IMessage) => {
           const body = message.binaryBody
             ? JSON.parse(new TextDecoder().decode((message as any).binaryBody))
@@ -91,7 +98,7 @@ export default function ChatRoomPage() {
             image: body.image ?? null,
             chatRoomId: Number(chatRoomId),
           };
-
+          // 💬 실시간 수신 메시지 추가
           setMessages((prev) => [...prev, fixedMessage]);
         });
       } catch (error) {
@@ -100,23 +107,28 @@ export default function ChatRoomPage() {
     };
 
     fetchMessagesAndConnect();
+
+    // 언마운트 시 연결 해제
     return () => {
       chatSocket.disconnect();
     };
   }, [chatRoomId, memberId]);
 
+  // ✅ 메시지 전송 함수
   const handleSendMessage = (text: string) => {
-    if (!text.trim() && selectedImages.length === 0) return;
+    if (!text.trim() && selectedImages.length === 0) return; // 비어있으면 무시
 
     const base64Image = selectedImages.length > 0 ? selectedImages[0].split(",")[1] : null;
 
-    // 👉 text, image 둘 다 한번에 보낸다
+    // 이미지 + 텍스트 함께 전송
     chatSocket.send(Number(chatRoomId), text, memberId, base64Image);
 
+    // 전송 후 초기화
     setSelectedImages([]);
     setShowActions(false);
   };
 
+  // ✅ 이미지 선택 시 base64로 변환하여 상태에 저장
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -125,18 +137,27 @@ export default function ChatRoomPage() {
     setShowActions(false);
   };
 
+  // ✅ 선택된 이미지 삭제
   const handleRemoveImage = (index: number) => {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // ✅ 송금 버튼 클릭
   const handleSendMoneyClick = () => {
     setShowActions(false);
     setShowPaymentModal(true);
   };
 
+  // ====================================
+  // 💡 === 화면 렌더링 ===
+  // ====================================
+
   return (
     <div className="flex flex-col h-screen bg-gray-50 relative">
+      {/* ✅ 채팅방 헤더 */}
       <ChatRoomHeader usedProductId={usedProductId ? Number(usedProductId) : null} />
+
+      {/* ✅ 채팅 메시지 목록 */}
       <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto px-4 py-2 space-y-2">
         {messages.length > 0 ? (
           (() => {
@@ -148,6 +169,7 @@ export default function ChatRoomPage() {
               return (
                 <div key={msg.messageId}>
                   {isNewDate && <DayDivider date={formatDate(msg.createdAt)} />}
+                  {/* 날짜 구분선 */}
                   <ChatMessageBubble
                     sender={msg.senderId === memberId ? "me" : "partner"}
                     content={msg.message}
@@ -165,7 +187,7 @@ export default function ChatRoomPage() {
         )}
       </div>
 
-      {/* 입력창 + 액션바 묶기 */}
+      {/* ✅ 입력창 + 선택 이미지 + 액션바 */}
       <div className="sticky bottom-0 bg-white flex flex-col z-20 pb-0.5">
         {/* 선택된 이미지 프리뷰 */}
         {selectedImages.length > 0 && (
@@ -183,14 +205,14 @@ export default function ChatRoomPage() {
             ))}
           </div>
         )}
-
+        {/* 입력창 */}
         <ChatInputBox
           onToggleActions={() => setShowActions(!showActions)}
           onSendMessage={handleSendMessage}
           isImageSelected={selectedImages.length > 0}
         />
 
-        {/* 아래쪽에 붙는 액션바 */}
+        {/* 액션바 (앨범, 카메라, 송금) */}
         {showActions && (
           <div className="w-full bg-white py-4 flex justify-around border-t">
             <div
@@ -225,7 +247,7 @@ export default function ChatRoomPage() {
           </div>
         )}
       </div>
-
+      {/* 숨겨진 파일 입력 */}
       <input
         ref={fileInputRef}
         type="file"
@@ -242,7 +264,7 @@ export default function ChatRoomPage() {
         hidden
         onChange={handleFileChange}
       />
-
+      {/* 송금 모달 */}
       <PaymentSelectModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
     </div>
   );
