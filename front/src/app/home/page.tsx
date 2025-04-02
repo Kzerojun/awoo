@@ -4,8 +4,10 @@ import Header from "@/app/home/components/Header";
 import SavingRecommendation from "./components/SavingRecommendation";
 import MainActions from "./components/Mainactions";
 import InfoCard from "./components/InfoCard";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="flex flex-col">
       {/* 네비게이션 바 */}
@@ -32,6 +34,7 @@ export default function Home() {
             iconSrc="/icons/main/scales.svg"
           />
         </div>
+        <div onClick={() => router.push(`/alarm`)}>알림 테스트</div>
       </div>
     </div>
   );

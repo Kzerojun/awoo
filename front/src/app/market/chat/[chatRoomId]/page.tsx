@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { chatSocket } from "@/socket/chatSocket";
 import ChatRoomHeader from "../../chat/components/ChatRoomHeader";
-import ChatMessageBubble from "../../chat/components/ChatMessagaBubble";
+import ChatMessageBubble from "../components/ChatMessagaBubble";
 import ChatInputBox from "../../chat/components/ChatInputBox";
 import PaymentSelectModal from "../../chat/components/PaymentSelectModal";
 import type { IMessage } from "@stomp/stompjs";
@@ -28,17 +28,20 @@ export default function ChatRoomPage() {
   const [showActions, setShowActions] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const memberId = useAppSelector((state) => state.memberId.memberId); // ✅ 내 memberId
-  const scrollRef = useRef<HTMLDivElement>(null); // ✅ 스크롤용 ref
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const memberId = useAppSelector((state) => state.memberId.memberId);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ 자동 스크롤
+  // 스크롤 자동 내리기
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // ✅ 메시지 가져오기 + 소켓 연결
+  // 메시지 가져오기 + 소켓 연결
   useEffect(() => {
     if (!memberId || memberId === 0) return;
     const token = localStorage.getItem("accessToken");
@@ -68,12 +71,7 @@ export default function ChatRoomPage() {
             image: body.image ?? null,
             chatRoomId: Number(chatRoomId),
           };
-          setMessages((prev) => {
-            const newMessages = [...prev, fixedMessage];
-            return newMessages.sort(
-              (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-            );
-          });
+          setMessages((prev) => [...prev, fixedMessage]);
         });
       } catch (error) {
         console.error("채팅 기록 불러오기 실패", error);
@@ -81,30 +79,50 @@ export default function ChatRoomPage() {
     };
 
     fetchMessagesAndConnect();
-
     return () => {
       chatSocket.disconnect();
     };
   }, [chatRoomId, memberId]);
 
-  // ✅ 채팅 전송
+  // 채팅 전송
   const handleSendMessage = (text: string) => {
-    if (!text.trim()) return;
-    chatSocket.send(Number(chatRoomId), text, memberId);
+    if (!text.trim() && selectedImages.length === 0) return;
+    console.log("보낼 텍스트:", text);
+    console.log("보낼 이미지:", selectedImages);
+    setSelectedImages([]);
   };
 
-  // ✅ 렌더링
+  // 이미지 선택
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const newImages = Array.from(files).map((file) => URL.createObjectURL(file));
+    setSelectedImages((prev) => [...prev, ...newImages]);
+    setShowActions(false);
+  };
+
+  // 이미지 제거
+  const handleRemoveImage = (index: number) => {
+    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // 송금 모달
+  const handleSendMoneyClick = () => {
+    setShowActions(false);
+    setShowPaymentModal(true);
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 relative">
       <ChatRoomHeader usedProductId={usedProductId ? Number(usedProductId) : null} />
 
-      {/* 채팅 내용 (스크롤 영역) */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+      {/* 채팅 내용 */}
+      <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto px-4 py-2 space-y-2">
         {messages.length > 0 ? (
           messages.map((msg) => (
             <ChatMessageBubble
               key={msg.messageId}
-              sender={Number(msg.senderId) === Number(memberId) ? "me" : "partner"}
+              sender={msg.senderId === memberId ? "me" : "partner"}
               content={msg.message}
               time={msg.createdAt}
               image={msg.image}
@@ -117,39 +135,85 @@ export default function ChatRoomPage() {
         )}
       </div>
 
-      {/* 입력창 + 액션 버튼 고정 */}
-      <div className="sticky bottom-0 bg-white flex flex-col">
+      {/* ✅ 미리보기 영역 (입력창 위에 고정) */}
+      {selectedImages.length > 0 && (
+        <div className="absolute bottom-20 left-0 w-full bg-white py-2 border-t flex space-x-2 overflow-x-auto px-4 z-10">
+          {selectedImages.map((src, idx) => (
+            <div key={idx} className="relative flex-shrink-0">
+              <img src={src} alt="preview" className="w-16 h-16 object-cover rounded" />
+              <button
+                onClick={() => handleRemoveImage(idx)}
+                className="absolute top-0 right-0 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 입력창 + 액션 */}
+      <div
+        className={`sticky bottom-0 bg-white flex flex-col z-20 ${selectedImages.length > 0 ? "pb-20" : ""}`}
+      >
         <ChatInputBox
           onToggleActions={() => setShowActions(!showActions)}
           onSendMessage={handleSendMessage}
+          isImageSelected={selectedImages.length > 0}
         />
 
         {showActions && (
           <div className="w-full bg-white py-4 flex justify-around border-t">
-            {[
-              { label: "앨범", icon: "🖼️" },
-              { label: "카메라", icon: "📷" },
-              { label: "송금", icon: "💸" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="flex flex-col items-center space-y-1 cursor-pointer"
-                onClick={() => {
-                  if (item.label === "송금") {
-                    setShowPaymentModal(true);
-                    setShowActions(false);
-                  }
-                }}
-              >
-                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-                  {item.icon}
-                </div>
-                <span className="text-xs">{item.label}</span>
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col items-center space-y-1 cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                🖼️
               </div>
-            ))}
+              <span className="text-xs">앨범</span>
+            </div>
+
+            <div
+              onClick={() => cameraInputRef.current?.click()}
+              className="flex flex-col items-center space-y-1 cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                📷
+              </div>
+              <span className="text-xs">카메라</span>
+            </div>
+
+            <div
+              onClick={handleSendMoneyClick}
+              className="flex flex-col items-center space-y-1 cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                💸
+              </div>
+              <span className="text-xs">송금</span>
+            </div>
           </div>
         )}
       </div>
+
+      {/* 숨겨진 input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        hidden
+        multiple
+        onChange={handleFileChange}
+      />
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        hidden
+        onChange={handleFileChange}
+      />
 
       {/* 송금 모달 */}
       <PaymentSelectModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
