@@ -11,7 +11,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+let messaging: any; // messaging을 여기에 초기화
+
+if (typeof window !== "undefined") {
+  // 클라이언트 환경에서만 Firebase Messaging 초기화
+  const app = initializeApp(firebaseConfig);
+  messaging = getMessaging(app);
+}
 
 export { messaging };
