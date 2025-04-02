@@ -24,7 +24,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> properties = new HashMap<>();
 
         // Kafka Broker 위치 저장합니다.
-        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "j12c209.p.ssafy.io:9092");
 
         // Kafka Consumer 그룹의 ID 지정, 같은 그룹 ID를 가진 컨슈머들은 메시지를 공유하여 처리합니다.
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroupId");
