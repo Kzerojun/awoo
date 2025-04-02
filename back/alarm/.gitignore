@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/firebase/awoo-2c8de-firebase-adminsdk-fbsvc-8bea6d6321.json
+

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import check from "../../../../../public/icons/mypage/checkmark.svg";
 import { RootState } from "@/lib/store";
@@ -49,7 +49,7 @@ export default function RegisterDone() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <TopBar title="멍Pay" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="멍Pay" rightAction="bell" />
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
         {/* 체크 아이콘 */}

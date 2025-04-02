@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import Image from "next/image";
 import Button from "@/common/ui/Button";
 import my from "../../../../../public/icons/bottombar/active/my_aqua.svg";
@@ -220,7 +220,7 @@ export default function Edit() {
 
   return (
     <div className="flex flex-col items-center w-full h-full max-w-md mx-auto px-8 py-6 bg-[#FCFCFC] pt-14">
-      <TopBar title="프로필 수정" />
+      <CommonTopBar title="프로필 수정" />
 
       <div className="w-full mt-8">
         {/* 프로필 이미지 수정 영역 */}

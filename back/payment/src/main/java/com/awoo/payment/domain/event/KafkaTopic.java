@@ -1,8 +1,10 @@
 package com.awoo.payment.domain.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum KafkaTopic {
 
 	//요청
@@ -15,11 +17,10 @@ public enum KafkaTopic {
 	PAYMENT_CHARGE_COMPENSATE("payment-charge-compensate"),
 
 	//응답
-	PAYMENT_CHARGE_SUCCESS("payment-charge-success");
+	PAYMENT_CHARGE_SUCCESS("payment-charge-success"),
+
+	//등록
+	PAYMENT_REGISTER("payments-register");
 
 	private final String topicName;
-
-	KafkaTopic(String topicName) {
-		this.topicName = topicName;
-	}
 }

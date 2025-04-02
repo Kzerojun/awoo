@@ -12,10 +12,10 @@ import { checkPasswordConfirm } from "@/lib/slices/userActionSlice";
 
 interface ConfirmPasswordProps {
   onConfirm: (password: string) => void;
+  accountNo: string;
 }
 
-const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
-  const accountNo: string = "9993707307494326";
+const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { mutate: checkPasswordMutate } = useCheckPassword();
@@ -35,16 +35,8 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
       dispatch(checkPasswordConfirm(true));
       localStorage.removeItem("accountPasswordLockUntil"); // 만료되었으면 초기화
     }
+    console.log(accountNo);
   }, []);
-
-  // // 모달이 열릴 때와 닫힐 때 초기화
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     setPassword("");
-  //     setIsLoading(false);
-  //     setErrorCount(0);
-  //   }
-  // }, [isOpen]);
 
   // 숫자 입력 처리
   const handleNumberPress = (num: number) => {
@@ -84,8 +76,11 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
         {
           onSuccess: (data) => {
             if (data.success === true) {
-              router.replace("/account/my/deposit");
               onConfirm(pwd);
+              setPassword("");
+              setIsLoading(false);
+              setErrorCount(0);
+              dispatch(checkPasswordConfirm(true));
             } else {
               alert("비밀번호를 다시 입력하세요.");
               handleVerificationFailure();
@@ -109,6 +104,7 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
   const handleVerificationFailure = () => {
     setErrorCount((prev) => prev + 1);
     setPassword("");
+    dispatch(checkPasswordConfirm(false));
 
     // 오류 메시지 표시
     alert("비밀번호가 일치하지 않습니다.");
@@ -123,13 +119,16 @@ const CheckPassword = ({ onConfirm }: ConfirmPasswordProps) => {
       alert("비밀번호 입력 횟수를 초과했습니다.");
       setTimeout(() => {
         dispatch(checkPasswordConfirm(false));
+        setPassword("");
+        setIsLoading(false);
+        setErrorCount(0);
         router.replace("/home");
       }, 1500);
     }
   };
 
   return (
-    <div className="mt-25 bg-white rounded-t-3xl overflow-hidden">
+    <div className="mt-15 bg-white rounded-t-3xl overflow-hidden">
       {/* 헤더 */}
       <div className="p-6 bg-white">
         {/* 자물쇠 아이콘 */}

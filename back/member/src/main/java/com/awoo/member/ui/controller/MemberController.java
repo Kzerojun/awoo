@@ -1,6 +1,10 @@
 package com.awoo.member.ui.controller;
 
-import com.awoo.member.application.dto.*;
+import com.awoo.member.application.dto.request.LoginRequestDto;
+import com.awoo.member.application.dto.request.SignUpRequestDto;
+import com.awoo.member.application.dto.response.MemberInfoResponseDto;
+import com.awoo.member.application.dto.response.MemberUpdateRequestDto;
+import com.awoo.member.application.dto.response.TokenResponseDto;
 import com.awoo.member.application.service.MemberService;
 import com.awoo.member.infra.BaseColumn.RequestHeaderAuditorAware;
 import com.awoo.member.support.ApiUtils;
@@ -24,6 +28,7 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+//    private final QuestionService questionService;
 
     // 회원가입 (multipart/form-data)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,7 +63,7 @@ public class MemberController {
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.accessToken())
                     .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                    .body(ApiUtils.success(Map.of("message", "로그인 성공")));
+                    .body(ApiUtils.success(Map.of("memberId", token.memberId())));
 
         } catch (Exception e) {
             return ResponseEntity
@@ -169,5 +174,26 @@ public class MemberController {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
     }
+
+//    @PostMapping("/question")
+//    public ApiUtils.ApiResult<?> registerQuestion(@RequestHeader("X-User-Id") String memberId,
+//                                                  @RequestBody RegisterQuestionRequest request) {
+//        try {
+//            questionService.registerQuestion(memberId, request);
+//            return ApiUtils.success("문의사항이 등록되었습니다.");
+//        }catch (Exception e) {
+//            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
+//    @GetMapping
+//    public ApiUtils.ApiResult<?> fetchQuestionList(@RequestHeader("X-User-Id") String memberId) {
+//        try {
+//            questionService.fetchQuestionList(memberId);
+//            return ApiUtils.success("문의사항이 등록되었습니다.");
+//        }catch (Exception e) {
+//            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 }

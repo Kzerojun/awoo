@@ -40,6 +40,13 @@ dependencies {
     //Kafka
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    // Firebase Admin SDK
+    implementation 'com.google.firebase:firebase-admin:9.3.0'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+
 }
 
 dependencyManagement {

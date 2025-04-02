@@ -85,6 +85,10 @@ public class UsedProductEntity {
         }
     }
 
+    public void modifyStatusBySafe(UsedProductStatus usedProductStatus){
+        this.usedProductStatus = usedProductStatus;
+    }
+
     public boolean hasPermission(Integer memberId) {
         return this.memberId.equals(memberId);
     }
