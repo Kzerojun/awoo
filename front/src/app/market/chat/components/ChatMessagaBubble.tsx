@@ -8,12 +8,19 @@ interface Props {
 export default function ChatMessageBubble({ sender, content, time }: Props) {
   const isMe = sender === "me";
   return (
-    <div className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[70%] p-2 rounded-lg text-sm ${isMe ? "bg-aqua text-white" : "bg-white border"}`}
-      >
-        {content}
-        <div className="text-[10px] text-right mt-1 text-gray-400">{time}</div>
+    <div className={`flex ${isMe ? "justify-end" : "justify-start"} px-2`}>
+      <div className="flex flex-col space-y-1">
+        <div
+          className={`
+            max-w-[240px] px-3 py-2 rounded-2xl text-sm break-words
+            ${isMe ? "bg-aqua text-white rounded-br-none" : "bg-white border rounded-bl-none"}
+          `}
+        >
+          {content}
+        </div>
+        <div className={`text-[10px] text-gray-400 ${isMe ? "text-right" : "text-left"}`}>
+          {time}
+        </div>
       </div>
     </div>
   );

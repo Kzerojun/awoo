@@ -8,6 +8,8 @@ import ChatMessageBubble from "../../chat/components/ChatMessagaBubble";
 import ChatInputBox from "../../chat/components/ChatInputBox";
 import PaymentSelectModal from "../../chat/components/PaymentSelectModal";
 import type { IMessage } from "@stomp/stompjs";
+import axiosInstance from "@/api/axiosInstance";
+import { useAppSelector } from "@/lib/store"; // ✅ 추가: 내 memberId 가져오기
 
 interface MessageType {
   messageId: number;
@@ -20,12 +22,15 @@ interface MessageType {
 
 export default function ChatRoomPage() {
   const { chatRoomId } = useParams() as { chatRoomId: string };
+  const searchParams = useSearchParams();
+  const usedProductId = searchParams.get("usedProductId");
+
   const [showActions, setShowActions] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
 
-  const searchParams = useSearchParams();
-  const usedProductId = searchParams.get("usedProductId");
+  const memberId = useAppSelector((state) => state.memberId.memberId); // ✅ 내 memberId
+
   // --------------------------
   // ✅ 과거 메시지 + 소켓 연결
   // --------------------------
@@ -33,19 +38,41 @@ export default function ChatRoomPage() {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
-    // 소켓 연결 + 구독 + 실시간 메세지 핸들링
-    chatSocket.connect(token, Number(chatRoomId), (message: IMessage) => {
-      const body = JSON.parse(message.body);
-      const fixedMessage: MessageType = {
-        messageId: Date.now(),
-        senderId: body.senderId ?? 0,
-        message: body.message ?? "",
-        createdAt: body.createdAt ?? new Date().toISOString(),
-        image: body.image ?? null,
-        chatRoomId: Number(chatRoomId),
-      };
-      setMessages((prev) => [...prev, fixedMessage]);
-    });
+    const fetchMessagesAndConnect = async () => {
+      try {
+        // 1. 과거 채팅 기록 가져오기
+        const res = await axiosInstance.get(`/used-products/chat-rooms/${chatRoomId}`);
+        const pastMessages: MessageType[] = res.data.response.chatMessages.map((msg: any) => ({
+          messageId: msg.messageId,
+          senderId: msg.senderId,
+          message: msg.message,
+          createdAt: msg.createdAt,
+          image: msg.image,
+          chatRoomId: Number(chatRoomId),
+        }));
+
+        // 2. messages 초기화
+        setMessages(pastMessages);
+
+        // 3. 소켓 연결 및 실시간 메시지 추가
+        chatSocket.connect(token, Number(chatRoomId), (message: IMessage) => {
+          const body = JSON.parse(message.body);
+          const fixedMessage: MessageType = {
+            messageId: Date.now(),
+            senderId: body.senderId ?? 0,
+            message: body.message ?? "",
+            createdAt: body.createdAt ?? new Date().toISOString(),
+            image: body.image ?? null,
+            chatRoomId: Number(chatRoomId),
+          };
+          setMessages((prev) => [...prev, fixedMessage]);
+        });
+      } catch (error) {
+        console.error("채팅 기록 불러오기 실패", error);
+      }
+    };
+
+    fetchMessagesAndConnect();
 
     return () => {
       chatSocket.disconnect();
@@ -70,18 +97,15 @@ export default function ChatRoomPage() {
       {/* 채팅 내용 */}
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
         {messages.length > 0 ? (
-          messages.map((msg) => {
-            console.log("렌더링 대상", msg);
-            return (
-              <ChatMessageBubble
-                key={msg.messageId}
-                sender={msg.senderId === 123 ? "me" : "partner"} // FIXME: 나중에 내 id 비교
-                content={msg.message}
-                time={msg.createdAt}
-                image={msg.image}
-              />
-            );
-          })
+          messages.map((msg) => (
+            <ChatMessageBubble
+              key={msg.messageId}
+              sender={msg.senderId === memberId ? "me" : "partner"} // ✅ 내 memberId와 비교로 분기
+              content={msg.message}
+              time={msg.createdAt}
+              image={msg.image}
+            />
+          ))
         ) : (
           <div className="flex items-center justify-center h-full text-gray-400">
             아직 채팅이 없습니다.
