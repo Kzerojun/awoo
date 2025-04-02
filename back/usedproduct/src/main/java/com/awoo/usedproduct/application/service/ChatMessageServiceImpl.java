@@ -41,7 +41,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         return FetchMessageResponse.builder()
                 .chatRoomId(command.chatRoomId())
-                .image(command.image())
+                .image(imageUrl)
                 .messageId(entity.getChatMessageId())
                 .message(command.message())
                 .senderId(command.senderId())
