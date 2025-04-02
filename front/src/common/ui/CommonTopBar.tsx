@@ -10,13 +10,15 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
 import React from "react";
+import { changeTransferData, clearTransferData } from "@/lib/slices/transferSlice";
 
 interface CommonTopBarProps {
   title: string;
-  leftAction?: "back" | "close";
-  rightAction?: "bell" | "none" | "cancel" | "setting";
+  leftAction?: "back" | "close" | "transferBack";
+  rightAction?: "bell" | "none" | "cancel" | "setting" | "close";
   backColor?: "white" | "aqua" | "green";
   textColor?: "white" | "black";
+  transferStep?: number;
   onClose?: () => void;
   onBellClick?: () => void;
   onSettingClick?: () => void;
@@ -28,6 +30,7 @@ const CommonTopBar = ({
   rightAction = "none",
   backColor = "white",
   textColor = "black",
+  transferStep = 1,
   onClose,
   onBellClick,
   onSettingClick,
@@ -35,12 +38,14 @@ const CommonTopBar = ({
   interface leftActionTypes {
     back: React.ReactNode;
     close: React.ReactNode;
+    transferBack: React.ReactNode;
   }
 
   interface rightActionTypes {
     bell: React.ReactNode;
     none: null;
     cancel: React.ReactNode;
+    close: React.ReactNode;
     setting: React.ReactNode;
   }
 
@@ -58,12 +63,14 @@ const CommonTopBar = ({
   const leftActionTypes: leftActionTypes = {
     back: <ChevronLeftIcon className="h-6 w-6" />,
     close: <XMarkIcon className="h-6 w-6" />,
+    transferBack: <span className="text-sm ">이전</span>,
   };
 
   const rightActionTypes: rightActionTypes = {
     bell: <BellIcon className="h-6 w-6" />,
     none: null,
     cancel: <span className="text-sm ">취소</span>,
+    close: <XMarkIcon className="h-6 w-6" />,
     setting: <Cog6ToothIcon className="h-6 w-6" />,
   };
 
@@ -98,6 +105,12 @@ const CommonTopBar = ({
         // 모달 닫고 페이지 이동 처리 등
         onClose();
       }
+    } else if (leftAction === "transferBack") {
+      if (transferStep > 1) {
+        dispatch(changeTransferData({ transferStep: transferStep - 1 }));
+      } else if (transferStep === 1) {
+        router.back();
+      }
     }
     // bell 등 다른 경우는 아직 미사용
   };
@@ -115,6 +128,13 @@ const CommonTopBar = ({
     // 알림
     else if (rightAction === "bell" && onBellClick) {
       onBellClick();
+    }
+    // 닫기
+    else if (rightAction === "close") {
+      if (leftAction === "transferBack") {
+        dispatch(clearTransferData());
+        router.back();
+      }
     }
   };
 
