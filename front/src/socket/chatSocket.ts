@@ -40,7 +40,12 @@ class ChatSocket {
     if (!this.stompClient || !this.stompClient.connected) return;
     const token = localStorage.getItem("accessToken");
     console.log(`메시지 전송: ${message}`);
-
+    const payload = {
+      message,
+      image,
+      senderId: memberId,
+    };
+    console.log("실제 전송 payload", payload);
     // ✅ image 기본 null 적용
     this.stompClient.publish({
       destination: `/pub/chat/rooms/${roomId}`,

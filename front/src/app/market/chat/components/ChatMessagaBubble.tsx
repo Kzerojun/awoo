@@ -24,7 +24,7 @@ export default function ChatMessageBubble({ sender, content, time }: Props) {
             ${isMe ? "bg-aqua text-white rounded-br-none" : "bg-white border rounded-bl-none"}
           `}
           style={{
-            maxWidth: "90%", // 최대 70%
+            maxWidth: "60%", // 최대 70%
             wordBreak: "break-word", // 강제 줄바꿈
           }}
         >
