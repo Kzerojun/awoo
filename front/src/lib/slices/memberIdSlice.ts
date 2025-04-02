@@ -22,6 +22,6 @@ const MemberIdSlice = createSlice({
     resetMemberId: () => initialState,
   },
 });
-export const { setMemberId } = MemberIdSlice.actions;
+export const { setMemberId, resetMemberId } = MemberIdSlice.actions;
 
 export default MemberIdSlice.reducer;
