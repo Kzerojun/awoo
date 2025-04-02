@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isOpen: boolean;
@@ -6,6 +7,7 @@ interface Props {
 }
 
 export default function PaymentSelectModal({ isOpen, onClose }: Props) {
+  const router = useRouter();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -27,7 +29,9 @@ export default function PaymentSelectModal({ isOpen, onClose }: Props) {
               <div className="flex items-center space-x-3 cursor-pointer">
                 <div className="text-orange-500 text-xl">💰</div>
                 <div>
-                  <div className="text-sm">송금하기</div>
+                  <div className="text-sm" onClick={() => router.push(`/my/paymentSend/`)}>
+                    송금하기
+                  </div>
                 </div>
               </div>
 
@@ -44,7 +48,9 @@ export default function PaymentSelectModal({ isOpen, onClose }: Props) {
               <div className="flex items-center space-x-3 cursor-pointer">
                 <div className="text-blue-500 text-xl">🛡️</div>
                 <div>
-                  <div className="text-sm">안심결제</div>
+                  <div className="text-sm" onClick={() => router.push(`/market/safePayment/`)}>
+                    안심결제
+                  </div>
                   <div className="text-[11px] text-gray-400">
                     물품을 받기 전까지 거래 금액을 안전하게 보관해요
                   </div>
