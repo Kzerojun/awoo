@@ -23,6 +23,7 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final VerifyOneWonService verifyOneWonService;
     private final VerifyPasswordService verifyPasswordService;
     private final TransferAmountService transferAmountService;
+    private final SafePayService safePayService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -87,6 +88,13 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     public TransferAmountResponse transferAmount(TransferAmountCommand command) {
         Integer transactionId = transferAmountService.transferAmount(command);
         return new TransferAmountResponse(transactionId);
+    }
+
+    // 멍페이 주식회사에 입금 로직
+    @Override
+    public SafePayResponse transferSafePay(SafePayCommand safePayCommand) {
+        Integer transactionId = safePayService.safePay(safePayCommand);
+        return new SafePayResponse(transactionId);
     }
 }
 
