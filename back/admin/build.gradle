@@ -56,6 +56,10 @@ dependencies {
 
 	//ApiUtils
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	//Kafka 메시지 record & localDateTime 직렬화 지원
+	implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.named('test') {

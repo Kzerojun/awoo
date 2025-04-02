@@ -27,4 +27,6 @@ public interface PaymentServiceFacade {
     FetchPaymentResponse fetchAccount(Integer memberId);
 
     TransferAmountResponse transferAmount(TransferAmountCommand amountCommand);
+
+    SafePayResponse transferSafePay(SafePayCommand safePayCommand);
 }

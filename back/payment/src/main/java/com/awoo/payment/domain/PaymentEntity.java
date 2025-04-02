@@ -41,6 +41,11 @@ public class PaymentEntity {
         this.balance += amount;
     }
 
+    public int calSafeFee(int amount) {
+        int fee = (int) Math.ceil(amount * 0.015);
+        return amount-fee;
+    }
+
     public void registerAccount(String accountNo) {
         this.accountNo = accountNo;
     }

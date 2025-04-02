@@ -1,26 +1,11 @@
 package com.awoo.payment.ui.web;
 
 
-import com.awoo.payment.application.command.ChargeBalanceCommand;
-import com.awoo.payment.application.command.CheckAuthCodeCommand;
-import com.awoo.payment.application.command.TransferAmountCommand;
-import com.awoo.payment.application.command.VerifyPaymentPasswordCommand;
-import com.awoo.payment.application.command.RegisterPaymentCommand;
-import com.awoo.payment.application.command.RemitOneWonCommand;
-import com.awoo.payment.application.command.SendAuthPhoneMessageCommand;
-import com.awoo.payment.application.command.VerifyOneWonCommand;
+import com.awoo.payment.application.command.*;
 import com.awoo.payment.application.query.FetchBalanceQuery;
 import com.awoo.payment.support.ApiUtils;
 import com.awoo.payment.ui.facade.PaymentServiceFacade;
-import com.awoo.payment.ui.facade.dto.request.ChargePaymentBalanceRequest;
-import com.awoo.payment.ui.facade.dto.request.CheckAuthCodeRequest;
-import com.awoo.payment.ui.facade.dto.request.CheckPaymentPasswordRequest;
-import com.awoo.payment.ui.facade.dto.request.RegisterPaymentPasswordRequest;
-import com.awoo.payment.ui.facade.dto.request.RegisterPaymentRequest;
-import com.awoo.payment.ui.facade.dto.request.RemitOneWonRequest;
-import com.awoo.payment.ui.facade.dto.request.SendAuthPhoneMessageRequest;
-import com.awoo.payment.ui.facade.dto.request.TransferAmountRequest;
-import com.awoo.payment.ui.facade.dto.request.VerifyOneWonRequest;
+import com.awoo.payment.ui.facade.dto.request.*;
 import com.awoo.payment.ui.facade.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -133,6 +118,17 @@ public class PaymentController {
         TransferAmountCommand command = request.toCommand(userId,idempotencyKey);
         TransferAmountResponse response = paymentServiceFacade.transferAmount(
                 command);
+        return ApiUtils.success(response);
+    }
+
+    @PostMapping("/safe-pays")
+    public ApiUtils.ApiResult<SafePayResponse> safePay(
+            @RequestBody SafePayRequest request,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestHeader("X-User-Id") String userId) {
+
+        SafePayCommand command = request.toCommand(userId,idempotencyKey);
+        SafePayResponse response = paymentServiceFacade.transferSafePay(command);
         return ApiUtils.success(response);
     }
 }

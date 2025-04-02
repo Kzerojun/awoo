@@ -1,6 +1,11 @@
 package com.awoo.member.application.service;
 
-import com.awoo.member.application.dto.*;
+import com.awoo.member.application.dto.request.LoginRequestDto;
+import com.awoo.member.application.dto.request.SignUpRequestDto;
+import com.awoo.member.application.dto.response.MemberInfoResponseDto;
+import com.awoo.member.application.dto.response.MemberUpdateRequestDto;
+import com.awoo.member.application.dto.response.TokenResponseDto;
+import com.awoo.member.application.dto.response.UserKeyResponseDto;
 import com.awoo.member.domain.model.Member;
 import com.awoo.member.domain.model.Provider;
 import com.awoo.member.domain.model.vo.*;
@@ -85,7 +90,7 @@ public class MemberServiceImpl implements MemberService {
         String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getEmail().getValue());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getId(), member.getEmail().getValue());
 
-        return new TokenResponseDto(accessToken, refreshToken);
+        return new TokenResponseDto(accessToken, refreshToken, member.getId());
     }
 
     public ResponseEntity<?> refreshToken(HttpServletRequest request) {

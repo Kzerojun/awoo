@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/lib/store";
 import { getPaymentBalance, getPaymentAccounts } from "@/api/payment/payment";
 
 export default function RegisteredMyPayment() {
@@ -96,9 +95,6 @@ export default function RegisteredMyPayment() {
           </button>
         </div>
       </div>
-
-      {/* 연결된 계좌 표시 */}
-      {linkedAccount && <div className="text-xs text-gray-500 mt-1">연결계좌: {linkedAccount}</div>}
     </div>
   );
 }
