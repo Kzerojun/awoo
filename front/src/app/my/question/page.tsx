@@ -1,18 +1,16 @@
 "use client";
-import TopBar from "@/common/ui/TopBar";
-import { BellIcon } from "@heroicons/react/24/outline";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import QuestionList from "./components/QuestionList";
 import Link from "next/link";
-import { sampleQuestions } from "./data/questionData";
 
 export default function Question() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopBar title="1:1 문의" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="1:1 문의" rightAction="bell" />
 
       <div className="pt-14 pb-20 px-4">
-        {/* 문의 목록 */}
-        <QuestionList initialQuestions={sampleQuestions} />
+        {/* 문의 목록 (API로 데이터 로드) */}
+        <QuestionList />
 
         {/* 추가 문의 안내 */}
         <div className="mt-5">
