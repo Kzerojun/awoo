@@ -1,11 +1,13 @@
 package com.awoo.admin.ui.controller;
 
+import com.awoo.admin.application.command.AnswerQuestionCommand;
 import com.awoo.admin.application.command.CreateAdminAccountCommand;
 import com.awoo.admin.application.command.CreateSavingProductCommand;
 import com.awoo.admin.application.command.LoginAdminCommand;
 import com.awoo.admin.domain.Role;
 import com.awoo.admin.support.ApiUtils;
 import com.awoo.admin.ui.facade.AdminServiceFacade;
+import com.awoo.admin.ui.facade.dto.request.AnswerQuestionRequest;
 import com.awoo.admin.ui.facade.dto.request.CreateAdminAccountRequest;
 import com.awoo.admin.ui.facade.dto.request.CreateSavingProductRequest;
 import com.awoo.admin.ui.facade.dto.request.LoginAdminRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminServiceFacade adminServiceFacade;
+
     @PostMapping("/savings")
     public ApiUtils.ApiResult<?> createSavingProduct(@RequestBody CreateSavingProductRequest request) {
         try {
@@ -64,7 +67,33 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/answer")
+    public ApiUtils.ApiResult<?> answerQuestion(@RequestBody AnswerQuestionRequest request) {
+        try {
+            AnswerQuestionCommand command = request.toCommand();
+            adminServiceFacade.answerQuestion(command);
+            return ApiUtils.success("답변이 등록되었습니다.");
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
+    @GetMapping("/questions")
+    public ApiUtils.ApiResult<?> fetchQuestionList() {
+        try {
+            return ApiUtils.success(adminServiceFacade.fetchQuestionList());
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    @GetMapping("/questions/{questionId}")
+    public ApiUtils.ApiResult<?> fetchQuestionDetail(@PathVariable int questionId) {
+        try {
+            return ApiUtils.success(adminServiceFacade.fetchQuestionDetail(questionId));
+        }catch (Exception e) {
+            return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

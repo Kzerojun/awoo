@@ -1,6 +1,6 @@
-package com.awoo.admin.domain.repository;
+package com.awoo.member.domain.repository;
 
-import com.awoo.admin.domain.Entity.QuestionEntity;
+import com.awoo.member.domain.model.QuestionEntity;
 
 import java.util.List;
 
