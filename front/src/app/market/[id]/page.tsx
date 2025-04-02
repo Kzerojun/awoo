@@ -12,6 +12,7 @@ import DetailBottomBar from "../components/DetailBottomBar";
 import { createChatRoom } from "@/api/market/chat/createChatRoom";
 import { useRouter } from "next/navigation";
 import { chatSocket } from "@/socket/chatSocket";
+import type { IMessage } from "@stomp/stompjs";
 
 export default function MarketDetailPage() {
   const { id } = useParams() as { id: string };
@@ -31,8 +32,11 @@ export default function MarketDetailPage() {
       const chatRoomId = res.response.chatRoomId;
 
       // 2. 소켓 연결 및 구독
-      chatSocket.connect(token); // jwt로 소켓 연결
-      chatSocket.subscribe(chatRoomId); // 생성된 채팅방 구독
+      chatSocket.connect(token, chatRoomId, (message: IMessage) => {
+        const body = JSON.parse(message.body);
+        console.log("메시지 수신", body);
+        // TODO: 메시지 상태 업데이트나 store 처리
+      });
 
       // 3. 채팅방 페이지로 이동
       router.push(`/market/chat/${chatRoomId}`);
