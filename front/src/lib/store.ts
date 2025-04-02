@@ -20,6 +20,8 @@ import profileReducer from "./slices/profileSlice";
 import petReducer from "./slices/petSlice";
 import myDepositReducer from "./slices/myDepositSlice";
 import savingAccountDetailReducer from "./slices/savingAccountDetailSlice";
+import transferReducer from "./slices/transferSlice";
+
 // === ✅ Step 3 : persist 설정 ===
 const persistConfig = {
   key: "root",
@@ -51,6 +53,7 @@ const rootReducer = combineReducers({
   pet: petReducer,
   myDeposit: myDepositReducer,
   savingAccountDetail: savingAccountDetailReducer,
+  transfer: transferReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
