@@ -22,6 +22,23 @@ export default function RootLayout({
   title?: string;
   rightAction?: React.ReactNode;
 }) {
+  // === ✨ SW 등록 ===
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      if (!navigator.serviceWorker.controller) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js")
+          .then((registration) => {
+            console.log("✅ Service Worker 등록 성공:", registration);
+          })
+          .catch((err) => {
+            console.error("❌ Service Worker 등록 실패:", err);
+          });
+      } else {
+        console.log("✅ 이미 Service Worker 등록됨");
+      }
+    }
+  }, []);
   useNotificationListener(); // ✅ 알림 팝업 리스너는 앱 전체에 항상
   usePermissionObserver(); // ✅ 권한 변경 감지는 전역에서
   // 상단바가 표시될지 여부 결정
