@@ -1701,3 +1701,67 @@ Prometheus 시스템은 다음과 같은 컴포넌트로 구성됩니다:
 - `Grafana Loki와 Tempo`: 로깅 및 분산 추적을 위한 Grafana Labs의 추가 도구와의 통합
 
 </details>
+
+<details>
+<summary><strong>0403</strong></summary>
+
+# SonarQube란?
+
+> SonarQube는 지속적인 코드 품질 검사를 위한 오픈소스 플랫폼입니다. 개발자들이 더 나은 코드를 작성할 수 있도록 도와주며, 코드 품질 문제를 자동으로 감지하고 관리합니다.
+
+## 핵심 기능
+
+- 코드 품질 분석: 버그, 코드 스멜, 취약점 등을 자동으로 감지
+- 보안 취약점 스캔: OWASP Top 10, CWE/SANS Top 25와 같은 기준으로 보안 취약점 분석
+- 코드 중복 탐지: 코드베이스 내의 중복 코드 식별
+- 코드 커버리지 분석: 테스트 코드가 실제 코드를 얼마나 커버하는지 측정
+- 기술 부채 관리: 코드 개선 사항을 "기술 부채"로 수치화하여 관리
+
+## 아키텍처 구성
+
+SonarQube는 다음 세 가지 주요 컴포넌트로 구성됩니다:
+
+### 1. SonarQube 서버:
+
+- 웹 서버: 사용자 인터페이스 제공
+- 검색 서버(Elasticsearch): 코드 이슈 검색 기능 지원
+- Compute Engine: 코드 분석 결과 처리
+
+### 2. 데이터베이스(PostgreSQL):
+
+- 코드 품질 메트릭, 이슈, 사용자 설정 등 저장
+- 트랜잭션 처리 및 관계형 데이터 관리
+
+### 3. SonarScanner:
+
+- 실제 코드 분석을 수행하는 클라이언트 도구
+- 다양한 빌드 도구(Maven, Gradle, Jenkins 등)와 통합 가능
+
+## 지원 언어
+
+SonarQube는 27개 이상의 프로그래밍 언어를 지원합니다:
+
+- Java, JavaScript, C#, C/C++, Python
+- PHP, TypeScript, Ruby, Go, Swift
+- Kotlin, Scala, HTML, CSS 등
+
+## 품질 게이트(Quality Gates)
+
+SonarQube는 "품질 게이트"라는 개념을 통해 코드가 프로덕션에 배포될 수 있는지 여부를 결정합니다:
+
+- 정의된 품질 기준(예: 버그 수, 코드 커버리지 비율 등)을 충족해야만 통과
+- CI/CD 파이프라인과 통합하여 자동화된 품질 관리 가능
+
+## 에디션
+
+- Community Edition: 무료 오픈소스 버전, 기본 기능 제공
+- Developer/Enterprise/Data Center Edition: 상용 버전으로 추가 기능 및 언어 지원
+
+## 통합
+
+SonarQube는 다양한 개발 도구와 통합됩니다:
+
+- CI/CD 도구: Jenkins, GitLab CI, Azure DevOps, GitHub Actions
+- IDE 플러그인: IntelliJ IDEA, Eclipse, Visual Studio
+- 이슈 추적 시스템: Jira, GitHub Issues, Azure DevOps
+</details>
