@@ -8,6 +8,7 @@ import ProductImage from "../components/ProductImage";
 import ProfileInfo from "../components/ProfileInfo";
 import InfoStats from "../components/InfoStates";
 import DetailBottomBar from "../components/DetailBottomBar";
+import { toggleLike } from "@/api/market/like/toggleLike";
 
 import { createChatRoom } from "@/api/market/chat/createChatRoom";
 import { useRouter } from "next/navigation";
@@ -17,8 +18,30 @@ import type { IMessage } from "@stomp/stompjs";
 export default function MarketDetailPage() {
   const { id } = useParams() as { id: string };
   const [detail, setDetail] = useState<any>(null);
+  // ✅ 찜 상태 관리
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   const router = useRouter();
+  // ✅ 찜하기 핸들러
+  const handleToggleLike = async () => {
+    try {
+      const res = await toggleLike(detail.usedProductId);
+      const wasLiked = res.data.response.wasLiked;
+
+      if (wasLiked) {
+        setIsLiked(false);
+        setLikeCount((prev) => prev - 1);
+      } else {
+        setIsLiked(true);
+        setLikeCount((prev) => prev + 1);
+      }
+
+      console.log("✅ 찜 상태:", !wasLiked);
+    } catch (error) {
+      console.error("찜 처리 실패", error);
+    }
+  };
   const handleChatClick = async () => {
     try {
       const token = localStorage.getItem("accessToken"); // or redux에서 가져와도 됨
@@ -49,6 +72,8 @@ export default function MarketDetailPage() {
       try {
         const res = await getProductDetail(id); // 여기 id 그대로 넘기면 됨
         setDetail(res);
+        setIsLiked(res.isLiked); // ✅ 초기값
+        setLikeCount(res.likeCount); // ✅ 초기 찜 수
       } catch (error) {
         console.error("상세조회 실패", error);
       }
@@ -88,7 +113,12 @@ export default function MarketDetailPage() {
       <InfoStats views={detail.viewCount} chat={detail.likeCount} likes={0} />
 
       {/* ✅ 하단 액션바 */}
-      <DetailBottomBar price={`${detail.price.toLocaleString()}원`} onChatClick={handleChatClick} />
+      <DetailBottomBar
+        price={`${detail.price.toLocaleString()}원`}
+        isLiked={isLiked}
+        onToggleLike={handleToggleLike}
+        onChatClick={handleChatClick}
+      />
     </div>
   );
 }
