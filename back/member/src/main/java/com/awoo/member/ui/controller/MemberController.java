@@ -132,13 +132,6 @@ public class MemberController {
         return ApiUtils.success(Map.of("message", "사용 가능한 닉네임입니다."));
     }
 
-    //member Key 복호화 & 발행
-    @GetMapping("/member-key")
-    public ApiUtils.ApiResult<?> findUserKey(@RequestParam Integer memberId) throws Exception {
-        return ApiUtils.success(FindMemberKeyResponse.create(memberService.getUserKey(memberId)));
-
-    }
-
     //비밀번호 재설정
     @PatchMapping("/api/members/password")
     public ApiUtils.ApiResult<?> resetPassword(@RequestBody Map<String, String> requestBody) {
@@ -205,6 +198,18 @@ public class MemberController {
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    //member Key 복호화 & 발행
+    @GetMapping("/member-key")
+    public ApiUtils.ApiResult<?> findUserKey(@RequestParam Integer memberId) throws Exception {
+        return ApiUtils.success(FindMemberKeyResponse.create(memberService.getUserKey(memberId)));
+    }
+
+    //account 계좌이체시 이름 조회용
+    @GetMapping("/name")
+    public String getMemberName(@RequestParam Integer memberId) {
+        return memberService.getMemberInfo(memberId).name();
     }
 
 }
