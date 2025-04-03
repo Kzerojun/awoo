@@ -20,7 +20,11 @@ import Button from "@/common/ui/Button";
 // 이메일 중복 체크 쿼리
 import { useEmailCheck } from "@/hooks/user/useEmailCheck";
 
+// FCM 권한 설정
+import { useFCMToken } from "@/hooks/alarm/useFCM";
+
 const SignupForm = () => {
+  const { onlyRequestPermission } = useFCMToken();
   const router = useRouter();
 
   // 리액트 쿼리 사용
@@ -173,7 +177,7 @@ const SignupForm = () => {
     setIsMatch(password1 === value);
   };
 
-  const goToProfileRegister = (e: FormEvent<HTMLFormElement>) => {
+  const goToProfileRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       !name ||
@@ -194,7 +198,13 @@ const SignupForm = () => {
       alert("모든 입력값을 정확히 입력해주세요");
       return;
     }
-
+    // 👉 제출 직전에 FCM 알림 전송 권한 요청
+    const permissionGranted = await onlyRequestPermission();
+    if (permissionGranted) {
+      console.log("✅ 알림 권한 허용됨");
+    } else {
+      console.log("❌ 알림 권한 거부됨 또는 무시됨");
+    }
     // 스토어에 데이터 저장하기
     dispatch(
       setRegisterData({
