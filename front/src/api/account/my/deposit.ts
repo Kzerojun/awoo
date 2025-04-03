@@ -78,6 +78,13 @@ interface TransactionMemoPayload {
   transactionMemo: string;
 }
 
+// 이체 한도 변경 Payload
+interface ChangeLimitPayload {
+  accountNo: string;
+  oneTimeTransferLimit: Number;
+  dailyTransferLimit: Number;
+}
+
 // 내부 계좌 해지 payload
 interface DeleteDepositPayload {
   accountNo: string;
@@ -201,6 +208,30 @@ export const postTransactionMemo = async ({
     return res.data;
   } catch (err) {
     console.error("거래 메모 등록 실패:", err);
+    throw err;
+  }
+};
+
+// 이체 한도 변경
+export const changeDepositLimit = async ({
+  accountNo,
+  oneTimeTransferLimit,
+  dailyTransferLimit,
+}: ChangeLimitPayload) => {
+  try {
+    const res = await axiosInstance.post(
+      `/accounts/change-limit`,
+      { accountNo, oneTimeTransferLimit, dailyTransferLimit },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("이체 한도 변경 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("이체 한도 변경 실패:", err);
     throw err;
   }
 };

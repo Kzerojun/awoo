@@ -8,17 +8,24 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { popPath, markGoingBack } from "@/lib/slices/userActionSlice";
+import {
+  popPath,
+  markGoingBack,
+  changeCurrentManageDepositView,
+  changeCurrentManageSavingView,
+} from "@/lib/slices/userActionSlice";
 import React from "react";
 import { changeTransferData, clearTransferData } from "@/lib/slices/transferSlice";
 
 interface CommonTopBarProps {
   title: string;
-  leftAction?: "back" | "close" | "transferBack";
+  leftAction?: "back" | "close" | "transferBack" | "depositManageBack" | "savingManageBack";
   rightAction?: "bell" | "none" | "cancel" | "setting" | "close";
   backColor?: "white" | "aqua" | "green";
   textColor?: "white" | "black";
   transferStep?: number;
+  currentDepositCurrentView?: number;
+  currentSavingCurrentView?: number;
   onClose?: () => void;
   onBellClick?: () => void;
   onSettingClick?: () => void;
@@ -31,6 +38,8 @@ const CommonTopBar = ({
   backColor = "white",
   textColor = "black",
   transferStep = 1,
+  currentDepositCurrentView = 1,
+  currentSavingCurrentView = 1,
   onClose,
   onBellClick,
   onSettingClick,
@@ -39,6 +48,8 @@ const CommonTopBar = ({
     back: React.ReactNode;
     close: React.ReactNode;
     transferBack: React.ReactNode;
+    depositManageBack: React.ReactNode;
+    savingManageBack: React.ReactNode;
   }
 
   interface rightActionTypes {
@@ -64,6 +75,8 @@ const CommonTopBar = ({
     back: <ChevronLeftIcon className="h-6 w-6" />,
     close: <XMarkIcon className="h-6 w-6" />,
     transferBack: <span className="text-sm ">이전</span>,
+    depositManageBack: <span className="text-sm ">이전</span>,
+    savingManageBack: <span className="text-sm ">이전</span>,
   };
 
   const rightActionTypes: rightActionTypes = {
@@ -105,10 +118,25 @@ const CommonTopBar = ({
         // 모달 닫고 페이지 이동 처리 등
         onClose();
       }
+      // 계좌이체 커스텀
     } else if (leftAction === "transferBack") {
       if (transferStep > 1) {
         dispatch(changeTransferData({ transferStep: transferStep - 1 }));
       } else if (transferStep === 1) {
+        router.back();
+      }
+      // 내부 계좌 관리 커스텀
+    } else if (leftAction === "depositManageBack") {
+      if (currentDepositCurrentView > 1) {
+        dispatch(changeCurrentManageDepositView(1));
+      } else if (currentDepositCurrentView === 1) {
+        router.back();
+      }
+      // 적금 관리 커스텀
+    } else if (leftAction === "savingManageBack") {
+      if (currentSavingCurrentView > 1) {
+        dispatch(changeCurrentManageSavingView(1));
+      } else if (currentSavingCurrentView === 1) {
         router.back();
       }
     }

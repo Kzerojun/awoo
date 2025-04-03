@@ -2,17 +2,24 @@
 import React, { useEffect } from "react";
 import SavingTop from "../components/SavingTop";
 import SavingBottom from "../components/SavingBottom";
-import { useAppSelector } from "@/lib/store";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
 import WalkingLoading from "@/app/walk/components/WalkingLoading";
 import { useGetSavingAccount } from "@/hooks/account/saving/useGetSavingAccount";
 import { useRouter } from "next/navigation";
-import CommonTopBar from "@/common/ui/CommonTopBar";
+import { getMySaving } from "@/lib/slices/myDepositSavingSlice";
 
 const MySavingPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const savingId = String(useAppSelector((state) => state.savingAccountDetail.selectedSavingId));
   const { data: savingInfo, isLoading, isError } = useGetSavingAccount(savingId ?? "");
+
+  useEffect(() => {
+    if (savingInfo) {
+      dispatch(getMySaving(savingInfo));
+    }
+  }, [savingInfo, savingId]);
 
   useEffect(() => {
     if (isError) {

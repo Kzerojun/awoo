@@ -28,10 +28,10 @@ const TransactionList = ({ deposit }: Props) => {
   const todayStr = `${year}${month}${date}`; // 20250327
 
   // 계좌번호
-  const accountNo = useAppSelector((state) => state.myDeposit.deposit?.accountNo);
+  const accountNo = useAppSelector((state) => state.myDepositSaving.deposit?.accountNo);
 
   // 계좌개설일
-  const createDate = useAppSelector((state) => state.myDeposit.deposit?.accountCreatedDate);
+  const createDate = useAppSelector((state) => state.myDepositSaving.deposit?.accountCreatedDate);
 
   // 계좌 조회 시작일
   const [startDate, setStartDate] = useState<string>(createDate || "");

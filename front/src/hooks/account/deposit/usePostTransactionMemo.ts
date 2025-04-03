@@ -5,10 +5,10 @@ export const usePostTransactionMemo = () => {
   return useMutation({
     mutationFn: postTransactionMemo,
     onSuccess: (data) => {
-      console.log("거래 내역 메모 등록 성공:", data);
+      console.log("쿼리 거래 내역 메모 등록 성공:", data);
     },
     onError: (err) => {
-      console.error("거래 내역 메모 등록 실패:", err);
+      console.error("쿼리 거래 내역 메모 등록 실패:", err);
     },
   });
 };

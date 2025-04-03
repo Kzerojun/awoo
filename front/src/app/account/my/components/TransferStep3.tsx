@@ -155,11 +155,14 @@ const TransferStep3 = () => {
         transferName={withdrawalTransactionSummary}
         transferBalance={formatAmount(transactionBalance)}
       />
-      <CheckPasswordModal
-        isOpen={showCheckPasswordModal}
-        onConfirm={handleTransfer}
-        onClose={() => setShowCheckPasswordModal(false)}
-      />
+      {accountNo && (
+        <CheckPasswordModal
+          accountNo={accountNo}
+          isOpen={showCheckPasswordModal}
+          onConfirm={handleTransfer}
+          onClose={() => setShowCheckPasswordModal(false)}
+        />
+      )}
     </div>
   );
 };

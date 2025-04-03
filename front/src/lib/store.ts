@@ -18,7 +18,7 @@ import savingPasswordReducer from "./slices/savingPasswordSlice";
 import accountProgressReducer from "./slices/accountProgressSlice";
 import profileReducer from "./slices/profileSlice";
 import petReducer from "./slices/petSlice";
-import myDepositReducer from "./slices/myDepositSlice";
+import myDepositSavingReducer from "./slices/myDepositSavingSlice";
 import savingAccountDetailReducer from "./slices/savingAccountDetailSlice";
 import chatReducer from "./slices/chatSlice";
 import transferReducer from "./slices/transferSlice";
@@ -54,7 +54,7 @@ const rootReducer = combineReducers({
   accountProgress: accountProgressReducer,
   profile: profileReducer,
   pet: petReducer,
-  myDeposit: myDepositReducer,
+  myDepositSaving: myDepositSavingReducer,
   savingAccountDetail: savingAccountDetailReducer,
   transfer: transferReducer,
   chat: chatReducer,

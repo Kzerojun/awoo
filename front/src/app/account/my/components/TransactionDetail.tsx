@@ -15,7 +15,7 @@ interface TransactionDetailProps {
 const TransactionDetail = ({ transaction, onClose, onUpdate }: TransactionDetailProps) => {
   const { mutate: memoMutation, isPending: memoPending } = usePostTransactionMemo();
   // 계좌번호
-  const accountNo = useAppSelector((state) => state.myDeposit.deposit?.accountNo);
+  const accountNo = useAppSelector((state) => state.myDepositSaving.deposit?.accountNo);
   // 거래 고유 번호
   const transactionUniqueNo = transaction?.transactionUniqueNo;
 
