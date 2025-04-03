@@ -74,25 +74,28 @@ const ChangeDepositLimit = () => {
       {/* 하단 변경 부분 */}
       <div className="w-full h-3/4 bg-gray-100 flex flex-col items-center justify-center gap-y-10">
         {/* 조회 박스 */}
-        <div className="w-[80%] h-32 border bg-white border-gray-700">
+        <div className="w-[80%] border bg-white border-gray-700">
           <ul className="h-full space-y-3">
             <li className="bg-gray-200 text-sm px-2 py-1">현재 이체 한도</li>
-            <li className="px-2 flex justify-between items-center">
+            <li className="px-2 flex justify-between items-center text-sm">
               <span>1일</span>
               <span> {Number(dailyTransferLimit).toLocaleString("ko-KR")} 원</span>
             </li>
             <li>
               <hr className="text-gray-200" />
             </li>
-            <li className="px-2 flex justify-between items-center">
+            <li className="px-2 flex justify-between items-center text-sm">
               <span>1회</span>
               <span>{Number(oneTimeTransferLimit).toLocaleString("ko-KR")} 원</span>
+            </li>
+            <li>
+              <hr className="text-gray-200" />
             </li>
           </ul>
         </div>
 
         {/* 변경 박스 */}
-        <div className="w-[80%] h-40 border bg-white border-gray-700">
+        <div className="w-[80%] border bg-white border-gray-700">
           <ul className="h-full space-y-3">
             <li className="bg-gray-200 text-sm px-2 py-1">변경할 이체 한도</li>
             <li className="px-2 flex justify-between items-center text-sm">
@@ -140,6 +143,9 @@ const ChangeDepositLimit = () => {
 
                 <span className="text-xs">최대 1,000만 원</span>
               </span>
+            </li>
+            <li>
+              <hr className="text-gray-200" />
             </li>
           </ul>
         </div>
