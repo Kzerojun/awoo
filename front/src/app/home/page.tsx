@@ -4,8 +4,14 @@ import Header from "@/app/home/components/Header";
 import SavingRecommendation from "./components/SavingRecommendation";
 import MainActions from "./components/Mainactions";
 import InfoCard from "./components/InfoCard";
+import { useFCMToken } from "@/hooks/alarm/useFCM";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { checkAndUpdateToken } = useFCMToken();
+  useEffect(() => {
+    checkAndUpdateToken(); // 앱 진입할 때 토큰 갱신 검사
+  }, []);
   return (
     <div className="flex flex-col">
       {/* 네비게이션 바 */}
