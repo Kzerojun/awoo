@@ -7,6 +7,7 @@ import { useGetSavingInquirePayment } from "@/hooks/account/saving/useGetSavingI
 import WalkingLoading from "@/app/walk/components/WalkingLoading";
 import { InquirePaymentResponse } from "@/api/account/my/saving";
 import { PaymentInfoInterface } from "./MyAccountType";
+import LoadingDog from "./JustWalkingDog";
 interface AccountPayload {
   accountNo: string;
 }
@@ -66,7 +67,7 @@ const SavingList = ({ accountNo }: AccountPayload) => {
   const unformatInputDate = (str: string) => str.replaceAll("-", "");
 
   if (isPending) {
-    return <WalkingLoading />;
+    return <LoadingDog />;
   }
 
   return (
