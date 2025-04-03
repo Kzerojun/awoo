@@ -1,4 +1,6 @@
-interface Props {
+import { useRouter } from "next/navigation";
+
+interface ChatListItemProps {
   chat: {
     roomId: string;
     partnerNickname: string;
@@ -7,29 +9,44 @@ interface Props {
     lastMessageTime: string;
     unreadCount: number;
     type: string;
+    usedProductId: number | null;
   };
+  hasBorder: boolean;
 }
 
-export default function ChatListItem({ chat }: Props) {
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+};
+
+export default function ChatListItem({ chat, hasBorder }: ChatListItemProps) {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push(`/market/chat/${chat.roomId}?usedProductId=${chat.usedProductId}`);
+  };
   return (
-    <div className="flex items-center space-x-3 p-2 border-b border-gray-300">
+    <div
+      className={`flex items-center justify-between py-4 ${hasBorder ? "border-b" : ""}`}
+      onClick={handleClick}
+    >
+      {/* 프로필 */}
       <img
         src={chat.partnerProfileImage}
         alt="profile"
-        className="w-12 h-12 rounded-full object-cover"
+        className="w-10 h-10 rounded-md object-cover mr-2"
       />
-      <div className="flex-1">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold">{chat.partnerNickname}</span>
-          <span className="text-xs text-gray-400">{chat.lastMessageTime}</span>
-        </div>
-        <div className="text-sm text-gray-500 truncate">{chat.lastMessage}</div>
+
+      {/* 닉네임 & 마지막 메시지 */}
+      <div className="flex-1 ml-2 truncate">
+        <div className="text-m font-semibold truncate">{chat.partnerNickname}</div>
+        <div className="text-xs text-gray-400 truncate">{chat.lastMessage}</div>
       </div>
-      {chat.unreadCount > 0 && (
-        <div className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-          {chat.unreadCount}
-        </div>
-      )}
+
+      {/* 날짜 */}
+      <div className="text-xs text-gray-400 whitespace-nowrap ml-auto">
+        {formatDate(chat.lastMessageTime)}
+      </div>
     </div>
   );
 }

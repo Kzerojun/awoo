@@ -62,6 +62,10 @@ const SavingTop = ({ savingInfo }: SavingProps) => {
 
   const passedDays = calculatedPassDays(savingInfo.accountCreateDate);
 
+  const goToSavingManage = () => {
+    router.push("/account/my/saving/manage");
+  };
+
   return (
     <>
       <CommonTopBar
@@ -69,8 +73,9 @@ const SavingTop = ({ savingInfo }: SavingProps) => {
         rightAction="setting"
         backColor="green"
         textColor="white"
+        onSettingClick={goToSavingManage}
       />
-      <div className="h-1/2 mt-14 w-full flex flex-col items-center justify-center bg-green">
+      <div className="h-2/5 mt-14 w-full flex flex-col items-center justify-center bg-green">
         <main className="flex flex-col  justify-center items-center gap-y-8">
           <div className="flex flex-col justify-center items-center gap-y-3">
             {/* 적용 금리 */}

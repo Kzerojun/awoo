@@ -11,9 +11,9 @@ interface Props {
 
 const DepositBottom = ({ deposit }: Props) => {
   return (
-    <div className="flex-1 w-full flex flex-col ">
+    <div className="h-3/5 w-full flex flex-col ">
       {/* <div>계좌 조회 아랫부분</div> */}
-      <TransactionList />
+      <TransactionList deposit={deposit} />
     </div>
   );
 };

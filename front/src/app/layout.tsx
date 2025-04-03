@@ -1,3 +1,4 @@
+"use client";
 import "@/app/globals.css";
 import { Providers } from "./providers";
 import { Metadata, Viewport } from "next";
@@ -7,19 +8,10 @@ import { useTrackRouteChange } from "@/hooks/change-back/useTrackRouteChange";
 import TrackRouteWrapper from "@/common/ui/TrackRouteWrapper";
 // import AppInitializer from "@/hooks/user/AppInitializer";
 import { KeypadProvider } from "@/contexts/KeypadContent"; // ✅ 키패드 컨텍스트
-
-export const metadata: Metadata = {
-  title: "AwOO",
-  description: "AwOO - 강아지 라이프 플랫폼",
-  manifest: "/manifest.json",
-};
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#ffffff",
-};
+// FCM 관련 코드
+import { useEffect } from "react";
+import { useNotificationListener } from "@/hooks/alarm/useNotificationListner";
+import { usePermissionObserver } from "@/hooks/alarm/usePermissionObserver";
 
 export default function RootLayout({
   children,
@@ -30,19 +22,30 @@ export default function RootLayout({
   title?: string;
   rightAction?: React.ReactNode;
 }) {
+  // === ✨ SW 등록 ===
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      if (!navigator.serviceWorker.controller) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js")
+          .then((registration) => {
+            console.log("✅ Service Worker 등록 성공:", registration);
+          })
+          .catch((err) => {
+            console.error("❌ Service Worker 등록 실패:", err);
+          });
+      } else {
+        console.log("✅ 이미 Service Worker 등록됨");
+      }
+    }
+  }, []);
+  useNotificationListener(); // ✅ 알림 팝업 리스너는 앱 전체에 항상
+  usePermissionObserver(); // ✅ 권한 변경 감지는 전역에서
   // 상단바가 표시될지 여부 결정
   const showTopBar = title || rightAction;
 
   return (
     <html lang="ko" className="h-screen">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <link
-          href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
-          rel="stylesheet"
-        />
-      </head>
-
       <body className="h-screen flex flex-col">
         <Providers>
           <KeypadProvider>

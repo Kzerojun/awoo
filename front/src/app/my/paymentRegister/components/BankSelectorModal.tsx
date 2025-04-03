@@ -39,7 +39,7 @@ export default function BankSelectorModal({
     "KEB하나",
     "신한",
     "카카오",
-    "싸피",
+    "AwOO",
   ];
 
   // 사용할 은행 목록 (외부에서 전달받은 목록 또는 기본 목록)

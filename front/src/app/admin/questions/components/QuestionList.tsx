@@ -1,15 +1,38 @@
 import React from "react";
-import { QuestionData } from "../data/mockData";
+
+// API 응답 타입 정의
+interface QuestionListItem {
+  questionId: number;
+  name: string;
+  email: string;
+  subject: string;
+  createdAt: string;
+  isAnswer: boolean;
+}
 
 interface QuestionListProps {
-  questions: QuestionData[];
-  onViewDetail: (question: QuestionData) => void;
+  questions: QuestionListItem[];
+  onViewDetail: (questionId: number) => void;
 }
 
 export default function QuestionList({ questions, onViewDetail }: QuestionListProps) {
   // 행 클릭 핸들러
-  const handleRowClick = (question: QuestionData) => {
-    onViewDetail(question);
+  const handleRowClick = (questionId: number) => {
+    onViewDetail(questionId);
+  };
+
+  // 날짜 포맷 함수
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    } catch (e) {
+      return dateString;
+    }
   };
 
   return (
@@ -26,37 +49,37 @@ export default function QuestionList({ questions, onViewDetail }: QuestionListPr
         <tbody>
           {questions.map((question, index) => (
             <tr
-              key={question.id}
+              key={question.questionId}
               className={`hover:bg-gray-50 cursor-pointer transition-colors duration-150 ${
                 index !== questions.length - 1 ? "border-b border-gray-100" : ""
               }`}
-              onClick={() => handleRowClick(question)}
+              onClick={() => handleRowClick(question.questionId)}
             >
               <td className="px-6 py-4">
                 <div className="flex items-center">
                   <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-medium mr-3">
-                    {question.writer.charAt(0)}
+                    {question.name.charAt(0)}
                   </div>
                   <div>
-                    <div className="text-gray-800">{question.writer}</div>
-                    <div className="text-sm text-gray-500">{question.userId}</div>
+                    <div className="text-gray-800">{question.name}</div>
+                    <div className="text-sm text-gray-500">{question.email}</div>
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4">
-                <div className="font-medium text-gray-800">{question.title}</div>
+                <div className="font-medium text-gray-800">{question.subject}</div>
               </td>
-              <td className="px-6 py-4 text-gray-700">{question.date}</td>
+              <td className="px-6 py-4 text-gray-700">{formatDate(question.createdAt)}</td>
               <td className="px-6 py-4 text-center">
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium inline-block
                   ${
-                    question.status === "답변 대기"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-green-100 text-green-700"
+                    question.isAnswer
+                      ? "bg-green-100 text-green-700"
+                      : "bg-yellow-100 text-yellow-700"
                   }`}
                 >
-                  {question.status}
+                  {question.isAnswer ? "답변 완료" : "답변 대기"}
                 </span>
               </td>
             </tr>

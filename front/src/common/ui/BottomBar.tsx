@@ -46,9 +46,14 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     "/my/paymentRegister/registerDone",
     "/my/paymentSend/completeSend",
     "/my/paymentCharge/chargeDone",
+    "/walk/start/start", // 산책하는 페이지
     "/walk/take-photo", // 산책 후 사진 찍는 페이지
     "/walk/end/check", // 산책 종료 페이지
     "/main", // 메인 웹페이지
+    "/market/safePayment/safePayDone",
+    "/market/safePayment/safePay",
+    "/account/my/deposit/transfer", // 계좌이체 페이지
+    "/account/my/check-password", // 계좌 조회 비밀번호 입력 페이지
   ];
   const isMarketDetail = /^\/market\/[^\/]+$/.test(currentPath);
 

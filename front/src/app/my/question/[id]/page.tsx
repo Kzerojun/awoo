@@ -2,12 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
-import { QuestionItemType } from "../data/questionData";
+import { getQuestionDetail } from "@/api/question/question";
+import { toast } from "react-toastify";
 
-// 상세 문의 데이터 타입 (기본 문의 데이터 + 상세 내용)
-interface QuestionDetailType extends QuestionItemType {
+// 문의 상세 데이터 타입
+interface QuestionDetailType {
+  id: number;
+  title: string;
+  author: string;
+  date: string;
+  isLocked: boolean;
+  hasAnswer: boolean;
   content: string;
   answer?: string;
 }
@@ -15,75 +22,132 @@ interface QuestionDetailType extends QuestionItemType {
 export default function QuestionDetail() {
   const params = useParams();
   const router = useRouter();
-  const questionId = params.id;
+  const questionId = params.id ? parseInt(params.id as string) : 0;
   const [question, setQuestion] = useState<QuestionDetailType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [password, setPassword] = useState<string>("");
+  const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
 
-  // 문의 데이터 로드 (실제로는 API 호출)
-  useEffect(() => {
-    // 문의 상세 데이터를 가져오는 API 호출을 시뮬레이션
-    // 실제 구현 시에는 API 호출로 대체
-    const mockQuestionData: { [key: string]: QuestionDetailType } = {
-      "1": {
-        id: 1,
-        title: "측정 거리 오차 문의 드립니다.",
-        author: "김홍범(rlag**)",
-        date: "2025.03.12",
-        isLocked: true,
-        hasAnswer: false,
-        content:
-          "산책하는 동안 거리 측정에 오차가 너무 크게 발생합니다. 같은 코스를 걷는데도 매번 측정 거리가 다르게 나타납니다. 이 문제를 해결할 수 있을까요?",
-      },
-      "2": {
-        id: 2,
-        title: "가족 적금 가입 문의 드립니다.",
-        author: "이다은(dlek**)",
-        date: "2025.02.12",
-        isLocked: true,
-        hasAnswer: false,
-        content:
-          "가족 적금 상품에 가입하려고 합니다. 가족 구성원은 총 3명인데, 모두 함께 가입해야 하나요? 각자 계정으로 가입이 가능한지 알고 싶습니다.",
-      },
-      "3": {
-        id: 3,
-        title: "탈퇴 시 데이터 처리 문의 드립니다.",
-        author: "김홍범(rlag**)",
-        date: "2025.01.12",
-        isLocked: false,
-        hasAnswer: true,
-        content:
-          "서비스 탈퇴 시 그동안 기록된 산책 데이터와 저장된 개인정보는 어떻게 처리되나요? 모든 데이터가 즉시 삭제되는지 알고 싶습니다.",
-        answer:
-          "안녕하세요, 고객님. 서비스 탈퇴 시 개인정보는 즉시 삭제됩니다. 다만 법적 보존 의무가 있는 일부 데이터(거래 기록 등)는 법정 기간 동안 보관 후 파기됩니다. 자세한 내용은 개인정보처리방침을 참고해 주세요.",
-      },
-      "4": {
-        id: 4,
-        title: "산책 거리 미기록 문의 드립니다.",
-        author: "강은수(rkdd**)",
-        date: "2024.12.12",
-        isLocked: true,
-        hasAnswer: true,
-        content:
-          "어제 산책을 했는데 앱에서 기록이 되지 않았습니다. GPS는 켜져 있었고, 1시간 정도 산책했는데 전혀 기록되지 않았어요. 혹시 복구 가능한가요?",
-        answer:
-          "안녕하세요, 고객님. 불편을 드려 죄송합니다. GPS 신호가 약한 지역이나 배터리 최적화 설정이 활성화된 경우 기록이 누락될 수 있습니다. 안타깝게도 누락된 산책 기록은 복구가 어렵습니다. 향후 산책 시 앱이 백그라운드에서도 실행될 수 있도록 배터리 최적화 설정을 확인해 주세요.",
-      },
-    };
+  // 문의 데이터 로드
+  const fetchQuestionDetail = async (pwd: string = "") => {
+    try {
+      setLoading(true);
+      const response = await getQuestionDetail({
+        questionId: questionId,
+        password: pwd,
+      });
 
-    setTimeout(() => {
-      if (mockQuestionData[questionId as string]) {
-        setQuestion(mockQuestionData[questionId as string]);
+      if (response.success) {
+        const data = response.response;
+        // 데이터 형식 변환
+        setQuestion({
+          id: questionId, // API 응답에 ID가 없어 URL 파라미터 사용
+          title: data.subject,
+          author: data.name || "사용자",
+          date: new Date()
+            .toLocaleDateString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\. /g, "."),
+          isLocked: false, // 정보가 없으므로 기본값 사용
+          hasAnswer: !!data.answer,
+          content: data.content,
+          answer: data.answer,
+        });
+
+        setShowPasswordModal(false);
+      } else {
+        // 비밀번호가 잘못된 경우 또는 다른 오류
+        if (pwd) {
+          setPasswordError(true);
+        } else {
+          toast.error("문의를 불러오는데 실패했습니다.");
+          router.back();
+        }
       }
+    } catch (error) {
+      console.error("문의 상세 조회 오류:", error);
+      toast.error("문의를 불러오는데 실패했습니다.");
+    } finally {
       setLoading(false);
-    }, 500); // 실제 API 호출 시뮬레이션을 위한 지연
-  }, [questionId]);
+    }
+  };
+
+  // useEffect에서는 위에서 정의한 함수를 호출
+  useEffect(() => {
+    fetchQuestionDetail();
+  }, [questionId]); // 의존성 배열에서 router 제거, fetchQuestionDetail은 컴포넌트 함수 내부에 있으므로 포함 안 함
+
+  // 비밀글 비밀번호 제출
+  const handlePasswordSubmit = () => {
+    if (!password.trim()) {
+      setPasswordError(true);
+      return;
+    }
+
+    fetchQuestionDetail(password);
+  };
+
+  // 비밀번호 입력 핸들러
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordError(false);
+    setPassword(e.target.value);
+  };
 
   if (loading) {
     return (
       <div className="flex flex-col min-h-screen bg-white">
-        <TopBar title="1:1 문의" />
+        <CommonTopBar title="1:1 문의" />
         <div className="pt-14 flex justify-center items-center h-screen">
-          <p>로딩 중...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-teal-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // 비밀번호 입력 모달
+  if (showPasswordModal) {
+    return (
+      <div className="flex flex-col min-h-screen bg-white">
+        <CommonTopBar title="1:1 문의" />
+        <div className="pt-14 flex flex-col items-center justify-center h-screen p-4">
+          <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-xl font-bold mb-4 text-center">비밀글 확인</h2>
+            <p className="text-sm text-gray-600 mb-4 text-center">
+              이 글은 비밀글입니다. 비밀번호를 입력해주세요.
+            </p>
+
+            <div className="mb-4">
+              <input
+                type="password"
+                className={`w-full p-2 border ${passwordError ? "border-red-500" : "border-gray-300"} rounded`}
+                placeholder="비밀번호를 입력하세요"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              {passwordError && (
+                <p className="text-red-500 text-xs mt-1">비밀번호가 일치하지 않습니다.</p>
+              )}
+            </div>
+
+            <div className="flex justify-between">
+              <button
+                onClick={() => router.back()}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded"
+              >
+                취소
+              </button>
+              <button
+                onClick={handlePasswordSubmit}
+                className="px-4 py-2 bg-teal-500 text-white rounded"
+              >
+                확인
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -92,7 +156,7 @@ export default function QuestionDetail() {
   if (!question) {
     return (
       <div className="flex flex-col min-h-screen bg-white">
-        <TopBar title="1:1 문의" />
+        <CommonTopBar title="1:1 문의" />
         <div className="pt-14 flex justify-center items-center h-screen">
           <p>문의를 찾을 수 없습니다.</p>
         </div>
@@ -102,7 +166,7 @@ export default function QuestionDetail() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopBar title="1:1 문의" />
+      <CommonTopBar title="1:1 문의" />
 
       <div className="pt-14 pb-20 px-4">
         {/* 문의 제목 */}

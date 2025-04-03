@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     register: true,
     skipWaiting: true,
     disable: false,
+    sw: "/firebase-messaging-sw.js",
   }),
   webpack(config) {
     config.module.rules.push({

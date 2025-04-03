@@ -45,7 +45,7 @@ const DepositTop = ({ deposit }: Props) => {
         backColor="aqua"
         onSettingClick={goToManageDeposit}
       />
-      <div className="h-1/3 mt-14 w-full flex flex-col items-center justify-center bg-aqua">
+      <div className="h-2/5 mt-14 w-full flex flex-col items-center justify-center bg-aqua">
         <main className="flex flex-col  justify-center items-center gap-y-10">
           <div className="flex flex-col justify-center items-center gap-y-3">
             {/* 계좌 번호 */}

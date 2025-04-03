@@ -9,8 +9,14 @@ import Button from "@/common/ui/Button";
 import { useAppSelector } from "@/lib/store";
 import { useGetTransactionList } from "@/hooks/account/deposit/useGetTransactionList";
 import WalkingLoading from "@/app/walk/components/WalkingLoading";
+import { DepositResponse } from "@/api/account/my/deposit";
+import LoadingDog from "./JustWalkingDog";
 
-const TransactionList = () => {
+interface Props {
+  deposit: DepositResponse;
+}
+
+const TransactionList = ({ deposit }: Props) => {
   const router = useRouter();
   const { mutate: transactionListMutation, isPending: transactionListPending } =
     useGetTransactionList();
@@ -22,10 +28,10 @@ const TransactionList = () => {
   const todayStr = `${year}${month}${date}`; // 20250327
 
   // 계좌번호
-  const accountNo = useAppSelector((state) => state.myDeposit.deposit?.accountNo);
+  const accountNo = useAppSelector((state) => state.myDepositSaving.deposit?.accountNo);
 
   // 계좌개설일
-  const createDate = useAppSelector((state) => state.myDeposit.deposit?.accountCreatedDate);
+  const createDate = useAppSelector((state) => state.myDepositSaving.deposit?.accountCreatedDate);
 
   // 계좌 조회 시작일
   const [startDate, setStartDate] = useState<string>(createDate || "");
@@ -42,30 +48,6 @@ const TransactionList = () => {
   // 거래내역 담을 state 변수
   const [transactionHistory, setTransactionHistory] = useState<TransactionResponse[]>([]);
 
-  // 처음에는 계좌 개설일부터 오늘까지 전부 조회
-  useEffect(() => {
-    if (!accountNo || !createDate || !todayStr) {
-      alert("거래 내역 조회에 실패했습니다. \n 다시 시도해주세요.");
-      router.push("/home");
-      return;
-    }
-
-    transactionListMutation(
-      { accountNo, startDate: createDate, endDate: todayStr },
-      {
-        onSuccess: (data) => {
-          setTransactionHistory(data);
-        },
-        onError: (err) => {
-          console.error("거래 내역 조회 실패;", err);
-          alert("다시 시도해주세요.");
-          router.push("/home");
-          return;
-        },
-      }
-    );
-  }, []);
-
   // 계좌 개설일
 
   const formattedStartDate = `${createDate?.slice(0, 4)}-${createDate?.slice(4, 6)}-${createDate?.slice(6, 8)}`;
@@ -76,20 +58,15 @@ const TransactionList = () => {
     null
   );
 
-  const showDetail = (transaction: TransactionResponse) => {
-    setShowTransactionObject(transaction);
-    setIsShowDetail(true);
-  };
-
-  const handleDateSearch = () => {
-    if (!accountNo || !createDate || !todayStr) {
+  const fetchTransactionList = (startDateArg: string, endDateArg: string) => {
+    if (!accountNo || !startDateArg || !endDateArg) {
       alert("거래 내역 조회에 실패했습니다. \n 다시 시도해주세요.");
       router.push("/home");
       return;
     }
 
     transactionListMutation(
-      { accountNo, startDate: createDate, endDate: todayStr },
+      { accountNo, startDate: startDateArg, endDate: endDateArg },
       {
         onSuccess: (data) => {
           setTransactionHistory(data);
@@ -98,14 +75,29 @@ const TransactionList = () => {
           console.error("거래 내역 조회 실패;", err);
           alert("다시 시도해주세요.");
           router.push("/home");
-          return;
         },
       }
     );
   };
 
+  // 처음에는 계좌 개설일부터 오늘까지 전부 조회
+  useEffect(() => {
+    if (createDate) {
+      fetchTransactionList(createDate, todayStr);
+    }
+  }, []);
+
+  const showDetail = (transaction: TransactionResponse) => {
+    setShowTransactionObject(transaction);
+    setIsShowDetail(true);
+  };
+
+  const handleDateSearch = () => {
+    fetchTransactionList(startDate, endDate);
+  };
+
   if (transactionListPending) {
-    return <WalkingLoading />;
+    return <LoadingDog />;
   }
 
   return (
@@ -183,8 +175,11 @@ const TransactionList = () => {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <TransactionDetail transaction={showTransactionObject} />
-              <Button text="확인" onClick={() => setIsShowDetail(false)} />
+              <TransactionDetail
+                transaction={showTransactionObject}
+                onClose={() => setIsShowDetail(false)}
+                onUpdate={() => fetchTransactionList(startDate, endDate)}
+              />
             </motion.div>
           </motion.div>
         )}

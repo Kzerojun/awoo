@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css");
+html {
+  font-family: "NanumSquareNeo", sans-serif;
+}
 @theme {
   --color-aqua: #0fc9ba;
   --color-light-aqua: #8aede1;
@@ -19,7 +23,7 @@
 @tailwind utilities;
 
 @layer base {
-  html {
+  body {
     font-family: "NanumSquareNeo", sans-serif;
   }
 
