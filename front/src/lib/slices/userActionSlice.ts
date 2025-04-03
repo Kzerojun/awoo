@@ -6,8 +6,9 @@ interface UserActionState {
   historyStack: string[];
   currentWalkingSelectView: number;
   currentMyPetView: number;
-  // currentWalkingDog: PetInterface | null;
   currentPetDetailView: number;
+  currnetManageDepositView: number;
+  currnetManageSavingView: number;
   isGoingBack: boolean;
   checkPassword: boolean;
 }
@@ -16,7 +17,8 @@ const initialState: UserActionState = {
   historyStack: [],
   currentWalkingSelectView: 0,
   currentMyPetView: 0,
-  // currentWalkingDog: null,
+  currnetManageDepositView: 1,
+  currnetManageSavingView: 1,
   currentPetDetailView: 1,
   isGoingBack: false,
   checkPassword: true,
@@ -43,11 +45,14 @@ const userActionSlice = createSlice({
     changeWalkingSelectView: (state, action: PayloadAction<number>) => {
       state.currentWalkingSelectView = action.payload;
     },
-    // setCurrentWalkingDog: (state, action: PayloadAction<PetInterface>) => {
-    //   state.currentWalkingDog = action.payload;
-    // },
     changeCurrentPetDetailView: (state, action: PayloadAction<number>) => {
       state.currentPetDetailView = action.payload;
+    },
+    changeCurrentManageDepositView: (state, action: PayloadAction<number>) => {
+      state.currnetManageDepositView = action.payload;
+    },
+    changeCurrentManageSavingView: (state, action: PayloadAction<number>) => {
+      state.currnetManageSavingView = action.payload;
     },
     checkPasswordConfirm: (state, action: PayloadAction<boolean>) => {
       state.checkPassword = action.payload;
@@ -64,7 +69,8 @@ export const {
   clearHistory,
   changeMyPetView,
   changeWalkingSelectView,
-  // setCurrentWalkingDog,
+  changeCurrentManageDepositView,
+  changeCurrentManageSavingView,
   changeCurrentPetDetailView,
   checkPasswordConfirm,
 
