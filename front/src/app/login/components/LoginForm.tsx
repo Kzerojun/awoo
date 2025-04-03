@@ -7,8 +7,12 @@ import Link from "next/link";
 import { useLogin } from "@/hooks/user/useLogin";
 import { useUserInfo } from "@/hooks/user/useUserInfo";
 import { useRouter } from "next/navigation";
+// FCM 토큰 저장
+import { useFCMToken } from "@/hooks/alarm/useFCM";
 
 const LoginForm = () => {
+  // FCM
+  const { getAndSendToken } = useFCMToken();
   const { refetch: refetchUserInfo } = useUserInfo();
   const { mutate: loginMutate, isPending, isError, isSuccess } = useLogin(refetchUserInfo);
   const router = useRouter();
@@ -17,6 +21,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      getAndSendToken(); // FCM 토큰 발급 + 서버로 전송
       router.replace("/home");
     }
   }, [isSuccess, router]);
