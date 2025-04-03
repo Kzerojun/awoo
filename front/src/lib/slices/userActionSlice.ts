@@ -7,8 +7,8 @@ interface UserActionState {
   currentWalkingSelectView: number;
   currentMyPetView: number;
   currentPetDetailView: number;
-  currnetManageDepositView: number;
-  currnetManageSavingView: number;
+  currentManageDepositView: number;
+  currentManageSavingView: number;
   isGoingBack: boolean;
   checkPassword: boolean;
 }
@@ -17,8 +17,8 @@ const initialState: UserActionState = {
   historyStack: [],
   currentWalkingSelectView: 0,
   currentMyPetView: 0,
-  currnetManageDepositView: 1,
-  currnetManageSavingView: 1,
+  currentManageDepositView: 1,
+  currentManageSavingView: 1,
   currentPetDetailView: 1,
   isGoingBack: false,
   checkPassword: true,
@@ -49,10 +49,10 @@ const userActionSlice = createSlice({
       state.currentPetDetailView = action.payload;
     },
     changeCurrentManageDepositView: (state, action: PayloadAction<number>) => {
-      state.currnetManageDepositView = action.payload;
+      state.currentManageDepositView = action.payload;
     },
     changeCurrentManageSavingView: (state, action: PayloadAction<number>) => {
-      state.currnetManageSavingView = action.payload;
+      state.currentManageSavingView = action.payload;
     },
     checkPasswordConfirm: (state, action: PayloadAction<boolean>) => {
       state.checkPassword = action.payload;
