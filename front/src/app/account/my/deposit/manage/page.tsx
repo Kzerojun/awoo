@@ -9,13 +9,13 @@ import DeleteDeposit from "../../components/DeleteDeposit";
 
 const ManageDepositPage = () => {
   // 계좌 관리 view. 1 -> 메인 뷰, 2 -> 이체 한도 변경, 3 -> 계좌 해지
-  const currentDepositCurrentView = useAppSelector(
-    (staet) => staet.userAction.currnetManageDepositView
+  const currentManageDepositView = useAppSelector(
+    (state) => state.userAction.currentManageDepositView
   );
 
   return (
     <>
-      {currentDepositCurrentView === 1 && (
+      {currentManageDepositView === 1 && (
         <div>
           <CommonTopBar title="계좌 관리" />
           <main className="mt-14 w-full h-full flex flex-col justify-center items-center ">
@@ -24,24 +24,24 @@ const ManageDepositPage = () => {
           </main>
         </div>
       )}
-      {currentDepositCurrentView === 2 && (
+      {currentManageDepositView === 2 && (
         <div className="w-full h-[calc(100%-3.5rem)]">
           <CommonTopBar
             title="이체 한도 조회 및 변경"
             leftAction="depositManageBack"
-            currentDepositCurrentView={currentDepositCurrentView}
+            currentManageDepositView={currentManageDepositView}
           />
           <main className="mt-14 w-full h-full flex flex-col justify-center items-center ">
             <ChangeDepositLimit />
           </main>
         </div>
       )}
-      {currentDepositCurrentView === 3 && (
+      {currentManageDepositView === 3 && (
         <div className="w-full h-[calc(100%-3.5rem)]">
           <CommonTopBar
             title="계좌 해지"
             leftAction="depositManageBack"
-            currentDepositCurrentView={currentDepositCurrentView}
+            currentManageDepositView={currentManageDepositView}
           />
           <main className="mt-14 w-full h-full flex flex-col justify-center items-center ">
             <DeleteDeposit />
