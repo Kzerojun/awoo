@@ -14,11 +14,13 @@ interface Props {
   isOpen: boolean;
   onConfirm: (password: string) => void;
   onClose: () => void;
+  className?: string;
+  accountNo: string;
 }
-const CheckPasswordModal = ({ isOpen, onConfirm, onClose }: Props) => {
+const CheckPasswordModal = ({ isOpen, onConfirm, onClose, className, accountNo }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const accountNo = useAppSelector((state) => state.transfer.withdrawalAccountNo);
+  // const accountNo = useAppSelector((state) => state.transfer.withdrawalAccountNo);
   const { mutate: checkPasswordMutate } = useCheckPassword();
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -125,7 +127,7 @@ const CheckPasswordModal = ({ isOpen, onConfirm, onClose }: Props) => {
           onClick={onClose}
         >
           <motion.div
-            className="w-full bg-white rounded-t-2xl flex flex-col justify-center"
+            className={`w-full bg-white rounded-t-2xl flex flex-col justify-center ${className}`}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
