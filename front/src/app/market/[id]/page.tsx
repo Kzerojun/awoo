@@ -23,6 +23,7 @@ export default function MarketDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [status, setStatus] = useState<string | null>(null); // 상태 state
+  const [type, setType] = useState<"COMMON" | "SAFE">("COMMON"); // 기본은 COMMON
 
   const router = useRouter();
   // ✅ 찜하기 핸들러
@@ -71,16 +72,25 @@ export default function MarketDetailPage() {
   };
   const handleStatusChange = async (newStatus: "SA" | "RE" | "SO") => {
     if (newStatus === status) return; // 같은 상태 누르면 무시
+    setStatus(newStatus);
+
+    // 거래완료 선택하면 type 선택 UI 보여주기 위함
+    if (newStatus !== "SO") {
+      // 거래중, 예약중일 때는 type 강제 COMMON
+      setType("COMMON");
+      handleStatusPatch(newStatus, "COMMON");
+    }
+  };
+  // ✅ PATCH 전용 함수
+  const handleStatusPatch = async (status: "SA" | "RE" | "SO", type: "COMMON" | "SAFE") => {
     try {
-      await patchProductStatus(detail.usedProductId, newStatus);
-      setStatus(newStatus);
+      await patchProductStatus(detail.usedProductId, status, type);
       alert("상태가 변경되었습니다!");
     } catch (error) {
       alert("상태 변경 실패");
       console.error(error);
     }
   };
-
   useEffect(() => {
     const fetchDetail = async () => {
       try {
@@ -127,11 +137,12 @@ export default function MarketDetailPage() {
       {/* ✅ 조회수, 채팅, 좋아요 */}
       <InfoStats views={detail.viewCount} chat={detail.likeCount} likes={0} />
 
-      {/* ✅ 상태 변경 */}
+      {/* 상태 변경 */}
       {detail.canModify && status && (
         <div className="px-4 mt-4 space-y-2">
-          <p className="text-sm text-gray-600">현재 상태</p>
+          <p className="text-sm text-gray-600">판매 상태 관리</p>
           <div className="flex gap-2">
+            {/* 상태 변경 버튼 */}
             <button
               onClick={() => handleStatusChange("SA")}
               className={`border rounded px-3 py-1 text-sm ${status === "SA" ? "bg-blue-500 text-white" : "bg-white text-gray-600"}`}
@@ -153,6 +164,25 @@ export default function MarketDetailPage() {
               거래완료
             </button>
           </div>
+
+          {/* 거래완료일 때만 type 선택 */}
+          {status === "SO" && (
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => handleStatusPatch("SO", "COMMON")}
+                className={`border rounded px-3 py-1 text-sm ${type === "COMMON" ? "bg-green-500 text-white" : "bg-white text-gray-600"}`}
+              >
+                일반거래 완료
+              </button>
+
+              <button
+                onClick={() => handleStatusPatch("SO", "SAFE")}
+                className={`border rounded px-3 py-1 text-sm ${type === "SAFE" ? "bg-purple-500 text-white" : "bg-white text-gray-600"}`}
+              >
+                안심거래 확정
+              </button>
+            </div>
+          )}
         </div>
       )}
 
