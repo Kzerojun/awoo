@@ -14,13 +14,22 @@ import {
   changeSelectedDepositAccountNo,
 } from "@/lib/slices/savingAccountDetailSlice";
 import { changeClickedAccount } from "@/lib/slices/savingAccountDetailSlice";
+interface SavingAccount {
+  savingAccountNo: number;
+  accountNo: string;
+  depositBalance: number;
+  petId: number;
+  name: string;
+  accountName: string;
+}
 
 export default function AccountMinePage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [savingAccounts, setSavingAccounts] = useState<SavingAccount[]>([]);
 
   const [deposit, setDeposit] = useState<any>(null);
-  const [savingAccounts, setSavingAccounts] = useState<any[]>([]);
+  const [petDetails, setPetDetails] = useState<Record<number, any>>({});
 
   // ✅ 입출금, 적금 계좌 조회
   useEffect(() => {
@@ -84,6 +93,34 @@ export default function AccountMinePage() {
       console.error("pet 상세 조회 실패", err);
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [depositData, savingData] = await Promise.all([
+          getInternalAccounts(),
+          getSavingList(),
+        ]);
+        dispatch(resetSavingAccountDetailSlice());
+        setDeposit(depositData);
+        setSavingAccounts(savingData);
+
+        // 🐶 pet 상세 조회
+        const petIds = savingData
+          .map((item: SavingAccount) => item.petId)
+          .filter((id: any): id is number => id !== null && id !== undefined);
+
+        const petDetailList = await Promise.all(petIds.map((id: any) => getPetDetail(id)));
+        const detailMap: Record<number, any> = {};
+        petDetailList.forEach((detail, i) => {
+          detailMap[petIds[i]] = detail;
+        });
+        setPetDetails(detailMap);
+      } catch (error) {
+        console.error("계좌 조회 실패", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -98,7 +135,7 @@ export default function AccountMinePage() {
           <p className="text-sm ml-3 mt-1">AwOO 입출금계좌</p>
           <p className="text-xl font-semibold mt-1 mb-3 ml-3">
             {deposit?.accountBalance !== undefined
-              ? `${deposit.accountBalance.toLocaleString()}원`
+              ? `${Number(deposit.accountBalance).toLocaleString()}원`
               : "로딩중"}
           </p>
 
@@ -116,27 +153,31 @@ export default function AccountMinePage() {
         </div>
 
         {/* ✅ 적금 계좌 */}
-        {savingAccounts.map((item, idx) => (
-          <div
-            key={item.savingAccountNo || idx}
-            className="bg-[#9EEBD1] rounded-xl p-4 flex items-center gap-4 cursor-pointer min-h-[100px]"
-            onClick={() => handleSavingClick(item)}
-          >
-            <img
-              src={item.imageUrl || "/images/avatars/basic.jpg"}
-              alt="강아지"
-              className="w-12 h-12 rounded-full object-cover"
-            />
-            <div className="flex-1">
-              <p className="text-sm">
-                {item.dogName}의 {item.name}
-              </p>
-              <p className="text-lg font-semibold">
-                {item.depositBalance ? `${item.depositBalance.toLocaleString()}원` : "0원"}
-              </p>
+        {savingAccounts.map((item, idx) => {
+          const pet = petDetails[item.petId];
+          return (
+            <div
+              key={item.savingAccountNo || idx}
+              className="bg-[#9EEBD1] rounded-xl p-4 flex items-center gap-4 cursor-pointer min-h-[100px]"
+              onClick={() => handleSavingClick(item)}
+            >
+              <img
+                src={pet?.profileImage || "/images/avatars/basic.jpg"}
+                alt="강아지"
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              <div className="flex-1">
+                <p className="text-sm">
+                  {pet?.name || "이름없음"}의 {item.accountName} 적금
+                </p>
+
+                <p className="text-lg font-semibold">
+                  {Number(item.depositBalance || 0).toLocaleString()}원
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
