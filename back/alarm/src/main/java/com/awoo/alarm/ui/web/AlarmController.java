@@ -3,6 +3,7 @@ package com.awoo.alarm.ui.web;
 import com.awoo.alarm.support.ApiUtils;
 import com.awoo.alarm.ui.facade.AlarmServiceFacade;
 import com.awoo.alarm.ui.facade.dto.request.FcmSendDto;
+import com.awoo.alarm.ui.facade.dto.request.FcmTokenDto;
 import com.awoo.alarm.ui.facade.dto.response.SendAlarmResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,5 +19,12 @@ public class AlarmController {
     public ApiUtils.ApiResult<SendAlarmResponse> sendAlarm(@RequestHeader("X-User-Id") Integer memberId,
                                                            @RequestBody FcmSendDto fcmSendDto){
         return ApiUtils.success(alarmServiceFacade.sendAlarm(fcmSendDto));
+    }
+
+    @PostMapping("/tokens")
+//    RegisterFcmTokenResponse
+    public ApiUtils.ApiResult<?> registerFcmToken(@RequestHeader("X-User-Id") Integer memberId,
+                                                                         @RequestBody FcmTokenDto fcmTokenDto){
+        return ApiUtils.success(alarmServiceFacade.registerFcmToken(memberId, fcmTokenDto));
     }
 }
