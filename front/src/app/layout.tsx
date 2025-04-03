@@ -10,7 +10,8 @@ import TrackRouteWrapper from "@/common/ui/TrackRouteWrapper";
 import { KeypadProvider } from "@/contexts/KeypadContent"; // ✅ 키패드 컨텍스트
 // FCM 관련 코드
 import { useEffect } from "react";
-import { useFCM } from "@/hooks/alarm/useFCM";
+import { useNotificationListener } from "@/hooks/alarm/useNotificationListner";
+import { usePermissionObserver } from "@/hooks/alarm/usePermissionObserver";
 
 export default function RootLayout({
   children,
@@ -21,12 +22,8 @@ export default function RootLayout({
   title?: string;
   rightAction?: React.ReactNode;
 }) {
-  const { fcmToken, permission } = useFCM(); // useFCM 훅 사용
-
-  useEffect(() => {
-    console.log("FCM 토큰:", fcmToken);
-    console.log("알림 권한:", permission);
-  }, [fcmToken, permission]);
+  useNotificationListener(); // ✅ 알림 팝업 리스너는 앱 전체에 항상
+  usePermissionObserver(); // ✅ 권한 변경 감지는 전역에서
   // 상단바가 표시될지 여부 결정
   const showTopBar = title || rightAction;
 
