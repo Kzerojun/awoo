@@ -19,6 +19,7 @@ export default function MainActions() {
       {/* 적금 계좌 개설 버튼 */}
       <button
         type="button"
+        onClick={() => router.push("/account/open/saving/")}
         className="flex-1 p-3 bg-gray-100 rounded-lg shadow flex items-center justify-center gap-2 h-14"
       >
         <img src="/icons/main/money-bag.svg" alt="적금 아이콘" className="w-6 h-6" />
