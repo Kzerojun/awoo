@@ -6,7 +6,7 @@ import DepositBottom from "../components/DepositBottom";
 import { useDepositList } from "@/hooks/account/deposit/useGetDepositAccount";
 import { DepositResponse } from "@/api/account/my/deposit";
 import WalkingLoading from "@/app/walk/components/WalkingLoading";
-import { getMyDeposit } from "@/lib/slices/myDepositSlice";
+import { getMyDeposit } from "@/lib/slices/myDepositSavingSlice";
 
 const MyDepositPage = () => {
   const dispatch = useAppDispatch();
