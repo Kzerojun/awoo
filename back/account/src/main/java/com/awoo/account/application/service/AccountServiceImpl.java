@@ -4,6 +4,8 @@ import com.awoo.account.application.command.*;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.domain.AccountType;
+import com.awoo.account.infra.Kafka.KafkaProducer;
+import com.awoo.account.infra.client.member.MemberClient;
 import com.awoo.account.infra.ssafyfinance.SSAFYCommonApiClient;
 import com.awoo.account.infra.ssafyfinance.SSAFYDemandDepositApiClient;
 import com.awoo.account.infra.ssafyfinance.request.*;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class AccountServiceImpl implements AccountService{
     private final SSAFYApiHelper ssafyApiHelper;
     private final AESUtil aesUtil;
     private final AccountRepository accountRepository;
+    private final KafkaProducer kafkaProducer;
+    private final MemberClient memberClient;
 
     @Transactional
     public void createAccount(String memberId, CreateAccountCommand command) {
@@ -98,6 +103,24 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         SSAFYTransferResponse fetchAccountResponse = SSAFYApiClient.transfer(request);
+
+        // kafka 요청 메시지 생성
+        // 입금, 출금 계좌로 부터 각각 memberId 조회
+        Integer senderId =  accountRepository.findByAccountNumber(command.withdrawalAccountNo()).getMemberId();
+        Integer receiverId = accountRepository.findByAccountNumber(command.depositAccountNo()).getMemberId();
+
+        //member 도메인에 memberId에 맵핑된 name 요청
+        String senderName = memberClient.getMemberName(senderId);
+        String receiverName = memberClient.getMemberName(receiverId);
+
+        //kafka 메시지 발신
+        kafkaProducer.send("account.transfer.v1",
+                Map.of("senderId", senderId,
+                        "senderName", senderName,
+                        "transactionBalance", command.transactionBalance(),
+                        "receiverId", receiverId,
+                        "receiverName", receiverName));
+
         return fetchAccountResponse.REC();
     }
 

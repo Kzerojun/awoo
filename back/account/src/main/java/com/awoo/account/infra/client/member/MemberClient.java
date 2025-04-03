@@ -12,4 +12,6 @@ public interface MemberClient {
     @GetMapping("/api/members/member-key")
     ApiUtils.ApiResult<FetchMemberKeyResponse> fetchMemberKey(@RequestParam("memberId")Integer memberId);
 
+    @GetMapping("/api/members/name")
+    String getMemberName(@RequestParam Integer memberId);
 }

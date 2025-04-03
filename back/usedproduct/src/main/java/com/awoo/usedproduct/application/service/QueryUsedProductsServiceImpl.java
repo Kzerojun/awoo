@@ -15,6 +15,7 @@ import com.awoo.usedproduct.ui.facade.dto.response.FetchChatRoomResponse;
 import com.awoo.usedproduct.ui.facade.dto.response.FetchChatRoomsResponse;
 import com.awoo.usedproduct.ui.facade.dto.response.FetchMessageResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
 
     private final UsedProductRepository usedProductRepository;
@@ -100,6 +102,12 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
                 ).toList();
 
         return new FetchChatMessagesResponse(fetchMessageResponse);
+    }
+
+    @Override
+    public List<UsedProductEntity> searchUsedProducts(String keyword) {
+        log.info("Keyword 검색 : {} ",keyword);
+        return usedProductRepository.findByTitleContaining(keyword);
     }
 }
 

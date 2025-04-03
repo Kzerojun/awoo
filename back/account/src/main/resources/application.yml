@@ -20,6 +20,11 @@ spring:
 
   kafka:
     bootstrap-servers: j12c209.p.ssafy.io:9092
+    consumer:
+      group-id: member-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 aes :
   secret_key : ${AES_KEY}
@@ -34,12 +39,6 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
-
-feign:
-  client:
-    config:
-      member-service:
-        url: ${member-service.url}
 
 management:
   endpoints:
