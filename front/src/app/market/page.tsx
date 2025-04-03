@@ -8,11 +8,12 @@ import SearchBar from "./components/SearchBar";
 import ChatList from "./components/ChatList";
 import Button from "@/common/ui/Button";
 import { useRouter } from "next/navigation";
-import { getProductList } from "@/api/market/read/getList"; 
+import { getProductList } from "@/api/market/read/getList";
 
 export default function MarketPage() {
   const [currentTab, setCurrentTab] = useState<MarketTab>("상품");
   const [items, setItems] = useState<MarketItem[]>([]);
+  const [originalItems, setOriginalItems] = useState<MarketItem[]>([]);
   const router = useRouter();
 
   // ✅ 목록 API 연동
@@ -20,7 +21,9 @@ export default function MarketPage() {
     const fetchData = async () => {
       try {
         const res = await getProductList();
-        setItems(res.usedProducts); // 백엔드에서 받아온 response 적용
+        const fetchedItems = res.usedProducts;
+        setItems(fetchedItems);
+        setOriginalItems(fetchedItems);
       } catch (error) {
         console.error("중고거래 목록 로딩 실패", error);
       }
@@ -28,12 +31,26 @@ export default function MarketPage() {
     fetchData();
   }, []);
 
+  // 검색 결과 처리 핸들러
+  const handleSearchResults = (searchResults: MarketItem[]) => {
+    // 검색 결과가 없으면 빈 배열로, 있으면 검색 결과로 설정
+    setItems(searchResults.length > 0 ? searchResults : []);
+  };
+
+  // 탭이 변경되면 원래 아이템으로 복원
+  const handleTabChange = (tab: MarketTab) => {
+    setCurrentTab(tab);
+    if (tab === "상품") {
+      setItems(originalItems);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-      <MarketHeader currentTab={currentTab} onTabChange={setCurrentTab} />
+      <MarketHeader currentTab={currentTab} onTabChange={handleTabChange} />
       <div className="mt-14 px-4 py-2 flex-1 space-y-4">
         <div className="mb-4">
-          <SearchBar />
+          <SearchBar onSearchResults={handleSearchResults} />
         </div>
 
         {/* 상품탭 */}
