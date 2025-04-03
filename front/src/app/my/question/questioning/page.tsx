@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import TopBar from "@/common/ui/TopBar";
+import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import { createQuestion } from "@/api/question/question";
+import { toast } from "react-toastify";
 
 export default function Questioning() {
   const router = useRouter();
@@ -25,36 +27,49 @@ export default function Questioning() {
     e.preventDefault();
 
     if (!title.trim()) {
-      alert("문의 제목을 입력해주세요.");
+      toast.error("문의 제목을 입력해주세요.");
       return;
     }
 
     if (category === "카테고리 선택") {
-      alert("문의 유형을 선택해주세요.");
+      toast.error("문의 유형을 선택해주세요.");
       return;
     }
 
     if (!content.trim()) {
-      alert("문의 내용을 입력해주세요.");
+      toast.error("문의 내용을 입력해주세요.");
       return;
     }
 
     if (isPrivate && !password.trim()) {
-      alert("비밀번호를 입력해주세요.");
+      toast.error("비밀번호를 입력해주세요.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // 실제 구현에서는 API 호출
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // API 요청 객체 생성
+      const requestData = {
+        subject: title,
+        content: content,
+        category: category,
+        isPublic: !isPrivate,
+        password: isPrivate ? password : "",
+      };
 
-      // 성공 시 목록 페이지로 이동
-      router.push("/my/question");
+      // API 호출
+      const response = await createQuestion(requestData);
+
+      if (response.success) {
+        toast.success(response.response || "문의가 성공적으로 등록되었습니다.");
+        router.push("/my/question");
+      } else {
+        toast.error(response.error || "문의 등록에 실패했습니다.");
+      }
     } catch (error) {
       console.error("문의 등록 중 오류가 발생했습니다:", error);
-      alert("문의 등록에 실패했습니다. 다시 시도해주세요.");
+      toast.error("문의 등록에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -72,7 +87,7 @@ export default function Questioning() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <TopBar title="문의하기" rightAction={<BellIcon className="h-6 w-6 text-gray-500 mt-1" />} />
+      <CommonTopBar title="문의하기" rightAction="bell" />
 
       <div className="pt-15 pb-20 px-4">
         <form onSubmit={handleSubmit}>

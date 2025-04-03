@@ -11,7 +11,7 @@ interface MySavingProps {
 
 const SavingBottom = ({ savingInfo }: MySavingProps) => {
   return (
-    <div className="flex-1 w-full flex flex-col ">
+    <div className="h-3/5 w-full flex flex-col ">
       <SavingList accountNo={savingInfo.accountNo} />
     </div>
   );

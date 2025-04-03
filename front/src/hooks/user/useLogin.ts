@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "@/api/user/auth";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setUserData } from "@/lib/slices/userSlice";
+import { setMemberId, resetMemberId } from "@/lib/slices/memberIdSlice";
 
 export const useLogin = (refetchUserInfo: () => Promise<any>) => {
   const dispatch = useAppDispatch();
@@ -16,6 +17,13 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
       if (accessToken) {
         localStorage.setItem("accessToken", accessToken);
       }
+
+      // 🚀 memberId 추출
+      const memberId = res.data.response.memberId;
+      // ✅ 안전하게 초기화 후 저장
+      dispatch(resetMemberId());
+      dispatch(setMemberId(memberId));
+
       // 유저 정보 조회 refetch
       const response = await refetchUserInfo();
       console.log(response);
