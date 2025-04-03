@@ -111,7 +111,7 @@ const MarketTopBar = ({ title = "", canModify, articleId }: MarketTopBarProps) =
               <button
                 onClick={() => {
                   setShowOptions(false);
-                  alert("🚨 신고하기 페이지로 이동!");
+                  router.push(`/market/article/report/${articleId}`);
                 }}
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
