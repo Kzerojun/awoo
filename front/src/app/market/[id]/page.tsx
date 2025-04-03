@@ -14,6 +14,7 @@ import { createChatRoom } from "@/api/market/chat/createChatRoom";
 import { useRouter } from "next/navigation";
 import { chatSocket } from "@/socket/chatSocket";
 import type { IMessage } from "@stomp/stompjs";
+import { patchProductStatus } from "@/api/market/update/patchStatus";
 
 export default function MarketDetailPage() {
   const { id } = useParams() as { id: string };
@@ -21,6 +22,7 @@ export default function MarketDetailPage() {
   // ✅ 찜 상태 관리
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [status, setStatus] = useState<string | null>(null); // 상태 state
 
   const router = useRouter();
   // ✅ 찜하기 핸들러
@@ -67,11 +69,24 @@ export default function MarketDetailPage() {
       console.error("채팅방 생성 실패", error);
     }
   };
+  const handleStatusChange = async (newStatus: "SA" | "RE" | "SO") => {
+    if (newStatus === status) return; // 같은 상태 누르면 무시
+    try {
+      await patchProductStatus(detail.usedProductId, newStatus);
+      setStatus(newStatus);
+      alert("상태가 변경되었습니다!");
+    } catch (error) {
+      alert("상태 변경 실패");
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const res = await getProductDetail(id); // 여기 id 그대로 넘기면 됨
+        const res = await getProductDetail(id);
         setDetail(res);
+        setStatus(res.usedProductStatus); // 상태 초기값
         setIsLiked(res.isLiked); // ✅ 초기값
         setLikeCount(res.likeCount); // ✅ 초기 찜 수
       } catch (error) {
@@ -111,6 +126,35 @@ export default function MarketDetailPage() {
 
       {/* ✅ 조회수, 채팅, 좋아요 */}
       <InfoStats views={detail.viewCount} chat={detail.likeCount} likes={0} />
+
+      {/* ✅ 상태 변경 */}
+      {detail.canModify && status && (
+        <div className="px-4 mt-4 space-y-2">
+          <p className="text-sm text-gray-600">현재 상태</p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleStatusChange("SA")}
+              className={`border rounded px-3 py-1 text-sm ${status === "SA" ? "bg-blue-500 text-white" : "bg-white text-gray-600"}`}
+            >
+              거래중
+            </button>
+
+            <button
+              onClick={() => handleStatusChange("RE")}
+              className={`border rounded px-3 py-1 text-sm ${status === "RE" ? "bg-yellow-500 text-white" : "bg-white text-gray-600"}`}
+            >
+              예약중
+            </button>
+
+            <button
+              onClick={() => handleStatusChange("SO")}
+              className={`border rounded px-3 py-1 text-sm ${status === "SO" ? "bg-gray-500 text-white" : "bg-white text-gray-600"}`}
+            >
+              거래완료
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ✅ 하단 액션바 */}
       <DetailBottomBar
