@@ -14,6 +14,7 @@ public interface UsedProductServiceFacade {
 
     UsedProductsResponse fetchUsedProducts(Pageable pageable);
 
+
     FetchUsedProductDetailResponse fetchUsedProduct(FetchUsedProductQuery query);
 
     FetchMySalesResponse fetchMySales(FetchMySalesQuery query);
@@ -33,4 +34,7 @@ public interface UsedProductServiceFacade {
     FetchChatRoomsResponse fetchChatRooms(Integer memberId);
 
     FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId);
+
+    SearchUsedProductsResponse searchUsedProducts(String keyword);
+
 }

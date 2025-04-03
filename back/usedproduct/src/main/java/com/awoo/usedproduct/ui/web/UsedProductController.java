@@ -166,6 +166,13 @@ public class UsedProductController {
         return ApiUtils.success(response);
     }
 
+    @GetMapping("/search")
+    public ApiUtils.ApiResult<SearchUsedProductsResponse> searchUsedProducts(@RequestParam String keyword){
+        SearchUsedProductsResponse response = usedProductServiceFacade.searchUsedProducts(
+                keyword);
+
+        return ApiUtils.success(response);
+    }
 
 
 }
