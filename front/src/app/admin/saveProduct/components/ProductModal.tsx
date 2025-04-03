@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { periodOptions } from "../data/mockData";
 import awooAdmin from "../../../../../public/logos/AwOO_admin.svg";
 import cancel from "../../../../../public/icons/admin/cancel.svg";
+
+// 가입 기간 옵션
+const periodOptions = ["90일", "120일", "150일"];
 
 interface ProductModalProps {
   onClose: () => void;
@@ -13,11 +15,10 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    period: "6개월",
+    period: "90일",
     minAmount: 1,
     maxAmount: 100,
-    minRate: 0.1,
-    maxRate: 2.0,
+    maxRate: 3.0,
     rateDescription: "",
   });
 
@@ -29,7 +30,7 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
     setFormData({
       ...formData,
       [name]:
-        name === "minAmount" || name === "maxAmount" || name === "minRate" || name === "maxRate"
+        name === "minAmount" || name === "maxAmount" || name === "maxRate"
           ? parseFloat(value)
           : value,
     });
@@ -38,7 +39,8 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
   // 폼 제출 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...formData, isActive: true, id: Date.now() });
+    onSave(formData);
+    console.log(formData);
   };
 
   return (
@@ -71,7 +73,7 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="예: AW우리펫 적금상품"
+              placeholder="예: 풍족하개"
               className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
               required
             />
@@ -84,8 +86,9 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="상품에 대한 설명을 입력하세요"
+              placeholder="예: 산책 적금 3단계 상품"
               className="w-full p-3 border rounded-md h-20 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+              required
             />
           </div>
 
@@ -137,36 +140,21 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
               </div>
             </div>
 
-            {/* 이자율 */}
+            {/* 이자율 - 최대 이율만 입력받도록 수정 */}
             <div className="w-1/2">
               <label className="block text-gray-700 font-medium mb-2">이자율 (%)</label>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  name="minRate"
-                  value={formData.minRate}
-                  onChange={handleChange}
-                  min="0.1"
-                  max="10"
-                  step="0.1"
-                  className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="최소 이율"
-                  required
-                />
-                <span className="text-gray-500">~</span>
-                <input
-                  type="number"
-                  name="maxRate"
-                  value={formData.maxRate}
-                  onChange={handleChange}
-                  min="0.1"
-                  max="10"
-                  step="0.1"
-                  className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="최대 이율"
-                  required
-                />
-              </div>
+              <input
+                type="number"
+                name="maxRate"
+                value={formData.maxRate}
+                onChange={handleChange}
+                min="0.1"
+                max="10"
+                step="0.1"
+                className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                placeholder="이자율"
+                required
+              />
             </div>
           </div>
 
@@ -177,8 +165,9 @@ export default function ProductModal({ onClose, onSave }: ProductModalProps) {
               name="rateDescription"
               value={formData.rateDescription}
               onChange={handleChange}
-              placeholder="이자율 적용 조건 및 방식을 설명해주세요"
+              placeholder="예: 3.3% 이자를 지급합니다"
               className="w-full p-3 border rounded-md h-20 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+              required
             />
           </div>
 

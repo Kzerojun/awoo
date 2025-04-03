@@ -1,27 +1,36 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { QuestionData } from "../data/mockData";
 import awooAdmin from "../../../../../public/logos/AwOO_admin.svg";
 import cancel from "../../../../../public/icons/admin/cancel.svg";
 
+// API 응답 타입 정의
+interface QuestionDetail {
+  subject: string;
+  name: string;
+  content: string;
+  answer: string;
+}
+
 interface QuestionDetailModalProps {
-  question: QuestionData;
+  questionId: number;
+  question: QuestionDetail;
   onClose: () => void;
   onSubmit: (questionId: number, answer: string) => void;
 }
 
 export default function QuestionDetailModal({
+  questionId,
   question,
   onClose,
   onSubmit,
 }: QuestionDetailModalProps) {
   const [answer, setAnswer] = useState(question.answer || "");
-  const isAnswered = question.status === "답변 완료";
+  const isAnswered = !!question.answer; // answer가 있으면 답변 완료 상태
 
   // 답변 제출 핸들러
   const handleSubmit = () => {
     if (answer.trim()) {
-      onSubmit(question.id, answer);
+      onSubmit(questionId, answer);
     }
   };
 
@@ -50,7 +59,7 @@ export default function QuestionDetailModal({
             <label className="block text-gray-700 font-medium mb-2">제목</label>
             <input
               type="text"
-              value={question.title}
+              value={question.subject}
               readOnly
               className="w-full p-2 border rounded-md bg-gray-50"
             />
@@ -61,7 +70,7 @@ export default function QuestionDetailModal({
             <label className="block text-gray-700 font-medium mb-2">작성자</label>
             <input
               type="text"
-              value={`${question.writer} (${question.userId})`}
+              value={question.name}
               readOnly
               className="w-full p-2 border rounded-md bg-gray-50"
             />
@@ -86,7 +95,7 @@ export default function QuestionDetailModal({
                   isAnswered ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
                 }`}
               >
-                {question.status}
+                {isAnswered ? "답변 완료" : "답변 대기"}
               </span>
             </div>
             <textarea
