@@ -62,11 +62,11 @@ public class UsedProductEntity {
     }
 
     public void modify(String title, String content,
-                       Integer price, List<String> images){
+                       Integer price, List<UsedProductImage> images){
         this.title = title;
         this.content = content;
         this.price = price;
-        updateImages(images);
+        this.images = images;
     }
 
     public boolean canModify(Integer memberId){
@@ -105,9 +105,4 @@ public class UsedProductEntity {
         this.viewCount++;
     }
 
-    private void updateImages(List<String> imageUrls){
-        this.images = imageUrls.stream()
-                .map(UsedProductImage::new)
-                .toList();
-    }
 }

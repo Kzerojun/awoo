@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public record ModifyUsedProductRequest(String title, String content, Integer price) {
+public record ModifyUsedProductRequest(String title, String content, Integer price, List<String> remainImageUrls) {
 
 
     public ModifyUsedProductCommand toCommand(String memberId, Integer productId, List<MultipartFile> images) {
@@ -16,7 +16,8 @@ public record ModifyUsedProductRequest(String title, String content, Integer pri
                 .content(content)
                 .price(price)
                 .memberId(Integer.valueOf(memberId))
-                .images(images)
+                .remainImages(remainImageUrls)
+                .newImages(images)
                 .usedProductId(productId)
                 .build();
     }
