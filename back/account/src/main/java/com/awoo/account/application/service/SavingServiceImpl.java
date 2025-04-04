@@ -160,7 +160,7 @@ public class SavingServiceImpl implements SavingService{
         SSAFYApiClient.deleteSavingAccount(request);
 
         //DB 변경
-        AccountEntity account = accountRepository.findByAccountNumber(accountNo);
+        AccountEntity account = accountRepository.findByAccountNumber(aesUtil.encrypt(accountNo));
         account.markDeleted();
     }
 
