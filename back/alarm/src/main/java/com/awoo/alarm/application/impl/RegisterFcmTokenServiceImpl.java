@@ -2,6 +2,7 @@ package com.awoo.alarm.application.impl;
 
 import com.awoo.alarm.application.RegisterFcmTokenService;
 import com.awoo.alarm.application.command.RegisterFcmTokenCommand;
+import com.awoo.alarm.application.exception.FcmTokenRegisterException;
 import com.awoo.alarm.support.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,11 @@ public class RegisterFcmTokenServiceImpl implements RegisterFcmTokenService {
     @Override
     public void registerFcmToken(RegisterFcmTokenCommand command) {
 
-        redisService.setValues("fcmtoken" +command.memberId(), command.token());
+        try {
+            redisService.setValues("fcmtoken" +command.memberId(), command.token());
+        }catch (Exception e){
+            throw new FcmTokenRegisterException();
+        }
+
     }
 }

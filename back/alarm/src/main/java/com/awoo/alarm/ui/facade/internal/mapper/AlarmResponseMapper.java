@@ -2,6 +2,8 @@ package com.awoo.alarm.ui.facade.internal.mapper;
 
 import com.awoo.alarm.domain.Alarm;
 import com.awoo.alarm.ui.facade.dto.request.FcmTokenDto;
+import com.awoo.alarm.ui.facade.dto.response.DeleteFcmTokenResponse;
+import com.awoo.alarm.ui.facade.dto.response.RegisterFcmTokenResponse;
 import com.awoo.alarm.ui.facade.dto.response.SendAlarmResponse;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,12 @@ public class AlarmResponseMapper {
         return SendAlarmResponse.fromEntity(alarm);
     }
 
-    public void registerFcmToken(final Integer memberId, final FcmTokenDto fcmTokenDto){
+    public RegisterFcmTokenResponse registerFcmToken(){
+        return RegisterFcmTokenResponse.register();
+    }
 
+
+    public DeleteFcmTokenResponse deleteFcmToken(){
+        return DeleteFcmTokenResponse.delete();
     }
 }

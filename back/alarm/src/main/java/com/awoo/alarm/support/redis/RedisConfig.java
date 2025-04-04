@@ -20,6 +20,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private String redisPort;
 
+    @Value("${spring.data.redis.password}")
+    private String redisPassword;
+
     //Redis 서버와 연결하는 ConnectionFactory를 생성하여 반환함
     //나중에 Redis를 사용할 때, 이 ConnectionFactory를 기반으로 연결이 이루어짐
     @Bean
@@ -27,6 +30,7 @@ public class RedisConfig {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(Integer.valueOf(redisPort));
+        redisStandaloneConfiguration.setPassword(redisPassword);
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         return lettuceConnectionFactory;
     }

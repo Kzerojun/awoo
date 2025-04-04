@@ -4,6 +4,8 @@ import com.awoo.alarm.support.ApiUtils;
 import com.awoo.alarm.ui.facade.AlarmServiceFacade;
 import com.awoo.alarm.ui.facade.dto.request.FcmSendDto;
 import com.awoo.alarm.ui.facade.dto.request.FcmTokenDto;
+import com.awoo.alarm.ui.facade.dto.response.DeleteFcmTokenResponse;
+import com.awoo.alarm.ui.facade.dto.response.RegisterFcmTokenResponse;
 import com.awoo.alarm.ui.facade.dto.response.SendAlarmResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +24,13 @@ public class AlarmController {
     }
 
     @PostMapping("/tokens")
-//    RegisterFcmTokenResponse
-    public ApiUtils.ApiResult<?> registerFcmToken(@RequestHeader("X-User-Id") Integer memberId,
+    public ApiUtils.ApiResult<RegisterFcmTokenResponse> registerFcmToken(@RequestHeader("X-User-Id") Integer memberId,
                                                                          @RequestBody FcmTokenDto fcmTokenDto){
         return ApiUtils.success(alarmServiceFacade.registerFcmToken(memberId, fcmTokenDto));
+    }
+
+    @DeleteMapping("/tokens")
+    public ApiUtils.ApiResult<DeleteFcmTokenResponse> deleteFcmToken(@RequestHeader("X-User-Id") Integer memberId){
+        return ApiUtils.success(alarmServiceFacade.deleteFcmToken(memberId));
     }
 }
