@@ -34,6 +34,7 @@ public class ModifyStatusServiceImpl implements ModifyStatusService {
                     .price(usedProductEntity.getPrice())
                     .sellerId(usedProductEntity.getMemberId())
                     .buyerId(command.memberId())
+                    .usedProductId(usedProductEntity.getUsedProductId())
                     .build();
 
             UsedProductOutbox outbox = outBoxFactory.create(event, UsedProductOutbox.EventType.USED_PRODUCT_SAFE_SOLD, KafkaTopic.USED_PRODUCT_SAFE_SOLD);
