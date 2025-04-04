@@ -1,5 +1,6 @@
 package com.awoo.usedproduct.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LikeRepository {
@@ -11,5 +12,7 @@ public interface LikeRepository {
     void delete(LikeEntity like);
 
     boolean existsByUsedProductIdAndMemberId(Integer usedProductId, Integer memberId);
+
+    List<LikeEntity> findByMemberId(Integer memberId);
 
 }

@@ -174,5 +174,10 @@ public class UsedProductController {
         return ApiUtils.success(response);
     }
 
+    @GetMapping("/likes")
+    public ApiUtils.ApiResult<FetchLikeUsedProductsResponse> fetchLikeUsedProducts(@RequestHeader("X-User-Id") String memberId) {
+        FetchLikeUsedProductsResponse response = usedProductServiceFacade.fetchLikeUsedProducts(Integer.valueOf(memberId));
+        return ApiUtils.success(response);
+    }
 
 }

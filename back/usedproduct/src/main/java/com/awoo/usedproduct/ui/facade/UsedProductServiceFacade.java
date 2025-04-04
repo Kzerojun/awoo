@@ -37,4 +37,5 @@ public interface UsedProductServiceFacade {
 
     SearchUsedProductsResponse searchUsedProducts(String keyword);
 
+    FetchLikeUsedProductsResponse fetchLikeUsedProducts(Integer memberId);
 }
