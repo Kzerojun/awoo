@@ -75,7 +75,7 @@ spring:
           uri: lb://admin
           predicates :
             - Path=/api/admin/**
-        - id: alarm-service
+        - id: alarm
           uri: lb://alarm
           predicates:
             - Path=/api/alarms/**

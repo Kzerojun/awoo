@@ -74,7 +74,7 @@ public class AccountController {
             if (accountServiceFacade.confirmPassword(request.get("accountNo"), request.get("password"))) {
                 return ApiUtils.success("비밀번호 일치");
             }
-            return ApiUtils.success("비밀번호가 일치하지 않습니다.");
+            return ApiUtils.error("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }

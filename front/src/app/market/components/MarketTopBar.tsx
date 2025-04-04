@@ -22,7 +22,9 @@ const MarketTopBar = ({ title = "", canModify, articleId }: MarketTopBarProps) =
   const router = useRouter();
   const dispatch = useAppDispatch();
   const historyStack = useAppSelector((state) => state.userAction.historyStack);
-
+  // ✅ 콘솔 찍기
+  console.log("🧾 MarketTopBar - articleId:", articleId);
+  console.log("🧾 MarketTopBar - canModify:", canModify);
   const handleBack = () => {
     if (historyStack.length > 0) {
       const prevPath = historyStack[historyStack.length - 1];
@@ -51,8 +53,6 @@ const MarketTopBar = ({ title = "", canModify, articleId }: MarketTopBarProps) =
   }, [showOptions]);
 
   const handleDelete = async () => {
-    const confirmDelete = confirm("정말 삭제하시겠습니까?");
-    if (!confirmDelete) return;
     try {
       await deleteProduct(articleId);
       alert("삭제되었습니다.");

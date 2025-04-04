@@ -6,19 +6,21 @@ import { UploadImages, ArticleForm } from "../../../types/article";
 import { CameraIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Button from "@/common/ui/Button";
 import { postUsedProduct } from "@/api/market/create/article";
-import { putUsedProduct } from "@/api/market/update/article"; // 수정 API import
+import { putUsedProduct } from "@/api/market/update/article";
 import { useRouter } from "next/navigation";
 
 // 컴포넌트 Props 정의
 interface ArticleWritePageProps {
-  initialData?: ArticleForm; // 수정 시 초기 데이터
-  isEdit?: boolean; // 수정 모드 여부
+  initialData?: ArticleForm & { id?: string; imageUrls?: string[] };
+  isEdit?: boolean;
 }
 
-// 판매글 작성/수정 페이지 컴포넌트
 const ArticleWritePage = ({ initialData, isEdit = false }: ArticleWritePageProps) => {
-  const route = useRouter();
+  console.log("🛠️ ArticleWritePage initialData:", initialData); // 💬 props로 넘긴 값 확인
+  const router = useRouter();
   const [images, setImages] = useState<UploadImages[]>([]);
+  const [remainImageUrls, setRemainImageUrls] = useState<string[]>(initialData?.imageUrls || []);
+
   const [form, setForm] = useState<ArticleForm>(
     initialData || {
       title: "",
@@ -64,7 +66,10 @@ const ArticleWritePage = ({ initialData, isEdit = false }: ArticleWritePageProps
     setImages((prev) => prev.filter((_, idx) => idx !== index));
   };
 
-  // ✅ 등록/수정 공통 처리
+  const handleDeleteRemainImage = (index: number) => {
+    setRemainImageUrls((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
   const handleSubmit = async () => {
     try {
       const priceNumber = Number(form.price.replace(/,/g, ""));
@@ -76,33 +81,41 @@ const ArticleWritePage = ({ initialData, isEdit = false }: ArticleWritePageProps
 
       const formData = new FormData();
 
+      const jsonPayload = {
+        title: form.title,
+        content: form.description,
+        price: priceNumber,
+        remainImageUrls: remainImageUrls,
+      };
+
       formData.append(
         "request",
-        new Blob(
-          [
-            JSON.stringify({
-              title: form.title,
-              content: form.description,
-              price: priceNumber,
-            }),
-          ],
-          { type: "application/json" }
-        )
+        new Blob([JSON.stringify(jsonPayload)], {
+          type: "application/json",
+        })
       );
 
       images.forEach((img) => {
         formData.append("images", img.file);
       });
-
+      // ✅ 여기서 FormData 확인!
+      for (const pair of formData.entries()) {
+        console.log("🧾 FormData:", pair[0], pair[1]);
+      }
       if (isEdit) {
-        await putUsedProduct(formData);
+        if (!initialData?.id) {
+          alert("게시글 ID가 존재하지 않습니다.");
+          return;
+        }
+
+        await putUsedProduct(initialData.id, formData);
         alert("수정이 완료되었습니다.");
       } else {
         await postUsedProduct(formData);
         alert("등록이 완료되었습니다.");
       }
 
-      route.push("/market"); // 등록/수정 후 목록으로 이동
+      router.push("/market");
     } catch (error) {
       console.error("등록/수정 실패", error);
       alert("처리 중 오류가 발생했습니다.");
@@ -126,6 +139,28 @@ const ArticleWritePage = ({ initialData, isEdit = false }: ArticleWritePageProps
         className="hidden"
       />
 
+      {/* 기존 이미지 (수정모드일 때) */}
+      {remainImageUrls.length > 0 && (
+        <div className="flex overflow-x-auto gap-2 mb-2 pt-2">
+          {remainImageUrls.map((url, idx) => (
+            <div key={idx} className="relative w-[70px] h-[70px] flex-shrink-0">
+              <img
+                src={url}
+                alt={`origin-${idx}`}
+                className="w-full h-full object-cover rounded-md"
+              />
+              <button
+                onClick={() => handleDeleteRemainImage(idx)}
+                className="absolute -top-2 -right-2 bg-white rounded-full p-0.5 shadow-md"
+              >
+                <XMarkIcon className="w-4 h-4 text-error" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 새로 추가된 이미지 */}
       {images.length > 0 && (
         <div className="flex overflow-x-auto gap-2 mb-2 pt-2">
           {images.map((img, idx) => (
@@ -152,7 +187,7 @@ const ArticleWritePage = ({ initialData, isEdit = false }: ArticleWritePageProps
           className="w-[70px] h-[70px] bg-gray-100 rounded-lg flex flex-col items-center justify-center text-gray-400 text-sm cursor-pointer"
         >
           <CameraIcon className="w-6 h-6 mb-1" />
-          <span className="text-xs">{images.length}/10</span>
+          <span className="text-xs">{images.length + remainImageUrls.length}/10</span>
         </div>
       </div>
 

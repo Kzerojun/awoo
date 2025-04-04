@@ -27,7 +27,7 @@ public class ChatMessageEntity {
 
     private String message;
 
-    //바이트 코드 형태
+    //Url
     private String image;
 
     @CreatedDate
