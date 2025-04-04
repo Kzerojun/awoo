@@ -6,11 +6,19 @@ import MainActions from "./components/Mainactions";
 import InfoCard from "./components/InfoCard";
 import { useFCMToken } from "@/hooks/alarm/useFCM";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { useAppDispatch } from "@/lib/store";
+import { clearHistory } from "@/lib/slices/userActionSlice";
+import WalkPostitCarousel from "@/app/home/components/WalkPostitCarousel";
 
 export default function Home() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const { checkAndUpdateToken } = useFCMToken();
   useEffect(() => {
     checkAndUpdateToken(); // 앱 진입할 때 토큰 갱신 검사
+    dispatch(clearHistory()); // 뒤로가기 스택 초기화
   }, []);
   return (
     <div className="flex flex-col">
@@ -31,12 +39,9 @@ export default function Home() {
             title="안전한 중고거래, 멍페이로 해결"
             description="입출금 계좌 개설하고, 간편하게 멍페이로 결제하세요!"
           />
-
-          <InfoCard
-            title="반려견을 위한 보험"
-            description="쉽게 찾고 쉽게 가입할 수 있어요!"
-            iconSrc="/icons/main/scales.svg"
-          />
+        </div>
+        <div className="space-y-3 pt-1">
+          <WalkPostitCarousel />
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 "use client";
+
 import "@/app/globals.css";
 import { Providers } from "./providers";
 import { Metadata, Viewport } from "next";
