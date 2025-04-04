@@ -1,6 +1,8 @@
 package com.awoo.account.application.service;
 
 import com.awoo.account.application.command.*;
+import com.awoo.account.application.exception.AccountApplicationErrorCode;
+import com.awoo.account.application.exception.AccountApplicationException;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.domain.AccountType;
@@ -35,6 +37,10 @@ public class AccountServiceImpl implements AccountService{
 
     @Transactional
     public String createAccount(String memberId, CreateAccountCommand command) {
+        if (!command.conditionsAgreement()) {
+            throw new AccountApplicationException(AccountApplicationErrorCode.CONDITION_FALSE);
+        }
+
         // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
@@ -55,7 +61,7 @@ public class AccountServiceImpl implements AccountService{
                 .bankCode(response.REC().bankCode())
                 .accountNumber(encodedAccountNo)
                 .password(encodedPassword)
-                .conditionsAgreement(command.conditionsAgreement())
+                .conditionsAgreement(true)
                 .accountType(AccountType.INTERNAL)
                 .build();
 
