@@ -104,4 +104,17 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId) {
         return queryUsedProductsService.fetchChatMessages(memberId, chatRoomId);
     }
+
+    @Override
+    public SearchUsedProductsResponse searchUsedProducts(String keyword) {
+        List<UsedProductEntity> usedProductEntities = queryUsedProductsService.searchUsedProducts(
+                keyword);
+
+       return SearchUsedProductsResponse.builder()
+                .usedProducts(
+                        usedProductEntities.stream()
+                                .map(UsedProductResponse::fromEntity)
+                                .toList()
+                ).build();
+    }
 }

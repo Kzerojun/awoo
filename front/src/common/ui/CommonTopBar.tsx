@@ -24,8 +24,8 @@ interface CommonTopBarProps {
   backColor?: "white" | "aqua" | "green";
   textColor?: "white" | "black";
   transferStep?: number;
-  currentDepositCurrentView?: number;
-  currentSavingCurrentView?: number;
+  currentManageDepositView?: number;
+  currentManageSavingView?: number;
   onClose?: () => void;
   onBellClick?: () => void;
   onSettingClick?: () => void;
@@ -38,8 +38,8 @@ const CommonTopBar = ({
   backColor = "white",
   textColor = "black",
   transferStep = 1,
-  currentDepositCurrentView = 1,
-  currentSavingCurrentView = 1,
+  currentManageDepositView = 1,
+  currentManageSavingView = 1,
   onClose,
   onBellClick,
   onSettingClick,
@@ -127,16 +127,16 @@ const CommonTopBar = ({
       }
       // 내부 계좌 관리 커스텀
     } else if (leftAction === "depositManageBack") {
-      if (currentDepositCurrentView > 1) {
+      if (currentManageDepositView > 1) {
         dispatch(changeCurrentManageDepositView(1));
-      } else if (currentDepositCurrentView === 1) {
+      } else if (currentManageDepositView === 1) {
         router.back();
       }
       // 적금 관리 커스텀
     } else if (leftAction === "savingManageBack") {
-      if (currentSavingCurrentView > 1) {
+      if (currentManageSavingView > 1) {
         dispatch(changeCurrentManageSavingView(1));
-      } else if (currentSavingCurrentView === 1) {
+      } else if (currentManageSavingView === 1) {
         router.back();
       }
     }

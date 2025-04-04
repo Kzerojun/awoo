@@ -25,4 +25,6 @@ public interface QueryUsedProductsService {
 
     FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId);
 
+
+    List<UsedProductEntity> searchUsedProducts(String keyword);
 }
