@@ -15,8 +15,8 @@ public class KafkaProducer {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendKafkaMessage(KafkaTopic topic, Object value) {
-        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic.getTopicName(), value);
+    public void sendKafkaMessage(String topic, Object value) {
+        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, value);
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 handleSuccess(result);

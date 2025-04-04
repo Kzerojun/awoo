@@ -73,7 +73,7 @@ public class UsedProductController {
     @DeleteMapping("/{usedProductId}")
     public ApiUtils.ApiResult<DeleteUsedProductResponse> deleteUsedProduct(
             @PathVariable(name = "usedProductId") Integer usedProductId,
-                                                  @RequestHeader("X-User-Id") String memberId){
+            @RequestHeader("X-User-Id") String memberId){
         DeleteUsedProductCommand command = DeleteUsedProductCommand.builder()
                 .userProductId(usedProductId)
                 .memberId(Integer.valueOf(memberId))
