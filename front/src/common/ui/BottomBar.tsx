@@ -39,6 +39,8 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     "/",
     "/#",
     "/my/profile/withdraw",
+    "/signup",
+    "/signup/policy",
     "/signup/profile",
     "/my/paymentRegister/signupDone",
     "/my/paymentRegister/paymentPassword",
