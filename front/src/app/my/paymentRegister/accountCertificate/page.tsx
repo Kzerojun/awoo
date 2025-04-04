@@ -7,9 +7,12 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import Certificate, { CertificateRef } from "./components/Certificate";
 import { verifyOneWonTransfer } from "@/api/payment/payment";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { changeSelectedDepositAccountNo } from "@/lib/slices/savingAccountDetailSlice";
 
 export default function AccountCertificate() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [maxAttempts] = useState(3); // 최대 시도 횟수
   const [attempts, setAttempts] = useState(0); // 현재 시도 횟수
   const [isVerifying, setIsVerifying] = useState(false);
@@ -23,11 +26,13 @@ export default function AccountCertificate() {
     const account = sessionStorage.getItem("verification_account");
     if (account) {
       setAccountNo(account);
+      // Redux store에 계좌번호 저장 (입출금 계좌 내역 조회용)
+      dispatch(changeSelectedDepositAccountNo(account));
     } else {
       toast.error("계좌 정보가 없습니다. 이전 단계로 돌아갑니다.");
       router.push("/my/paymentRegister/accountConnect");
     }
-  }, [router]);
+  }, [router, dispatch]);
 
   // 인증번호 검증 완료 처리
   const handleCertificateComplete = async (certificateNumber: string) => {

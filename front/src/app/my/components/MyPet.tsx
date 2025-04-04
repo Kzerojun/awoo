@@ -10,44 +10,64 @@ import Link from "next/link";
 export default function MyPet() {
   const { refetch: petListRefetch } = usePetList();
   const [petList, setPetList] = useState<PetInterface[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchPetList = async () => {
+      setIsLoading(true);
       try {
         const result = await petListRefetch();
         console.log("반려견 목록 조회", result.data);
         console.log("반려견 목록에서 펫 데이터", result?.data);
 
-        if (result.isSuccess && result.data) {
-          setPetList(result.data);
+        if (result.isSuccess) {
+          setPetList(result.data || []);
         }
       } catch (err) {
         console.error("반려견 목록 조회 실패임!", err);
+        setPetList([]);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchPetList();
-  }, []);
+  }, [petListRefetch]);
+
+  // 반려동물이 없는 경우 보여줄 컴포넌트
+  const NoPetsMessage = () => (
+    <div className="flex flex-col items-center justify-center w-full">
+      <p className="text-sm text-gray-500 mb-2">등록된 반려동물이 없어요</p>
+    </div>
+  );
 
   return (
     <Link href="my/pet" className="w-full block">
       <div className="flex items-center justify-between w-full">
-        <div className="flex flex-col gap-y-3">
+        <div className="flex flex-col gap-y-3 w-full">
           <div className="flex items-center">
             <div className="text-xs text-[#828282] ml-1">나의 반려동물 보러 가기</div>
           </div>
 
-          <div className="flex items-center justify-center gap-x-3">
-            {petList?.map((pet) => (
-              <Image
-                key={pet.petId}
-                src={pet.profileImage}
-                alt="반려동물 아이콘"
-                width={70}
-                height={70}
-                className="rounded-full object-cover aspect-square"
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-3">
+              <div className="text-sm text-gray-400">로딩 중...</div>
+            </div>
+          ) : !petList || petList.length === 0 ? (
+            <NoPetsMessage />
+          ) : (
+            <div className="flex items-center justify-center gap-x-3">
+              {petList.map((pet) => (
+                <Image
+                  key={pet.petId}
+                  src={pet.profileImage}
+                  alt="반려동물 아이콘"
+                  width={70}
+                  height={70}
+                  className="rounded-full object-cover aspect-square"
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className="text-gray-400">
           <Image src={vector} alt="화살표" />

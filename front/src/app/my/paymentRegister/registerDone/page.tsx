@@ -48,38 +48,43 @@ export default function RegisterDone() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white">
       <CommonTopBar title="멍Pay" rightAction="bell" />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
-        {/* 체크 아이콘 */}
-        <div className="mb-6">
-          <Image src={check} alt="성공" width={90} height={90} className="mx-auto" />
+      <div className="flex flex-col items-center px-4 pt-14">
+        {/* 메인 컨텐츠 - 고정된 간격 사용 */}
+        <div className="mt-[110px] mb-[100px] flex flex-col items-center">
+          {/* 체크 아이콘 */}
+          <div className="flex items-center justify-center mb-3 p-3 bg-teal-50 rounded-full">
+            <Image src={check} alt="성공" width={95} height={95} />
+          </div>
+
+          {/* 성공 메시지 */}
+          <h2 className="text-[23px] font-bold text-center mb-2">
+            {isLoading ? "로딩 중..." : `${nickname}님`}
+          </h2>
+          <p className="text-[23px] font-bold text-center text-teal-600">계좌 인증을 성공했어요</p>
+
+          {/* 안내 메시지 */}
+          <div className="mt-6 bg-gray-50 rounded-xl p-5 w-full max-w-xs">
+            <p className="text-gray-700 text-center leading-relaxed text-[15px]">
+              <span className="text-teal-600">멍Pay</span>와 함께 하는{" "}
+              <span className="text-teal-600">안심 거래</span> !
+              <br />
+              안전하고 편리한 결제 서비스를 누려보세요 !
+            </p>
+          </div>
         </div>
 
-        {/* 성공 메시지 - 이름과 성공 메시지를 더 가깝게 배치 */}
-        <h2 className="text-2xl font-bold text-center mb-1">
-          {isLoading ? "로딩 중..." : `${nickname}님`}
-        </h2>
-        <p className="text-xl font-bold text-center text-teal-600 mb-8">계좌 인증을 성공했어요</p>
-
-        {/* 안내 메시지 - 여백 조정 및 텍스트 스타일 개선 */}
-        <div className="bg-gray-50 rounded-xl p-5 w-full max-w-xs mb-18">
-          <p className="text-gray-700 text-center leading-relaxed text-[15px]">
-            <span className="text-teal-600">멍Pay</span>와 함께 하는{" "}
-            <span className="text-teal-600">안심 거래</span> !
-            <br />
-            안전하고 편리한 결제 서비스를 누려보세요 !
-          </p>
+        {/* 마이페이지 이동 버튼 */}
+        <div className="w-[270px] max-w-md">
+          <button
+            onClick={handleGoToMyPage}
+            className="w-full py-3 bg-[#0DCFAA] rounded-lg text-white font-medium text-lg"
+          >
+            마이페이지로 이동
+          </button>
         </div>
-
-        {/* 마이페이지 이동 버튼 - 여백 및 크기 조정 */}
-        <button
-          onClick={handleGoToMyPage}
-          className="w-full max-w-xs py-4 bg-teal-500 text-white font-medium rounded-full transition-colors hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-300"
-        >
-          마이페이지로 이동
-        </button>
       </div>
     </div>
   );
