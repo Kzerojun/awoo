@@ -67,7 +67,7 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
       }
 
       // 인증 페이지로 이동
-      router.push("/my/paymentRegister/accountCertificate");
+      router.replace("/my/paymentRegister/accountCertificate");
     } catch (error) {
       console.error("1원 송금 요청 실패:", error);
       toast.error("계좌 인증 요청에 실패했습니다. 다시 시도해주세요.");
