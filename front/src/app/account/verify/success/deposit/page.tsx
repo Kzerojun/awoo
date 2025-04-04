@@ -11,6 +11,7 @@ import Button from "@/common/ui/Button";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setAccountVerified } from "@/lib/slices/accountSlice";
 import { OpenDepositAccount } from "@/api/account/open/account";
+import { useChangeDepositLimit } from "@/hooks/account/deposit/useChangeDepositLimit";
 
 export default function AccountVerifySuccessPage() {
   // ✅ 계좌 개설 완료 여부 상태 (true면 완료 화면 보여줌)
@@ -21,17 +22,51 @@ export default function AccountVerifySuccessPage() {
   // ✅ Redux에서 password, conditionsAgreement 가져오기
   const { password, conditionsAgreement } = useAppSelector((state) => state.account);
 
+  // 1일 한도 이체 -> 100만원, 1회 이체 한도 -> 100만원
+  const dailyLimit = 1000000;
+  const oneTimeLimit = 1000000;
+  // 계좌이체 한도 변경 쿼리
+  const { mutate: changeDepositLimitMutation, isPending: changeDepositLimitPending } =
+    useChangeDepositLimit();
+  // 개설 후 계좌번호 조회
+  const [accountNo, setAccountNo] = useState<string | null>(null);
+  const [readyChangeLimit, setReadyChangeLimit] = useState<boolean>(false);
   // ✅ 컴포넌트 마운트 시 Redux에 계좌 인증 완료 상태 저장
   useEffect(() => {
     dispatch(setAccountVerified(true));
   }, [dispatch]);
 
+  // 이체 한도 변경 준비 완료되면 변경
+  useEffect(() => {
+    if (!accountNo) {
+      console.log("이체 한도 변경 실패");
+      return;
+    }
+    changeDepositLimitMutation(
+      {
+        accountNo,
+        oneTimeTransferLimit: oneTimeLimit,
+        dailyTransferLimit: dailyLimit,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("이체한도 변경 성공:", data);
+        },
+        onError: (err) => {
+          console.error("이체 한도 변경 실패:", err);
+        },
+      }
+    );
+  }, [readyChangeLimit]);
+
   // ✅ "확인" 버튼 클릭 시 실행되는 함수
   // 👉 비밀번호 & 약관동의 데이터를 포함해 계좌 개설 API 요청
   const handleOpenAccount = async () => {
     try {
-      await OpenDepositAccount({ password, conditionsAgreement }); // 계좌 개설 API 호출
+      const res = await OpenDepositAccount({ password, conditionsAgreement }); // 계좌 개설 API 호출
       setShowComplete(true); // 성공 시 완료 화면으로 전환
+      setAccountNo(res.response.accountNo);
+      setReadyChangeLimit(true);
     } catch (error) {
       console.error("❌ 계좌 개설 실패:", error); // 실패 시 콘솔에 에러 출력
       alert("계좌 개설에 실패했습니다. 다시 시도해주세요.");
