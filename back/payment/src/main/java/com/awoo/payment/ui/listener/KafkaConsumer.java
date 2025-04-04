@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +19,7 @@ public class KafkaConsumer {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "used-product-safe-sold")
-    public void processUsedProductSafeSold(String message) {
+    public void processUsedProductSafeSold(String message, Acknowledgment ack) {
         try {
             log.info("중고 물품 안심 결제 메시지: {}", message);
             UsedProductSoldOutBySafeEvent event = objectMapper.readValue(message,
@@ -33,10 +33,9 @@ public class KafkaConsumer {
                     .build();
 
             safePayService.confirmSafeTransaction(command);
-
+            ack.acknowledge();
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }
-
     }
 }
