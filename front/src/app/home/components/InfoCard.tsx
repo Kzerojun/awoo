@@ -4,11 +4,15 @@ interface InfoCardProps {
   title: string;
   description: string;
   iconSrc?: string;
+  onClick?: () => void;
 }
 
-export default function InfoCard({ title, description, iconSrc }: InfoCardProps) {
+export default function InfoCard({ title, description, iconSrc, onClick }: InfoCardProps) {
   return (
-    <div className="p-4 py-6 bg-light-aqua rounded-lg shadow flex justify-between items-center">
+    <div
+      className="p-4 py-6 bg-light-aqua rounded-lg shadow flex justify-between items-center"
+      onClick={onClick}
+    >
       {/* 텍스트 영역 (왼쪽 정렬) */}
       <div className="text-left">
         <h2 className="text-m font-semibold">{title}</h2>

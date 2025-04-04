@@ -40,7 +40,8 @@
     "react-toastify": "^11.0.5",
     "redux-persist": "^6.0.0",
     "sockjs-client": "^1.6.1",
-    "storybook": "^8.6.6"
+    "storybook": "^8.6.6",
+    "swiper": "^11.2.6"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3",
