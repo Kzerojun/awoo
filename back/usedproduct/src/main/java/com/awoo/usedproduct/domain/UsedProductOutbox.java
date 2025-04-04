@@ -24,7 +24,7 @@ public class UsedProductOutbox {
     private String topic;
 
     @Enumerated(EnumType.STRING)
-    private EventType evenType;
+    private EventType eventType;
 
     @Column(columnDefinition = "JSON", nullable = false)
     private String payload;
@@ -38,9 +38,9 @@ public class UsedProductOutbox {
     private LocalDateTime createdAt;
 
     @Builder
-    public UsedProductOutbox(String topic, EventType evenType, String payload, Status status, Integer aggregateId) {
+    public UsedProductOutbox(String topic, EventType eventType, String payload, Status status, Integer aggregateId) {
         this.topic = topic;
-        this.evenType = evenType;
+        this.eventType = eventType;
         this.payload = payload;
         this.status = status;
         this.aggregateId = aggregateId;
