@@ -6,6 +6,7 @@ import com.awoo.payment.ui.listener.event.UsedProductSoldOutBySafeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,15 +16,15 @@ public class KafkaConsumer {
     private final SafePayService safePayService;
 
     @KafkaListener(topics = "used-product-safe-sold")
-    public void processUsedProductSafeSold(UsedProductSoldOutBySafeEvent event) {
+    public void processUsedProductSafeSold(UsedProductSoldOutBySafeEvent payload) {
 
-        log.info("Received event: {}", event.toString());
+        log.info("Received event: {}", payload.toString());
 
         ConfirmSafeTransactionCommand command = ConfirmSafeTransactionCommand.builder()
-                .usedProductId(event.usedProductId())
-                .price(event.price())
-                .buyerId(event.buyerId())
-                .sellerId(event.sellerId())
+                .usedProductId(payload.usedProductId())
+                .price(payload.price())
+                .buyerId(payload.buyerId())
+                .sellerId(payload.sellerId())
                 .build();
         safePayService.confirmSafeTransaction(command);
     }

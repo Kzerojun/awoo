@@ -42,7 +42,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
         chatMessageRepository.save(entity);
 
-        kafkaProducer.sendKafkaMessage(KafkaTopic.CHAT_MESSAGE, entity);
+        kafkaProducer.sendKafkaMessage(KafkaTopic.CHAT_MESSAGE.getTopicName(), entity);
 
         return FetchMessageResponse.builder()
                 .chatRoomId(command.chatRoomId())

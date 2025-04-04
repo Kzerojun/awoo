@@ -1,13 +1,11 @@
 package com.awoo.usedproduct.application.service;
 
 import com.awoo.usedproduct.application.ModifyStatusService;
+import com.awoo.usedproduct.application.UsedProductOutboxRepository;
 import com.awoo.usedproduct.application.command.ModifyUsedProductStatusCommand;
 import com.awoo.usedproduct.application.exception.ApplicationErrorCode;
 import com.awoo.usedproduct.application.exception.UsedProductNotFoundException;
-import com.awoo.usedproduct.domain.PaymentType;
-import com.awoo.usedproduct.domain.UsedProductEntity;
-import com.awoo.usedproduct.domain.UsedProductRepository;
-import com.awoo.usedproduct.domain.UsedProductStatus;
+import com.awoo.usedproduct.domain.*;
 import com.awoo.usedproduct.infra.kafka.KafkaProducer;
 import com.awoo.usedproduct.infra.kafka.KafkaTopic;
 import com.awoo.usedproduct.infra.kafka.event.UsedProductSoldOutBySafeEvent;
@@ -20,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ModifyStatusServiceImpl implements ModifyStatusService {
 
     private final UsedProductRepository usedProductRepository;
-    private final KafkaProducer kafkaProducer;
+    private final UsedProductOutboxRepository usedProductOutboxRepository;
+    private final UsedProductOutBoxFactory outBoxFactory;
 
     @Override
     @Transactional
@@ -30,18 +29,17 @@ public class ModifyStatusServiceImpl implements ModifyStatusService {
             usedProductEntity.modifyStatus(command.status(), command.memberId());
         }
 
-
-        usedProductEntity.modifyStatusBySafe(command.status());
-
         if (command.status().equals(UsedProductStatus.SO) && command.paymentType().equals(PaymentType.SAFE)) {
             UsedProductSoldOutBySafeEvent event = UsedProductSoldOutBySafeEvent.builder()
                     .price(usedProductEntity.getPrice())
                     .sellerId(usedProductEntity.getMemberId())
                     .buyerId(command.memberId())
                     .build();
-            kafkaProducer.sendKafkaMessage(KafkaTopic.USED_PRODUCT_SAFE_SOLD,event);
-        }
 
+            UsedProductOutbox outbox = outBoxFactory.create(event, UsedProductOutbox.EventType.USED_PRODUCT_SAFE_SOLD, KafkaTopic.USED_PRODUCT_SAFE_SOLD);
+            usedProductEntity.modifyStatusBySafe(command.status());
+            usedProductOutboxRepository.save(outbox);
+        }
         return usedProductEntity.getUsedProductId();
     }
 }
