@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   // 이미지 도메인 설정 추가
   images: {
-    domains: ["c209awoo.s3.us-east-2.amazonaws.com", "test.com"],
+    domains: ["c209awoo.s3.us-east-2.amazonaws.com"],
   },
   // ✅ next-pwa 설정은 별도로 적용
   ...withPWA({
