@@ -13,7 +13,7 @@ public interface AccountServiceFacade {
 
     DeductBalanceResponse deductBalance(DeductBalanceCommand command);
 
-    void createAccount(String memberId, CreateAccountCommand command) throws Exception;
+    String createAccount(String memberId, CreateAccountCommand command) throws Exception;
     List<SSAFYAccountResponseDto> getAccountList(String memberId) throws JsonProcessingException;
     List<TransactionResponse> getTransactions(String memberId, TransactionsCommand command);
 

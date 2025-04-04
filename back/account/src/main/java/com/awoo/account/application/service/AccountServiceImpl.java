@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService{
     private final MemberClient memberClient;
 
     @Transactional
-    public void createAccount(String memberId, CreateAccountCommand command) {
+    public String createAccount(String memberId, CreateAccountCommand command) {
         // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
@@ -61,6 +61,8 @@ public class AccountServiceImpl implements AccountService{
 
         // DB 저장
         accountRepository.save(account);
+
+        return response.REC().accountNo();
     }
 
     public List<SSAFYAccountResponseDto> getAccountList(String memberId) {
