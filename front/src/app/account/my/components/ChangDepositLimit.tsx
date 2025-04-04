@@ -1,14 +1,22 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import Button from "@/common/ui/Button";
 import CheckPasswordModal from "./CheckPasswordModal";
 import { changeCurrentManageDepositView } from "@/lib/slices/userActionSlice";
+import { useChangeDepositLimit } from "@/hooks/account/deposit/useChangeDepositLimit";
+import { useRouter } from "next/navigation";
+import { DepositResponse } from "@/api/account/my/deposit";
+import { useDepositList } from "@/hooks/account/deposit/useGetDepositAccount";
+import { getMyDeposit } from "@/lib/slices/myDepositSavingSlice";
 
 const ChangeDepositLimit = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const accountNo = useAppSelector((state) => state.myDepositSaving.deposit?.accountNo);
+  const { refetch: depositListRefetch, isPending: depositPending } = useDepositList();
+  const [depositList, setDepositList] = useState<DepositResponse[]>([]);
   const oneTimeTransferLimit = useAppSelector(
     (state) => state.myDepositSaving.deposit?.oneTimeTransferLimit
   );
@@ -26,6 +34,31 @@ const ChangeDepositLimit = () => {
   const isOneTimeLimitExceeded = oneTimeLimit !== null && oneTimeLimit > MAX_LIMIT;
 
   const [showCheckPasswordModal, setShowCheckPasswordModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!accountNo) {
+      alert("다시 시도해주세요.");
+      router.replace("/home");
+      return;
+    }
+    const fetchDepositList = async () => {
+      try {
+        const result = await depositListRefetch();
+        console.log("내부 계좌 목록 조회", result.data);
+        if (result.isSuccess && result.data) {
+          setDepositList(result.data);
+          dispatch(getMyDeposit(result.data[0]));
+        }
+      } catch (err) {
+        console.error("내부 계좌 목록 조회 실패", err);
+      }
+    };
+    fetchDepositList();
+  }, []);
+
+  // 이체 한도 변경 쿼리
+  const { mutate: changeDepositLimitMutation, isPending: changeDepositLimitPending } =
+    useChangeDepositLimit();
 
   const formatNumber = (value: string) => {
     const numericValue = value.replace(/[^0-9]/g, "");
@@ -51,10 +84,30 @@ const ChangeDepositLimit = () => {
   };
 
   const successChangeLimit = () => {
+    if (!accountNo || !oneTimeLimit || !dailyLimit) {
+      alert("다시 시도해주세요.");
+      return;
+    }
     // TODO: 계좌 이체 한도 변경 함수 호출
-
-    setShowCheckPasswordModal(false);
-    dispatch(changeCurrentManageDepositView(1));
+    changeDepositLimitMutation(
+      {
+        accountNo,
+        oneTimeTransferLimit: oneTimeLimit,
+        dailyTransferLimit: dailyLimit,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("이체 한도 변경 성공", data);
+          alert("이체 한도가 변경되었습니다.");
+          dispatch(changeCurrentManageDepositView(1));
+        },
+        onError: (err) => {
+          console.error("이체 한도 변경 실패:", err);
+          alert("다시 시도해주세요.");
+          return;
+        },
+      }
+    );
   };
 
   return (
@@ -150,7 +203,11 @@ const ChangeDepositLimit = () => {
           </ul>
         </div>
 
-        <Button text="변경하기" onClick={() => setShowCheckPasswordModal(true)} />
+        <Button
+          text="변경하기"
+          onClick={() => setShowCheckPasswordModal(true)}
+          disabled={changeDepositLimitPending}
+        />
       </div>
       {accountNo && (
         <CheckPasswordModal
@@ -158,7 +215,6 @@ const ChangeDepositLimit = () => {
           isOpen={showCheckPasswordModal}
           onConfirm={successChangeLimit}
           onClose={() => setShowCheckPasswordModal(false)}
-          className="mb-3"
         />
       )}
     </div>
