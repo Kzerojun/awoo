@@ -247,3 +247,15 @@ export const deleteDeposit = async ({ accountNo, refundAccountNo }: DeleteDeposi
     throw err;
   }
 };
+
+// 멍페이 가입 여부 조회
+export const getPayRegisterCheck = async () => {
+  try {
+    const res = await axiosInstance.get("/payments/accounts");
+    console.log("멍페이 가입 여부 조회 성공:", res.data);
+    return res.data.response;
+  } catch (err) {
+    console.error("멍페이 가입 여부 조회 실패:", err);
+    throw err;
+  }
+};

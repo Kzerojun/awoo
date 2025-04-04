@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { pushPath, markGoingBack } from "@/lib/slices/userActionSlice";
 
 const EXCLUDED_PATHS = [
+  "/signup/policy",
   "/account/my/deposit/manage",
   "/account/my/saving/manage",
   "/account/my/deposit/transfer",
