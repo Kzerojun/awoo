@@ -19,7 +19,7 @@ export default function Login() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-white gap-6">
       <Image src={logo} alt="로고 이미지" />
       <LoginForm />
-      <SocialLogin />
+      {/* <SocialLogin /> */}
       <div className="flex flex-col items-center gap-1 text-xs">
         <p>아직 회원이 아니라면?</p>
         <Link
@@ -29,12 +29,6 @@ export default function Login() {
           회원가입 하기
         </Link>
       </div>
-      <Button
-        text="뒤로 가기"
-        backgroundColor="custom-gray"
-        fontColor="custom-balck"
-        onClick={goBack}
-      />
     </div>
   );
 }
