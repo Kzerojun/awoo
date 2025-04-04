@@ -17,7 +17,7 @@ public class UsedProductOutBoxFactory {
 
         return UsedProductOutbox.builder()
                 .topic(kafkaTopic.getTopicName())
-                .evenType(eventType)
+                .eventType(eventType)
                 .status(UsedProductOutbox.Status.PENDING)
                 .aggregateId(event.usedProductId())
                 .payload(serializeToJson(event))

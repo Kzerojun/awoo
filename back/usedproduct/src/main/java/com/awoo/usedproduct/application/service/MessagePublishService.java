@@ -22,7 +22,6 @@ public class MessagePublishService {
     @Scheduled(fixedRate = 1000)
     @Transactional
     public void publishMessage() {
-        log.info("Publishing message...");
         List<UsedProductOutbox> messages = usedProductOutboxRepository.read();
         messages.forEach(message -> {
             producer.sendKafkaMessage(message.getTopic(), message.getPayload());
