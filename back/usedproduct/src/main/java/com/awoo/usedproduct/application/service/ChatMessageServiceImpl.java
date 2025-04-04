@@ -5,6 +5,8 @@ import com.awoo.usedproduct.application.command.MessageCommand;
 import com.awoo.usedproduct.domain.ChatMessageEntity;
 import com.awoo.usedproduct.domain.ChatMessageRepository;
 import com.awoo.usedproduct.infra.aws.S3Storage;
+import com.awoo.usedproduct.infra.kafka.KafkaProducer;
+import com.awoo.usedproduct.infra.kafka.KafkaTopic;
 import com.awoo.usedproduct.ui.facade.dto.response.FetchMessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
     private final S3Storage s3Storage;
+    private final KafkaProducer kafkaProducer;
+
     @Override
     public FetchMessageResponse saveMessage(MessageCommand command) {
         String imageUrl = null;
@@ -38,6 +42,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .build();
         chatMessageRepository.save(entity);
 
+        kafkaProducer.sendKafkaMessage(KafkaTopic.CHAT_MESSAGE, entity);
 
         return FetchMessageResponse.builder()
                 .chatRoomId(command.chatRoomId())
