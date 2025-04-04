@@ -18,7 +18,7 @@ public class DeleteUsedProductServiceImpl implements DeleteUsedProductService {
     @Override
     public void deleteUsedProduct(DeleteUsedProductCommand command) {
         UsedProductEntity usedProductEntity = usedProductRepository.findById(command.userProductId()).orElseThrow(() -> new UsedProductNotFoundException(ApplicationErrorCode.PRODUCT_NOT_FOUND));
-        usedProductEntity.canModify(command.userProductId());
+        usedProductEntity.canModify(command.memberId());
         usedProductRepository.delete(usedProductEntity);
     }
 }
