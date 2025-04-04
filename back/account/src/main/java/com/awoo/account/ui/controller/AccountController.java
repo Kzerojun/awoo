@@ -22,8 +22,7 @@ public class AccountController {
                                                @RequestBody CreateAccountRequest request) {
         try{
             CreateAccountCommand command = request.toCommand();
-            accountServiceFacade.createAccount(memberId, command);
-            return ApiUtils.success("계좌가 생성되었습니다.");
+            return ApiUtils.success(Map.of("accountNo", accountServiceFacade.createAccount(memberId, command)));
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
