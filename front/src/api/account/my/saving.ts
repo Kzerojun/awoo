@@ -185,7 +185,7 @@ export const getSavingEarlyTerminationInterest = async ({
 // 적금 계좌 해지
 export const deleteSavingAccount = async ({ accountNo }: AccountNoPayload) => {
   try {
-    const res = await axiosInstance.delete(`/savings`, { data: accountNo });
+    const res = await axiosInstance.delete(`/savings`, { data: { accountNo } });
     console.log("적금 계좌 해지 성공:", res.data);
     return res.data;
   } catch (err) {

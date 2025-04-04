@@ -6,9 +6,14 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import ImpossibleDeleteDepositModal from "./ImpossibleDeleteDepositModal";
 import PossibleDeleteDepositModal from "./PossibleDeleteDepositModal";
 import CheckPasswordModal from "./CheckPasswordModal";
+import { useDeleteDeposit } from "@/hooks/account/deposit/useDeleteDeposit";
+import { useRouter } from "next/navigation";
+import { useGetPayRegisterCheck } from "@/hooks/account/deposit/useGetPayRegisterCheck";
+import { useGetSavingAccountList } from "@/hooks/account/saving/useGetSavingAccountList";
 
 const DeleteDeposit = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   // 계좌 번호
   const accountNo = useAppSelector((state) => state.myDepositSaving.deposit?.accountNo);
   // 계좌 이름
@@ -17,6 +22,23 @@ const DeleteDeposit = () => {
   const createdDate = useAppSelector((state) => state.myDepositSaving.deposit?.accountCreatedDate);
   // 계좌 잔액
   const accountBalance = useAppSelector((state) => state.myDepositSaving.deposit?.accountBalance);
+
+  // 계좌 해지 쿼리
+  const { mutate: deleteDepositMutation, isPending: deleteDepositPending } = useDeleteDeposit();
+  // 멍페이 가입 여부 조회 쿼리
+  const {
+    data: payRegisterData,
+    refetch: payRegisterRefetch,
+    isSuccess: payRegisterSuccess,
+    isError: payRegisterError,
+  } = useGetPayRegisterCheck();
+  // 적금 가입 목록 조회 쿼리
+  const {
+    data: savingListData,
+    refetch: savingListRefetch,
+    isSuccess: savingListSuccess,
+    isError: savingListError,
+  } = useGetSavingAccountList();
 
   // 해지할 수 있는 계좌인지 아닌지
   // const [isPossibleDelete, setIsPossibleDelete] = useState<boolean>(true); // 테스트용
@@ -27,13 +49,68 @@ const DeleteDeposit = () => {
   const [isPayCheck, setIsPayCheck] = useState<boolean>(false);
   // 적금 체크. 있으면 false, 없으면 true
   const [isSavingCheck, setIsSavingCheck] = useState<boolean>(false);
-  // 비밀번호 체크 모달
-  const [showCheckPasswordModal, setShowCheckPasswordModal] = useState<boolean>(false);
+
   // 반환 계좌
   const [refundAccountNo, setRefundAccountNo] = useState<string>("");
 
+  // 비밀번호 체크 모달
+  const [showCheckPasswordModal, setShowCheckPasswordModal] = useState<boolean>(false);
+  // 비밀번호 2번 확인
+  const [showAgainCheckPassword, setShowAgainCheckPassword] = useState<boolean>(false);
+  const [finalCheck, setFinalCheck] = useState<boolean>(false);
+
+  const clearState = () => {
+    setIsPossibleDelete(false);
+    setShowImpossible(false);
+    setShowPossible(false);
+    setIsPayCheck(false);
+    setIsSavingCheck(false);
+    setRefundAccountNo("");
+    setShowCheckPasswordModal(false);
+    setShowAgainCheckPassword(false);
+    setFinalCheck(false);
+  };
+
   // TODO:초기 진입 시 멍페이 계좌 확인 + 적금 확인
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // 멍페이 가입 여부 확인
+    const fetchPayRegisterCheck = async () => {
+      const res = await payRegisterRefetch();
+
+      if (res.isSuccess && res.data?.response?.accountNo) {
+        setIsPayCheck(false);
+      } else {
+        setIsPayCheck(true);
+      }
+    };
+    // 적금 목록 조회
+    const fetchSavingList = async () => {
+      const res = await savingListRefetch();
+      if (res.isSuccess && res.data) {
+        if (res.data.length > 0) {
+          setIsSavingCheck(false);
+        } else {
+          setIsSavingCheck(true);
+        }
+      }
+    };
+    fetchPayRegisterCheck();
+    fetchSavingList();
+  }, []);
+
+  useEffect(() => {
+    console.log("멍페이 가입 여부 통과:", isPayCheck);
+    console.log("적금 가입 여부 통과:", isSavingCheck);
+    if (isPayCheck && isSavingCheck) {
+      setIsPossibleDelete(true);
+    }
+  }, [isPayCheck, isSavingCheck]);
+
+  useEffect(() => {
+    if (finalCheck) {
+      handleDeleteDeposit();
+    }
+  }, [finalCheck]);
 
   // 계좌 번호 포맷팅
   const formattedAccountNo = accountNo?.replace(/(\d{4})(?=\d)/g, "$1-");
@@ -59,7 +136,41 @@ const DeleteDeposit = () => {
     }
   };
 
-  const handleDeleteDeposit = () => {};
+  const handleDeleteDeposit = () => {
+    if (!accountNo || !refundAccountNo) {
+      alert("다시 시도해주세요.");
+      router.replace("/home");
+      clearState();
+      return;
+    }
+    alert("해지 신청");
+    deleteDepositMutation(
+      {
+        accountNo,
+        refundAccountNo,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("계좌해지 성공:", data);
+          if (!data.response) {
+            alert("계좌 해지에 실패했습니다. \n 나중에 다시 시도해주세요.");
+            clearState();
+            router.replace("/home");
+            return;
+          }
+          alert("계좌 해지에 성공했습니다.");
+          clearState();
+          router.replace("/home");
+        },
+        onError: (err) => {
+          console.log("계좌 해지 실패:", err);
+          alert("계좌 해지에 실패했습니다. \n 나중에 다시 시도해주세요.");
+          clearState();
+          router.replace("/home");
+        },
+      }
+    );
+  };
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
@@ -137,13 +248,22 @@ const DeleteDeposit = () => {
           setShowCheckPasswordModal={setShowCheckPasswordModal}
         />
       )}
-      {accountNo && showCheckPasswordModal && (
+      {accountNo && (
         <CheckPasswordModal
           accountNo={accountNo}
           isOpen={showCheckPasswordModal}
-          onConfirm={handleDeleteDeposit}
+          deleteType="deposit"
+          reCheck={showAgainCheckPassword}
+          onConfirm={() => {
+            if (!finalCheck) {
+              setShowAgainCheckPassword(true);
+            }
+          }}
           onClose={() => setShowCheckPasswordModal(false)}
-          className="mb-3"
+          onFinalCheckClose={() => {
+            setShowAgainCheckPassword(false);
+          }}
+          setFinalCheck={setFinalCheck}
         />
       )}
     </div>

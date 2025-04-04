@@ -6,12 +6,18 @@ import MainActions from "./components/Mainactions";
 import InfoCard from "./components/InfoCard";
 import { useFCMToken } from "@/hooks/alarm/useFCM";
 import { useEffect } from "react";
+import { useAppDispatch } from "@/lib/store";
+import { clearHistory } from "@/lib/slices/userActionSlice";
 
 export default function Home() {
+  const dispatch = useAppDispatch();
   const { checkAndUpdateToken } = useFCMToken();
+
   useEffect(() => {
     checkAndUpdateToken(); // 앱 진입할 때 토큰 갱신 검사
+    dispatch(clearHistory()); // 뒤로가기 스택 초기화
   }, []);
+
   return (
     <div className="flex flex-col">
       {/* 네비게이션 바 */}

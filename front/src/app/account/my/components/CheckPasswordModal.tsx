@@ -15,9 +15,23 @@ interface Props {
   onConfirm: (password: string) => void;
   onClose: () => void;
   className?: string;
+  deleteType?: string;
+  reCheck?: boolean;
+  setFinalCheck?: (value: boolean) => void;
+  onFinalCheckClose?: () => void;
   accountNo: string;
 }
-const CheckPasswordModal = ({ isOpen, onConfirm, onClose, className, accountNo }: Props) => {
+const CheckPasswordModal = ({
+  isOpen,
+  onConfirm,
+  onClose,
+  className,
+  deleteType,
+  reCheck,
+  setFinalCheck,
+  onFinalCheckClose,
+  accountNo,
+}: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   // const accountNo = useAppSelector((state) => state.transfer.withdrawalAccountNo);
@@ -66,6 +80,14 @@ const CheckPasswordModal = ({ isOpen, onConfirm, onClose, className, accountNo }
         {
           onSuccess: (data) => {
             if (data.success === true) {
+              if (reCheck && setFinalCheck && onFinalCheckClose) {
+                setFinalCheck(true);
+                setPassword("");
+                setIsLoading(false);
+                setErrorCount(0);
+                onFinalCheckClose();
+                return;
+              }
               onConfirm(pwd);
               setPassword("");
               setIsLoading(false);
@@ -116,18 +138,25 @@ const CheckPasswordModal = ({ isOpen, onConfirm, onClose, className, accountNo }
     }
   };
 
+  const closeModal = () => {
+    onClose();
+    if (onFinalCheckClose) {
+      onFinalCheckClose();
+    }
+  };
+
   return (
     <AnimatePresence>
-      {isOpen && (
+      {(isOpen || reCheck) && (
         <motion.div
-          className="fixed inset-0 z-50 bg-black/30 flex items-end"
+          className="fixed inset-0 z-200 bg-black/30 flex items-end"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className={`w-full bg-white rounded-t-2xl flex flex-col justify-center ${className}`}
+            className={`w-full bg-white rounded-t-2xl flex flex-col justify-center ${className} `}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -135,13 +164,21 @@ const CheckPasswordModal = ({ isOpen, onConfirm, onClose, className, accountNo }
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-green w-full rounded-t-2xl">
-              <div onClick={onClose}>
+              <div onClick={closeModal}>
                 <XMarkIcon className="w-7 h-7 text-gray-600 m-3" />
               </div>
               <div className="flex justify-center my-6">
                 <LockClosedIcon className="w-8 h-8 text-teal-500" />
               </div>
-              <h2 className="text-xl font-bold flex justify-center">계좌 비밀번호</h2>
+              {isOpen && (deleteType === "deposit" || !deleteType) ? (
+                <h2 className="text-xl font-bold flex justify-center">계좌 비밀번호</h2>
+              ) : isOpen && deleteType === "saving" ? (
+                <h2 className="text-xl font-bold flex justify-center">적금 비밀번호</h2>
+              ) : reCheck ? (
+                <h2 className="text-xl font-bold flex justify-center">다시 한 번 입력하세요</h2>
+              ) : (
+                <h2 className="text-xl font-bold flex justify-center">계좌 비밀번호</h2>
+              )}
 
               <div className="flex justify-center space-x-4 my-10">
                 {passwordCircles.map((_, index) => (
@@ -162,7 +199,7 @@ const CheckPasswordModal = ({ isOpen, onConfirm, onClose, className, accountNo }
             </div>
 
             {/* 하단 키패드 영역 */}
-            <div className="w-full">
+            <div className="w-full ">
               <NumericKeypad
                 onNumberPress={handleNumberPress}
                 onBackspace={handleBackspace}
