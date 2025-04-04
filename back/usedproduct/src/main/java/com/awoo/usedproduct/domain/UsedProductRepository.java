@@ -19,4 +19,6 @@ public interface UsedProductRepository {
     boolean existsById(Integer usedProductId);
     List<UsedProductEntity> findByTitleContaining(String keyword);
 
+    List<UsedProductEntity> findByUsedProductIdIn(List<Integer> usedProductIds);
+
 }
