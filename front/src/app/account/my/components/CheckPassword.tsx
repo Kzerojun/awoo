@@ -80,6 +80,7 @@ const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
               setPassword("");
               setIsLoading(false);
               setErrorCount(0);
+              localStorage.removeItem("accountPasswordLockUntil");
               dispatch(checkPasswordConfirm(true));
             } else {
               alert("비밀번호를 다시 입력하세요.");
@@ -102,17 +103,13 @@ const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
 
   // 비밀번호 검증 실패 처리
   const handleVerificationFailure = () => {
-    setErrorCount((prev) => prev + 1);
-    setPassword("");
-    dispatch(checkPasswordConfirm(false));
+    const nextCount = errorCount + 1;
+    setErrorCount(nextCount);
 
-    // 오류 메시지 표시
-    alert("비밀번호가 일치하지 않습니다.");
+    setPassword("");
 
     // 3회 이상 실패하면 모달 닫기
-    if (errorCount >= 2) {
-      // 현재 카운트 + 1로 판단하므로 2를 기준으로 함
-
+    if (nextCount >= 3) {
       const lockUntil = Date.now() + 10 * 60 * 1000; // 현재 시간 + 10분
       localStorage.setItem("accountPasswordLockUntil", lockUntil.toString());
 
@@ -178,7 +175,7 @@ const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
       </div>
 
       {/* 숫자 키패드 컴포넌트 */}
-      {!passwordStatus ? (
+      {errorCount === 3 ? (
         <div className="text-center text-red-500 p-4">
           비밀번호 입력이 잠시 차단되었습니다.
           <br />
