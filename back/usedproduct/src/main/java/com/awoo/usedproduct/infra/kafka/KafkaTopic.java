@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum KafkaTopic {
 
-    USED_PRODUCT_SAFE_SOLD("used-product-safe-sold");
+    USED_PRODUCT_SAFE_SOLD("used-product-safe-sold"),
+    CHAT_MESSAGE("chat-message");
 
 
     private final String topicName;

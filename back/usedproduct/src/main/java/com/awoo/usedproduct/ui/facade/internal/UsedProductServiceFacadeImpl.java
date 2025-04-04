@@ -117,4 +117,16 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
                                 .toList()
                 ).build();
     }
+
+    @Override
+    public FetchLikeUsedProductsResponse fetchLikeUsedProducts(Integer memberId) {
+        List<UsedProductEntity> usedProductEntities = queryUsedProductsService.fetchLikeUsedProducts(memberId);
+
+        return FetchLikeUsedProductsResponse.builder()
+                .usedProducts(usedProductEntities.stream()
+                        .map(UsedProductResponse::fromEntity)
+                        .toList()
+                )
+                .build();
+    }
 }

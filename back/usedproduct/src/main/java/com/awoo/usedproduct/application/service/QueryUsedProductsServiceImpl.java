@@ -109,5 +109,18 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
         log.info("Keyword 검색 : {} ",keyword);
         return usedProductRepository.findByTitleContaining(keyword);
     }
+
+    @Override
+    public List<UsedProductEntity> fetchLikeUsedProducts(Integer memberId) {
+        List<LikeEntity> likes = likeRepository.findByMemberId(memberId);
+
+        // 2. usedProductId 추출
+        List<Integer> usedProductIds = likes.stream()
+                .map(LikeEntity::getUsedProductId)
+                .toList();
+
+        // 3. 해당 상품들 조회
+        return usedProductRepository.findByUsedProductIdIn(usedProductIds);
+    }
 }
 

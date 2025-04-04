@@ -22,8 +22,7 @@ public class AccountController {
                                                @RequestBody CreateAccountRequest request) {
         try{
             CreateAccountCommand command = request.toCommand();
-            accountServiceFacade.createAccount(memberId, command);
-            return ApiUtils.success("계좌가 생성되었습니다.");
+            return ApiUtils.success(Map.of("accountNo", accountServiceFacade.createAccount(memberId, command)));
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
@@ -74,7 +73,7 @@ public class AccountController {
             if (accountServiceFacade.confirmPassword(request.get("accountNo"), request.get("password"))) {
                 return ApiUtils.success("비밀번호 일치");
             }
-            return ApiUtils.success("비밀번호가 일치하지 않습니다.");
+            return ApiUtils.error("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
