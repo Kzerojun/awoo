@@ -13,6 +13,7 @@ import { setAccountVerified } from "@/lib/slices/accountSlice";
 import { OpenDepositAccount } from "@/api/account/open/account";
 import { useChangeDepositLimit } from "@/hooks/account/deposit/useChangeDepositLimit";
 
+import { setHasDepositAccount } from "@/lib/slices/accountStatusSlice";
 export default function AccountVerifySuccessPage() {
   // ✅ 계좌 개설 완료 여부 상태 (true면 완료 화면 보여줌)
   const [showComplete, setShowComplete] = useState(false);
@@ -67,6 +68,9 @@ export default function AccountVerifySuccessPage() {
       setShowComplete(true); // 성공 시 완료 화면으로 전환
       setAccountNo(res.response.accountNo);
       setReadyChangeLimit(true);
+
+      // ✅ 입출금 계좌 개설 완료 상태 Redux에 저장
+      dispatch(setHasDepositAccount(true));
     } catch (error) {
       console.error("❌ 계좌 개설 실패:", error); // 실패 시 콘솔에 에러 출력
       alert("계좌 개설에 실패했습니다. 다시 시도해주세요.");
