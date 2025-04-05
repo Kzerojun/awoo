@@ -1,4 +1,4 @@
-package com.awoo.admin.infra.client.member.response;
+package com.awoo.admin.infra.client.member;
 
 import java.time.LocalDateTime;
 

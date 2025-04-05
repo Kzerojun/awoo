@@ -1,7 +1,8 @@
-package com.awoo.admin.application.service;
+package com.awoo.admin.application.service.impl;
 
 import com.awoo.admin.application.command.RegisterReportCommand;
 import com.awoo.admin.application.command.handleReportCommand;
+import com.awoo.admin.application.service.ReportService;
 import com.awoo.admin.domain.Entity.ReportEntity;
 import com.awoo.admin.domain.repository.ReportRepository;
 import com.awoo.admin.ui.facade.dto.response.FetchReportResponse;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     @Transactional

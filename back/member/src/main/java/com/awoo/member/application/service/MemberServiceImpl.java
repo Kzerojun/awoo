@@ -13,6 +13,7 @@ import com.awoo.member.domain.repository.MemberRepository;
 import com.awoo.member.infra.jwt.JwtTokenProvider;
 import com.awoo.member.infra.util.AESUtil;
 import com.awoo.member.ui.dto.CheckMemberRequest;
+import com.awoo.member.ui.dto.FetchMemberInfo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Service
@@ -246,6 +249,18 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
 
         member.markDeleted();
+    }
+
+    public List<FetchMemberInfo> fetchMemberInfoList(Set<Integer> memberIds) {
+        return memberRepository.findAllByIdIn(memberIds).stream()
+                .map(member -> new FetchMemberInfo(
+                        member.getId(),
+                        member.getName().getValue(),
+                        member.getEmail().getValue(),
+                        member.getNickname(),
+                        member.getCreatedAt()
+                ))
+                .toList();
     }
 
 }

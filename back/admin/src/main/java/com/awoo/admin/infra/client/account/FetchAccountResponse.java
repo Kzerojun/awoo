@@ -1,4 +1,4 @@
-package com.awoo.admin.infra.client.member.response;
+package com.awoo.admin.infra.client.account;
 
 import java.time.LocalDateTime;
 
@@ -7,7 +7,7 @@ public record FetchAccountResponse(int memberId,
                                    String accountNo,
                                    AccountType accountType,
                                    LocalDateTime accountCreatedAt,
-                                   int petId,
+                                   Integer petId,
                                    boolean isDelete
                                    ) {
     public enum AccountType {

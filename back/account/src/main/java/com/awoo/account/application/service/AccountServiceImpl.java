@@ -210,7 +210,7 @@ public class AccountServiceImpl implements AccountService{
             FetchAccountResponse response = FetchAccountResponse.builder()
                     .memberId(entity.getMemberId())
                     .bankCode(entity.getBankCode())
-                    .accountNo(entity.getAccountNumber())
+                    .accountNo(aesUtil.decrypt(entity.getAccountNumber()))
                     .accountType(entity.getAccountType())
                     .accountCreatedAt(entity.getCreatedAt())
                     .petId(entity.getPetId())

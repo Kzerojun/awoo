@@ -7,6 +7,7 @@ import com.awoo.pet.ui.facade.dto.response.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PetServiceFacade {
 
@@ -29,4 +30,6 @@ public interface PetServiceFacade {
     SearchWalkListResponse searchWalkListByMember(final Integer memberId);
 
     SearchWalkListResponse searchWalkInMonthByPet (final Integer petId);
+
+    List<FetchPetInfoResponse> fetchPetInfoList(Set<Integer> petIds);
 }

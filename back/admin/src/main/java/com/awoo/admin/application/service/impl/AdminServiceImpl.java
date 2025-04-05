@@ -1,7 +1,8 @@
-package com.awoo.admin.application.service;
+package com.awoo.admin.application.service.impl;
 
 import com.awoo.admin.application.command.CreateAdminAccountCommand;
 import com.awoo.admin.application.command.LoginAdminCommand;
+import com.awoo.admin.application.service.AdminService;
 import com.awoo.admin.domain.Entity.AdminEntity;
 import com.awoo.admin.domain.Role;
 import com.awoo.admin.domain.repository.AdminRepository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final AESUtil aesUtil;

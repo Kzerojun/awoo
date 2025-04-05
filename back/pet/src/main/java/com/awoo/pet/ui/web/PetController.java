@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -76,5 +77,10 @@ public class PetController {
     @GetMapping("/{petId}/walks/inMonth")
     public ApiUtils.ApiResult<SearchWalkListResponse> searchWalkInMonthByPet(@PathVariable Integer petId){
         return ApiUtils.success(petServiceFacade.searchWalkInMonthByPet(petId));
+    }
+
+    @PostMapping("/admin")
+    public List<FetchPetInfoResponse> fetchPetInfoList(@RequestBody Set<Integer> petIds) {
+        return petServiceFacade.fetchPetInfoList(petIds);
     }
 }

@@ -1,9 +1,9 @@
 package com.awoo.admin.ui.facade.internal;
 
 import com.awoo.admin.application.service.AccountService;
-import com.awoo.admin.infra.client.member.response.FetchAccountResponse;
-import com.awoo.admin.infra.client.member.response.FetchMemberInfo;
-import com.awoo.admin.infra.client.member.response.FetchPetInfo;
+import com.awoo.admin.infra.client.account.FetchAccountResponse;
+import com.awoo.admin.infra.client.member.FetchMemberInfo;
+import com.awoo.admin.infra.client.pet.FetchPetInfo;
 import com.awoo.admin.ui.facade.AccountServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,10 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
     }
 
     public List<FetchMemberInfo> fetchMemberInfoList(Set<Integer> memberIds) {
-        return null;
+        return accountService.fetchMemberInfoList(memberIds);
     }
 
     public List<FetchPetInfo> fetchPetInfoList(Set<Integer> petIds) {
-        return null;
+        return accountService.fetchPetInfoList(petIds);
     }
 }

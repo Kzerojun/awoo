@@ -1,6 +1,7 @@
-package com.awoo.admin.application.service;
+package com.awoo.admin.application.service.impl;
 
 import com.awoo.admin.application.command.CreateSavingProductCommand;
+import com.awoo.admin.application.service.SavingService;
 import com.awoo.admin.infra.ssafyfinance.SSAFYSavingsApiClient;
 import com.awoo.admin.infra.ssafyfinance.request.SSAFYCommonHeaderRequest;
 import com.awoo.admin.infra.ssafyfinance.request.SSAFYCreateSavingProductRequest;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class SavingServiceImpl implements SavingService{
+public class SavingServiceImpl implements SavingService {
     private final SSAFYApiHelper ssafyApiHelper;
     private final SSAFYSavingsApiClient ssafySavingsApiClient;
     public void createSavingProduct(CreateSavingProductCommand command) {

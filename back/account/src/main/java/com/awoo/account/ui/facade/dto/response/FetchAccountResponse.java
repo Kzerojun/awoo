@@ -10,7 +10,7 @@ public record FetchAccountResponse(int memberId,
                                    String accountNo,
                                    AccountType accountType,
                                    LocalDateTime accountCreatedAt,
-                                   int petId,
+                                   Integer petId,
                                    boolean isDelete) {
     @Builder
     public FetchAccountResponse {
