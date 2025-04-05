@@ -38,6 +38,7 @@ export default function ChatRoomPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [productId, setProductId] = useState<number | null>(null);
 
   // 📌 이미지 파일 -> Base64 변환 함수
   const fileToBase64 = (file: File): Promise<string> => {
@@ -60,7 +61,10 @@ export default function ChatRoomPage() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
-
+  useEffect(() => {
+    const id = searchParams.get("usedProductId");
+    if (id) setProductId(Number(id));
+  }, [searchParams]);
   // ✅ 채팅 기록 불러오기 & 소켓 연결
   useEffect(() => {
     if (!memberId || memberId === 0) return;
@@ -155,8 +159,7 @@ export default function ChatRoomPage() {
   return (
     <div className="flex flex-col h-screen bg-gray-50 relative">
       {/* ✅ 채팅방 헤더 */}
-      <ChatRoomHeader usedProductId={usedProductId ? Number(usedProductId) : null} />
-
+      <ChatRoomHeader usedProductId={productId} />
       {/* ✅ 채팅 메시지 목록 */}
       <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto px-4 py-2 space-y-2">
         {messages.length > 0 ? (
@@ -265,7 +268,12 @@ export default function ChatRoomPage() {
         onChange={handleFileChange}
       />
       {/* 송금 모달 */}
-      <PaymentSelectModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
+      <PaymentSelectModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        chatRoomId={Number(chatRoomId)}
+        usedProductId={productId ?? 0}
+      />
     </div>
   );
 }
