@@ -1,8 +1,14 @@
 package com.awoo.admin.domain.Entity;
 
 import com.awoo.admin.domain.Process;
+import com.awoo.admin.infra.Kafka.consume.RegisterReportConsume;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -14,41 +20,53 @@ public class ReportEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-    @Column(name = "user_from", nullable = false)
-    private String userFrom;
-
-    @Column(name = "user_to", nullable = false)
-    private String userTo;
-
-    @Column(name = "user_to_email", nullable = false)
-    private String userToEmail;
-
-    @Column(name = "report_by", nullable = false)
-    private String reportBy;
+    @Column(nullable = false)
+    private String reporterName;
 
     @Column(nullable = false)
-    private String content;
+    private String reporterEmail;
+
+    @Column(nullable = false)
+    private String reportedUserName;
+
+    @Column(nullable = false)
+    private String reportedUserEmail;
+
+    @Column(nullable = false)
+    private int usedProductId;
+
+    @Column(nullable = false)
+    private LocalDateTime reportedAt;
+
+    @Column(nullable = false)
+    private RegisterReportConsume.Reason reason;
+
+//    @Column(nullable = false)
+//    private String content;
 
     @Column
     @Enumerated(EnumType.STRING)
     private Process process;
 
     @Column(nullable = false)
-    private int count;
+    private int reportCount;
 
     @Builder
-    public ReportEntity(String userFrom, String userTo, String userToEmail, String reportBy,
-                        String content) {
-        this.userFrom = userFrom;
-        this.userTo = userTo;
-        this.userToEmail = userToEmail;
-        this.reportBy = reportBy;
-        this.content = content;
+    public ReportEntity(String reporterName, String reporterEmail,
+                        String reportedUserName, String reportedUserEmail, int usedProductId,
+                        LocalDateTime reportedAt, RegisterReportConsume.Reason reason) {
+        this.reporterName = reporterName;
+        this.reporterEmail = reporterEmail;
+        this.reportedUserName = reportedUserName;
+        this.reportedUserEmail = reportedUserEmail;
+        this.usedProductId = usedProductId;
+        this.reportedAt = reportedAt;
+        this.reason = reason;
         this.process = Process.P;
-        this.count = 1;
+        this.reportCount = 1;
     }
 
     public void changeProcess(Process process) { this.process = process; }
 
-    public void upCount() { this.count++; }
+    public void upCount() { this.reportCount++; }
 }

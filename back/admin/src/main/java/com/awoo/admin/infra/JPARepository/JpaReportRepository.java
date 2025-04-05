@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JpaReportRepository extends ReportRepository, JpaRepository<ReportEntity,Integer> {
+    ReportEntity findByReportedUserEmail(String reportedUserEmail);
 }
