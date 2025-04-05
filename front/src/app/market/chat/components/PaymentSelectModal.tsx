@@ -31,7 +31,14 @@ export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedPr
               <div className="flex items-center space-x-3 cursor-pointer">
                 <div className="text-orange-500 text-xl">💰</div>
                 <div>
-                  <div className="text-sm" onClick={() => router.push(`/my/paymentSend/`)}>
+                  <div
+                    className="text-sm"
+                    onClick={() =>
+                      router.push(
+                        `/my/paymentSend?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
+                      )
+                    }
+                  >
                     송금하기
                   </div>
                 </div>
