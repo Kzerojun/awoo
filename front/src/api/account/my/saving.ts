@@ -108,6 +108,7 @@ export const getSavingAccount = async ({ savingId }: GetSavingPayload): Promise<
     const res = await axiosInstance.get<ApiResponse<SavingResponse>>(
       `/savings?savingId=${savingId}`
     );
+    console.log("적금 단건 계좌 조회할 때 savingId", savingId);
     console.log("적금 계좌 단건 조회 성공:", res.data);
     return res.data.response;
   } catch (err) {
