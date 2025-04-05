@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import puppy from "../../../../../../public/icons/home/home-dog-2.png"; // 강아지 이미지 경로에 맞게 수정해주세요
+import puppy from "../../../../../../public/icons/home/home-dog-2.png";
 
 export default function WalkReportPreview() {
   return (
