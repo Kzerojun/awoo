@@ -58,7 +58,6 @@ public class AccountController {
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @PostMapping("/deduct")
