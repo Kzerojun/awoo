@@ -1,7 +1,8 @@
 "use client";
 
-import { HeartIcon as SolidHeart } from "@heroicons/react/24/solid";
-import { HeartIcon as OutlineHeart } from "@heroicons/react/24/outline";
+import { BookmarkIcon } from "@heroicons/react/24/outline"; // 찜 안됨
+import { BookmarkIcon as SolidBookmarkIcon } from "@heroicons/react/24/solid"; // 찜 됨
+
 import Button from "@/common/ui/Button";
 import MoungpayJoinModal from "@/app/market/components/MoungpayJoinModel";
 import { useAppSelector } from "@/lib/store";
@@ -39,9 +40,9 @@ export default function DetailBottomBar({
         <div className="flex items-center gap-2">
           <button onClick={onToggleLike} className="mr-4 ml-2">
             {isLiked ? (
-              <SolidHeart className="w-6 h-6 text-rose-500" />
+              <SolidBookmarkIcon className="w-6 h-6 text-gray-600" />
             ) : (
-              <OutlineHeart className="w-6 h-6 text-gray-400" />
+              <BookmarkIcon className="w-6 h-6 text-gray-400" />
             )}
           </button>
           <div className="text-lg font-bold text-gray-900">{price}</div>
