@@ -60,9 +60,11 @@ export default function MarketPage() {
     <div className="flex flex-col min-h-screen">
       <MarketHeader currentTab={currentTab} onTabChange={handleTabChange} />
       <div className="mt-14 px-4 py-2 flex-1 space-y-4">
-        <div className="mb-4">
-          <SearchBar onSearchResults={handleSearchResults} />
-        </div>
+        {currentTab === "상품" && (
+          <div className="mb-4">
+            <SearchBar onSearchResults={handleSearchResults} />
+          </div>
+        )}
 
         {/* 상품탭 */}
         {currentTab === "상품" ? (
