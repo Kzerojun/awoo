@@ -114,8 +114,8 @@ public class AccountServiceImpl implements AccountService{
 
         // kafka 요청 메시지 생성
         // 입금, 출금 계좌로 부터 각각 memberId 조회
-        Integer senderId =  accountRepository.findByAccountNumber(command.withdrawalAccountNo()).getMemberId();
-        Integer receiverId = accountRepository.findByAccountNumber(command.depositAccountNo()).getMemberId();
+        Integer senderId =  accountRepository.findByAccountNumber(aesUtil.encrypt(command.withdrawalAccountNo())).getMemberId();
+        Integer receiverId = accountRepository.findByAccountNumber(aesUtil.encrypt(command.depositAccountNo())).getMemberId();
 
         //member 도메인에 memberId에 맵핑된 name 요청
         String senderName = memberClient.getMemberName(senderId);

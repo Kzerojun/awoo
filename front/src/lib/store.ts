@@ -23,6 +23,7 @@ import savingAccountDetailReducer from "./slices/savingAccountDetailSlice";
 import chatReducer from "./slices/chatSlice";
 import transferReducer from "./slices/transferSlice";
 import memberIdReducer from "./slices/memberIdSlice";
+import accountStatusReducer from "./slices/accountStatusSlice";
 
 // === ✅ Step 3 : persist 설정 ===
 const persistConfig = {
@@ -37,6 +38,7 @@ const persistConfig = {
     "pet",
     "savingAccountDetail",
     "memberId",
+    "accountStatus",
   ], // persist로 값을 관리할 필요가 있는 경우에 추가
 };
 
@@ -59,6 +61,7 @@ const rootReducer = combineReducers({
   transfer: transferReducer,
   chat: chatReducer,
   memberId: memberIdReducer,
+  accountStatus: accountStatusReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

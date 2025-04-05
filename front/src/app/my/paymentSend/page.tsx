@@ -9,6 +9,7 @@ import SendAmountModal from "./components/SendAmountModal";
 import SendConfirmModal from "./components/SendConfirmModal";
 import { getPaymentBalance, transferPayment } from "@/api/payment/payment";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 export default function PaymentSend() {
   const router = useRouter();
@@ -20,6 +21,11 @@ export default function PaymentSend() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSending, setIsSending] = useState<boolean>(false);
   const [transactionId, setTransactionId] = useState<number | null>(null);
+
+  const searchParams = useSearchParams();
+  const chatRoomId = searchParams.get("chatRoomId");
+  const usedProductId = searchParams.get("usedProductId");
+  const backUrl = `/market/chat/${chatRoomId}?usedProductId=${usedProductId}`;
 
   // 컴포넌트 마운트 시 잔액 조회
   useEffect(() => {
@@ -105,7 +111,8 @@ export default function PaymentSend() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      <CommonTopBar title="송금" rightAction="bell" />
+      {/* 멍페이 송금 출입 이후 다시 채팅으로 돌아갈때 중고물품 정보를 알고 가기 위함 */}
+      <CommonTopBar title="송금" rightAction="bell" leftAction="back" backUrl={backUrl} />
 
       <div className="pt-14 flex-1 flex flex-col">
         <SendBankInfo onComplete={handleBankInfoComplete} />

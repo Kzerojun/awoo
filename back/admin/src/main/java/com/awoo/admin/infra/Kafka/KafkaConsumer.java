@@ -1,8 +1,11 @@
 package com.awoo.admin.infra.Kafka;
 
 import com.awoo.admin.application.command.RegisterAnswerCommand;
+import com.awoo.admin.application.command.RegisterReportCommand;
 import com.awoo.admin.application.service.QuestionService;
+import com.awoo.admin.application.service.ReportService;
 import com.awoo.admin.infra.Kafka.consume.RegisterQuestionConsume;
+import com.awoo.admin.infra.Kafka.consume.RegisterReportConsume;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -17,11 +20,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor // 생성자 자동 생성
+@RequiredArgsConstructor
 public class KafkaConsumer {
 
     private final QuestionService questionService;
+    private final ReportService reportService;
 
+    //문의사항 발생
     @KafkaListener(topics = "account.register.question.v1", groupId = "admin-group")
     public void registerQuestion(String kafkaMessage) {
         log.info("Kafka Message : -> " + kafkaMessage);
@@ -39,12 +44,22 @@ public class KafkaConsumer {
         }
     }
 
-//    @KafkaListener(topics = "account.register.question.v1", groupId = "admin-group")
-//    public void registerQuestion(@Payload RegisterQuestionConsume kafkaMessage) {
-//        log.info("Kafka Message : -> " + kafkaMessage);
-//        RegisterAnswerCommand command = kafkaMessage.toCommand();
-//        questionService.registerQuestion(command);
-//    }
+    //신고 사항 발생
+    @KafkaListener(topics = "used-products-reported", groupId = "admin-group")
+    public void registerReport(String kafkaMessage) {
+        log.info("Kafka Message : -> " + kafkaMessage);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new ParameterNamesModule());
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        try {
+            RegisterReportConsume payload = mapper.readValue(kafkaMessage, RegisterReportConsume.class);
+            RegisterReportCommand command = payload.toCommand();
+            reportService.registerReport(command);
+        } catch (Exception e) {
+            log.error("Kafka Consumer message parsing failed", e);
+        }
+    }
 
     @Bean
     public NewTopic registerQuestionTopic() {

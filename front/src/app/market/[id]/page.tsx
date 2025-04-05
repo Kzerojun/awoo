@@ -111,11 +111,7 @@ export default function MarketDetailPage() {
   return (
     <div className="pb-24">
       {/* ✅ 상단바 */}
-      <MarketTopBar
-        title={detail.title}
-        canModify={detail.canModify}
-        articleId={detail.usedProductId}
-      />
+      <MarketTopBar title="" canModify={detail.canModify} articleId={detail.usedProductId} />
 
       {/* ✅ 이미지 */}
       <ProductImage src={detail.imageUrls[0]} />
