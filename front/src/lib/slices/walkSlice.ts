@@ -7,6 +7,7 @@ interface WalkState {
   distance: number | null;
   currentWalkingDog: PetInterface | null;
   photo?: string | null;
+  selectBackgroundImage?: string;
 }
 
 const initialState: WalkState = {
@@ -16,6 +17,7 @@ const initialState: WalkState = {
   distance: null,
   currentWalkingDog: null,
   photo: null,
+  selectBackgroundImage: "/images/walking/walkingBackground3.png",
 };
 
 const walkSlice = createSlice({
