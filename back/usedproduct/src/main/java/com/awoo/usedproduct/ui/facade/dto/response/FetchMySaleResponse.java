@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 public record FetchMySaleResponse(Integer usedProductId,
+								  String title,
 								  String imageUrl,
 								  Integer price,
 								  LocalDateTime createdAt,
