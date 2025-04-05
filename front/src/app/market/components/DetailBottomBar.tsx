@@ -3,6 +3,10 @@
 import { HeartIcon as SolidHeart } from "@heroicons/react/24/solid";
 import { HeartIcon as OutlineHeart } from "@heroicons/react/24/outline";
 import Button from "@/common/ui/Button";
+import MoungpayJoinModal from "@/app/market/components/MoungpayJoinModel";
+import { useAppSelector } from "@/lib/store";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface DetailBottomBarProps {
   price: string;
@@ -17,6 +21,17 @@ export default function DetailBottomBar({
   onChatClick,
   onToggleLike,
 }: DetailBottomBarProps) {
+  const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
+  const isPaymentUser = useAppSelector((state) => state.user.paymentRegister);
+  // 👉 채팅 버튼 클릭 처리
+  const handleChatClick = () => {
+    if (!isPaymentUser) {
+      setShowModal(true);
+      return;
+    }
+    onChatClick(); // 기존 로직 그대로 실행
+  };
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-3 z-50">
       <div className="flex items-center justify-between">
@@ -40,9 +55,12 @@ export default function DetailBottomBar({
           backgroundColor="aqua"
           fontColor="white"
           width="short"
-          onClick={onChatClick}
+          onClick={handleChatClick}
         />
       </div>
+
+      {/* 💡 모달 컴포넌트 추가 */}
+      <MoungpayJoinModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }
