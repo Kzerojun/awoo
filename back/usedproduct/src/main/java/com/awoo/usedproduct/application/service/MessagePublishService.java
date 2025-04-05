@@ -19,7 +19,7 @@ public class MessagePublishService {
     private final UsedProductOutboxRepository usedProductOutboxRepository;
     private final KafkaProducer producer;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
     @Transactional
     public void publishMessage() {
         List<UsedProductOutbox> messages = usedProductOutboxRepository.read();

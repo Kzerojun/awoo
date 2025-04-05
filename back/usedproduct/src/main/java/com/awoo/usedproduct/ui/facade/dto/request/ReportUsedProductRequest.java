@@ -5,9 +5,10 @@ import com.awoo.usedproduct.domain.ReportReason;
 
 public record ReportUsedProductRequest(ReportReason reason) {
 
-	public ReportCommand toCommand(Integer usedProductId){
+	public ReportCommand toCommand(Integer usedProductId, String memberId){
 		return ReportCommand.builder()
 				.reason(reason)
+				.memberId(Integer.valueOf(memberId))
 				.usedProductId(usedProductId)
 				.build();
 	}

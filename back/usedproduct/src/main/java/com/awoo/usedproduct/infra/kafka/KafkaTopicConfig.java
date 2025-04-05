@@ -18,4 +18,9 @@ public class KafkaTopicConfig {
     public NewTopic createUsedProductMessageTopic() {
         return new NewTopic(KafkaTopic.CHAT_MESSAGE.getTopicName(), 3, (short) 1);
     }
+
+    @Bean
+    public NewTopic createUsedProductReportedTopic() {
+        return new NewTopic(KafkaTopic.USED_PRODUCT_REPORT.getTopicName(), 3, (short) 1);
+    }
 }
