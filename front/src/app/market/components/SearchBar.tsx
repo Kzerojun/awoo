@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MagnifyingGlassIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { searchUsedProducts } from "@/api/market/search/search";
 import { MarketItem } from "../types/market";
 
@@ -32,7 +32,7 @@ export default function MarketSearchBar({
 
   return (
     <div className="flex items-center border border-gray-400 rounded-md px-3 py-2 bg-white">
-      <Bars3Icon className="w-6 h-6 text-gray-500" />
+      {/* <Bars3Icon className="w-6 h-6 text-gray-500" /> */}
       <input
         type="text"
         placeholder="상품명을 입력하세요"

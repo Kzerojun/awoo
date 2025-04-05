@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { MarketItem } from "../types/market";
 import { EyeIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 interface MarketListItemProps extends MarketItem {
   onClick?: () => void;
@@ -14,8 +15,8 @@ export default function MarketListItem({
   title,
   time,
   price,
-  views,
-  chat,
+  viewCount,
+  likeCount,
   onClick,
 }: MarketListItemProps) {
   const router = useRouter();
@@ -41,11 +42,11 @@ export default function MarketListItem({
         <div className="text-xs text-gray-400 mt-1 flex items-center space-x-2">
           <span className="flex items-center gap-1">
             <EyeIcon className="w-4 h-4" />
-            {views}
+            {viewCount}
           </span>
           <span className="flex items-center gap-1">
-            <ChatBubbleLeftEllipsisIcon className="w-4 h-4" />
-            {chat}
+            <BookmarkIcon className="w-4 h-4" />
+            {likeCount}
           </span>
         </div>
       </div>
