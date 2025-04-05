@@ -103,7 +103,7 @@ export const adminLogin = async (credentials: AdminLoginRequest): Promise<AdminL
 export const answerQuestion = async (
   answerData: AnswerQuestionRequest
 ): Promise<AnswerQuestionResponse> => {
-  const response = await axiosInstance.post("/admin/answer", answerData);
+  const response = await axiosInstance.post("/admin/questions/answer", answerData);
   return response.data;
 };
 
