@@ -15,11 +15,13 @@ import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
+import com.awoo.account.ui.facade.dto.response.FetchAccountResponse;
 import com.awoo.account.ui.facade.dto.response.TransactionResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -198,6 +200,27 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         ssafyCommonApiClient.checkAuthCode(request);
+    }
+
+    public List<FetchAccountResponse> fetchAccountAll() {
+        List<AccountEntity> accountEntities = accountRepository.findAll();
+        List<FetchAccountResponse> result = new ArrayList<>();
+
+        for (AccountEntity entity : accountEntities) {
+            FetchAccountResponse response = FetchAccountResponse.builder()
+                    .memberId(entity.getMemberId())
+                    .bankCode(entity.getBankCode())
+                    .accountNo(entity.getAccountNumber())
+                    .accountType(entity.getAccountType())
+                    .accountCreatedAt(entity.getCreatedAt())
+                    .petId(entity.getPetId())
+                    .isDelete(entity.isDeleted())
+                    .build();
+
+            result.add(response);
+        }
+
+        return result;
     }
 
 }
