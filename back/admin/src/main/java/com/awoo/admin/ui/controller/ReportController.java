@@ -15,7 +15,7 @@ public class ReportController {
 
     private final ReportServiceFacade reportServiceFacade;
 
-    @PostMapping
+    @PatchMapping
     public ApiUtils.ApiResult<?> handleReport(@RequestBody handleReportRequest request) {
         try {
             handleReportCommand command = request.toCommand();
