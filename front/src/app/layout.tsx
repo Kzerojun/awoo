@@ -13,6 +13,7 @@ import { KeypadProvider } from "@/contexts/KeypadContent"; // ✅ 키패드 컨�
 import { useEffect } from "react";
 import { useNotificationListener } from "@/hooks/alarm/useNotificationListner";
 import { usePermissionObserver } from "@/hooks/alarm/usePermissionObserver";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -23,6 +24,43 @@ export default function RootLayout({
   title?: string;
   rightAction?: React.ReactNode;
 }) {
+  // children 의 현재 경로
+  const path = usePathname();
+  // 바텀바 숨김 페이지들
+  const hideBottomBarPaths = [
+    "/",
+    "/#",
+    "/login",
+    "/my/profile/withdraw",
+    "/signup",
+    "/signup/policy",
+    "/signup/profile",
+    "/my/paymentRegister/signupDone",
+    "/my/paymentRegister/paymentPassword",
+    "/my/paymentRegister/accountCertificate",
+    "/my/paymentRegister/registerDone",
+    "/my/paymentSend/completeSend",
+    "/my/paymentCharge/chargeDone",
+    "/walk/pre",
+    "/walk/start/guide",
+    "/walk/start/start", // 산책하는 페이지
+    "/walk/take-photo", // 산책 후 사진 찍는 페이지
+    "/walk/end/check", // 산책 종료 페이지
+    "/main", // 메인 웹페이지
+    "/market/safePayment/safePayDone",
+    "/market/safePayment/safePay",
+    "/account/my/deposit/transfer", // 계좌이체 페이지
+    "/account/my/check-password", // 계좌 조회 비밀번호 입력 페이지
+  ];
+
+  const shouldShowBottomBar = () => {
+    const isMarketDetail = /^\/market\/[^\/]+$/.test(path);
+    if (path.includes("/admin") || isMarketDetail) return false;
+    return !hideBottomBarPaths.includes(path);
+  };
+
+  const showBottomBar = shouldShowBottomBar();
+
   // === ✨ SW 등록 ===
   useEffect(() => {
     if ("serviceWorker" in navigator) {
@@ -54,12 +92,16 @@ export default function RootLayout({
             <TrackRouteWrapper />
             <ToastWrapper />
             {/* 메인 컨텐츠 영역 */}
-            <main className="flex-1 overflow-y-auto w-full min-h-screen pb-14 scrollbar-hide">
+            <main
+              className={`flex-1 overflow-y-auto w-full scrollbar-hide ${
+                showBottomBar ? "pb-14" : ""
+              }`}
+            >
               {children}
             </main>
 
             {/* 하단바 (fixed bottom-0) */}
-            <BottomBarWrapper />
+            {showBottomBar && <BottomBarWrapper />}
           </KeypadProvider>
         </Providers>
       </body>

@@ -23,15 +23,31 @@ const formatTime = (date: Date | null) => {
 
 const formatElapsedTime = (seconds: number) => {
   const flooredSeconds = Math.floor(seconds);
-  const minutes = Math.floor(flooredSeconds / 60);
+  const hours = Math.floor(flooredSeconds / 3600);
+  const minutes = Math.floor((flooredSeconds % 3600) / 60);
   const remainingSeconds = flooredSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}시간 ${minutes}분 ${remainingSeconds}초`;
+  }
   return `${minutes}분 ${remainingSeconds}초`;
 };
 
 const Walking = () => {
-  // const { requestPermission } = useLocationPermission();
-  const { stopTracking, isTracking, elapsedTime, startTime, endTime, distance } =
-    useLocationTracking();
+  const {
+    startTracking,
+    stopTracking,
+    isTracking,
+    elapsedTime,
+    startTime,
+    endTime,
+    distance,
+    positions,
+    currentPosition,
+    startPosition,
+  } = useLocationTracking();
+  const [isMapReady, setIsMapReady] = useState<boolean>(false);
+  const [trackingStarted, setTrackingStarted] = useState(false);
   const [totalWalkTime, setTotalWalkTime] = useState<string | null>(null);
   const [walkStartTime, setWalkStartTime] = useState<string | null>(null);
   const [walkEndTime, setWalkEndTime] = useState<string | null>(null);
@@ -40,6 +56,12 @@ const Walking = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const walkingDog = useAppSelector((state) => state.walk.currentWalkingDog);
+
+  // 페이지 진입 시 트래킹 정보 초기화
+  useEffect(() => {
+    setTrackingStarted(false);
+    setIsTrackingStopped(false);
+  }, []);
 
   useEffect(() => {
     console.log(walkingDog);
@@ -62,6 +84,11 @@ const Walking = () => {
       setDisplayElapsedTime(formatElapsedTime(elapsedTime));
     }
   }, [elapsedTime, isTrackingStopped]);
+
+  const handleStartWalk = () => {
+    startTracking(); // 위치, 시간 트래킹 시작
+    setTrackingStarted(true);
+  };
 
   // 종료 버튼 누르면 기록 종료 + 시간 기록
   const handleStopTracking = () => {
@@ -89,6 +116,7 @@ const Walking = () => {
   const goToCheckPay = () => {
     router.push("/walk/end/check");
   };
+
   return (
     <div className="flex flex-col items-center w-full px-8 justify-center gap-5">
       {isTracking ? (
@@ -102,29 +130,40 @@ const Walking = () => {
 
       <div className="text-xl text-green">산책 시간 : {displayElapsedTime}</div>
       <div className="w-full max-w-3xl h-[50vh] mb-8">
-        <MapTraking />
+        <MapTraking
+          onMapReady={() => setIsMapReady(true)}
+          positions={positions}
+          currentPosition={currentPosition}
+          startPosition={startPosition}
+          isTracking={isTracking}
+          distance={distance}
+        />
       </div>
 
-      {isTracking ? (
+      {!isTracking && isMapReady && !trackingStarted && (
+        <Button text="산책 시작!" onClick={handleStartWalk} img={paw} backgroundColor="green" />
+      )}
+
+      {isTracking && (
         <Button
           text="끝내기"
           img={paw}
           onClick={handleStopTracking}
           backgroundColor="light-green"
         />
-      ) : (
-        <>
-          <div className="flex flex-col justify-center items-center gap-y-3">
-            <Button text="사진 찍기" img={paw} onClick={goToPhoto} backgroundColor="green" />
-            <Button
-              text="건너 뛰기"
-              onClick={goToCheckPay}
-              backgroundColor="white"
-              border="green"
-              fontColor="green"
-            />
-          </div>
-        </>
+      )}
+
+      {!isTracking && trackingStarted && (
+        <div className="flex flex-col justify-center items-center gap-y-3">
+          <Button text="사진 찍기" img={paw} onClick={goToPhoto} backgroundColor="green" />
+          <Button
+            text="건너 뛰기"
+            onClick={goToCheckPay}
+            backgroundColor="white"
+            border="green"
+            fontColor="green"
+          />
+        </div>
       )}
     </div>
   );

@@ -8,7 +8,7 @@ const WalkingGuidePage = () => {
   return (
     <div>
       <CommonTopBar title="산책" />
-      <main className="mt-20">
+      <main className="mt-14">
         <WalkingGuide />
       </main>
     </div>
