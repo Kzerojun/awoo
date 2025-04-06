@@ -10,6 +10,7 @@ public record UsedProductReportedEvent(
 		Reporter reporter,
 		ReportedUser reportedUser,
 		ReportReason reason,
+		String reportDetails,
 		LocalDateTime reportedAt
 ) {
 
