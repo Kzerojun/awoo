@@ -46,6 +46,7 @@ public record RegisterReportConsume(
                 .usedProductId(usedProductId)
                 .reportedAt(reportedAt)
                 .reason(reason)
+                .reportDetails(reportDetails)
                 .build();
     }
 }
