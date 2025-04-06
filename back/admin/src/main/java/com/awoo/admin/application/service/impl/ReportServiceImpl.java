@@ -4,13 +4,16 @@ import com.awoo.admin.application.command.RegisterReportCommand;
 import com.awoo.admin.application.command.handleReportCommand;
 import com.awoo.admin.application.service.ReportService;
 import com.awoo.admin.domain.Entity.ReportEntity;
+import com.awoo.admin.domain.Process;
 import com.awoo.admin.domain.repository.ReportRepository;
+import com.awoo.admin.infra.Kafka.KafkaProducer;
 import com.awoo.admin.ui.facade.dto.response.FetchReportResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -18,6 +21,7 @@ import java.util.List;
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
+    private final KafkaProducer kafkaProducer;
     @Transactional
     public void registerReport(RegisterReportCommand command) {
         // 대상 중고 게시글 기준으로 기존 신고 검색
@@ -43,6 +47,11 @@ public class ReportServiceImpl implements ReportService {
     public void handleReport(handleReportCommand command) {
         ReportEntity report = reportRepository.findByReportId(command.reportId());
         report.changeProcess(command.process());
+
+        if (command.process() == Process.O) {
+            //삭제 처리 kafka 전송
+            kafkaProducer.send("admin-report-delete", Map.of("usedProductId", report.getUsedProductId()));
+        }
     }
 
     public List<FetchReportResponse> fetchReportList() {
