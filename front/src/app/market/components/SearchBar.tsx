@@ -35,7 +35,7 @@ export default function MarketSearchBar({
       {/* <Bars3Icon className="w-6 h-6 text-gray-500" /> */}
       <input
         type="text"
-        placeholder="상품명을 입력하세요"
+        placeholder="중고 상품을 검색해보세요."
         className="flex-1 mx-2 text-sm focus:outline-none"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
