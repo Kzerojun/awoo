@@ -5,6 +5,7 @@ import com.awoo.usedproduct.application.command.*;
 import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.domain.UsedProductEntity;
+import com.awoo.usedproduct.infra.MemberInfoResponse;
 import com.awoo.usedproduct.ui.facade.UsedProductServiceFacade;
 import com.awoo.usedproduct.ui.facade.dto.response.*;
 import java.util.List;
@@ -55,8 +56,10 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
     public FetchUsedProductDetailResponse fetchUsedProduct(FetchUsedProductQuery query) {
         UsedProductEntity usedProductEntity = queryUsedProductsService.fetchUsedProduct(query);
         boolean liked = queryUsedProductsService.isLiked(query.usedProductId(),query.memberId());
+        MemberInfoResponse memberInfoResponse = queryUsedProductsService.fetchMemberInfo(
+                usedProductEntity.getMemberId());
         return FetchUsedProductDetailResponse.create(
-                usedProductEntity, liked, query.memberId());
+                usedProductEntity, liked, query.memberId(),memberInfoResponse.name());
     }
 
     @Override

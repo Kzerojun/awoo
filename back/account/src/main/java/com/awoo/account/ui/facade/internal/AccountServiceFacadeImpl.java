@@ -1,12 +1,13 @@
 package com.awoo.account.ui.facade.internal;
 
 import com.awoo.account.application.command.*;
-import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountResponseDto;
 import com.awoo.account.application.service.AccountService;
 import com.awoo.account.application.service.DeductBalanceService;
+import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountResponseDto;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYTransferREC;
 import com.awoo.account.ui.facade.AccountServiceFacade;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
+import com.awoo.account.ui.facade.dto.response.FetchAccountResponse;
 import com.awoo.account.ui.facade.dto.response.TransactionResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -65,5 +66,8 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
         accountService.checkAuthCode(memberId, accountNo, authCode);
     }
 
+    public List<FetchAccountResponse> fetchAccountAll() {
+        return accountService.fetchAccountAll();
+    }
 
 }

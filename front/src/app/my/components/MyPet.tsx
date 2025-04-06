@@ -55,7 +55,7 @@ export default function MyPet() {
           ) : !petList || petList.length === 0 ? (
             <NoPetsMessage />
           ) : (
-            <div className="flex items-center justify-center gap-x-3">
+            <div className="flex items-center justify-start gap-x-3">
               {petList.map((pet) => (
                 <Image
                   key={pet.petId}

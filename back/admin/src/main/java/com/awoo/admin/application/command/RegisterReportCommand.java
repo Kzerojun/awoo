@@ -11,7 +11,8 @@ public record RegisterReportCommand(String reporterName,
                                     String reportedUserEmail,
                                     int usedProductId,
                                     LocalDateTime reportedAt,
-                                    Reason reason) {
+                                    Reason reason,
+                                    String reportDetails) {
 
     @Builder
     public RegisterReportCommand {

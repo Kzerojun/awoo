@@ -1,14 +1,14 @@
 package com.awoo.admin.infra.client.member;
 
-import com.awoo.admin.infra.client.member.response.FetchMemberKeyResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Set;
 
 @FeignClient(name = "member")
 public interface MemberClient {
-
-    @GetMapping("/api/members/member-key")
-    FetchMemberKeyResponse fetchMemberKey(@RequestParam("memberId")Integer memberId);
-
+    @PostMapping("/api/members/admin")
+    List<FetchMemberInfo> fetchMemberInfoList(@RequestBody Set<Integer> memberIds);
 }

@@ -7,6 +7,7 @@ import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
 import com.awoo.usedproduct.domain.*;
 import com.awoo.usedproduct.infra.MemberClient;
+import com.awoo.usedproduct.infra.MemberInfoResponse;
 import com.awoo.usedproduct.infra.MemberNicknameResponse;
 import com.awoo.usedproduct.infra.querydsl.QueryDslUsedProductRepository;
 import com.awoo.usedproduct.support.ApiUtils;
@@ -57,6 +58,8 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
     public List<UsedProductEntity> fetchMySales(FetchMySalesQuery query) {
         return queryDslUsedProductRepository.fetchMySales(query);
     }
+
+
 
     @Override
     public boolean isLiked(Integer usedProductId, Integer memberId) {
@@ -121,6 +124,11 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
 
         // 3. 해당 상품들 조회
         return usedProductRepository.findByUsedProductIdIn(usedProductIds);
+    }
+
+    @Override
+    public MemberInfoResponse fetchMemberInfo(Integer memberId) {
+        return memberClient.fetchMemberInfo(memberId).getResponse();
     }
 }
 

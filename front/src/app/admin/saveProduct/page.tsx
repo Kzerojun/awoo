@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import ProductCard from "./components/ProductCard";
 import ProductModal from "./components/ProductModal";
 import { getSavingsProducts, createSavingsProduct } from "@/api/admin/admin";
-
-// admin.ts에서 가져온 타입 정의 사용
 import { SavingsProduct, SavingsProductRequest } from "@/api/admin/admin";
+
+// 허용된 상품명 목록
+const allowedProductNames = ["풍족하개", "적절하개", "산뜻하개"];
 
 export default function SaveProduct() {
   const [products, setProducts] = useState<SavingsProduct[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<SavingsProduct[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +23,15 @@ export default function SaveProduct() {
       setLoading(true);
       const response = await getSavingsProducts();
       if (response.success) {
+        // 모든 상품 데이터 저장
         setProducts(response.response);
+
+        // 허용된 이름을 가진 상품만 필터링하고, 가입 기간이 6일인 상품 제외
+        const filtered = response.response.filter(
+          (product) =>
+            allowedProductNames.includes(product.accountName) && product.subscriptionPeriod !== "6" // 가입 기간이 6일인 상품 제외
+        );
+        setFilteredProducts(filtered);
       } else {
         console.error("적금 상품 목록 조회 실패:", response.error);
       }
@@ -40,8 +50,8 @@ export default function SaveProduct() {
   // 페이지네이션 처리
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -91,7 +101,7 @@ export default function SaveProduct() {
       ) : (
         <>
           {/* 적금 상품이 없는 경우 */}
-          {products.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="text-center p-8">
               <p className="text-gray-500">등록된 적금 상품이 없습니다.</p>
             </div>
