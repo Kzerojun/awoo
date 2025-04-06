@@ -36,13 +36,16 @@ public class ReportEntity {
 
 	private Integer usedProductId;
 
+	private String reportDetails;
+
 	@CreatedDate
 	private LocalDateTime createdAt;
 
 	@Builder
-	public ReportEntity(Integer usedProductId, ReportReason reason) {
+	public ReportEntity(Integer usedProductId, ReportReason reason, String reportDetails) {
 		this.usedProductId = usedProductId;
 		this.reason = reason;
+		this.reportDetails = reportDetails;
 		this.status = ReportStatus.P;
 	}
 }

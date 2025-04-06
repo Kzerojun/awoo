@@ -39,6 +39,7 @@ public class ReportServiceImpl implements ReportService {
 		ReportEntity reportEntity = ReportEntity.builder()
 				.usedProductId(command.usedProductId())
 				.reason(command.reason())
+				.reportDetails(command.reportDetails())
 				.build();
 		reportRepository.save(reportEntity);
 
@@ -58,6 +59,7 @@ public class ReportServiceImpl implements ReportService {
 						reporterMemberInfo.getResponse().email()))
 				.reason(command.reason())
 				.reportedAt(reportEntity.getCreatedAt())
+				.reportDetails(reportEntity.getReportDetails())
 				.usedProductId(command.usedProductId())
 				.build();
 
