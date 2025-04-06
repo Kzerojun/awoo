@@ -68,5 +68,5 @@ public class ReportEntity {
 
     public void changeProcess(Process process) { this.process = process; }
 
-    public void upCount() { this.reportCount++; }
+    public void changeCount(int reportCount) { this.reportCount = reportCount; }
 }
