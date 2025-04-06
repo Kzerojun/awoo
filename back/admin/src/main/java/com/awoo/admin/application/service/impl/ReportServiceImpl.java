@@ -31,6 +31,7 @@ public class ReportServiceImpl implements ReportService {
                 .usedProductId(command.usedProductId())
                 .reportedAt(command.reportedAt())
                 .reason(command.reason())
+                .reportDetails(command.reportDetails())
                 .build();
 
         if (maxReportCount != null) { newReport.changeCount(maxReportCount + 1); }
