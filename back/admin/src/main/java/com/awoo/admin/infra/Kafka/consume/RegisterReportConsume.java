@@ -9,7 +9,8 @@ public record RegisterReportConsume(
         User reportedUser,
         int usedProductId,
         LocalDateTime reportedAt,
-        Reason reason
+        Reason reason,
+        String reportDetails
 ) {
     public record User(
             String name,
