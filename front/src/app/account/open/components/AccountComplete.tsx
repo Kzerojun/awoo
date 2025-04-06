@@ -22,7 +22,7 @@ export default function AccountComplete({ title, description, info }: AccountCom
     dispatch(resetAccountProgress());
   }, [dispatch]);
   const handleGoToMyAccounts = () => {
-    router.push("/home/myaccount"); // 실제 경로에 맞게 수정 가능
+    router.push("/home"); // home 으로 복귀
   };
   return (
     <div className="flex flex-col items-center justify-start pt-20 px-6 text-center gap-1">

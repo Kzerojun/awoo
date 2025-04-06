@@ -10,7 +10,7 @@ import SavingAdCard from "../myaccount/components/saving/SavingAdCard";
 import PayAdCard from "../myaccount/components/pay/PayAdCard";
 import PetRegisterCard from "../myaccount/components/pet/PetRegisterCard";
 import WalkReportPreview from "../myaccount/components/pet/WalkReportPreview";
-
+import SavingSummaryCard from "../myaccount/components/saving/SavingSummaryCard";
 import { getInternalAccounts } from "@/api/account/open/saving/depositlist";
 
 export default function HomeContent() {
@@ -62,6 +62,7 @@ export default function HomeContent() {
       {status === "WITH_SAVING" && account && (
         <>
           <AccountCard account={account} />
+          <SavingSummaryCard />
           <PayAdCard />
         </>
       )}
@@ -69,6 +70,7 @@ export default function HomeContent() {
       {status === "COMPLETE" && account && (
         <>
           <AccountCard account={account} />
+          <SavingSummaryCard />
         </>
       )}
     </div>
