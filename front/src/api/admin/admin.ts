@@ -93,6 +93,63 @@ interface QuestionDetailResponse {
   error: null | string;
 }
 
+// 신고 관련 인터페이스
+export interface Report {
+  reportId: number;
+  reporterName: string;
+  reporterEmail: string;
+  reportedUserName: string;
+  reportedUserEmail: string;
+  usedProductId: number;
+  reportedAt: string;
+  reason: string;
+  process: string;
+  reportCount: number;
+}
+
+interface ReportListResponse {
+  success: boolean;
+  response: Report[];
+  error: null | string;
+}
+
+interface ReportDetailResponse {
+  success: boolean;
+  response: Report;
+  error: null | string;
+}
+
+interface ReportProcessRequest {
+  reportId: number;
+  process: string; // 'P' | 'W' | 'O'
+}
+
+interface ReportProcessResponse {
+  success: boolean;
+  response: string;
+  error: null | string;
+}
+
+// 유저 계좌 정보 interface
+export interface UserAccount {
+  memberName: string;
+  email: string;
+  nickname: string;
+  memberCreatedAt: string;
+  bankCode: string; // 999: 싸피은행(awoo)
+  accountNo: string;
+  accountType: string; // INTERNAL: 내부계좌 | SAVING: 적금
+  accountCreatedAt: string;
+  isDelete: boolean; // 해지여부, true: 해지 | false: 사용중
+  petName: string | null; // 없으면 null
+}
+
+interface UserAccountResponse {
+  success: boolean;
+  response: UserAccount[];
+  error: null | string;
+}
+
 // admin 로그인
 export const adminLogin = async (credentials: AdminLoginRequest): Promise<AdminLoginResponse> => {
   const response = await axiosInstance.post("/admin/login", credentials);
@@ -130,5 +187,29 @@ export const createSavingsProduct = async (
   formData: SavingsProductRequest
 ): Promise<CreateSavingsProductResponse> => {
   const response = await axiosInstance.post("/admin/savings", formData);
+  return response.data;
+};
+
+// 신고 목록 조회
+export const getReportList = async (): Promise<ReportListResponse> => {
+  const response = await axiosInstance.get("/admin/reports");
+  return response.data;
+};
+
+// 신고 상세 조회
+export const getReportDetail = async (reportId: number): Promise<ReportDetailResponse> => {
+  const response = await axiosInstance.get(`/admin/reports/${reportId}`);
+  return response.data;
+};
+
+// 신고 처리
+export const processReport = async (data: ReportProcessRequest): Promise<ReportProcessResponse> => {
+  const response = await axiosInstance.patch("/admin/reports", data);
+  return response.data;
+};
+
+// 유저 내부 계좌 목록 조회
+export const getUserAccount = async (): Promise<UserAccountResponse> => {
+  const response = await axiosInstance.get("/admin/accounts");
   return response.data;
 };
