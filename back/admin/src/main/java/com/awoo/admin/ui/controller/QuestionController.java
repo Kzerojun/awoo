@@ -2,7 +2,7 @@ package com.awoo.admin.ui.controller;
 
 import com.awoo.admin.application.command.AnswerQuestionCommand;
 import com.awoo.admin.support.ApiUtils;
-import com.awoo.admin.ui.facade.AdminServiceFacade;
+import com.awoo.admin.ui.facade.QuestionServiceFacade;
 import com.awoo.admin.ui.facade.dto.request.AnswerQuestionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final AdminServiceFacade adminServiceFacade;
+    private final QuestionServiceFacade questionServiceFacade;
     @GetMapping
     public ApiUtils.ApiResult<?> fetchQuestionList() {
         try {
-            return ApiUtils.success(adminServiceFacade.fetchQuestionList());
+            return ApiUtils.success(questionServiceFacade.fetchQuestionList());
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
@@ -26,7 +26,7 @@ public class QuestionController {
     @GetMapping("/{questionId}")
     public ApiUtils.ApiResult<?> fetchQuestionDetail(@PathVariable int questionId) {
         try {
-            return ApiUtils.success(adminServiceFacade.fetchQuestionDetail(questionId));
+            return ApiUtils.success(questionServiceFacade.fetchQuestionDetail(questionId));
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
@@ -36,7 +36,7 @@ public class QuestionController {
     public ApiUtils.ApiResult<?> answerQuestion(@RequestBody AnswerQuestionRequest request) {
         try {
             AnswerQuestionCommand command = request.toCommand();
-            adminServiceFacade.answerQuestion(command);
+            questionServiceFacade.answerQuestion(command);
             return ApiUtils.success("답변이 등록되었습니다.");
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);

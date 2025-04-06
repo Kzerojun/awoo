@@ -4,6 +4,7 @@ import com.awoo.account.application.command.*;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYAccountResponseDto;
 import com.awoo.account.infra.ssafyfinance.response.SSAFYTransferREC;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
+import com.awoo.account.ui.facade.dto.response.FetchAccountResponse;
 import com.awoo.account.ui.facade.dto.response.TransactionResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -30,4 +31,6 @@ public interface AccountServiceFacade {
     void openAccountAuth(String memberId, String accountNo);
 
     void checkAuthCode(String memberId, String accountNo, String authCode);
+
+    List<FetchAccountResponse> fetchAccountAll();
 }
