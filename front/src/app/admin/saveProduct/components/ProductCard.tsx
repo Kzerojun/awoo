@@ -83,15 +83,9 @@ export default function ProductCard({ product, onProductUpdated }: ProductCardPr
           )}
         </div>
 
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex justify-end items-center gap-2">
           <button
-            className="flex-1 py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md transition duration-200 text-sm font-medium"
-            onClick={handleEdit}
-          >
-            수정하기
-          </button>
-          <button
-            className={`flex-1 py-2 px-4 ${
+            className={`flex py-2 px-8 ${
               isActive
                 ? "bg-red-50 hover:bg-red-100 text-red-600"
                 : "bg-teal-50 hover:bg-teal-100 text-teal-600"

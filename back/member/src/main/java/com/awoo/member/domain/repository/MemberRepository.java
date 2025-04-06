@@ -3,7 +3,9 @@ package com.awoo.member.domain.repository;
 import com.awoo.member.domain.model.Member;
 import com.awoo.member.domain.model.vo.Email;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface MemberRepository {
 
@@ -17,5 +19,7 @@ public interface MemberRepository {
     Optional<Member> findByEmail(Email email);
 
     boolean existsByNickname(String nickname);
+
+    List<Member> findAllByIdIn(Set<Integer> memberIds);
 }
 

@@ -1,7 +1,8 @@
-package com.awoo.admin.application.service;
+package com.awoo.admin.application.service.impl;
 
 import com.awoo.admin.application.command.RegisterReportCommand;
 import com.awoo.admin.application.command.handleReportCommand;
+import com.awoo.admin.application.service.ReportService;
 import com.awoo.admin.domain.Entity.ReportEntity;
 import com.awoo.admin.domain.repository.ReportRepository;
 import com.awoo.admin.ui.facade.dto.response.FetchReportResponse;
@@ -14,31 +15,28 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     @Transactional
     public void registerReport(RegisterReportCommand command) {
-        // 대상자 이메일 기준으로 기존 신고 검색
-        ReportEntity existingReport = reportRepository.findByReportedUserEmail(command.reportedUserEmail());
+        // 대상 중고 게시글 기준으로 기존 신고 검색
+        Integer maxReportCount = reportRepository.findMaxReportCountByUsedProductId(command.usedProductId());
 
-        if (existingReport != null) {
-            // 이전에 신고당한 적 있음 → 횟수만 증가
-            existingReport.upCount(); // reportCount++
-            reportRepository.save(existingReport);
-        } else {
-            // 최초 신고 → 새 신고 등록
-            ReportEntity newReport = ReportEntity.builder()
-                    .reporterName(command.reporterName())
-                    .reporterEmail(command.reporterEmail())
-                    .reportedUserName(command.reportedUserName())
-                    .reportedUserEmail(command.reportedUserEmail())
-                    .usedProductId(command.usedProductId())
-                    .reportedAt(command.reportedAt())
-                    .reason(command.reason())
-                    .build();
-            reportRepository.save(newReport);
-        }
+        ReportEntity newReport = ReportEntity.builder()
+                .reporterName(command.reporterName())
+                .reporterEmail(command.reporterEmail())
+                .reportedUserName(command.reportedUserName())
+                .reportedUserEmail(command.reportedUserEmail())
+                .usedProductId(command.usedProductId())
+                .reportedAt(command.reportedAt())
+                .reason(command.reason())
+                .reportDetails(command.reportDetails())
+                .build();
+
+        if (maxReportCount != null) { newReport.changeCount(maxReportCount + 1); }
+
+        reportRepository.save(newReport);
     }
 
     @Transactional

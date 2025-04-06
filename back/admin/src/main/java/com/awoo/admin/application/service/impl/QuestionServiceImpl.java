@@ -1,7 +1,8 @@
-package com.awoo.admin.application.service;
+package com.awoo.admin.application.service.impl;
 
 import com.awoo.admin.application.command.AnswerQuestionCommand;
 import com.awoo.admin.application.command.RegisterAnswerCommand;
+import com.awoo.admin.application.service.QuestionService;
 import com.awoo.admin.domain.Entity.QuestionEntity;
 import com.awoo.admin.domain.repository.QuestionRepository;
 import com.awoo.admin.infra.Kafka.KafkaProducer;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class QuestionServiceImpl implements QuestionService{
+public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final KafkaProducer kafkaProducer;

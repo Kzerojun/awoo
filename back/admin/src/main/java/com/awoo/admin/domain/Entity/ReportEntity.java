@@ -41,8 +41,8 @@ public class ReportEntity {
     @Column(nullable = false)
     private RegisterReportConsume.Reason reason;
 
-//    @Column(nullable = false)
-//    private String content;
+    @Column
+    private String reportDetails;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -54,7 +54,7 @@ public class ReportEntity {
     @Builder
     public ReportEntity(String reporterName, String reporterEmail,
                         String reportedUserName, String reportedUserEmail, int usedProductId,
-                        LocalDateTime reportedAt, RegisterReportConsume.Reason reason) {
+                        LocalDateTime reportedAt, RegisterReportConsume.Reason reason, String reportDetails) {
         this.reporterName = reporterName;
         this.reporterEmail = reporterEmail;
         this.reportedUserName = reportedUserName;
@@ -64,9 +64,10 @@ public class ReportEntity {
         this.reason = reason;
         this.process = Process.P;
         this.reportCount = 1;
+        this.reportDetails = reportDetails;
     }
 
     public void changeProcess(Process process) { this.process = process; }
 
-    public void upCount() { this.reportCount++; }
+    public void changeCount(int reportCount) { this.reportCount = reportCount; }
 }

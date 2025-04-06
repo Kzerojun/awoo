@@ -5,13 +5,11 @@ import com.awoo.pet.domain.pet.Pet;
 import com.awoo.pet.domain.pet.PetRepository;
 import com.awoo.pet.domain.pet.PetSavingGrade;
 import com.awoo.pet.domain.walk.WalkRepository;
+import com.awoo.pet.ui.facade.dto.response.FetchPetInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +51,14 @@ public class SearchPetListServiceImpl implements SearchPetListService {
         }
 
         return result;
+    }
+
+    public List<FetchPetInfoResponse> fetchPetInfoList(Set<Integer> petIds) {
+        return petRepository.findAllByPetIdIn(petIds).stream()
+                .map(pet -> new FetchPetInfoResponse(
+                        pet.getPetId(),
+                        pet.getName()
+                ))
+                .toList();
     }
 }
