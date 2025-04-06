@@ -3,7 +3,9 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { pushPath, markGoingBack } from "@/lib/slices/userActionSlice";
+import { pushPath, markGoingBack, clearHistory } from "@/lib/slices/userActionSlice";
+
+const RESET_STACK_PATHS = ["/home", "/login", "/walk/end/check", "/my"];
 
 const EXCLUDED_PATHS = [
   "/signup/policy",
@@ -11,6 +13,8 @@ const EXCLUDED_PATHS = [
   "/account/my/saving/manage",
   "/account/my/deposit/transfer",
   "/account/my/check-password",
+  "/walk/start/walking",
+  "/walk/end/check",
 ];
 
 export const useTrackRouteChange = () => {
@@ -28,6 +32,12 @@ export const useTrackRouteChange = () => {
 
   useEffect(() => {
     const prevPath = prevPathRef.current;
+    const shouldReset = RESET_STACK_PATHS.includes(pathname);
+
+    if (shouldReset) {
+      dispatch(clearHistory());
+    }
+
     const shouldPush =
       !isGoingBackRef.current &&
       prevPath &&
