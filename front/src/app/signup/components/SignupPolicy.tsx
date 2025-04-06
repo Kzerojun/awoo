@@ -151,7 +151,7 @@ const SignupPolicy = ({ privacyAgreed, setPrivacyAgreed }: SignupPolicyProps) =>
               />
             )}
           </span>
-          <p>(필수) 위치 정보 수집 권한 이용 동의</p>
+          <p>(필수) 위치 정보 수집 권한 이용 및 동의</p>
         </div>
 
         {/* 위치 정보 활용 */}

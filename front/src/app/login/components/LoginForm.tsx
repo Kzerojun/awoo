@@ -49,7 +49,7 @@ const LoginForm = () => {
           placeholder="이메일을 입력하세요"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="bg-custom-white border border-custom-gray focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-72 placeholder:p-2 placeholder:text-xs"
+          className="bg-custom-white border border-custom-gray focus:ring-2 focus:border-0 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-72 placeholder:p-2 placeholder:text-xs"
         />
 
         {/* 비밀번호 입력 */}
@@ -60,7 +60,7 @@ const LoginForm = () => {
           placeholder="비밀번호를 입력하세요"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="bg-custom-white border shadow-none border-custom-gray focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-72 placeholder:px-1 placeholder:text-xs"
+          className="bg-custom-white border shadow-none border-custom-gray focus:border-0 focus:ring-2 focus:ring-light-aqua focus:outline-none rounded-md px-2 text-sm h-10 w-72 placeholder:p-2 placeholder:text-xs"
         />
 
         {!isPending ? (
@@ -88,14 +88,14 @@ const LoginForm = () => {
       <div className="flex gap-2 justify-center items-center">
         <Link
           href="/login/findId"
-          className="text-xs px-4 cursor-pointer hover:underline hover:underline-offset-4 hover:text-aqua transition-colors duration-200"
+          className="text-xs px-4 cursor-pointer underline underline-offset-5"
         >
           아이디 찾기
         </Link>
         <p className="text-sm">|</p>
         <Link
           href="/login/reset-password"
-          className="text-xs px-4 cursor-pointer hover:underline hover:underline-offset-4 hover:text-aqua transition-colors duration-200"
+          className="text-xs px-4 cursor-pointer underline underline-offset-5"
         >
           비밀번호 재설정
         </Link>
