@@ -24,6 +24,7 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     private final VerifyPasswordService verifyPasswordService;
     private final TransferAmountService transferAmountService;
     private final SafePayService safePayService;
+    private final CommonPayService commonPayService;
 
     @Override
     public RegisterPaymentResponse register(RegisterPaymentCommand command) {
@@ -95,6 +96,13 @@ public class PaymentServiceFacadeImpl implements PaymentServiceFacade {
     public SafePayResponse transferSafePay(SafePayCommand safePayCommand) {
         Integer transactionId = safePayService.safePay(safePayCommand);
         return new SafePayResponse(transactionId);
+    }
+
+
+    @Override
+    public CommonPayResponse commonPay(CommonPayCommand command) {
+        Integer transactionId = commonPayService.commonPay(command);
+        return new CommonPayResponse(transactionId);
     }
 }
 

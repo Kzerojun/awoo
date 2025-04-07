@@ -13,3 +13,4 @@ public record MessageRequest(String message, String image) {
                 .build();
     }
 }
+

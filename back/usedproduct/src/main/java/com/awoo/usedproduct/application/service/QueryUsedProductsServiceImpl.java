@@ -47,6 +47,7 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
     @Override
     @Transactional
     public UsedProductEntity fetchUsedProduct(FetchUsedProductQuery query) {
+        log.info("Fetch used product {}",query.usedProductId());
         UsedProductEntity usedProductEntity = usedProductRepository.findById(query.usedProductId())
                 .orElseThrow(() -> new UsedProductNotFoundException(
                         ApplicationErrorCode.PRODUCT_NOT_FOUND));
