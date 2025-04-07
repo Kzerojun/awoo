@@ -7,7 +7,7 @@ import java.util.List;
 
 public record FetchUsedProductDetailResponse(Integer usedProductId, String title, String content,
 											 Integer price, UsedProductStatus usedProductStatus, int viewCount,
-											 int likeCount, List<String> imageUrls, boolean isLiked, boolean canModify
+											 int likeCount, List<String> imageUrls, boolean isLiked, boolean canModify,Integer sellerId
 ) {
 	public static FetchUsedProductDetailResponse create(UsedProductEntity usedProductEntity, boolean isLiked, Integer memberId){
 		return new FetchUsedProductDetailResponse(
@@ -21,7 +21,8 @@ public record FetchUsedProductDetailResponse(Integer usedProductId, String title
 				usedProductEntity.getImages().stream()
 						.map(UsedProductImage::getImageUrl).toList(),
 				isLiked,
-				usedProductEntity.hasPermission(memberId)
+				usedProductEntity.hasPermission(memberId),
+				usedProductEntity.getMemberId()
 		);
 	}
 

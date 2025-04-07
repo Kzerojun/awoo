@@ -131,4 +131,14 @@ public class PaymentController {
         SafePayResponse response = paymentServiceFacade.transferSafePay(command);
         return ApiUtils.success(response);
     }
+
+    @PostMapping("/common-pays")
+    public ApiUtils.ApiResult<CommonPayResponse> commonPay(
+            @RequestBody CommonPayRequest request,
+            @RequestHeader("X-User-Id") String userId) {
+
+        CommonPayCommand command = request.toCommand(userId);
+        CommonPayResponse response = paymentServiceFacade.commonPay(command);
+        return ApiUtils.success(response);
+    }
 }
