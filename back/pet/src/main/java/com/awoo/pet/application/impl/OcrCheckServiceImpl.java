@@ -51,15 +51,13 @@ public class OcrCheckServiceImpl implements OcrCheckService {
                 g.drawImage(image, 0, 0, null);
                 g.dispose();
 
-                File correctedFile = new File(System.getProperty("java.io.tmpdir") + "/corrected_" + ocrImage.getOriginalFilename());
-                ImageIO.write(cleanedImage, "png", correctedFile);
 
                 // Tesseract 인식
                 Tesseract tesseract = new Tesseract();
                 tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata"); // 언어팩 경로
                 tesseract.setLanguage("kor"); // 한글 지원
 
-                String text = tesseract.doOCR(correctedFile);
+                String text = tesseract.doOCR(cleanedImage);
 
                 // 동물 등록 번호 추출
                 Pattern regNumPattern = Pattern.compile("동물등록번호\\s*:\\s*(\\d+)");
