@@ -1,10 +1,10 @@
 "use client";
 
 import CommonTopBar from "@/common/ui/CommonTopBar";
-import SafePaymentProcess from "./components/SafePaymentProcess";
+import CommonPaymentProcess from "./components/CommonPaymentProcess";
 import { useSearchParams } from "next/navigation";
 
-export default function SafePayment() {
+export default function CommonPayment() {
   const searchParams = useSearchParams();
   const chatRoomId = searchParams.get("chatRoomId");
   const usedProductId = searchParams.get("usedProductId");
@@ -12,9 +12,8 @@ export default function SafePayment() {
 
   return (
     <div className="flex flex-col inset-0 bg-white my-14">
-      {/* 안심결제 출입 이후 다시 채팅으로 돌아갈때 중고물품 정보를 알고 가기 위함 */}
-      <CommonTopBar title="안심 결제" leftAction="back" backUrl={backUrl} />
-      <SafePaymentProcess chatRoomId={chatRoomId} usedProductId={usedProductId} />
+      <CommonTopBar title="일반 결제" leftAction="back" backUrl={backUrl} />
+      <CommonPaymentProcess chatRoomId={chatRoomId} usedProductId={usedProductId} />
     </div>
   );
 }
