@@ -13,6 +13,8 @@ import { resetSaving } from "@/lib/slices/savingSlice";
 import { useDispatch, UseDispatch } from "react-redux";
 import { resetSavingPasswordState } from "@/lib/slices/savingPasswordSlice";
 import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
+import { setHasSavingAccount } from "@/lib/slices/accountStatusSlice";
+
 export default function SavingAccountVerifySuccessPage() {
   const dispatch = useDispatch();
   const [showComplete, setShowComplete] = useState(false);
@@ -49,6 +51,7 @@ export default function SavingAccountVerifySuccessPage() {
 
       // 진짜 성공했을 때 실행되는 코드
       // 리셋 - 개설 끝난 경우 redux 업데이트
+      dispatch(setHasSavingAccount(true)); // ✅ 적금 계좌 개설 성공 처리
       dispatch(resetSaving());
       dispatch(resetAccountProgress());
       dispatch(resetSavingPasswordState());

@@ -5,10 +5,12 @@ import com.awoo.account.support.ApiUtils;
 import com.awoo.account.ui.facade.AccountServiceFacade;
 import com.awoo.account.ui.facade.dto.request.*;
 import com.awoo.account.ui.facade.dto.response.DeductBalanceResponse;
+import com.awoo.account.ui.facade.dto.response.FetchAccountResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,8 +24,7 @@ public class AccountController {
                                                @RequestBody CreateAccountRequest request) {
         try{
             CreateAccountCommand command = request.toCommand();
-            accountServiceFacade.createAccount(memberId, command);
-            return ApiUtils.success("계좌가 생성되었습니다.");
+            return ApiUtils.success(Map.of("accountNo", accountServiceFacade.createAccount(memberId, command)));
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
@@ -59,7 +60,6 @@ public class AccountController {
         }catch (Exception e){
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @PostMapping("/deduct")
@@ -129,12 +129,17 @@ public class AccountController {
 
     @PostMapping("/checkAuthCode")
     public ApiUtils.ApiResult<?> checkAuthCode(@RequestHeader("X-User-Id") String memberId,
-                                                 @RequestBody Map<String, String> request){
+                                               @RequestBody Map<String, String> request){
         try {
             accountServiceFacade.checkAuthCode(memberId, request.get("accountNo"), request.get("authCode"));
             return ApiUtils.success("정상 처리되었습니다.");
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/all")
+    public List<FetchAccountResponse> fetchAccountAll() {
+        return accountServiceFacade.fetchAccountAll();
     }
 }

@@ -10,6 +10,7 @@ import cameraIcon from "../../../../public/icons/walking/cameraIcon.svg";
 
 import Button from "@/common/ui/Button";
 const TakePhoto = () => {
+  const dogName = useAppSelector((state) => state.walk.currentWalkingDog?.name);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const router = useRouter();
@@ -18,12 +19,15 @@ const TakePhoto = () => {
 
   const photoData = useAppSelector((state) => state.walk.photo);
 
-  //Redux 상태 변경을 감지하여 로그 출력
-  // useEffect(() => {
-  //   if (photoData) {
-  //     console.log("📸 Redux에 저장된 사진 데이터:", photoData);
-  //   }
-  // }, [photoData]);
+  // 들어오자마자 카메라 시작
+  useEffect(() => {
+    startCamera();
+
+    // 페이지 나갈 때 종료
+    return () => {
+      stopCamera();
+    };
+  }, []);
 
   // 카메라 시작
   const startCamera = async () => {
@@ -56,8 +60,23 @@ const TakePhoto = () => {
     setIsCameraOn(false);
   };
 
+  //Redux 상태 변경을 감지하여 로그 출력
+  // useEffect(() => {
+  //   if (photoData) {
+  //     console.log("📸 Redux에 저장된 사진 데이터:", photoData);
+  //   }
+  // }, [photoData]);
+
   // 사진 촬영 및 Redux 저장 후 이동
   const captureImage = () => {
+    console.log("📸 사진 촬영 시도");
+    if (!videoRef.current) {
+      console.warn("⚠️ videoRef가 null입니다.");
+    }
+
+    if (!canvasRef.current) {
+      console.warn("⚠️ canvasRef가 null입니다.");
+    }
     if (!videoRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -85,60 +104,39 @@ const TakePhoto = () => {
     router.push("/walk/end/check");
   };
   return (
-    <div className="flex flex-col items-center justify-center gap-5 h-full">
-      <div className="flex items-center justify-center gap-x-3">
-        <Image src={cameraIcon} alt="카메라 아이콘" width={35} height={35} />
-        <div className="text-xl">사진 촬영</div>
-      </div>
-
+    <div className="relative w-screen h-screen overflow-hidden">
+      {/* 카메라 미리보기 (비디오 전체 채우기) */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
-        className={`w-full max-w-lg border rounded-lg shadow-lg ${!isCameraOn ? "hidden" : ""}`}
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
       />
-      <canvas ref={canvasRef} className="hidden" />
 
-      <div className="mt-4 flex gap-4">
-        {!isCameraOn && (
-          <div className="flex flex-col items-center justify-center gap-6">
-            <span className="flex flex-col items-center justify-center gap-2">
-              <div className="text-xl w-68 text-center">
-                산책 종료, 아이들과 함께 사진을 찍어보세요!
-              </div>
-              <p>사진을 찍어 반려견과 추억을 쌓아보세요!</p>
-            </span>
-            <Image
-              className="rounded-4xl"
-              src={dogPhoto}
-              alt="강아지 사진"
-              width="300"
-              height="300"
-            />
-            <button
-              onClick={startCamera}
-              className="px-4 py-2 bg-green text-white rounded-lg"
-              disabled={isCameraOn}
-            >
-              카메라 시작
-            </button>
-          </div>
-        )}
-        {isCameraOn && (
-          <button onClick={captureImage} className="px-4 py-2 bg-green text-white rounded-lg">
-            사진 촬영
-          </button>
-        )}
-        {isCameraOn && (
-          <button
-            onClick={goToCheckPay}
-            className="px-4 py-2 bg-custom-gray text-white rounded-lg"
-            disabled={!isCameraOn}
-          >
-            건너 뛰기
-          </button>
-        )}
+      {/* 오버레이 UI */}
+      <div className="absolute top-6 left-0 right-0 flex items-center justify-center gap-x-3 z-10">
+        <Image src={cameraIcon} alt="카메라 아이콘" width={35} height={35} />
+        <div className="text-2xl text-white drop-shadow-lg">사진 촬영</div>
       </div>
+
+      {/* 하단 버튼 오버레이 */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4 z-50">
+        <button
+          className="px-4 py-2 bg-gray-600 text-white rounded-lg"
+          onClick={goToCheckPay}
+          disabled={!isCameraOn}
+        >
+          건너 뛰기
+        </button>
+        <button
+          className="px-4 py-2 bg-green text-white rounded-lg"
+          type="button"
+          onClick={captureImage}
+        >
+          사진 촬영
+        </button>
+      </div>
+      <canvas ref={canvasRef} className="hidden" />
     </div>
   );
 };

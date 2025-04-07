@@ -1,13 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/store";
+import { setTransferInfo, resetTransferInfo } from "@/lib/slices/transfercheckSlice";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  chatRoomId: number;
+  usedProductId: number;
 }
 
-export default function PaymentSelectModal({ isOpen, onClose }: Props) {
+export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedProductId }: Props) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -29,7 +34,29 @@ export default function PaymentSelectModal({ isOpen, onClose }: Props) {
               <div className="flex items-center space-x-3 cursor-pointer">
                 <div className="text-orange-500 text-xl">💰</div>
                 <div>
-                  <div className="text-sm" onClick={() => router.push(`/my/paymentSend/`)}>
+                  <div
+                    className="text-sm"
+                    onClick={() => {
+                      dispatch(resetTransferInfo());
+                      console.log("✅ transfer info 저장", {
+                        fromChat: true,
+                        chatRoomId,
+                        usedProductId,
+                      });
+                      dispatch(
+                        setTransferInfo({
+                          fromChat: true,
+                          chatRoomId,
+                          usedProductId,
+                        })
+                      );
+                      console.log("🚀 멍페이 송금 페이지로 이동");
+
+                      router.push(
+                        `/my/paymentSend?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
+                      );
+                    }}
+                  >
                     송금하기
                   </div>
                 </div>
@@ -48,7 +75,14 @@ export default function PaymentSelectModal({ isOpen, onClose }: Props) {
               <div className="flex items-center space-x-3 cursor-pointer">
                 <div className="text-blue-500 text-xl">🛡️</div>
                 <div>
-                  <div className="text-sm" onClick={() => router.push(`/market/safePayment/`)}>
+                  <div
+                    className="text-sm"
+                    onClick={() =>
+                      router.push(
+                        `/market/safePayment?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
+                      )
+                    }
+                  >
                     안심결제
                   </div>
                   <div className="text-[11px] text-gray-400">

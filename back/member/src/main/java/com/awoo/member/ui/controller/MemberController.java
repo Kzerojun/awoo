@@ -13,6 +13,7 @@ import com.awoo.member.infra.BaseColumn.RequestHeaderAuditorAware;
 import com.awoo.member.support.ApiUtils;
 import com.awoo.member.ui.dto.CheckMemberRequest;
 import com.awoo.member.ui.dto.CheckMemberResponse;
+import com.awoo.member.ui.dto.FetchMemberInfo;
 import com.awoo.member.ui.dto.FindMemberKeyResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/members")
@@ -212,4 +215,8 @@ public class MemberController {
         return memberService.getMemberInfo(memberId).name();
     }
 
+    @PostMapping("/admin")
+    public List<FetchMemberInfo> fetchMemberInfoList(@RequestBody Set<Integer> memberIds) {
+        return memberService.fetchMemberInfoList(memberIds);
+    }
 }

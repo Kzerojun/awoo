@@ -9,13 +9,24 @@ import ChatList from "./components/ChatList";
 import Button from "@/common/ui/Button";
 import { useRouter } from "next/navigation";
 import { getProductList } from "@/api/market/read/getList";
+import MoungpayJoinModal from "@/app/market/components/MoungpayJoinModel";
+import { useAppSelector } from "@/lib/store";
 
 export default function MarketPage() {
   const [currentTab, setCurrentTab] = useState<MarketTab>("상품");
   const [items, setItems] = useState<MarketItem[]>([]);
   const [originalItems, setOriginalItems] = useState<MarketItem[]>([]);
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
+  const isPaymentUser = useAppSelector((state) => state.user.paymentRegister);
 
+  const handleWriteClick = () => {
+    if (!isPaymentUser) {
+      setShowModal(true); // 모달 띄우기
+      return;
+    }
+    router.push("/market/article/write"); // 멍페이 가입자만 진입
+  };
   // ✅ 목록 API 연동
   useEffect(() => {
     const fetchData = async () => {
@@ -49,9 +60,11 @@ export default function MarketPage() {
     <div className="flex flex-col min-h-screen">
       <MarketHeader currentTab={currentTab} onTabChange={handleTabChange} />
       <div className="mt-14 px-4 py-2 flex-1 space-y-4">
-        <div className="mb-4">
-          <SearchBar onSearchResults={handleSearchResults} />
-        </div>
+        {currentTab === "상품" && (
+          <div className="mb-4">
+            <SearchBar onSearchResults={handleSearchResults} />
+          </div>
+        )}
 
         {/* 상품탭 */}
         {currentTab === "상품" ? (
@@ -80,8 +93,9 @@ export default function MarketPage() {
         className="fixed bottom-16 right-3 shadow-lg z-50"
         backgroundColor="aqua"
         fontColor="custom-white"
-        onClick={() => router.push("/market/article/write")}
+        onClick={handleWriteClick}
       />
+      <MoungpayJoinModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }

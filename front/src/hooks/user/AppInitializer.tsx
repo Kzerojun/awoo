@@ -19,13 +19,14 @@
 //           console.log("이니셜라이저 실행");
 //           if (data) {
 //             dispatch(setUserData(data));
-//             // router.replace("/home");
+//             router.replace("/home");
 //           }
 //         })
 //         .catch((err) => {
 //           console.error("자동 로그인 시 유저 정보 가져오기 실패: ", err);
+//           alert("로그아웃 되었습니다. \n 다시 로그인해주세요.");
 //           localStorage.removeItem("accessToken");
-//           // router.replace("/login");
+//           router.replace("/login");
 //         });
 //     } else {
 //       router.replace("/login");

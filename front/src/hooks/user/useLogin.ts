@@ -3,6 +3,8 @@ import { login } from "@/api/user/auth";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setUserData } from "@/lib/slices/userSlice";
 import { setMemberId, resetMemberId } from "@/lib/slices/memberIdSlice";
+// 펫 정보 저장
+import { getPetList } from "@/api/pet/pet";
 
 export const useLogin = (refetchUserInfo: () => Promise<any>) => {
   const dispatch = useAppDispatch();
@@ -31,6 +33,14 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
       if (response.status === "success" && response) {
         const getUserData = response.data;
         console.log("유저 정보 테스트 데이터:", getUserData);
+
+        // 유저의 펫 정보 조회
+        let petList: any[] | null = null;
+        try {
+          petList = await getPetList();
+        } catch (err) {
+          console.error("펫 정보 조회 실패:", err);
+        }
         dispatch(
           setUserData({
             nickname: getUserData.nickname,
@@ -42,6 +52,7 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
             paymentRegister: getUserData.paymentRegister,
             walkGrade: getUserData.walkGrade,
             accessToken: accessToken,
+            petList: petList, // 🐶 포함!
           })
         );
       } else {

@@ -145,6 +145,7 @@ export const login = async ({ email, password }: LoginPayload) => {
 
 // 리프레시 토큰 확인
 export const refreshToken = (): Promise<{ data: { accessToken: string } }> => {
+  console.log("리프레시 토큰 요청");
   return axiosInstance.post("/members/refresh");
 };
 

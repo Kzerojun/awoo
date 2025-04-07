@@ -15,4 +15,5 @@ public interface QuestionService {
     List<fetchQuestionResponse> fetchQuestionList();
 
     QuestionDetailResponse fetchQuestionDetail(int questionId);
+
 }

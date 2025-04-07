@@ -3,6 +3,8 @@
 import { useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import { useRouter } from "next/navigation";
 import NumberKeypad from "../../components/NumberKeypad";
+import { useDispatch } from "react-redux";
+import { changeClickedAccount } from "@/lib/slices/savingAccountDetailSlice";
 
 interface CertificateProps {
   onComplete?: (certificateNumber: string) => void;
@@ -17,6 +19,7 @@ export interface CertificateRef {
 const Certificate = forwardRef<CertificateRef, CertificateProps>(
   ({ onComplete, disabled = false }, ref) => {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [certificateNumber, setCertificateNumber] = useState("");
     const [error, setError] = useState("");
 
@@ -63,6 +66,15 @@ const Certificate = forwardRef<CertificateRef, CertificateProps>(
       setError("");
     };
 
+    // 계좌 내역 조회 버튼 클릭 처리
+    const handleAccountViewClick = () => {
+      // 비밀번호 확인 페이지로 이동하기 위한 상태 설정
+      dispatch(changeClickedAccount("deposit"));
+
+      // 비밀번호 확인 페이지로 이동
+      router.push("/account/my/check-password");
+    };
+
     // 키보드 이벤트 핸들러
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -101,7 +113,7 @@ const Certificate = forwardRef<CertificateRef, CertificateProps>(
           </div>
 
           {/* 인증번호 입력 필드 */}
-          <div className="flex justify-center space-x-4 w-full mb-8">
+          <div className="flex justify-center space-x-4 w-full mb-4">
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
@@ -125,6 +137,17 @@ const Certificate = forwardRef<CertificateRef, CertificateProps>(
 
           {/* 처리 중 상태 표시 */}
           {disabled && <p className="text-teal-500 text-sm text-center mb-4">처리 중입니다...</p>}
+
+          {/* 입출금 계좌 내역 조회 버튼 추가 */}
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={handleAccountViewClick}
+              className="text-teal-500 underline text-sm font-medium"
+              disabled={disabled}
+            >
+              입출금 계좌 내역 조회하기
+            </button>
+          </div>
         </div>
 
         {/* 숫자 키패드 */}

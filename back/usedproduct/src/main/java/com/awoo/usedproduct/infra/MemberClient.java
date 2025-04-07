@@ -10,4 +10,9 @@ public interface MemberClient {
     @GetMapping("/api/members")
     ApiUtils.ApiResult<MemberNicknameResponse> fetchNickname(@RequestHeader("X-User-Id") Integer memberId);
 
+
+    @GetMapping("/api/members")
+    ApiUtils.ApiResult<MemberInfoResponse> fetchMemberInfo(@RequestHeader("X-User-Id") Integer memberId);
+
+
 }

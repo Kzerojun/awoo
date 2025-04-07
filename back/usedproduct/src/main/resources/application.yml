@@ -8,6 +8,8 @@ spring:
     name: USED-PRODUCT-SERVICE
 
   kafka:
+    properties:
+      security.protocol: PLAINTEXT
     bootstrap-servers: j12c209.p.ssafy.io:9092
     consumer:
       group-id: "used-product"

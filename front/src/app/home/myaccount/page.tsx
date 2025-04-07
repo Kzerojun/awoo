@@ -14,13 +14,14 @@ import {
   changeSelectedDepositAccountNo,
 } from "@/lib/slices/savingAccountDetailSlice";
 import { changeClickedAccount } from "@/lib/slices/savingAccountDetailSlice";
+
 interface SavingAccount {
   savingAccountNo: number;
   accountNo: string;
   depositBalance: number;
   petId: number;
-  name: string;
   accountName: string;
+  totalBalance: number;
 }
 
 export default function AccountMinePage() {

@@ -16,25 +16,19 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white gap-6">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] bg-white gap-6">
       <Image src={logo} alt="로고 이미지" />
       <LoginForm />
-      <SocialLogin />
+      {/* <SocialLogin /> */}
       <div className="flex flex-col items-center gap-1 text-xs">
         <p>아직 회원이 아니라면?</p>
         <Link
           href="/signup"
-          className="cursor-pointer hover:underline hover:underline-offset-4 hover:text-aqua transition-colors duration-200"
+          className="cursor-pointer underline underline-offset-5 text-aqua transition-colors duration-200"
         >
           회원가입 하기
         </Link>
       </div>
-      <Button
-        text="뒤로 가기"
-        backgroundColor="custom-gray"
-        fontColor="custom-balck"
-        onClick={goBack}
-      />
     </div>
   );
 }

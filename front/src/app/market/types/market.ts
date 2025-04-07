@@ -4,8 +4,9 @@ export interface MarketItem {
   title: string;
   time: string;
   price: string;
-  views: number;
-  chat: number;
+  viewCount: number;
+  likeCount: number;
+  createdAt: string;
 }
 
 export type MarketTab = "상품" | "내 채팅";

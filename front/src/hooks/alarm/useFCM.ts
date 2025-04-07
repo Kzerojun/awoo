@@ -20,21 +20,23 @@ export const useFCMToken = () => {
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
     });
+
     if (!token) {
       console.warn("FCM 토큰을 가져올 수 없습니다.");
       return;
     }
 
-    const oldToken = localStorage.getItem("fcmToken");
-    if (token !== oldToken) {
-      console.log("✅ [FCM] 발급된 토큰:", token);
-      await axiosInstance.post("/alarm/tokens", { token });
+    // 기존 토큰 여부 관계없이 무조건 서버로 전송
+    try {
+      console.log("🚀 [FCM] 토큰 무조건 전송:", token);
+      await axiosInstance.post("/alarms/tokens", { token });
       localStorage.setItem("fcmToken", token);
       setFcmToken(token);
-    } else {
-      console.log("✅ [FCM] 기존 토큰과 동일, 갱신 생략:", token);
+    } catch (err) {
+      console.error("❌ [FCM] 토큰 전송 실패:", err);
     }
   };
+
   // ✅ 앱 진입시 토큰만 검사 & 갱신용
   const checkAndUpdateToken = async () => {
     const permissionGranted = await requestPermission();
@@ -53,7 +55,7 @@ export const useFCMToken = () => {
 
     if (token !== oldToken) {
       console.log("🔄 [FCM] 앱 진입 후 토큰 변경 감지 → 서버 갱신");
-      await axiosInstance.post("/alarm/tokens", { token });
+      await axiosInstance.post("/alarms/tokens", { token });
       localStorage.setItem("fcmToken", token);
       setFcmToken(token);
     } else {

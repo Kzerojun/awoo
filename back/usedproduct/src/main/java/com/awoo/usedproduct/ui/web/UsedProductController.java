@@ -73,7 +73,7 @@ public class UsedProductController {
     @DeleteMapping("/{usedProductId}")
     public ApiUtils.ApiResult<DeleteUsedProductResponse> deleteUsedProduct(
             @PathVariable(name = "usedProductId") Integer usedProductId,
-                                                  @RequestHeader("X-User-Id") String memberId){
+            @RequestHeader("X-User-Id") String memberId){
         DeleteUsedProductCommand command = DeleteUsedProductCommand.builder()
                 .userProductId(usedProductId)
                 .memberId(Integer.valueOf(memberId))
@@ -98,9 +98,10 @@ public class UsedProductController {
 
     @PostMapping("/{usedProductId}/reports")
     public ApiUtils.ApiResult<ReportResponse> report(@PathVariable(name = "usedProductId") Integer usedProductId,
-            @RequestBody ReportUsedProductRequest request) {
+            @RequestBody ReportUsedProductRequest request,
+            @RequestHeader("X-User-Id") String memberId) {
 
-        ReportCommand command = request.toCommand(usedProductId);
+        ReportCommand command = request.toCommand(usedProductId, memberId);
         ReportResponse response = usedProductServiceFacade.report(command);
         return ApiUtils.success(response);
     }

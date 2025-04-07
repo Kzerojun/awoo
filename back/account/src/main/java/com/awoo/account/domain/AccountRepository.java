@@ -9,4 +9,6 @@ public interface AccountRepository {
     AccountEntity findByAccountId(Integer accountId);
 
     List<AccountEntity> findAllByMemberIdAndAccountType(Integer memberId, AccountType accountType);
+
+    List<AccountEntity> findAll();
 }

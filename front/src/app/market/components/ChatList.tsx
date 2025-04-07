@@ -14,7 +14,6 @@ interface ChatRoomType {
 }
 
 export default function ChatList() {
-  const [currentTab, setCurrentTab] = useState<"전체" | "판매" | "구매" | "안 읽은 채팅방">("전체");
   const [chatList, setChatList] = useState<ChatRoomType[]>([]);
 
   useEffect(() => {
@@ -35,7 +34,6 @@ export default function ChatList() {
 
   return (
     <div className="flex flex-col space-y-4">
-      <ChatFilterTabs currentTab={currentTab} setCurrentTab={setCurrentTab} />
       <div className="space-y-2">
         {filteredList.map((chat, index) => (
           <ChatListItem

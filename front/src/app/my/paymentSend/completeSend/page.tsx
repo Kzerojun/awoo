@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 
+import { useAppSelector, useAppDispatch } from "@/lib/store";
+import { resetTransferInfo } from "@/lib/slices/transfercheckSlice";
+
 // 실제 컴포넌트 콘텐츠를 별도 컴포넌트로 분리
 function CompleteSendContent() {
   const [amount, setAmount] = useState<number>(0);
@@ -108,10 +111,20 @@ function LoadingState() {
 // 메인 컴포넌트
 export default function CompleteSend() {
   const router = useRouter();
+  // 출발지 정보 확인 (채팅에서 온 송금 시작 인지 아닌지)
+  const transferInfo = useAppSelector((state) => state.transfercheck);
+  const dispatch = useAppDispatch();
 
   // 하단 버튼 부분은 항상 보여줌
   const handleConfirm = () => {
-    router.push("/my"); // 홈 화면으로 이동
+    if (transferInfo.fromChat && transferInfo.chatRoomId) {
+      dispatch(resetTransferInfo()); // 상태 초기화
+      router.push(
+        `/market/chat/${transferInfo.chatRoomId}?usedProductId=${transferInfo.usedProductId}`
+      );
+    } else {
+      router.push("/my"); // 기본 마이페이지로 이동
+    }
   };
 
   return (

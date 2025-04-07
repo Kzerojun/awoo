@@ -29,6 +29,7 @@ interface CommonTopBarProps {
   onClose?: () => void;
   onBellClick?: () => void;
   onSettingClick?: () => void;
+  backUrl?: string; // 정보 보존을 위해 라우팅 url
 }
 
 const CommonTopBar = ({
@@ -43,6 +44,7 @@ const CommonTopBar = ({
   onClose,
   onBellClick,
   onSettingClick,
+  backUrl,
 }: CommonTopBarProps) => {
   interface leftActionTypes {
     back: React.ReactNode;
@@ -105,7 +107,11 @@ const CommonTopBar = ({
   const handleLeftClick = () => {
     // 뒤로가기
     if (leftAction === "back") {
-      if (historyStack.length > 0) {
+      if (backUrl) {
+        // backUrl 이 명시되었으면 가장 우선 사용
+        router.push(backUrl);
+      } else if (historyStack.length > 0) {
+        // 명시되지 않은 경우 기존 로직
         const prevPath = historyStack[historyStack.length - 1];
         dispatch(markGoingBack(true));
         dispatch(popPath());

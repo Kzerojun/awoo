@@ -2,8 +2,8 @@ package com.awoo.usedproduct.application;
 
 import com.awoo.usedproduct.application.query.FetchMySalesQuery;
 import com.awoo.usedproduct.application.query.FetchUsedProductQuery;
-import com.awoo.usedproduct.domain.ChatRoomEntity;
 import com.awoo.usedproduct.domain.UsedProductEntity;
+import com.awoo.usedproduct.infra.MemberInfoResponse;
 import java.util.List;
 
 import com.awoo.usedproduct.ui.facade.dto.response.FetchChatMessagesResponse;
@@ -28,5 +28,7 @@ public interface QueryUsedProductsService {
     List<UsedProductEntity> searchUsedProducts(String keyword);
 
     List<UsedProductEntity> fetchLikeUsedProducts(Integer memberId);
+
+    MemberInfoResponse fetchMemberInfo(Integer memberId);
 
 }

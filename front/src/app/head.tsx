@@ -12,7 +12,10 @@ export const viewport = {
 export default function Head() {
   return (
     <>
-      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover,  maximum-scale=1.0, user-scalable=no"
+      />
       <link
         href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
         rel="stylesheet"

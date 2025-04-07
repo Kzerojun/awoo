@@ -9,14 +9,19 @@ const useLocationTracking = () => {
   const [distance, setDistance] = useState<number>(0);
   const [currentPosition, setCurrentPosition] = useState<[number, number] | null>(null);
   const [startPosition, setStartPosition] = useState<[number, number] | null>(null);
-  const [isTracking, setIsTracking] = useState<boolean>(true);
+  const [isTracking, setIsTracking] = useState<boolean>(false);
   const watchIdRef = useRef<number | null>(null);
 
-  // 타이머
+  // // 타이머 -> 원래 기존 코드
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const timeRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 타이머 -> 수정 부분
+  const startTimeRef = useRef<Date | null>(null);
+
+  // 산책을 시작 했는지 아닌지
 
   useEffect(() => {
     if (!("geolocation" in navigator)) {
@@ -51,13 +56,26 @@ const useLocationTracking = () => {
 
     // 산책 시간 기록
     if (isTracking) {
-      setStartTime(new Date());
-      // 2초 후부터 경과 시간 증가 시작
-      setTimeout(() => {
-        timeRef.current = setInterval(() => {
-          setElapsedTime((prev) => prev + 1);
-        }, 1000);
-      }, 2000);
+      // 기존 코드
+      // setStartTime(new Date());
+      // // 2초 후부터 경과 시간 증가 시작
+      // setTimeout(() => {
+      //   timeRef.current = setInterval(() => {
+      //     setElapsedTime((prev) => prev + 1);
+      //   }, 1000);
+      // }, 2000);
+
+      // 수정 코드
+      const start = new Date();
+      startTimeRef.current = start;
+
+      timeRef.current = setInterval(() => {
+        const now = new Date();
+        if (startTimeRef.current) {
+          const diff = Math.floor((now.getTime() - startTimeRef.current.getTime()) / 1000);
+          setElapsedTime(diff);
+        }
+      }, 1000);
 
       // 실시간 위치 추적 (watchPosition)
       watchIdRef.current = navigator.geolocation.watchPosition(
@@ -94,8 +112,17 @@ const useLocationTracking = () => {
       if (watchIdRef.current !== null) {
         navigator.geolocation.clearWatch(watchIdRef.current);
       }
+      if (timeRef.current) clearInterval(timeRef.current);
     };
   }, [isTracking]); // 트래킹 상태가 변경될 때마다 useEffect 실행
+
+  // 트래킹 시작
+  const startTracking = () => {
+    const now = new Date();
+    setStartTime(now);
+    startTimeRef.current = now;
+    setIsTracking(true);
+  };
 
   // 트래킹 종료 함수
   const stopTracking = () => {
@@ -121,6 +148,7 @@ const useLocationTracking = () => {
     distance,
     currentPosition,
     startPosition,
+    startTracking,
     isTracking,
     stopTracking,
     elapsedTime,

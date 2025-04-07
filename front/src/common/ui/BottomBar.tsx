@@ -38,7 +38,10 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
   const hideOnPages = [
     "/",
     "/#",
+    "/login",
     "/my/profile/withdraw",
+    "/signup",
+    "/signup/policy",
     "/signup/profile",
     "/my/paymentRegister/signupDone",
     "/my/paymentRegister/paymentPassword",
@@ -46,8 +49,11 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     "/my/paymentRegister/registerDone",
     "/my/paymentSend/completeSend",
     "/my/paymentCharge/chargeDone",
-    "/walk/start/start", // 산책하는 페이지
+    "/walk/pre",
+    "/walk/start/guide",
+    "/walk/start/walking", // 산책하는 페이지
     "/walk/take-photo", // 산책 후 사진 찍는 페이지
+    "/walk/photo-check", // 사진 찍고 확인하는 페이지
     "/walk/end/check", // 산책 종료 페이지
     "/main", // 메인 웹페이지
     "/market/safePayment/safePayDone",

@@ -108,6 +108,7 @@ export const getSavingAccount = async ({ savingId }: GetSavingPayload): Promise<
     const res = await axiosInstance.get<ApiResponse<SavingResponse>>(
       `/savings?savingId=${savingId}`
     );
+    console.log("적금 단건 계좌 조회할 때 savingId", savingId);
     console.log("적금 계좌 단건 조회 성공:", res.data);
     return res.data.response;
   } catch (err) {
@@ -185,7 +186,7 @@ export const getSavingEarlyTerminationInterest = async ({
 // 적금 계좌 해지
 export const deleteSavingAccount = async ({ accountNo }: AccountNoPayload) => {
   try {
-    const res = await axiosInstance.delete(`/savings`, { data: accountNo });
+    const res = await axiosInstance.delete(`/savings`, { data: { accountNo } });
     console.log("적금 계좌 해지 성공:", res.data);
     return res.data;
   } catch (err) {

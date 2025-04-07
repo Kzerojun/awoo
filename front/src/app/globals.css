@@ -1,9 +1,34 @@
 @import "tailwindcss";
 
-@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css");
+/* 로컬 폰트 정의 추가 */
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../../public/fonts/NanumSquareNeo-aLt.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../../public/fonts/NanumSquareNeo-bRg.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../../public/fonts/NanumSquareNeo-cBd.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
   font-family: "NanumSquareNeo", sans-serif;
 }
+
 @theme {
   --color-aqua: #0fc9ba;
   --color-light-aqua: #8aede1;
@@ -128,8 +153,9 @@ html {
   /* ✅ 전체 페이지에서 불필요한 스크롤 제거 */
   html,
   body {
-    height: 100dvh; /* ✅ 동적 뷰포트 높이 적용 */
-    overflow: hidden; /* ✅ 전체적인 스크롤 숨기기 */
+    height: 100%; /* ✅ 동적 뷰포트 높이 적용 */
+    min-height: 100dvh;
+    overflow: auto;
   }
 
   /* ✅ 스크롤바 숨기기 */

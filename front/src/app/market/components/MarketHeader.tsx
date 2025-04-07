@@ -23,7 +23,7 @@ export default function MarketHeader({ currentTab, onTabChange }: MarketHeaderPr
           <Image src={logo} alt="AwOO Logo" width={120} height={120} />
         </div>
       </Link>
-      <div className="flex space-x-4 ml-12">
+      <div className="flex space-x-4 ml-7 mr-2">
         {(["상품", "내 채팅"] as MarketTab[]).map((tab) => (
           <button
             key={tab}
@@ -34,8 +34,6 @@ export default function MarketHeader({ currentTab, onTabChange }: MarketHeaderPr
           </button>
         ))}
       </div>
-
-      <BellIcon className="h-7 w-7 text-gray-500 mr-2" />
     </header>
   );
 }

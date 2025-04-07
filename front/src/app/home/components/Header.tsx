@@ -1,33 +1,26 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { BellIcon } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
-import { useSelector, UseSelector } from "react-redux";
+import logoIcon from "../../../../public/logos/AwOO_logo.svg"; // 로고 이미지 경로에 맞게 수정
+
 export default function Header() {
   const pathname = usePathname();
-
   const userName = useSelector((state: RootState) => state.user.name);
-  // ✅ 그룹별로 처리
-  const isProductPage =
-    (pathname.startsWith("/home") && pathname !== "/home/myaccount") ||
-    pathname.startsWith("/account/saving") ||
-    pathname.startsWith("/account/open");
-  const isMyAccountPage = pathname.startsWith("/home/myaccount");
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white z-50 flex justify-between items-center p-4">
-      <h1 className="text-lg">{userName ?? "사용자"}</h1>
-      <nav className="flex space-x-4">
-        <Link href="/home">
-          <span className={`${isProductPage ? "text-black" : "text-gray-400"}`}>상품</span>
-        </Link>
-        <Link href="/home/myaccount">
-          <span className={`${isMyAccountPage ? "text-black" : "text-gray-400"}`}>내 계좌</span>
-        </Link>
-        <BellIcon className="h-6 w-6 text-gray-500" />
-      </nav>
+    <header className="fixed top-0 left-0 right-0 bg-white z-50 flex justify-between items-center px-4 py-4 ">
+      {/* 왼쪽: 로고 */}
+      <div className="flex items-center gap-2">
+        <Image src={logoIcon} alt="AwOO 로고" width={100} height={100} />
+      </div>
+
+      {/* 오른쪽: 사용자 이름 */}
+      <div className="text-m font-medium text-gray-700 mr-2">
+        {userName ? `${userName}님` : "사용자님"}
+      </div>
     </header>
   );
 }

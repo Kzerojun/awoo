@@ -1,6 +1,8 @@
 package com.awoo.account.application.service;
 
 import com.awoo.account.application.command.*;
+import com.awoo.account.application.exception.AccountApplicationErrorCode;
+import com.awoo.account.application.exception.AccountApplicationException;
 import com.awoo.account.domain.AccountEntity;
 import com.awoo.account.domain.AccountRepository;
 import com.awoo.account.domain.AccountType;
@@ -13,11 +15,13 @@ import com.awoo.account.infra.ssafyfinance.response.*;
 import com.awoo.account.infra.util.AESUtil;
 import com.awoo.account.support.SSAFYApiHelper;
 import com.awoo.account.support.SSAFYCode;
+import com.awoo.account.ui.facade.dto.response.FetchAccountResponse;
 import com.awoo.account.ui.facade.dto.response.TransactionResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +38,11 @@ public class AccountServiceImpl implements AccountService{
     private final MemberClient memberClient;
 
     @Transactional
-    public void createAccount(String memberId, CreateAccountCommand command) {
+    public String createAccount(String memberId, CreateAccountCommand command) {
+        if (!command.conditionsAgreement()) {
+            throw new AccountApplicationException(AccountApplicationErrorCode.CONDITION_FALSE);
+        }
+
         // SSAFY 계좌 생성 요청 생성
         SSAFYCreateAccountRequest request = SSAFYCreateAccountRequest.builder()
                 .Header(ssafyApiHelper.createHeader(Integer.valueOf(memberId), SSAFYCode.CREATE_ACCOUNT))
@@ -55,12 +63,14 @@ public class AccountServiceImpl implements AccountService{
                 .bankCode(response.REC().bankCode())
                 .accountNumber(encodedAccountNo)
                 .password(encodedPassword)
-                .conditionsAgreement(command.conditionsAgreement())
+                .conditionsAgreement(true)
                 .accountType(AccountType.INTERNAL)
                 .build();
 
         // DB 저장
         accountRepository.save(account);
+
+        return response.REC().accountNo();
     }
 
     public List<SSAFYAccountResponseDto> getAccountList(String memberId) {
@@ -106,8 +116,8 @@ public class AccountServiceImpl implements AccountService{
 
         // kafka 요청 메시지 생성
         // 입금, 출금 계좌로 부터 각각 memberId 조회
-        Integer senderId =  accountRepository.findByAccountNumber(command.withdrawalAccountNo()).getMemberId();
-        Integer receiverId = accountRepository.findByAccountNumber(command.depositAccountNo()).getMemberId();
+        Integer senderId =  accountRepository.findByAccountNumber(aesUtil.encrypt(command.withdrawalAccountNo())).getMemberId();
+        Integer receiverId = accountRepository.findByAccountNumber(aesUtil.encrypt(command.depositAccountNo())).getMemberId();
 
         //member 도메인에 memberId에 맵핑된 name 요청
         String senderName = memberClient.getMemberName(senderId);
@@ -190,6 +200,27 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         ssafyCommonApiClient.checkAuthCode(request);
+    }
+
+    public List<FetchAccountResponse> fetchAccountAll() {
+        List<AccountEntity> accountEntities = accountRepository.findAll();
+        List<FetchAccountResponse> result = new ArrayList<>();
+
+        for (AccountEntity entity : accountEntities) {
+            FetchAccountResponse response = FetchAccountResponse.builder()
+                    .memberId(entity.getMemberId())
+                    .bankCode(entity.getBankCode())
+                    .accountNo(aesUtil.decrypt(entity.getAccountNumber()))
+                    .accountType(entity.getAccountType())
+                    .accountCreatedAt(entity.getCreatedAt())
+                    .petId(entity.getPetId())
+                    .isDelete(entity.isDeleted())
+                    .build();
+
+            result.add(response);
+        }
+
+        return result;
     }
 
 }
