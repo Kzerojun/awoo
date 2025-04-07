@@ -16,6 +16,8 @@ public interface UsedProductRepository {
 
     void delete(UsedProductEntity entity);
 
+    void deleteById(Integer id);
+
     boolean existsById(Integer usedProductId);
     List<UsedProductEntity> findByTitleContaining(String keyword);
 
