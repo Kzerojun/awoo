@@ -1,13 +1,64 @@
 import React from "react";
-import { UserData } from "../data/mockData";
 
-interface UserListProps {
-  users: UserData[];
-  onViewUserDetail: (user: UserData) => void;
-  onViewAccountDetail: (user: UserData, accountNumber: string) => void;
+interface AccountInfo {
+  bankCode: string;
+  accountNo: string;
+  accountType: string;
+  accountCreatedAt: string;
+  isDelete: boolean;
 }
 
-export default function UserList({ users, onViewUserDetail, onViewAccountDetail }: UserListProps) {
+interface GroupedUserData {
+  memberName: string;
+  email: string;
+  nickname: string;
+  memberCreatedAt: string;
+  petName: string | null;
+  accounts: AccountInfo[];
+}
+
+interface UserListProps {
+  users: GroupedUserData[];
+  onViewUserDetail: (user: GroupedUserData) => void;
+}
+
+export default function UserList({ users, onViewUserDetail }: UserListProps) {
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    } catch (e) {
+      return dateString;
+    }
+  };
+
+  // 뱅크 코드 표시 함수
+  const getBankName = (bankCode: string): string => {
+    switch (bankCode) {
+      case "999":
+        return "싸피은행";
+      default:
+        return bankCode;
+    }
+  };
+
+  // 계좌 타입 표시 함수
+  const getAccountTypeName = (accountType: string): string => {
+    switch (accountType) {
+      case "INTERNAL":
+        return "내부계좌";
+      case "SAVING":
+        return "적금";
+      default:
+        return accountType;
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       <table className="w-full">
@@ -23,7 +74,7 @@ export default function UserList({ users, onViewUserDetail, onViewAccountDetail 
         <tbody>
           {users.map((user, index) => (
             <tr
-              key={user.id}
+              key={user.email}
               className={`hover:bg-gray-50 transition-colors duration-150 ${
                 index !== users.length - 1 ? "border-b border-gray-100" : ""
               }`}
@@ -31,27 +82,27 @@ export default function UserList({ users, onViewUserDetail, onViewAccountDetail 
               <td className="px-6 py-4 cursor-pointer" onClick={() => onViewUserDetail(user)}>
                 <div className="flex items-center">
                   <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-medium mr-3">
-                    {user.name.charAt(0)}
+                    {user.memberName.charAt(0)}
                   </div>
                   <div>
-                    <div className="font-medium text-gray-800">{user.name}</div>
-                    <div className="text-sm text-gray-500">{user.id}</div>
+                    <div className="font-medium text-gray-800">{user.memberName}</div>
+                    <div className="text-sm text-gray-500">{user.email}</div>
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-gray-700">{user.nickname}</td>
-              <td className="px-6 py-4 text-gray-700">{user.joinDate}</td>
+              <td className="px-6 py-4 text-gray-700">{formatDate(user.memberCreatedAt)}</td>
               <td className="px-6 py-4">
                 {user.accounts.length > 0 && (
                   <div>
                     <button
-                      onClick={() => onViewAccountDetail(user, user.accounts[0].number)}
+                      onClick={() => onViewUserDetail(user)}
                       className="inline-flex items-center text-sm text-teal-600 hover:text-teal-700"
                     >
                       <span className="bg-teal-100 text-teal-700 px-2 py-1 rounded-md mr-2">
-                        {user.accounts[0].type}
+                        {getAccountTypeName(user.accounts[0].accountType)}
                       </span>
-                      {user.accounts[0].number}
+                      {user.accounts[0].accountNo}
                       {user.accounts.length > 1 && (
                         <span className="ml-2 text-gray-500">외 {user.accounts.length - 1}개</span>
                       )}
@@ -59,7 +110,7 @@ export default function UserList({ users, onViewUserDetail, onViewAccountDetail 
                   </div>
                 )}
               </td>
-              <td className="px-6 py-4 text-gray-700">{user.pet}</td>
+              <td className="px-6 py-4 text-gray-700">{user.petName || "-"}</td>
             </tr>
           ))}
 

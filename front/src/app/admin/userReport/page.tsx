@@ -19,6 +19,7 @@ export default function UserReport() {
       const response = await getReportList();
       if (response.success) {
         setReports(response.response);
+        console.log(response);
       } else {
         console.error("신고 목록 조회 실패:", response.error);
       }
