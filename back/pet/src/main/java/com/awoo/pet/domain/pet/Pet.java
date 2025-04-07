@@ -34,8 +34,14 @@ public class Pet {
     @Column(nullable = false)
     private int savingLevel = 0;
 
+    @Column
+    private String animalRegNumber;
+
+    @Column
+    private String ocrImageUrl;
+
     @Builder
-    public Pet(Integer petId, int memberId, String name, String profileImage, String breed, int age, int savingId, int savingLevel) {
+    public Pet(Integer petId, int memberId, String name, String profileImage, String breed, int age, int savingId, int savingLevel, String animalRegNumber, String ocrImageUrl) {
         this.petId = petId;
         this.memberId = memberId;
         this.name = name;
@@ -44,6 +50,8 @@ public class Pet {
         this.age = age;
         this.savingId = savingId;
         this.savingLevel = savingLevel;
+        this.animalRegNumber = animalRegNumber;
+        this.ocrImageUrl = ocrImageUrl;
     }
 
     public void modifyPet(final ModifyPetCommand command){

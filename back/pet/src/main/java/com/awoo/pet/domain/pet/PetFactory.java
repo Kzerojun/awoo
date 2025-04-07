@@ -18,6 +18,8 @@ public class PetFactory {
                 .age(command.petCommand().age())
                 .savingId(command.petCommand().savingId())
                 .savingLevel(command.petCommand().savingLevel())
+                .animalRegNumber(command.petCommand().animalRegNumber())
+                .ocrImageUrl(command.petCommand().ocrImageUrl())
                 .build();
     }
 }
