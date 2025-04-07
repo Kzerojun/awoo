@@ -19,6 +19,9 @@ import com.awoo.account.ui.facade.dto.response.FetchAccountResponse;
 import com.awoo.account.ui.facade.dto.response.TransactionResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -202,11 +205,12 @@ public class AccountServiceImpl implements AccountService{
         ssafyCommonApiClient.checkAuthCode(request);
     }
 
-    public List<FetchAccountResponse> fetchAccountAll() {
-        List<AccountEntity> accountEntities = accountRepository.findAll();
-        List<FetchAccountResponse> result = new ArrayList<>();
+    public List<FetchAccountResponse> fetchAccountAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AccountEntity> pageResult = accountRepository.findAll(pageable);
 
-        for (AccountEntity entity : accountEntities) {
+        List<FetchAccountResponse> result = new ArrayList<>();
+        for (AccountEntity entity : pageResult) {
             FetchAccountResponse response = FetchAccountResponse.builder()
                     .memberId(entity.getMemberId())
                     .bankCode(entity.getBankCode())
@@ -221,6 +225,10 @@ public class AccountServiceImpl implements AccountService{
         }
 
         return result;
+    }
+
+    public long countAllAccounts() {
+        return accountRepository.count();
     }
 
 }
