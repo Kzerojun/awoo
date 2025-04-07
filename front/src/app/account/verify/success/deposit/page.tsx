@@ -79,19 +79,16 @@ export default function AccountVerifySuccessPage() {
 
   return (
     <div>
-      {/* ✅ 공통 상단 바 */}
-      <CommonTopBar title="계좌인증" leftAction="back" rightAction="cancel" />
+      {/* ✅ 계좌 개설 중일 때만 상단바 노출 */}
+      {!showComplete && <CommonTopBar title="계좌인증" leftAction="back" rightAction="cancel" />}
 
-      {/* ✅ 계좌 개설 완료 여부에 따른 화면 분기 */}
       {!showComplete ? (
         <div className="h-[calc(100vh-56px)] flex flex-col items-center justify-center text-center px-6">
           <Image src={Checkmark} alt="성공 아이콘" width={80} height={80} />
           <p className="mt-6 text-xl font-semibold">계좌 인증 완료</p>
-          {/* ✅ 확인 버튼 클릭 시 계좌 개설 시도 */}
           <Button className="mt-10" text="확인" width="long" onClick={handleOpenAccount} />
         </div>
       ) : (
-        // ✅ 계좌 개설 성공 시 보여주는 컴포넌트
         <AccountComplete
           title="입출금통장 개설완료"
           description={`입출금 통장이 개설되었습니다.\n아래의 내용을 확인해주세요.`}
