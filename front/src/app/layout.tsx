@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   // children 의 현재 경로
   const path = usePathname();
-  const isRootPath = path === "/" || path === "/#";
+  const isRootPath = path === "/";
 
   // 바텀바 숨김 페이지들
   const hideBottomBarPaths = [
