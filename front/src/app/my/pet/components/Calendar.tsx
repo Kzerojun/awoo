@@ -156,7 +156,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="p-4 mx-auto flex flex-col justify-center gap-y-5">
+    <div className="p-4 w-full flex flex-col justify-center gap-y-5">
       <div className="flex items-center justify-center gap-x-5 mt-3">
         <button
           className={`text-sm border-2 rounded-2xl w-20 h-10 ${
@@ -168,9 +168,9 @@ const Calendar = () => {
         >
           전체 일정
         </button>
-        {petList.map((pet) => (
+        {petList.map((pet, index) => (
           <button
-            key={pet.petId}
+            key={pet?.petId ?? `fallback-${index}`}
             className={`text-sm border-2 rounded-2xl w-20 h-10 ${
               selectCalendar === pet.petId
                 ? "bg-light-green text-white border-light-green"
@@ -178,12 +178,12 @@ const Calendar = () => {
             }`}
             onClick={() => handleCalendarChange(pet.petId)}
           >
-            {pet.name}
+            <span className="truncate">{pet.name}</span>
           </button>
         ))}
       </div>
 
-      <div className="max-w-md mx-auto p-4 rounded-lg shadow-md bg-white">
+      <div className="w-full mx-auto p-4 rounded-lg shadow-md bg-white">
         <div className="flex justify-between items-center mb-4">
           <button onClick={handlePrev} className="text-gray-400">
             &lt;
@@ -216,12 +216,12 @@ const Calendar = () => {
               <div
                 key={dateStr}
                 className={clsx(
-                  "h-14 p-1 flex flex-col justify-between rounded-lg cursor-pointer border-1 border-gray-300 hover:bg-gray-100 transition",
+                  "h-14 p-1 flex flex-col justify-between rounded-lg cursor-pointer hover:bg-gray-100 transition",
                   isCurrent && "bg-light-aqua border-aqua"
                 )}
                 onClick={() => handleDateClick(dateStr)}
               >
-                <div className="text-right pr-1 text-gray-500 text-sm">{dayNum}</div>
+                <div className="text-center pr-1 text-gray-500 text-sm">{dayNum}</div>
 
                 {hasEvents && (
                   <div className="flex items-center justify-center gap-1 text-xs text-gray-600 mt-1">
@@ -245,6 +245,7 @@ const Calendar = () => {
         onClose={() => setShowListModal(false)}
         dateLabel={clickedDate.replace(/-/g, ".")}
         schedules={schedulesForSelectedDate.map((e) => ({
+          key: e.id,
           id: e.id,
           title: `${e.title}`,
           time: e.startDate === e.endDate ? "" : `(${e.startDate} ~ ${e.endDate})`,
