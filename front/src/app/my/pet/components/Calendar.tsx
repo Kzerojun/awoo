@@ -156,29 +156,32 @@ const Calendar = () => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center gap-y-5">
-      <div className="flex items-center justify-center gap-x-5 mt-3">
+    <div className="mt-14 w-full flex flex-col justify-center gap-y-5">
+      <div className="flex items-center justify-start flex-wrap gap-3 mx-2 mt-2 px-2">
         <button
-          className={`text-sm border-2 rounded-2xl w-20 h-10 ${
-            selectCalendar === 0
-              ? "bg-light-green text-white border-light-green"
-              : "border-light-green text-black"
-          }`}
+          className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[80px] 
+      ${
+        selectCalendar === 0
+          ? "bg-sky-400 text-white border-sky-400 shadow-md scale-[1.05]"
+          : "border-sky-300 text-gray-800 hover:bg-sky-100"
+      }`}
           onClick={() => handleCalendarChange(0)}
         >
           전체 일정
         </button>
+
         {petList.map((pet, index) => (
           <button
             key={pet?.petId ?? `fallback-${index}`}
-            className={`text-sm border-2 rounded-2xl w-20 h-10 ${
-              selectCalendar === pet.petId
-                ? "bg-light-green text-white border-light-green"
-                : "border-light-green text-black"
-            }`}
+            className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[80px] 
+        ${
+          selectCalendar === pet.petId
+            ? "bg-sky-400 text-white border-sky-400 shadow-md scale-[1.05]"
+            : "border-sky-300 text-gray-800 hover:bg-sky-100"
+        }`}
             onClick={() => handleCalendarChange(pet.petId)}
           >
-            <span className="truncate">{pet.name}</span>
+            <span className="truncate max-w-[6rem]">{pet.name}</span>
           </button>
         ))}
       </div>
@@ -188,8 +191,8 @@ const Calendar = () => {
           <button onClick={handlePrev} className="text-gray-400">
             &lt;
           </button>
-          <h2 className="text-lg font-semibold text-green">{format(currentMonth, "yyyy년 M월")}</h2>
-          <button onClick={handleNext} className="text-green">
+          <h2 className="text-xl font-bold text-blue-400">{format(currentMonth, "yyyy년 M월")}</h2>
+          <button onClick={handleNext} className="text-blue-400">
             &gt;
           </button>
         </div>
@@ -224,7 +227,7 @@ const Calendar = () => {
                 <div
                   className={clsx(
                     "text-center text-sm w-6 h-6 mx-auto rounded-full flex items-center justify-center",
-                    isCurrent ? "bg-green text-white font-semibold" : "text-gray-700"
+                    isCurrent ? "bg-blue-300 text-white font-semibold" : "text-gray-700"
                   )}
                 >
                   {dayNum}
@@ -266,7 +269,7 @@ const Calendar = () => {
           key: e.id,
           id: e.id,
           title: `${e.title}`,
-          time: e.startDate === e.endDate ? "" : `(${e.startDate} ~ ${e.endDate})`,
+          time: e.startDate === e.endDate ? "" : `${e.startDate}~${e.endDate}`,
           color: e.color,
           dog: e.dog,
         }))}
