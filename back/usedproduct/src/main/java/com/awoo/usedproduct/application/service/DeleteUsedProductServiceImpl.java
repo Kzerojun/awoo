@@ -21,4 +21,9 @@ public class DeleteUsedProductServiceImpl implements DeleteUsedProductService {
         usedProductEntity.canModify(command.memberId());
         usedProductRepository.delete(usedProductEntity);
     }
+
+    @Override
+    public void deleteUsedProductByAdmin(Integer usedProductId){
+        usedProductRepository.deleteById(usedProductId);
+    }
 }
