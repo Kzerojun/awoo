@@ -79,7 +79,6 @@ axiosInstance.interceptors.response.use(
       } catch (err) {
         localStorage.removeItem("accessToken");
         console.error("리프레시 토큰 실패:", err);
-        alert("세션이 만료되었습니다. 다시 로그인 해주시길 바랍니다.");
         window.location.href = "/login";
         return Promise.reject(err);
       }
