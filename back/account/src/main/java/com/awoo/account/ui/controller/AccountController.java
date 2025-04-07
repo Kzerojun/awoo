@@ -139,7 +139,16 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public List<FetchAccountResponse> fetchAccountAll() {
-        return accountServiceFacade.fetchAccountAll();
+    public List<FetchAccountResponse> fetchAccountAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return accountServiceFacade.fetchAccountAll(page, size);
     }
+
+    @GetMapping("/count")
+    public long countAllAccounts() {
+        return accountServiceFacade.countAllAccounts();
+    }
+
 }

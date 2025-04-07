@@ -1,15 +1,20 @@
 package com.awoo.admin.ui.controller;
 
+import com.awoo.admin.infra.client.account.AccountClient;
 import com.awoo.admin.infra.client.account.FetchAccountResponse;
 import com.awoo.admin.infra.client.member.FetchMemberInfo;
 import com.awoo.admin.infra.client.pet.FetchPetInfo;
 import com.awoo.admin.support.ApiUtils;
 import com.awoo.admin.ui.facade.AccountServiceFacade;
 import com.awoo.admin.ui.facade.dto.response.CollectInternalInfoResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,15 +24,17 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin/accounts")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AccountController {
 
     private final AccountServiceFacade accountServiceFacade;
+    private final AccountClient accountClient;
 
     @GetMapping
-    public ApiUtils.ApiResult<?> CollectInternalInfos() {
+    public ApiUtils.ApiResult<?> CollectInternalInfos(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int size) {
         try {
-            List<FetchAccountResponse> fetchAccountList = accountServiceFacade.fetchAccountList();
+            List<FetchAccountResponse> fetchAccountList = accountServiceFacade.fetchAccountList(page, size);
 
             // memberId 중복 제거
             Set<Integer> memberIds = fetchAccountList.stream()
@@ -71,7 +78,13 @@ public class AccountController {
                     })
                     .toList();
 
-            return ApiUtils.success(responseList);
+            long totalCount = accountClient.countAllAccounts();
+
+            PageRequest pageable = PageRequest.of(page, size);
+            Page<CollectInternalInfoResponse> pagedResult =
+                    new PageImpl<>(responseList, pageable, totalCount);
+
+            return ApiUtils.success(pagedResult);
         }catch (Exception e) {
             return ApiUtils.error(e, HttpStatus.BAD_REQUEST);
         }

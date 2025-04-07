@@ -16,8 +16,8 @@ import java.util.Set;
 public class AccountServiceFacadeImpl implements AccountServiceFacade {
     private final AccountService accountService;
 
-    public List<FetchAccountResponse> fetchAccountList() {
-        return accountService.fetchAccountList();
+    public List<FetchAccountResponse> fetchAccountList(int page, int size) {
+        return accountService.fetchAccountList(page, size);
     }
 
     public List<FetchMemberInfo> fetchMemberInfoList(Set<Integer> memberIds) {
