@@ -8,7 +8,7 @@ import CheckEnd from "../../components/CheckEnd";
 
 const EndCheckPage = () => {
   return (
-    <div className="h-full flex flex-col justify-center items-center gap-8">
+    <div className="h-full flex flex-col justify-center items-center overscroll-none">
       <CheckEnd />
     </div>
   );
