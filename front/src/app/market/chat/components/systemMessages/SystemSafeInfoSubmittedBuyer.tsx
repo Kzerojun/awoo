@@ -5,9 +5,10 @@ import Image from "next/image";
 import logo from "@/../public/logos/AwOO_logo.svg";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/api/axiosInstance";
-import { useSearchParams } from "next/navigation";
-import { chatSocket } from "@/socket/chatSocket"; // 소켓 임포트
+import { useSearchParams, useParams } from "next/navigation";
+import { chatSocket } from "@/socket/chatSocket";
 import { useAppSelector } from "@/lib/store";
+
 interface Props {
   sender: "me" | "partner";
   createdAt: string;
@@ -16,15 +17,14 @@ interface Props {
 export function SystemSafeInfoSubmittedBuyer({ sender, createdAt }: Props) {
   const isMe = sender === "me";
   const searchParams = useSearchParams();
+  const { chatRoomId } = useParams() as { chatRoomId: string };
   const usedProductId = searchParams.get("usedProductId");
-
-  // 상태 변수
-  const [isConfirming, setIsConfirming] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-
   const memberId = useAppSelector((state) => state.memberId.memberId);
 
-  // 상품 상태 조회 함수
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [readyToSendMessage, setReadyToSendMessage] = useState(false);
+
   const fetchProductStatus = async (productId: string) => {
     try {
       const res = await axiosInstance.get(`/used-products/${productId}`);
@@ -36,7 +36,6 @@ export function SystemSafeInfoSubmittedBuyer({ sender, createdAt }: Props) {
     }
   };
 
-  // 구매 확정 처리 함수
   const handleConfirmPurchase = async () => {
     if (!usedProductId) return;
 
@@ -47,17 +46,7 @@ export function SystemSafeInfoSubmittedBuyer({ sender, createdAt }: Props) {
         type: "SAFE",
       });
       setConfirmed(true);
-
-      // 소켓을 통해 "SAFE_FINISH" 메시지 전송
-      const token = localStorage.getItem("accessToken");
-      const chatRoomId = searchParams.get("chatRoomId"); // chatRoomId 가져오기
-      if (token && chatRoomId) {
-        chatSocket.connect(token, Number(chatRoomId), () => {});
-        setTimeout(() => {
-          // 상대방에게 "SAFE_FINISH" 메시지 전송
-          chatSocket.send(Number(chatRoomId), "SAFE_COMPLETE", memberId); // ✅ 구매 확정 메시지
-        }, 300);
-      }
+      setReadyToSendMessage(true); // 메시지 전송 준비 완료
     } catch (error) {
       console.error("구매 확정 실패:", error);
       alert("구매 확정 중 오류가 발생했습니다.");
@@ -65,8 +54,13 @@ export function SystemSafeInfoSubmittedBuyer({ sender, createdAt }: Props) {
       setIsConfirming(false);
     }
   };
+  const handleSendMessage = () => {
+    const message = "SAFE_COMPLETE";
+    chatSocket.send(Number(chatRoomId), message, memberId);
 
-  // useEffect로 상품 상태 조회
+    setReadyToSendMessage(false); // 메시지 전송 후 버튼 제거
+  };
+
   useEffect(() => {
     if (usedProductId) {
       fetchProductStatus(usedProductId);
@@ -91,7 +85,7 @@ export function SystemSafeInfoSubmittedBuyer({ sender, createdAt }: Props) {
               <br />
               구매 확정을 진행해주세요.
             </p>
-            {!confirmed ? (
+            {!confirmed && (
               <button
                 onClick={handleConfirmPurchase}
                 disabled={isConfirming}
@@ -99,7 +93,16 @@ export function SystemSafeInfoSubmittedBuyer({ sender, createdAt }: Props) {
               >
                 {isConfirming ? "확인 중..." : "구매 확정"}
               </button>
-            ) : (
+            )}
+            {readyToSendMessage && (
+              <button
+                onClick={handleSendMessage}
+                className="mt-2 text-[12px] bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700 transition"
+              >
+                확인
+              </button>
+            )}
+            {confirmed && !readyToSendMessage && (
               <span className="text-[12px] text-green-600 mt-2">구매 확정 완료 🎉</span>
             )}
           </div>

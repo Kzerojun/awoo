@@ -177,30 +177,7 @@ export default function ChatRoomPage() {
     setShowActions(false);
     setShowPaymentModal(true);
   };
-  const dispatch = useAppDispatch();
   const chatSystem = useAppSelector((state) => state.chatSystem);
-
-  useEffect(() => {
-    if (!socketReady) return;
-    if (!isPaymentFinished(chatSystem)) return;
-
-    const message = chatSystem.paymentMethod === "SAFE" ? "SAFE_FINISH" : "PAYMENT_FINISH";
-    chatSocket.send(Number(chatRoomId), message, memberId);
-
-    // ✅ 채팅에 바로 반영
-    const now = new Date().toISOString();
-    const newSystemMessage: MessageType = {
-      messageId: Date.now(),
-      senderId: memberId,
-      message,
-      createdAt: now,
-      image: null,
-      chatRoomId: Number(chatRoomId),
-    };
-    setMessages((prev) => [...prev, newSystemMessage]);
-
-    dispatch(resetChatSystem());
-  }, [socketReady, chatSystem]); // 👉 오직 socketReady만 deps에 둬!
 
   // ====================================
   // 💡 === 화면 렌더링 ===
