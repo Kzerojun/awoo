@@ -36,7 +36,7 @@ const ScheduleModal = ({ isOpen, onClose, clickedDate, onSubmit }: Props) => {
   }, [isOpen, clickedDate]);
 
   if (new Date(endDate) < new Date(startDate)) {
-    toast.info("종료 날짜는 시작 날짜보다 빠를 수 없습니다.");
+    alert("종료 날짜는 시작 날짜보다 빠를 수 없습니다.");
     return;
   }
 
