@@ -5,9 +5,11 @@ import { setUserData } from "@/lib/slices/userSlice";
 import { setMemberId, resetMemberId } from "@/lib/slices/memberIdSlice";
 // 펫 정보 저장
 import { getPetList } from "@/api/pet/pet";
+import { useRouter } from "next/navigation";
 
 export const useLogin = (refetchUserInfo: () => Promise<any>) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   return useMutation({
     mutationFn: login,
     onSuccess: async (res) => {
@@ -63,7 +65,7 @@ export const useLogin = (refetchUserInfo: () => Promise<any>) => {
     },
     onError: (error) => {
       console.error("로그인 실패:", error);
-      alert("로그인 실패.");
+      router.replace("/login");
     },
   });
 };

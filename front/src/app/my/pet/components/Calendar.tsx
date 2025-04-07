@@ -156,7 +156,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="p-4 w-full flex flex-col justify-center gap-y-5">
+    <div className="w-full flex flex-col justify-center gap-y-5">
       <div className="flex items-center justify-center gap-x-5 mt-3">
         <button
           className={`text-sm border-2 rounded-2xl w-20 h-10 ${
@@ -183,7 +183,7 @@ const Calendar = () => {
         ))}
       </div>
 
-      <div className="w-full mx-auto p-4 rounded-lg shadow-md bg-white">
+      <div className="w-full mx-auto p-4 rounded-lg bg-white">
         <div className="flex justify-between items-center mb-4">
           <button onClick={handlePrev} className="text-gray-400">
             &lt;
@@ -200,7 +200,7 @@ const Calendar = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-1 mt-2 text-sm">
+        <div className="grid grid-cols-7 mt-2 text-sm">
           {Array.from({ length: prefixDays }).map((_, i) => (
             <div key={`empty-${i}`} />
           ))}
@@ -216,24 +216,42 @@ const Calendar = () => {
               <div
                 key={dateStr}
                 className={clsx(
-                  "h-14 p-1 flex flex-col justify-between rounded-lg cursor-pointer hover:bg-gray-100 transition",
-                  isCurrent && "bg-light-aqua border-aqua"
+                  "h-24 flex flex-col justify-start rounded-lg cursor-pointer hover:bg-gray-100 transition"
                 )}
                 onClick={() => handleDateClick(dateStr)}
               >
-                <div className="text-center pr-1 text-gray-500 text-sm">{dayNum}</div>
+                {/* 날짜 */}
+                <div
+                  className={clsx(
+                    "text-center text-sm w-6 h-6 mx-auto rounded-full flex items-center justify-center",
+                    isCurrent ? "bg-green text-white font-semibold" : "text-gray-700"
+                  )}
+                >
+                  {dayNum}
+                </div>
 
-                {hasEvents && (
-                  <div className="flex items-center justify-center gap-1 text-xs text-gray-600 mt-1">
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: dayEvents[0].color }}
-                    />
-                    {dayEvents.length > 1 && (
-                      <span className="text-[10px]">+{dayEvents.length - 1}</span>
-                    )}
-                  </div>
-                )}
+                {/* 일정 바 영역 */}
+                <div className="flex flex-col gap-[3px] mt-1 overflow-hidden">
+                  {dayEvents.slice(0, 3).map((event) => {
+                    const isStart = event.startDate === dateStr;
+                    return (
+                      <div
+                        key={event.id}
+                        className={clsx(
+                          " px-1 py-[2px] text-[10px] truncate",
+                          isStart ? "text-white" : "text-transparent"
+                        )}
+                        style={{ backgroundColor: event.color }}
+                      >
+                        {event.title}
+                      </div>
+                    );
+                  })}
+
+                  {dayEvents.length > 3 && (
+                    <div className="text-[10px] text-gray-500 text-center">더보기</div>
+                  )}
+                </div>
               </div>
             );
           })}
