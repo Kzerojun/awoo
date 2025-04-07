@@ -3,7 +3,7 @@ import { getPetWalkInMonthHistory } from "@/api/walk/walk";
 
 export const useGetPetWalkInMonthHistory = (petId: number) => {
   return useQuery({
-    queryKey: ["getPetWalkingHistory", petId],
+    queryKey: ["getPetWalkingInMonthHistory", petId],
     queryFn: () => getPetWalkInMonthHistory(petId),
     enabled: !!petId,
     refetchOnWindowFocus: false,
