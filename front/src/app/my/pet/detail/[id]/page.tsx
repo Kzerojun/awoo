@@ -21,7 +21,7 @@ const PetDetailPage = () => {
 
   return (
     <>
-      <CommonTopBar title={petDetail.name} />
+      <CommonTopBar title={petDetail.name} backUrl="/my/pet" />
       <main className="mt-14 px-4 h-[calc(100dvh-7rem)] overflow-y-auto">
         <PetDetail pet={petDetail} />
       </main>

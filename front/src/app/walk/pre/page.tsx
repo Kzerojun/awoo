@@ -67,7 +67,7 @@ const WalkPreSelectDogPage = () => {
 
   return (
     <>
-      <CommonTopBar title="산책" />
+      <CommonTopBar title="산책" backUrl="/home" />
       <main className="flex flex-col items-center justify-center mt-14">
         {currentView === 1 ? <NoPet /> : <SelectDog />}
       </main>

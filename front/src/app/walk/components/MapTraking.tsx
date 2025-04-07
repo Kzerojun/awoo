@@ -5,6 +5,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Map, MapMarker, Polyline, CustomOverlayMap } from "react-kakao-maps-sdk";
 import WalkingLoading from "./WalkingLoading";
 import { useAppSelector } from "@/lib/store";
+import { useRouter } from "next/navigation";
 
 interface MapTrackingProps {
   positions: [number, number][];
@@ -31,10 +32,12 @@ const MapTraking = ({
   //   distance,
   // } = useLocationTracking();
 
+  const router = useRouter();
   const walkingDog = useAppSelector((state) => state.walk.currentWalkingDog);
-  const profileImage = walkingDog?.profileImage ?? "/icons/waling/walkDogBasic.svg";
+  const profileImage = walkingDog?.profileImage ?? "/icons/walking/walkDogBasic.svg";
   const petName = walkingDog?.name;
   const [isScriptLoaded, setIsScriptLoaded] = useState<boolean>(false);
+  const [loadFailed, setLoadFailed] = useState<boolean>(false);
   const mapRef = useRef<kakao.maps.Map | null>(null); // 지도 사이즈 문제 해결
 
   const walkDoneIcons = [
@@ -82,6 +85,7 @@ const MapTraking = ({
 
       script.onerror = () => {
         console.error("❌ 카카오맵 스크립트 로드 실패!");
+        setLoadFailed(true);
       };
 
       document.head.appendChild(script);
@@ -99,8 +103,23 @@ const MapTraking = ({
     }, 300);
   }, [isScriptLoaded]);
 
-  if (!isScriptLoaded) {
+  if (!isScriptLoaded && !loadFailed) {
     return <WalkingLoading />;
+  }
+
+  if (loadFailed) {
+    return (
+      <div className="flex flex-col justify-center items-center w-full h-[50vh] gap-4 text-center text-gray-700">
+        <p>지도를 불러오지 못했어요. 😢</p>
+        <p>네트워크 상태를 확인하거나, 잠시 후 다시 시도해주세요.</p>
+        <button
+          className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition"
+          onClick={() => router.replace("/walk/pre")}
+        >
+          다시 시도하기
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -130,28 +149,7 @@ const MapTraking = ({
             }}
           />
         )}
-        {/* 사용자가 이동한 경로에 발자국 마커 표시 */}
-        {/* {isScriptLoaded &&
-          positions.map((pos, index) => (
-            <MapMarker
-              key={index}
-              position={{ lat: pos[0], lng: pos[1] }}
-              image={{
-                src: "/icons/walking/single_paw.svg",
-                size: { width: 30, height: 30 },
-              }}
-            />
-          ))} */}
-        {/* 사용자의 현재 위치를 나타내는 마커 (원래) */}
-        {/* {isScriptLoaded && currentPosition && (
-          <MapMarker
-            position={{ lat: currentPosition[0], lng: currentPosition[1] }}
-            image={{
-              src: profileImage,
-              size: { width: 50, height: 50 },
-            }}
-          />
-        )} */}
+        {/* 현재 위치 */}
         {isTracking && isScriptLoaded && currentPosition && (
           <CustomOverlayMap
             position={{ lat: currentPosition[0], lng: currentPosition[1] }}
@@ -162,7 +160,6 @@ const MapTraking = ({
             </div>
           </CustomOverlayMap>
         )}
-
         {/* 사용자가 이동한 경로를 선으로 연결 */}
         {isScriptLoaded && positions && positions?.length > 0 && (
           <Polyline

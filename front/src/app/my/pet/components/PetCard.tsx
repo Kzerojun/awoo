@@ -29,7 +29,7 @@ const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardP
   return (
     <div
       className={`w-full h-16 border rounded-2xl flex items-center justify-between p-4 cursor-pointer transition-colors
-    ${selected ? "border-green bg-light-green/30" : "border-gray-300 hover:bg-gray-100"}`}
+    ${selected ? "border-green bg-light-green/70" : "border-gray-300 hover:bg-gray-100 bg-white/60"}`}
       onClick={handleClick}
     >
       {/* 강아지 이미지 */}
