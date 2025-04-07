@@ -27,7 +27,7 @@ public class KafkaConsumer {
     private final ReportService reportService;
 
     //문의사항 발생
-    @KafkaListener(topics = "account.register.question.v1", groupId = "admin-group")
+    @KafkaListener(topics = "account.register.question.v1")
     public void registerQuestion(String kafkaMessage) {
         log.info("Kafka Message : -> " + kafkaMessage);
         ObjectMapper mapper = new ObjectMapper();
@@ -45,7 +45,7 @@ public class KafkaConsumer {
     }
 
     //신고 사항 발생
-    @KafkaListener(topics = "used-products-reported", groupId = "admin-group")
+    @KafkaListener(topics = "used-products-reported")
     public void registerReport(String kafkaMessage) {
         log.info("Kafka Message : -> " + kafkaMessage);
         ObjectMapper mapper = new ObjectMapper();
