@@ -66,8 +66,12 @@ public class AccountServiceFacadeImpl implements AccountServiceFacade {
         accountService.checkAuthCode(memberId, accountNo, authCode);
     }
 
-    public List<FetchAccountResponse> fetchAccountAll() {
-        return accountService.fetchAccountAll();
+    public List<FetchAccountResponse> fetchAccountAll(int page, int size) {
+        return accountService.fetchAccountAll(page, size);
+    }
+
+    public long countAllAccounts() {
+        return accountService.countAllAccounts();
     }
 
 }
