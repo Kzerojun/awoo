@@ -1,20 +1,72 @@
 import React from "react";
 import Image from "next/image";
-import { UserData } from "../data/mockData";
 import awooAdmin from "../../../../../public/logos/AwOO_admin.svg";
 import cancel from "../../../../../public/icons/admin/cancel.svg";
 
-interface UserDetailModalProps {
-  user: UserData;
-  onClose: () => void;
-  onViewAccountDetail: (accountNumber: string) => void;
+interface AccountInfo {
+  bankCode: string;
+  accountNo: string;
+  accountType: string;
+  accountCreatedAt: string;
+  isDelete: boolean;
 }
 
-export default function UserDetailModal({
-  user,
-  onClose,
-  onViewAccountDetail,
-}: UserDetailModalProps) {
+interface GroupedUserData {
+  memberName: string;
+  email: string;
+  nickname: string;
+  memberCreatedAt: string;
+  petName: string | null;
+  accounts: AccountInfo[];
+}
+
+interface UserDetailModalProps {
+  user: GroupedUserData;
+  onClose: () => void;
+}
+
+export default function UserDetailModal({ user, onClose }: UserDetailModalProps) {
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    } catch (e) {
+      return dateString;
+    }
+  };
+
+  // 뱅크 코드 표시 함수
+  const getBankName = (bankCode: string): string => {
+    switch (bankCode) {
+      case "999":
+        return "싸피은행";
+      default:
+        return bankCode;
+    }
+  };
+
+  // 계좌 타입 표시 함수
+  const getAccountTypeName = (accountType: string): string => {
+    switch (accountType) {
+      case "INTERNAL":
+        return "내부계좌";
+      case "SAVING":
+        return "적금";
+      default:
+        return accountType;
+    }
+  };
+
+  // 계좌 활성 상태 표시 함수
+  const getAccountStatus = (isDelete: boolean): string => {
+    return isDelete ? "해지됨" : "사용중";
+  };
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
@@ -40,7 +92,7 @@ export default function UserDetailModal({
             <label className="block text-gray-700 font-medium mb-2">유저 이름</label>
             <input
               type="text"
-              value={user.name}
+              value={user.memberName}
               readOnly
               className="w-full p-2 border rounded-md bg-gray-50"
             />
@@ -49,20 +101,31 @@ export default function UserDetailModal({
           {/* 유저 계좌 목록 */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">유저 계좌 목록</label>
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-40 overflow-y-auto">
               {user.accounts.map((account) => (
                 <div
-                  key={account.number}
-                  className="flex items-center justify-between p-3 border rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => onViewAccountDetail(account.number)}
+                  key={account.accountNo}
+                  className="flex flex-col p-3 border rounded-md bg-gray-50"
                 >
-                  <div className="flex items-center">
-                    <span className="bg-teal-100 text-teal-700 px-2 py-1 rounded-md mr-2">
-                      {account.type}
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center">
+                      <span className="bg-teal-100 text-teal-700 px-2 py-1 rounded-md mr-2">
+                        {getAccountTypeName(account.accountType)}
+                      </span>
+                      <span>{account.accountNo}</span>
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        account.isDelete ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+                      }`}
+                    >
+                      {getAccountStatus(account.isDelete)}
                     </span>
-                    <span>{account.number}</span>
                   </div>
-                  <div className="font-medium">{account.balance.toLocaleString()}원</div>
+                  <div className="text-xs text-gray-500 flex justify-between">
+                    <span>{getBankName(account.bankCode)}</span>
+                    <span>생성일: {formatDate(account.accountCreatedAt)}</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -85,11 +148,22 @@ export default function UserDetailModal({
               <label className="block text-gray-700 font-medium mb-2">반려동물</label>
               <input
                 type="text"
-                value={user.pet}
+                value={user.petName || "-"}
                 readOnly
                 className="w-full p-2 border rounded-md bg-gray-50"
               />
             </div>
+          </div>
+
+          {/* 이메일 */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">이메일</label>
+            <input
+              type="text"
+              value={user.email}
+              readOnly
+              className="w-full p-2 border rounded-md bg-gray-50"
+            />
           </div>
 
           {/* 가입 날짜 */}
@@ -97,7 +171,7 @@ export default function UserDetailModal({
             <label className="block text-gray-700 font-medium mb-2">가입 날짜</label>
             <input
               type="text"
-              value={user.joinDate}
+              value={formatDate(user.memberCreatedAt)}
               readOnly
               className="w-full p-2 border rounded-md bg-gray-50"
             />
