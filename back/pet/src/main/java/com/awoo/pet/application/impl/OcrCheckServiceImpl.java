@@ -58,6 +58,7 @@ public class OcrCheckServiceImpl implements OcrCheckService {
                 tesseract.setLanguage("kor"); // 한글 지원
 
                 String text = tesseract.doOCR(cleanedImage);
+                System.out.println(text);
 
                 // 동물 등록 번호 추출
                 Pattern regNumPattern = Pattern.compile("동물등록번호\\s*:\\s*(\\d+)");
