@@ -7,7 +7,7 @@ import BottomBarWrapper from "@/common/ui/BottombarWrapper";
 import ToastWrapper from "@/common/ui/ToastWrapper";
 import { useTrackRouteChange } from "@/hooks/change-back/useTrackRouteChange";
 import TrackRouteWrapper from "@/common/ui/TrackRouteWrapper";
-// import AppInitializer from "@/hooks/user/AppInitializer";
+import AppInitializer from "@/hooks/user/AppInitializer";
 import { KeypadProvider } from "@/contexts/KeypadContent"; // ✅ 키패드 컨텍스트
 // FCM 관련 코드
 import { useEffect } from "react";
@@ -89,7 +89,7 @@ export default function RootLayout({
       <body className="h-screen flex flex-col">
         <Providers>
           <KeypadProvider>
-            {/* <AppInitializer /> */}
+            <AppInitializer />
             <TrackRouteWrapper />
             <ToastWrapper />
             {/* 메인 컨텐츠 영역 */}

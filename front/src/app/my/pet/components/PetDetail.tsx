@@ -168,12 +168,12 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
               <h3 className="text-lg font-bold text-center text-[#3A5F71] mb-2">
                 아직 적금에 가입하지 않았어요!
               </h3>
-              <div className="mt-5 flex justify-center">
+              <div className="flex justify-end">
                 <button
                   onClick={goToSaving}
-                  className="flex items-center gap-1 px-3 py-1.5 border border-[#A6C1CF] rounded-xl text-xs text-[#33665A] hover:bg-[#E6F4F1] transition"
+                  className="flex items-center gap-1 px-3 py-1.5 border border-[#A6C1CF] rounded-xl text-sm text-[#33665A] hover:bg-[#E6F4F1] transition"
                 >
-                  적금 상품 보러가기
+                  🧐 적금 상품 보러가기
                 </button>
               </div>
             </div>
@@ -185,7 +185,7 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
             🐾 산책 기록
           </h3>
 
-          {petWalkInMonthList?.map((walk) => (
+          {petWalkList?.map((walk) => (
             <div
               key={walk.walkId}
               className="w-full max-w-md bg-white rounded-3xl shadow-xl px-6 py-6 transition hover:scale-[1.02] hover:shadow-2xl duration-200"

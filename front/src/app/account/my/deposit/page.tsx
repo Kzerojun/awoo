@@ -31,7 +31,7 @@ const MyDepositPage = () => {
   return (
     <>
       {depositList.length > 0 ? (
-        <div className="flex flex-col justify-center items-center h-full w-full">
+        <div className="flex flex-col justify-center items-center h-full w-full overscroll-none">
           <DepositTop deposit={depositList[0]} />
           <DepositBottom deposit={depositList[0]} />
         </div>
