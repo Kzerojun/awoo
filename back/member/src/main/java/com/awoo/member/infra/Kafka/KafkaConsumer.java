@@ -1,7 +1,9 @@
 package com.awoo.member.infra.Kafka;
 
+import com.awoo.member.application.service.MemberService;
 import com.awoo.member.application.service.QuestionService;
 import com.awoo.member.infra.Kafka.comsume.RegisterAnswer;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,12 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @Slf4j
 //@RequiredArgsConstructor // 생성자 자동 생성
 @AllArgsConstructor
 public class KafkaConsumer {
     private final QuestionService questionService;
+    private final MemberService memberService;
     @KafkaListener(topics = "admin.register.answer.v1")
     public void registerAnswer(String kafkaMessage) {
         log.info("Kafka Message : -> " + kafkaMessage);
@@ -33,5 +38,21 @@ public class KafkaConsumer {
             log.error("Kafka Consumer message parsing failed", e);
         }
     }
+
+    @KafkaListener(topics = "payments-register")
+    public void paymentRegister(String kafkaMessage) {
+        log.info("Kafka Message : -> " + kafkaMessage);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map<String, Integer> map = mapper.readValue(kafkaMessage, new TypeReference<>() {});
+            int memberId = map.get("memberId");
+            memberService.paymentRegister(memberId);
+        } catch (Exception e) {
+            log.error("Kafka Consumer message parsing failed", e);
+        }
+    }
+
+
 
 }
