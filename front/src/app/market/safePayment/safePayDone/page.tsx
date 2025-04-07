@@ -5,11 +5,19 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import checkmark from "../../../../../public/icons/mypage/checkmark.svg";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
+import { resetTransferInfo } from "@/lib/slices/transfercheckSlice";
+import { setChatStatus } from "@/lib/slices/chatSystemSlice";
+import { chatSocket } from "@/socket/chatSocket";
 
 export default function SafePayDone() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [amount, setAmount] = useState<number>(0);
+
+  const dispatch = useAppDispatch();
+  const { chatRoomId, usedProductId } = useAppSelector((state) => state.transfercheck);
+  const memberId = useAppSelector((state) => state.memberId.memberId); // ✅ 멤버 ID 가져오기
 
   // URL에서 금액 정보 가져오기
   useEffect(() => {
@@ -20,8 +28,27 @@ export default function SafePayDone() {
   }, [searchParams]);
 
   // 홈으로 이동
-  const handleGoToHome = () => {
-    router.push("/market");
+  const handleGoToChat = () => {
+    if (chatRoomId && usedProductId) {
+      dispatch(setChatStatus("FINISHED")); // ✅ 1. 시스템 메시지 상태 설정
+
+      // ✅ 2. 소켓이 이미 연결되어 있다면 여기서 바로 메시지 보냄
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        chatSocket.connect(token, chatRoomId, () => {}); // 단순 연결 (수신 콜백은 필요 없음)
+        setTimeout(() => {
+          chatSocket.send(chatRoomId, "SAFE_FINISH", memberId); // ✅ 직접 메시지 전송
+        }, 300); // 아주 짧게 대기 (연결 완료되게)
+      }
+
+      // ✅ 3. 상태 초기화 및 페이지 이동
+      dispatch(resetTransferInfo());
+      setTimeout(() => {
+        router.push(`/market/chat/${chatRoomId}?usedProductId=${usedProductId}`);
+      }, 500);
+    } else {
+      alert("채팅방 정보를 불러올 수 없습니다.");
+    }
   };
 
   return (
@@ -81,7 +108,7 @@ export default function SafePayDone() {
       {/* 버튼 영역 */}
       <div className="p-4 border-gray-200">
         <button
-          onClick={handleGoToHome}
+          onClick={handleGoToChat}
           className="w-full py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors"
         >
           중고거래 홈으로
