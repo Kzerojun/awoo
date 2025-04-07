@@ -17,7 +17,7 @@ const initialState: WalkState = {
   distance: null,
   currentWalkingDog: null,
   photo: null,
-  selectBackgroundImage: "/images/walking/walkingBackground3.png",
+  selectBackgroundImage: "/images/walking/walkingBackground2.png",
 };
 
 const walkSlice = createSlice({

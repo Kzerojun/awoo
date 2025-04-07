@@ -118,18 +118,9 @@ const Walking = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full px-8 justify-center gap-5">
-      {isTracking ? (
-        <div className="flex justify-center items-center">
-          {/* <Image src={dog} alt="강아지" width="20" height="20" /> */}
-          <div className="mt-4 p-2 text-2xl text-custom-gray">산책중....</div>
-        </div>
-      ) : (
-        <div className="mt-4 p-2 text-2xl text-green">🏁 산책 종료!</div>
-      )}
-
-      <div className="text-xl text-green">산책 시간 : {displayElapsedTime}</div>
-      <div className="w-full max-w-3xl h-[50vh] mb-8">
+    <div className="relative w-full h-full overflow-hidden">
+      {/* 지도 */}
+      <div className="absolute inset-0 z-0">
         <MapTraking
           onMapReady={() => setIsMapReady(true)}
           positions={positions}
@@ -140,21 +131,42 @@ const Walking = () => {
         />
       </div>
 
+      {/* 상태 표시 (optional) */}
+      <div
+        className={`absolute top-5 left-1/2 -translate-x-1/2 
+    text-white text-base z-10 bg-black/60 px-4 py-2 
+    rounded-full shadow text-center 
+    transition-all duration-300 ease-in-out 
+    whitespace-nowrap w-fit max-w-[90vw]
+    ${isTracking ? "animate-pulse" : ""}`}
+      >
+        {trackingStarted && isTracking
+          ? `⏳ 산책 중: ${displayElapsedTime} | ${distance.toFixed(2)}km`
+          : trackingStarted && !isTracking
+            ? "🏁 산책 종료!"
+            : "🚩 산책을 시작해보세요!"}
+      </div>
+
+      {/* 버튼들 */}
       {!isTracking && isMapReady && !trackingStarted && (
-        <Button text="산책 시작!" onClick={handleStartWalk} img={paw} backgroundColor="green" />
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
+          <Button text="산책 시작!" onClick={handleStartWalk} img={paw} backgroundColor="green" />
+        </div>
       )}
 
       {isTracking && (
-        <Button
-          text="끝내기"
-          img={paw}
-          onClick={handleStopTracking}
-          backgroundColor="light-green"
-        />
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
+          <Button
+            text="끝내기"
+            img={paw}
+            onClick={handleStopTracking}
+            backgroundColor="light-green"
+          />
+        </div>
       )}
 
       {!isTracking && trackingStarted && (
-        <div className="flex flex-col justify-center items-center gap-y-3">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col gap-3 items-center">
           <Button text="사진 찍기" img={paw} onClick={goToPhoto} backgroundColor="green" />
           <Button
             text="건너 뛰기"

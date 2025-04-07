@@ -26,7 +26,7 @@ const SelectDog = () => {
   const { requestPermission } = useLocationPermission();
   const [selectedPet, setSelectedPet] = useState<PetInterface | null>(null);
   const [backgroundImage, setBackgroundImage] = useState<string>(
-    "/images/walking/walkingBackground3.png"
+    "/images/walking/walkingBackground2.png"
   );
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const SelectDog = () => {
         className="absolute inset-0 bg-cover bg-center z-0 transition-all duration-300"
         style={{
           backgroundImage: `url(${backgroundImage})`,
-          filter: selectedPet ? "blur(4px)" : "none",
+          filter: selectedPet ? "blur(6px)" : "blur(4px)",
         }}
       />
 
@@ -71,7 +71,7 @@ const SelectDog = () => {
           </h2>
 
           <p className="text-sm text-center w-68">
-            <span className="font-bold">한 마리의 반려견</span>만 선택 가능합니다.
+            <span className="font-bold ">한 마리의 반려견</span>만 선택 가능합니다.
           </p>
         </div>
 

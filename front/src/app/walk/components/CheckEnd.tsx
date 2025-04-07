@@ -24,10 +24,15 @@ const CheckEnd = () => {
   const endTime = useAppSelector((state) => state.walk.endTime);
   const petId = useAppSelector((state) => state.walk.currentWalkingDog?.petId);
   const totalTime = useAppSelector((state) => state.walk.totalTime);
-  // 0을 허용을 안 해서 만든 가짜 데이터
-  // TODO: 원래 데이터로 바꾸기
-  // const distance = useAppSelector((state) => state.walk.distance);
-  const distance: number = 3.2;
+
+  // const distance = 3.2;
+  const distance = useAppSelector((state) => state.walk.distance);
+
+  // 배경
+  const backgroundImage = useAppSelector((state) => state.walk.selectBackgroundImage);
+
+  // 산책 기록 저장 상태
+  const [isSaveSuccess, setIsSaveSuccess] = useState<boolean>(false);
 
   const {
     mutate: walkingCountMutation,
@@ -36,17 +41,19 @@ const CheckEnd = () => {
     isError: walkingCountError,
   } = useWalkingCount();
 
-  const [showCongratulations, setShowCongratulations] = useState<boolean>(false);
+  const [showCongratulations, setShowCongratulations] = useState<boolean>(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCongratulations(true);
-    }, 5000);
+    const animationTimer = setTimeout(() => {
+      setShowCongratulations(false);
+    }, 2500);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(animationTimer);
+    };
   }, []);
 
-  const goToHome = async () => {
+  useEffect(() => {
     console.log(
       "산책 데이터 확인",
       "petID:",
@@ -60,84 +67,120 @@ const CheckEnd = () => {
     );
     if (!petId || !startTime || !endTime || distance == null) {
       console.warn("산책 기록 누락: 필수 정보 누락");
-      alert("산책 기록이 누락되었습니다. 1:1 문의를 남겨주세요. \n 홈으로 이동합니다.");
-      setTimeout(() => {
-        router.replace("/home");
-      }, 1000);
+      setIsSaveSuccess(false);
       return;
     }
-    try {
-      await walkingCountMutation({
+
+    walkingCountMutation(
+      {
         petId,
         startTime,
         endTime,
         distance,
-      });
+      },
+      {
+        onSuccess: (data) => {
+          console.log("산책 기록 성공:", data);
+          setIsSaveSuccess(true);
+        },
+        onError: (err) => {
+          console.error("산책 기록 실패:", err);
+          setIsSaveSuccess(false);
+        },
+      }
+    );
+  }, []);
 
-      setTimeout(() => {
-        router.push("/home");
-      }, 500);
-    } catch (err) {
-      console.error("산책 기록 실패했음", err);
-      alert("산책 기록에 실패했습니다. 1:1 문의를 이용해주세요. \n 홈으로 이동합니다.");
-      setTimeout(() => {
-        router.push("/home");
-      }, 500);
+  const goToHome = async () => {
+    if (walkingCountSuccess) {
+      alert("산책 기록이 저장되었습니다.");
+    } else if (walkingCountError) {
+      alert("산책 기록 저장에 실패했습니다. \n 1:1 문의를 이용해주세요.");
+    } else {
+      alert("산책 기록을 저장 중입니다.");
     }
+    router.push("/home");
+  };
+
+  const goToDetail = () => {
+    if (walkingCountSuccess) {
+      alert("산책 기록이 저장되었습니다.");
+    } else if (walkingCountError) {
+      alert("산책 기록 저장에 실패했습니다. \n 1:1 문의를 이용해주세요.");
+    } else {
+      alert("산책 기록을 저장 중입니다.");
+    }
+    if (!petId) {
+      alert("오류가 발생했습니다. \n 1:1 문의를 이용해주세요.");
+      router.push("/home");
+    }
+    router.push(`/my/pet/detail/${petId}`);
   };
 
   return (
     <>
-      {!showCongratulations ? (
-        <div className="w-full h-full bg-gradient-to-b from-green-100 to-blue-100 fixed bottom-0">
-          <CongratulationsEffect />
-        </div>
-      ) : (
-        <div className="w-full h-full bg-gradient-to-b from-green-100 to-blue-100 py-20 fixed bottom-0">
-          <div className="flex flex-col items-center justify-center gap-5">
-            <div className="flex flex-col items-center justify-center gap-6">
-              <span className="flex justify-center items-center gap-x-2">
-                <Image src={congra} alt="축하 이모지" width="50" height="50" />
-                <h1 className="text-4xl ">산책 종료</h1>
-                <Image src={congra} alt="축하 이모지" width="50" height="50" />
+      <div className="w-full h-full flex flex-col items-center justify-center py-20">
+        <div
+          className="absolute inset-0 bg-cover bg-center z-0 transition-all duration-300"
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            filter: "blur(4px)",
+          }}
+        />
+        {showCongratulations && (
+          <div className="absolute inset-0 pointer-events-none">
+            <CongratulationsEffect />
+          </div>
+        )}
+        <div className="relative py-10 z-50 flex flex-col items-center justify-center gap-y-20 bg-white/20 w-80 rounded-lg ">
+          <div className="flex flex-col items-center justify-center gap-6">
+            <span className="flex justify-center items-center gap-x-2">
+              <h1 className="text-4xl ">산책이 끝났습니다!</h1>
+            </span>
+            <h2 className="text-2xl">산책이 기록됩니다.</h2>
+          </div>
+          {/* 산책 데이터 */}
+          <div className="flex flex-col items-center justify-center gap-10">
+            <div className="flex flex-col items-center justify-center gap-5">
+              <span className="flex justify-center items-center">
+                <Image src={clock} alt="시계 이모지" />
+                <h2 className="text-lg">총 산책 시간</h2>
               </span>
-              <h2 className="text-2xl">산책이 기록되었습니다!</h2>
-            </div>
-            {/* 산책 데이터 */}
-            <div className="flex flex-col items-center justify-center gap-10">
-              <div className="flex flex-col items-center justify-center gap-5">
-                <span className="flex justify-center items-center">
-                  <Image src={clock} alt="시계 이모지" />
-                  <h2 className="text-2xl">총 산책 시간</h2>
-                </span>
 
-                <p className="text-3xl text-green">{totalTime}</p>
-              </div>
-              <div className="flex flex-col justify-center items-center gap-5">
-                <span className="flex justify-center items-center">
-                  <Image src={pin} alt="핀 이모지" />
-                  <h2 className="text-2xl">총 산책 거리</h2>
-                </span>
-
-                <p className="text-3xl text-green">{distance} km</p>
-              </div>
+              <p className="text-3xl font-bold">{totalTime}</p>
             </div>
-            <div className="relative w-full flex items-center justify-center">
-              <WalkingWithDog />
-              <div className="absolute bottom-50">
-                <Button
-                  text={walkingCountPending ? "저장 중.." : "산책 종료"}
-                  onClick={goToHome}
-                  backgroundColor="green"
-                  img={paw}
-                  width="medium"
-                  disabled={walkingCountPending}
-                />
-              </div>
+            <div className="flex flex-col justify-center items-center gap-5">
+              <span className="flex justify-center items-center">
+                <Image src={pin} alt="핀 이모지" />
+                <h2 className="text-lg">총 산책 거리</h2>
+              </span>
+
+              <p className="text-3xl font-bold">{distance} km</p>
+            </div>
+          </div>
+          <div className="relative w-full flex-col flex items-center justify-center">
+            {/* <WalkingWithDog /> */}
+            <div className="flex flex-col items-center justify-center gap-5">
+              <Button
+                text="보러가기"
+                onClick={goToDetail}
+                backgroundColor="light-green"
+                img={paw}
+                width="medium"
+                disabled={walkingCountPending}
+              />
+              <Button
+                text={walkingCountPending ? "저장 중.." : "홈으로"}
+                onClick={goToHome}
+                backgroundColor="green"
+                img={paw}
+                width="medium"
+                disabled={walkingCountPending}
+              />
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

@@ -51,7 +51,7 @@ const Pet = () => {
 
   return (
     <>
-      <CommonTopBar title="마이펫" leftAction="back" />
+      <CommonTopBar title="마이펫" backUrl="/my" />
       <main className="mt-14 px-4 h-[calc(100vh-112px)]">
         {currentView === 1 ? <NoPet /> : <PetMain />}
       </main>
