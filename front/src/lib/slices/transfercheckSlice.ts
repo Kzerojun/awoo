@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface TransferCheckState {
-  fromChat: boolean;
+  fromChat?: boolean;
   chatRoomId?: number;
   usedProductId?: number;
 }
