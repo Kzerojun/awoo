@@ -9,6 +9,7 @@ import { setPetList } from "@/lib/slices/petSlice";
 import NoPet from "./components/NoPet";
 import PetMain from "./components/PetMain";
 import { PetInterface } from "@/lib/slices/petSlice";
+import PetList from "./components/PetList";
 
 const Pet = () => {
   const dispatch = useAppDispatch();
@@ -53,7 +54,7 @@ const Pet = () => {
     <>
       <CommonTopBar title="마이펫" backUrl="/my" />
       <main className="mt-14 px-4 h-[calc(100vh-112px)]">
-        {currentView === 1 ? <NoPet /> : <PetMain />}
+        {currentView === 1 ? <NoPet /> : <PetList />}
       </main>
     </>
   );
