@@ -49,9 +49,9 @@ const TransferStep1 = () => {
   return (
     <div className="mt-10 w-full flex flex-col items-center justify-center gap-y-5">
       {/* 누구에게 보내는지 (출금 계좌 메모) withdrawalTransactionSummary*/}
-      <div className="w-full flex justify-center">
-        <div className="w-[80%]">
-          <label htmlFor="withdrawalTransactionSummary" className=" w-[80%] text-lg">
+      <div className="w-full flex justify-center ">
+        <div className="w-80">
+          <label htmlFor="withdrawalTransactionSummary" className=" w-[80%] ">
             받는 사람
           </label>
           <div className="w-full mt-3 relative">
@@ -61,7 +61,7 @@ const TransferStep1 = () => {
               placeholder="받는 사람 이름"
               value={withdrawalTransactionSummary}
               onChange={handleNameChange}
-              className="w-full h-16  text-xl focus:outline-none px-3 border border-gray-300 rounded-xl focus:border-aqua "
+              className="w-full h-12 focus:outline-none px-3 border border-gray-300 rounded-xl focus:border-aqua "
             />
             {/* 글자 수 표시 */}
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
@@ -72,8 +72,8 @@ const TransferStep1 = () => {
       </div>
       {/* 입금할 계좌 */}
       <div className="w-full flex justify-center">
-        <div className="w-[80%]">
-          <label htmlFor="depositAccountNo" className="w-[80%] text-lg">
+        <div className="w-80">
+          <label htmlFor="depositAccountNo" className="w-[80%] ">
             계좌번호
           </label>
           <div className="w-full mt-3">
@@ -83,12 +83,12 @@ const TransferStep1 = () => {
               placeholder="계좌번호"
               value={depositAccountNo}
               onChange={handleAccountChange}
-              className="w-full h-16  text-xl focus:outline-none px-3 border border-gray-300 rounded-xl focus:border-aqua "
+              className="w-full h-12 focus:outline-none px-3 border border-gray-300 rounded-xl focus:border-aqua "
             />
           </div>
         </div>
       </div>
-      <Button className="mt-5" text="확인" onClick={handleSaveData} />
+      <Button className="mt-5 w-80" text="확인" onClick={handleSaveData} />
     </div>
   );
 };
