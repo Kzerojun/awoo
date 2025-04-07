@@ -29,4 +29,6 @@ public interface PaymentServiceFacade {
     TransferAmountResponse transferAmount(TransferAmountCommand amountCommand);
 
     SafePayResponse transferSafePay(SafePayCommand safePayCommand);
+
+    CommonPayResponse commonPay(CommonPayCommand command);
 }

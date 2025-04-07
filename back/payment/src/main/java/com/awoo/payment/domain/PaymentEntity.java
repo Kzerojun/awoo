@@ -61,4 +61,12 @@ public class PaymentEntity {
 
         this.balance -= amount;
     }
+
+    public void commonPay(Integer price, PaymentEntity sellerPayment) {
+        if (this.balance < price) {
+            throw new IllegalArgumentException("잔액이 충분하지 않습니다.");
+        }
+        this.balance -= price;
+        sellerPayment.chargeBalance(price);
+    }
 }

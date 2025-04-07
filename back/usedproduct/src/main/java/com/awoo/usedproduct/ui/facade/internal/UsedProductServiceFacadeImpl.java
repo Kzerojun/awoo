@@ -59,7 +59,7 @@ public class UsedProductServiceFacadeImpl implements UsedProductServiceFacade {
         MemberInfoResponse memberInfoResponse = queryUsedProductsService.fetchMemberInfo(
                 usedProductEntity.getMemberId());
         return FetchUsedProductDetailResponse.create(
-                usedProductEntity, liked, query.memberId(),memberInfoResponse.name());
+                usedProductEntity, liked,memberInfoResponse.name(),query.memberId());
     }
 
     @Override

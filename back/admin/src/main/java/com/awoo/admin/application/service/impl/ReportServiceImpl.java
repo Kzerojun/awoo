@@ -66,7 +66,7 @@ public class ReportServiceImpl implements ReportService {
                         r.getReportedUserEmail(),
                         r.getUsedProductId(),
                         r.getReportedAt(),
-                        r.getReason(),
+                        r.getReason().getDescription(),
                         r.getProcess(),
                         r.getReportCount()
                 ))
@@ -83,7 +83,7 @@ public class ReportServiceImpl implements ReportService {
                 r.getReportedUserEmail(),
                 r.getUsedProductId(),
                 r.getReportedAt(),
-                r.getReason(),
+                r.getReason().getDescription(),
                 r.getProcess(),
                 r.getReportCount()
         );
