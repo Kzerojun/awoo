@@ -60,8 +60,8 @@ public class OcrCheckServiceImpl implements OcrCheckService {
                 String text = tesseract.doOCR(cleanedImage);
                 System.out.println(text);
 
-                // 동물등록번호 추출
-                Pattern regNumPattern = Pattern.compile("동\\s*물\\s*등\\s*록\\s*번\\s*호\\s*[:：]?\\s*(\\d{12,})");
+                // 동물등록번호 추출 (띄어쓰기 유연하게 대응)
+                Pattern regNumPattern = Pattern.compile("동\\s*물\\s*등\\s*록\\s*번\\s*호\\s*[:\\s]*([0-9]{12,15})");
                 Matcher regNumMatcher = regNumPattern.matcher(text);
 
                 String animalRegNumber = "";
@@ -70,40 +70,42 @@ public class OcrCheckServiceImpl implements OcrCheckService {
                 }
 
                 // 이름 추출
-                Pattern nameOnlyPattern = Pattern.compile("이\\s*름\\s*[:：]?\\s*(\\S+)");
+                Pattern nameOnlyPattern = Pattern.compile("이름\\s+([가-힣]+\\s*[가-힣]*)");
                 Matcher nameOnlyMatcher = nameOnlyPattern.matcher(text);
 
                 String animalName = "";
                 if (nameOnlyMatcher.find()) {
-                    animalName = nameOnlyMatcher.group(1);
+                    animalName = normalizeKoreanText(nameOnlyMatcher.group(1));
                 }
 
                 // 동물종 추출
-                Pattern speciesPattern = Pattern.compile("동\\s*물\\s*종\\s*[:：]?\\s*(\\S+)");
+                Pattern speciesPattern = Pattern.compile("동\\s*물\\s*종\\s*([가-힣]+)");
                 Matcher speciesMatcher = speciesPattern.matcher(text);
 
                 String animalSpecies = "";
                 if (speciesMatcher.find()) {
-                    animalSpecies = speciesMatcher.group(1);
+                    animalSpecies = normalizeKoreanText(speciesMatcher.group(1));
                 }
 
-                // 품종 추출
-                Pattern breedTypePattern = Pattern.compile("품\\s*종\\s*[:：]?\\s*(\\S+)");
+// 품종 추출
+                Pattern breedTypePattern = Pattern.compile("품\\s*종\\s*[:\\s]+((?:[가-힣]+\\s*){1,3})성\\s*별");
                 Matcher breedTypeMatcher = breedTypePattern.matcher(text);
 
                 String breedType = "";
                 if (breedTypeMatcher.find()) {
-                    breedType = breedTypeMatcher.group(1);
+                    String rawBreed = breedTypeMatcher.group(1);
+                    breedType = normalizeKoreanText(rawBreed.replaceAll("성별.*", ""));
                 }
 
                 // 소유자 이름 추출
-                Pattern ownerPattern = Pattern.compile("성\\s*명.*?[:：]?\\s*(\\S+)");
+                Pattern ownerPattern = Pattern.compile("성\\s*명.*?:\\s*([가-힣]+\\s*[가-힣]+\\s*[가-힣]*)");
                 Matcher ownerMatcher = ownerPattern.matcher(text);
 
-                String ownerName = "";
+                String rawOwner = "";
                 if (ownerMatcher.find()) {
-                    ownerName = ownerMatcher.group(1);
+                    rawOwner = ownerMatcher.group(1);
                 }
+                String ownerName = normalizeKoreanText(rawOwner);
 
                 // 출력
                 System.out.println("동물등록번호: " + animalRegNumber);
@@ -125,6 +127,11 @@ public class OcrCheckServiceImpl implements OcrCheckService {
         }
 
         return petInfo;
-
     }
+
+    // ✅ 공백 제거 헬퍼 함수는 클래스 내부, main 외부에 정의
+    public static String normalizeKoreanText(String input) {
+        return input.replaceAll("\\s+", "");
+    }
+
 }
