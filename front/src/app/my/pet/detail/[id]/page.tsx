@@ -14,18 +14,15 @@ const PetDetailPage = () => {
 
   if (isLoading) return <WalkingLoading />;
   if (isError || !petDetail) {
-    return (
-      <div className="mt-20 flex flex-col items-center justify-center gap-y-5">
-        <span>정보를 불러오지 못했습니다.</span>
-        <Button text="다시 로그인하기" onClick={() => router.push("/login")} width="medium" />
-      </div>
-    );
+    alert("펫 정보를 불러오지 못 했습니다.");
+    router.push("/my");
+    return;
   }
 
   return (
     <>
       <CommonTopBar title={petDetail.name} backUrl="/my/pet" />
-      <main className="mt-14 px-4 h-[calc(100vh-112px)]">
+      <main className="mt-14 px-4 h-[calc(100dvh-7rem)] overflow-y-auto">
         <PetDetail pet={petDetail} />
       </main>
     </>

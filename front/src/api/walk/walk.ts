@@ -35,6 +35,11 @@ interface GetMemberWalkListResponse {
   walks: WalkingResponse[];
 }
 
+//  이번 달 산책 기록 조회(반려견)
+interface GetPetWalkInMonthResponse {
+  walks: WalkingResponse[];
+}
+
 // 산책 count
 export const countWalking = async ({
   petId,
@@ -79,6 +84,20 @@ export const getMemberWalkingHistory = async (memberId: number): Promise<Walking
     return res.data.response.walks;
   } catch (err) {
     console.error("멤버별 산책 기록 전체 조회 실패:", err);
+    throw err;
+  }
+};
+
+// 이번 달 산책 기록 조회(반려견)
+export const getPetWalkInMonthHistory = async (petId: number): Promise<WalkingResponse[]> => {
+  try {
+    const res = await axiosInstance.get<ApiResponse<GetMemberWalkListResponse>>(
+      `/pets/${petId}/walks/inMonth`
+    );
+    console.log("이번달 반려견 산책 기록 전체 조회 성공:", res.data.response.walks);
+    return res.data.response.walks;
+  } catch (err) {
+    console.error("이번달 반려견 산책 기록 전체 조회 실패:", err);
     throw err;
   }
 };

@@ -55,14 +55,14 @@ export default function MyPet() {
           ) : !petList || petList.length === 0 ? (
             <NoPetsMessage />
           ) : (
-            <div className="flex items-center justify-start gap-x-3">
+            <div className="flex items-center justify-start gap-x-8">
               {petList.map((pet) => (
                 <Image
                   key={pet.petId}
                   src={pet.profileImage}
                   alt="반려동물 아이콘"
-                  width={70}
-                  height={70}
+                  width={55}
+                  height={55}
                   className="rounded-full object-cover aspect-square"
                 />
               ))}

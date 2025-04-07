@@ -15,6 +15,7 @@ const EXCLUDED_PATHS = [
   "/account/my/check-password",
   "/walk/start/walking",
   "/walk/end/check",
+  "/my/pet/detail",
 ];
 
 export const useTrackRouteChange = () => {
@@ -42,7 +43,7 @@ export const useTrackRouteChange = () => {
       !isGoingBackRef.current &&
       prevPath &&
       prevPath !== pathname &&
-      !EXCLUDED_PATHS.includes(prevPath);
+      !EXCLUDED_PATHS.some((excluded) => prevPath.startsWith(excluded));
 
     if (shouldPush) {
       dispatch(pushPath(prevPath));
