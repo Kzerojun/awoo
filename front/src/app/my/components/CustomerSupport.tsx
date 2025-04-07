@@ -18,7 +18,7 @@ export default function CustomerSupport() {
               <div className="mr-2">
                 <Image src={faq} alt="FAQ 아이콘" width={18} height={18} />
               </div>
-              <div className="text-[15px]">FAQ</div>
+              <div className="text-[15px]">자주 묻는 질문</div>
             </div>
             <div className="text-gray-400">
               <Image src={vector} width={7} height={7} alt="화살표" />

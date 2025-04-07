@@ -87,8 +87,14 @@ export default function Home() {
           // 메인 페이지 콘텐츠
           <div className="flex flex-col items-center w-full max-w-sm px-6 py-8">
             {/* 메인 로고 컨테이너 */}
-            <div className="relative mb-12 mt-4">
-              <Image src={awoologo} alt="awoo로고" className="drop-shadow-sm" />
+            <div className="relative mb-12">
+              <Image
+                src={awoologo}
+                alt="awoo로고"
+                className="drop-shadow-sm"
+                width={280}
+                height={280}
+              />
             </div>
 
             {/* 텍스트 섹션 */}
