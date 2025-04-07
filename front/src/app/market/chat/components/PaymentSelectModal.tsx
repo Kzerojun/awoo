@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/store";
+import { setTransferInfo, resetTransferInfo } from "@/lib/slices/transfercheckSlice";
 
 interface Props {
   isOpen: boolean;
@@ -10,6 +12,7 @@ interface Props {
 
 export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedProductId }: Props) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -33,11 +36,26 @@ export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedPr
                 <div>
                   <div
                     className="text-sm"
-                    onClick={() =>
+                    onClick={() => {
+                      dispatch(resetTransferInfo());
+                      console.log("✅ transfer info 저장", {
+                        fromChat: true,
+                        chatRoomId,
+                        usedProductId,
+                      });
+                      dispatch(
+                        setTransferInfo({
+                          fromChat: true,
+                          chatRoomId,
+                          usedProductId,
+                        })
+                      );
+                      console.log("🚀 멍페이 송금 페이지로 이동");
+
                       router.push(
                         `/my/paymentSend?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
-                      )
-                    }
+                      );
+                    }}
                   >
                     송금하기
                   </div>
