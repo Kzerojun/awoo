@@ -60,51 +60,52 @@ public class OcrCheckServiceImpl implements OcrCheckService {
                 String text = tesseract.doOCR(cleanedImage);
                 System.out.println(text);
 
-                // 동물 등록 번호 추출
-                Pattern regNumPattern = Pattern.compile("동물등록번호\\s*:\\s*(\\d+)");
+                // 동물등록번호 추출
+                Pattern regNumPattern = Pattern.compile("동\\s*물\\s*등\\s*록\\s*번\\s*호\\s*[:：]?\\s*(\\d{12,})");
                 Matcher regNumMatcher = regNumPattern.matcher(text);
 
                 String animalRegNumber = "";
                 if (regNumMatcher.find()) {
-                    animalRegNumber = regNumMatcher.group(1);  // 예: "410123456789012"
+                    animalRegNumber = regNumMatcher.group(1);
                 }
 
                 // 이름 추출
-                Pattern nameOnlyPattern = Pattern.compile("이름\\s+(\\S+)");
+                Pattern nameOnlyPattern = Pattern.compile("이\\s*름\\s*[:：]?\\s*(\\S+)");
                 Matcher nameOnlyMatcher = nameOnlyPattern.matcher(text);
 
                 String animalName = "";
                 if (nameOnlyMatcher.find()) {
-                    animalName = nameOnlyMatcher.group(1);  // 예: "종이"
+                    animalName = nameOnlyMatcher.group(1);
                 }
 
                 // 동물종 추출
-                Pattern breedPattern = Pattern.compile("동물종\\s*\\s*(\\S+)");
-                Matcher breedMatcher = breedPattern.matcher(text);
+                Pattern speciesPattern = Pattern.compile("동\\s*물\\s*종\\s*[:：]?\\s*(\\S+)");
+                Matcher speciesMatcher = speciesPattern.matcher(text);
 
                 String animalSpecies = "";
-                if (breedMatcher.find()) {
-                    animalSpecies = breedMatcher.group(1);  // 예: "개"
+                if (speciesMatcher.find()) {
+                    animalSpecies = speciesMatcher.group(1);
                 }
 
-                // 품종(견종) 추출
-                Pattern breedTypePattern = Pattern.compile("품종[:\\s]+(\\S+)");
+                // 품종 추출
+                Pattern breedTypePattern = Pattern.compile("품\\s*종\\s*[:：]?\\s*(\\S+)");
                 Matcher breedTypeMatcher = breedTypePattern.matcher(text);
 
                 String breedType = "";
                 if (breedTypeMatcher.find()) {
-                    breedType = breedTypeMatcher.group(1);  // 예: "믹스견"
+                    breedType = breedTypeMatcher.group(1);
                 }
 
                 // 소유자 이름 추출
-                Pattern ownerPattern = Pattern.compile("성\\s*명\\(법인명\\)\\s*:\\s*(\\S+)");
+                Pattern ownerPattern = Pattern.compile("성\\s*명.*?[:：]?\\s*(\\S+)");
                 Matcher ownerMatcher = ownerPattern.matcher(text);
 
                 String ownerName = "";
                 if (ownerMatcher.find()) {
-                    ownerName = ownerMatcher.group(1);  // 예: "김지한"
+                    ownerName = ownerMatcher.group(1);
                 }
 
+                // 출력
                 System.out.println("동물등록번호: " + animalRegNumber);
                 System.out.println("동물이름: " + animalName);
                 System.out.println("동물종: " + animalSpecies);
