@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import checkmark from "../../../../../public/icons/mypage/checkmark.svg";
 
-export default function SafePayDone() {
+export default function CommonPayDone() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [amount, setAmount] = useState<number>(0);
@@ -37,12 +37,12 @@ export default function SafePayDone() {
         </div>
 
         {/* 메인 메시지 */}
-        <h1 className="text-xl font-bold text-center mb-4">안심결제가 완료되었습니다</h1>
+        <h1 className="text-xl font-bold text-center mb-4">일반결제가 완료되었습니다</h1>
 
         {/* 금액 정보 */}
         <div className="text-3xl font-bold text-teal-500 mb-10">{amount.toLocaleString()}원</div>
 
-        {/* 설명 카드 - 개선된 버전 */}
+        {/* 설명 카드 */}
         <div className="w-full bg-teal-50 rounded-xl p-6 mb-2">
           {/* 첫 번째 항목 */}
           <div className="mb-6">
@@ -50,13 +50,13 @@ export default function SafePayDone() {
               <div className="w-6 h-6 flex items-center justify-center bg-teal-500 text-white rounded-full mr-3 flex-shrink-0 flex-none">
                 <span className="text-sm font-bold leading-none">1</span>
               </div>
-              <h3 className="text-md font-medium">에스크로 보관 중</h3>
+              <h3 className="text-md font-medium">결제 완료</h3>
             </div>
             <div>
               <p className="text-gray-700 text-[13px]">
-                결제하신 금액은 안전하게 보관되고 있습니다.
+                결제하신 금액이 판매자에게 전달되었습니다.
                 <br />
-                판매자가 즉시 인출할 수 없어 안전합니다.
+                판매자와 협의하여 물품을 수령하세요.
               </p>
             </div>
           </div>
@@ -67,11 +67,13 @@ export default function SafePayDone() {
               <div className="w-6 h-6 flex items-center justify-center bg-teal-500 text-white rounded-full mr-3 flex-shrink-0 flex-none">
                 <span className="text-sm font-bold leading-none">2</span>
               </div>
-              <h3 className="text-md font-medium">구매 확정 후 송금</h3>
+              <h3 className="text-md font-medium">거래 시 유의사항</h3>
             </div>
             <div>
               <p className="text-gray-700 text-[13px]">
-                상품을 받고 구매를 확정하면 판매자에게 대금이 지급됩니다.
+                일반 결제는 직접 거래 방식입니다. 물품을 확인한 후 거래를 진행하세요.
+                <br />
+                필요시 거래 내역은 마이페이지에서 확인할 수 있습니다.
               </p>
             </div>
           </div>

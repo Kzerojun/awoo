@@ -100,6 +100,10 @@ const TransactionList = ({ deposit }: Props) => {
     return <LoadingDog />;
   }
 
+  if (!transactionHistory) {
+    return <div className="flex flex-col items-center justify-center">거래 내역이 없습니다.</div>;
+  }
+
   return (
     <div className="w-full h-full">
       <div className="h-[10%] w-ful flex items-center justify-between border-b-1 border-gray-200 text-sm">
@@ -129,6 +133,12 @@ const TransactionList = ({ deposit }: Props) => {
         </button>
       </div>
       <div className=" w-full h-[92%] overflow-y-auto">
+        {!transactionHistory ||
+          (transactionHistory.length === 0 && (
+            <div className="mt-10 flex flex-col items-center justify-center text-lg">
+              거래 내역이 없습니다.
+            </div>
+          ))}
         {transactionHistory.map((transaction) => (
           <div
             key={transaction.transactionUniqueNo}

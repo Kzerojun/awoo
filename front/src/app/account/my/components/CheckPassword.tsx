@@ -182,7 +182,7 @@ const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
           10분 후 다시 시도해주세요.
         </div>
       ) : (
-        <div className="bottom-6 fixed left-0 right-0">
+        <div className="bottom-3 fixed left-0 right-0">
           <NumericKeypad
             onNumberPress={handleNumberPress}
             onBackspace={handleBackspace}

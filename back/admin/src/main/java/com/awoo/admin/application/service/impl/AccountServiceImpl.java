@@ -19,8 +19,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountClient accountClient;
     private final MemberClient memberClient;
     private final PetClient petClient;
-    public List<FetchAccountResponse> fetchAccountList() {
-        return accountClient.fetchAccountAll();
+    public List<FetchAccountResponse> fetchAccountList(int page, int size) {
+        return accountClient.fetchAccountAll(page, size);
     }
 
     public List<FetchMemberInfo> fetchMemberInfoList(Set<Integer> memberIds) {
@@ -30,6 +30,5 @@ public class AccountServiceImpl implements AccountService {
     public List<FetchPetInfo> fetchPetInfoList(Set<Integer> petIds) {
         return petClient.fetchPetInfoList(petIds);
     }
-
 
 }

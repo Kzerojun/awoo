@@ -79,7 +79,7 @@ const PetList = () => {
           </div>
           {petList.length < 3 ? (
             <div
-              className="w-60 h-16 border-1 border-light-green rounded-2xl flex justify-center items-center active:bg-light-green active:text-white transition-colors duration-150"
+              className="mt-5 w-60 h-12 border-1 border-light-green rounded-2xl flex justify-center items-center bg-white/50 active:bg-light-green active:text-green transition-colors duration-150"
               onClick={goToRegisterPet}
             >
               <div className="flex justify-center items-center gap-x-2">

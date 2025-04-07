@@ -28,6 +28,12 @@ public class PetController {
         return ApiUtils.success(petServiceFacade.registerPet(request, profileImage, memberId));
     }
 
+    @PostMapping(value = "/ocr", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiUtils.ApiResult<OcrCheckResponse> ocrCheck(@RequestHeader("X-User-Id") Integer memberId,
+                                                         @RequestPart(value = "ocrImage", required = false) MultipartFile ocrImage){
+        return ApiUtils.success(petServiceFacade.ocrCheck(memberId, ocrImage));
+    }
+
     @GetMapping
     public ApiUtils.ApiResult<SearchPetListResponse> searchPetList(@RequestHeader("X-User-Id") Integer memberId){
         return ApiUtils.success(petServiceFacade.searchPetList(memberId));
@@ -83,4 +89,7 @@ public class PetController {
     public List<FetchPetInfoResponse> fetchPetInfoList(@RequestBody Set<Integer> petIds) {
         return petServiceFacade.fetchPetInfoList(petIds);
     }
+
+
+
 }

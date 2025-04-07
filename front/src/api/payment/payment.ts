@@ -68,6 +68,20 @@ interface SafeTransferPaymentPayload {
   amount: number;
 }
 
+// 멍페이 일반 결제 interface
+interface CommonPaymentPayload {
+  usedProductId: number;
+}
+
+// 멍페이 일반 결제 응답 interface
+interface CommonPaymentResponse {
+  success: boolean;
+  response: {
+    transactionId: number;
+  };
+  error: any;
+}
+
 // 멍페이 핸드폰 인증 요청
 export const requestPhoneAuth = async ({ name, phone }: PhoneAuthPayload) => {
   console.log("멍페이 핸드폰 인증 요청", { name, phone });
@@ -378,6 +392,25 @@ export const makeSafePayment = async (amount: number) => {
     return res.data;
   } catch (err) {
     console.error("멍페이 안심 결제 실패:", err);
+    throw err;
+  }
+};
+
+export const commonPayment = async (usedProductId: number): Promise<CommonPaymentResponse> => {
+  console.log("멍페이 일반 결제 요청", { usedProductId });
+
+  try {
+    // 요청 본문 구성
+    const payload: CommonPaymentPayload = {
+      usedProductId,
+    };
+
+    const res = await axiosInstance.post("/payments/common-pays", payload);
+
+    console.log("멍페이 일반 결제 성공:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("멍페이 일반 결제 실패:", err);
     throw err;
   }
 };

@@ -6,45 +6,35 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import money from "../../../../../public/images/market/money.svg";
 import CommonTopBar from "@/common/ui/CommonTopBar";
-import SafeSendConfirmPassword from "./components/SafeSendConfirmPassword";
-import { makeSafePayment } from "@/api/payment/payment";
+import CommonSendPasswordConfirm from "./components/CommonSendPasswordConfirm";
+import { commonPayment } from "@/api/payment/payment";
 import { RootState } from "@/lib/store";
 import { getUserInfo } from "@/api/user/auth";
 import { toast } from "react-toastify";
 import axiosInstance from "@/api/axiosInstance";
 
-interface ProductResponse {
-  success: boolean;
-  response: {
-    usedProductId: number;
-    title: string;
-    content: string;
-    price: number;
-    imageUrls: string[];
-    sellerId: number;
-    name: string;
-    isLiked: boolean;
-    likeCount: number;
-    viewCount: number;
-    usedProductStatus: string;
-    canModify: boolean;
-  };
-  error: any;
+interface ProductDetail {
+  usedProductId: number;
+  title: string;
+  content: string;
+  price: number;
+  imageUrls: string[];
 }
 
-export default function SafePay() {
+export default function CommonPay() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const usedProductId = searchParams.get("usedProductId");
-  const chatRoomId = searchParams.get("chatRoomId");
 
   const [nickname, setNickname] = useState<string>("");
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const userState = useSelector((state: RootState) => state.user);
-  const [productData, setProductData] = useState<ProductResponse | null>(null);
+  const [product, setProduct] = useState<ProductDetail | null>(null);
   const [amount, setAmount] = useState<number>(0);
-  const [fee, setFee] = useState<number>(0);
+
+  // 일반 결제는 수수료가 없음
+  const fee = 0;
 
   // 상품 정보 가져오기
   useEffect(() => {
@@ -53,15 +43,10 @@ export default function SafePay() {
     const fetchProductDetail = async () => {
       try {
         const res = await axiosInstance.get(`/used-products/${usedProductId}`);
-        setProductData(res.data);
-
-        if (res.data.success && res.data.response) {
-          const price = res.data.response.price;
-          setAmount(price);
-          setFee(Math.round(price * 0.015)); // 1.5% 수수료
-        } else {
-          toast.error("상품 정보를 불러오는데 실패했습니다.");
-        }
+        const productData = res.data.response;
+        console.log("qkqkqkkqkqkqkqkq");
+        setProduct(productData);
+        setAmount(productData.price);
       } catch (error) {
         console.error("상품 상세 조회 실패", error);
         toast.error("상품 정보를 불러오는데 실패했습니다.");
@@ -100,7 +85,7 @@ export default function SafePay() {
 
   // 비밀번호 확인 성공 시 처리
   const handlePasswordConfirmed = async (password: string) => {
-    if (!amount || !productData || !productData.success) {
+    if (!usedProductId || !product) {
       toast.error("상품 정보가 없습니다.");
       return;
     }
@@ -108,18 +93,19 @@ export default function SafePay() {
     setIsLoading(true);
 
     try {
-      // 안심 결제 API 호출
-      const response = await makeSafePayment(amount);
+      // 일반 결제 API 호출
+      const productId = parseInt(usedProductId, 10);
+      const response = await commonPayment(productId);
 
       if (response.success) {
-        toast.success("안심 결제가 완료되었습니다.");
-        // 거래 성공 페이지로 이동
-        router.push(`/market/safePayment/safePayDone?amount=${amount}`);
+        toast.success("일반 결제가 완료되었습니다.");
+        // 성공 시 결제완료 페이지로 이동하면서 금액 정보 전달
+        router.push(`/market/commonPayment/commonPayDone?amount=${amount}`);
       } else {
-        toast.error(response.error?.message || "안심 결제에 실패했습니다.");
+        toast.error(response.error?.message || "일반 결제에 실패했습니다.");
       }
     } catch (error) {
-      console.error("안심 결제 처리 중 오류 발생:", error);
+      console.error("일반 결제 처리 중 오류 발생:", error);
       toast.error("결제 처리 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
@@ -127,21 +113,9 @@ export default function SafePay() {
     }
   };
 
-  // 상품 정보 로딩 중이면 로딩 표시
-  if (!productData && usedProductId) {
-    return (
-      <div className="flex flex-col inset-0 bg-white my-10">
-        <CommonTopBar title="안심 결제" />
-        <div className="flex-1 flex justify-center items-center">
-          <div className="animate-spin h-8 w-8 border-4 border-teal-500 rounded-full border-t-transparent"></div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col inset-0 bg-white my-10">
-      <CommonTopBar title="안심 결제" />
+      <CommonTopBar title="일반 결제" />
 
       <div className="flex-1 px-6 py-8 flex flex-col">
         {/* 상단 메시지 */}
@@ -149,9 +123,9 @@ export default function SafePay() {
           <h1 className="text-[22px] font-bold leading-tight">
             <span className="text-teal-500">{nickname}</span>님께 송금할
             <br />
-            {amount.toLocaleString()} 원을 안심결제로
+            {amount.toLocaleString()} 원을 일반결제로
             <br />
-            보관합니다.
+            전송합니다.
           </h1>
         </div>
 
@@ -167,9 +141,9 @@ export default function SafePay() {
           />
         </div>
 
-        {/* 수수료 정보 */}
+        {/* 결제 정보 */}
         <div className="bg-teal-50 rounded-lg p-3 mb-10">
-          <h2 className="text-lg font-bold mb-2 text-center">구매자 부담 수수료 내역 안내</h2>
+          <h2 className="text-lg font-bold mb-2 text-center">결제 금액 안내</h2>
           <ul className="space-y-1 ml-5">
             <li className="flex items-center">
               <span className="text-gray-700 mr-2">•</span>
@@ -177,7 +151,7 @@ export default function SafePay() {
             </li>
             <li className="flex items-center">
               <span className="text-gray-700 mr-2">•</span>
-              <span className="flex-1">수수료: {fee.toLocaleString()}원 (총금액 X 1.5%)</span>
+              <span className="flex-1">수수료: 없음</span>
             </li>
           </ul>
         </div>
@@ -196,7 +170,7 @@ export default function SafePay() {
       </div>
 
       {/* 비밀번호 확인 모달 */}
-      <SafeSendConfirmPassword
+      <CommonSendPasswordConfirm
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
         onConfirm={handlePasswordConfirmed}

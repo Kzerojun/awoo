@@ -32,5 +32,7 @@ public interface AccountServiceFacade {
 
     void checkAuthCode(String memberId, String accountNo, String authCode);
 
-    List<FetchAccountResponse> fetchAccountAll();
+    List<FetchAccountResponse> fetchAccountAll(int page, int size);
+
+    long countAllAccounts();
 }

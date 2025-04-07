@@ -23,6 +23,7 @@ import java.util.Set;
 public class PetServiceFacadeImpl implements PetServiceFacade {
 
     private final RegisterPetService registerPetService;
+    private final OcrCheckService ocrCheckService;
     private final SearchPetService searchPetService;
     private final ModifyPetService modifyPetService;
     private final SearchPetListService searchPetListService;
@@ -36,6 +37,12 @@ public class PetServiceFacadeImpl implements PetServiceFacade {
     public RegisterPetResponse registerPet(final RegisterPetRequest request, final MultipartFile profileImage, final Integer memberId) {
         Pet pet = registerPetService.registerPet(request.toCommand(memberId, profileImage));
         return mapper.registerPet(pet);
+    }
+
+    @Override
+    public OcrCheckResponse ocrCheck(final Integer memberId, final MultipartFile ocrImage) {
+        Map<String, Object> ocrInfo = ocrCheckService.ocrCheck(memberId, ocrImage);
+        return mapper.ocrCheck(ocrInfo);
     }
 
     @Override

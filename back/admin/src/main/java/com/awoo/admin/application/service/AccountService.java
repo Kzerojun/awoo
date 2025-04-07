@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface AccountService {
-    List<FetchAccountResponse> fetchAccountList();
+    List<FetchAccountResponse> fetchAccountList(int page, int size);
 
     List<FetchMemberInfo> fetchMemberInfoList(Set<Integer> memberIds);
 

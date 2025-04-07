@@ -17,4 +17,5 @@ public interface JpaAccountRepository extends AccountRepository, JpaRepository<A
 
     List<AccountEntity> findAllByMemberIdAndAccountType(Integer memberId, AccountType accountType);
 
+    long count();
 }

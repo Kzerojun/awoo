@@ -168,7 +168,7 @@ const CommonTopBar = ({
     else if (rightAction === "close") {
       if (leftAction === "transferBack") {
         dispatch(clearTransferData());
-        router.back();
+        router.push("/home");
       }
     }
   };
