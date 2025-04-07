@@ -11,6 +11,9 @@ import net.sourceforge.tess4j.Tesseract;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +40,26 @@ public class OcrCheckServiceImpl implements OcrCheckService {
                 File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + ocrImage.getOriginalFilename());
                 ocrImage.transferTo(convFile);
 
+                //이미지 보정
+                BufferedImage image = ImageIO.read(convFile);
+                BufferedImage cleanedImage = new BufferedImage(
+                        image.getWidth(),
+                        image.getHeight(),
+                        BufferedImage.TYPE_INT_RGB
+                );
+                Graphics2D g = cleanedImage.createGraphics();
+                g.drawImage(image, 0, 0, null);
+                g.dispose();
+
+                File correctedFile = new File(System.getProperty("java.io.tmpdir") + "/corrected_" + ocrImage.getOriginalFilename());
+                ImageIO.write(cleanedImage, "png", correctedFile);
+
                 // Tesseract 인식
                 Tesseract tesseract = new Tesseract();
                 tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata"); // 언어팩 경로
                 tesseract.setLanguage("kor"); // 한글 지원
 
-                String text = tesseract.doOCR(convFile);
+                String text = tesseract.doOCR(correctedFile);
 
                 // 동물 등록 번호 추출
                 Pattern regNumPattern = Pattern.compile("동물등록번호\\s*:\\s*(\\d+)");
