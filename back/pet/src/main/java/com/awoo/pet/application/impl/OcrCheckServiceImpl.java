@@ -39,7 +39,7 @@ public class OcrCheckServiceImpl implements OcrCheckService {
 
                 // Tesseract 인식
                 Tesseract tesseract = new Tesseract();
-                tesseract.setDatapath("C:/Program Files/tessdata"); // 언어팩 경로
+                tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/"); // 언어팩 경로
                 tesseract.setLanguage("kor"); // 한글 지원
 
                 String text = tesseract.doOCR(convFile);
