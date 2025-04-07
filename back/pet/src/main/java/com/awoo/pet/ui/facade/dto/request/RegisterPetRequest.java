@@ -19,6 +19,8 @@ public class RegisterPetRequest {
 
     private String name;
     private String breed;
+    private String animalRegNumber;
+    private String ocrImageUrl;
     private int age;
 
     public RegisterPetCommand toCommand(Integer memberId, MultipartFile profileImage) {
@@ -30,6 +32,8 @@ public class RegisterPetRequest {
                         .name(name)
                         .profileImage(profileImage)
                         .breed(breed)
+                        .animalRegNumber(animalRegNumber)
+                        .ocrImageUrl(ocrImageUrl)
                         .age(age)
                         .build()
         );
@@ -41,6 +45,14 @@ public class RegisterPetRequest {
         }
 
         if(breed == null || breed.isEmpty()){
+            throw new BreedRequiredException();
+        }
+
+        if(animalRegNumber == null || animalRegNumber.isEmpty()){
+            throw new BreedRequiredException();
+        }
+
+        if(ocrImageUrl == null || ocrImageUrl.isEmpty()){
             throw new BreedRequiredException();
         }
 

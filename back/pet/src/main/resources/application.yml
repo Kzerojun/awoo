@@ -22,7 +22,7 @@ spring:
   kafka:
     bootstrap-servers: j12c209.p.ssafy.io:9092
     consumer:
-      group-id: pet-savingId-group
+      group-id: pet-savingId-group-${spring.profiles.active}
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
