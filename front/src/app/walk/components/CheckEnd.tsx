@@ -15,6 +15,7 @@ import paw from "../../../../public/icons/white_paw.svg";
 import CongratulationsEffect from "./Congratulations";
 import WalkingWithDog from "./WalkingWithDog";
 import { useWalkingCount } from "@/hooks/walk/useWalkingCount";
+import { format } from "date-fns";
 
 const CheckEnd = () => {
   const router = useRouter();
@@ -54,28 +55,28 @@ const CheckEnd = () => {
   }, []);
 
   useEffect(() => {
-    console.log(
-      "산책 데이터 확인",
-      "petID:",
-      petId,
-      "startTime",
-      startTime,
-      "endTime",
-      endTime,
-      "distance",
-      distance
-    );
     if (!petId || !startTime || !endTime || distance == null) {
       console.warn("산책 기록 누락: 필수 정보 누락");
       setIsSaveSuccess(false);
       return;
     }
+    console.log(
+      "산책 데이터 확인",
+      "petID:",
+      petId,
+      "startTime",
+      format(new Date(startTime), "yyyy-MM-dd'T'HH:mm:ss"),
+      "endTime",
+      format(new Date(endTime), "yyyy-MM-dd'T'HH:mm:ss"),
+      "distance",
+      distance
+    );
 
     walkingCountMutation(
       {
         petId,
-        startTime,
-        endTime,
+        startTime: format(new Date(startTime), "yyyy-MM-dd'T'HH:mm:ss"),
+        endTime: format(new Date(endTime), "yyyy-MM-dd'T'HH:mm:ss"),
         distance,
       },
       {
