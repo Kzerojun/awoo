@@ -53,7 +53,7 @@ export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedPr
                       console.log("🚀 멍페이 송금 페이지로 이동");
 
                       router.push(
-                        `/my/paymentSend?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
+                        `/market/commonPayment?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
                       );
                     }}
                   >
