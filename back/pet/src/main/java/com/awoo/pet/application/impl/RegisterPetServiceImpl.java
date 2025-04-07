@@ -10,7 +10,12 @@ import com.awoo.pet.domain.pet.PetFactory;
 import com.awoo.pet.domain.pet.PetRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import net.sourceforge.tess4j.Tesseract;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
