@@ -47,7 +47,7 @@ const PetMain = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-full">
+      <div className="w-full flex flex-col items-center justify-center h-full">
         <div {...handlers} className="relative w-full h-full overflow-y-auto overflow-x-hidden">
           {/* 페이지 인디케이터 */}
           <div className="sticky top-1 flex justify-center gap-2 z-20">
@@ -56,7 +56,7 @@ const PetMain = () => {
                 key={index}
                 onClick={() => changePage(index, index > page ? 1 : -1)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === page ? "bg-aqua scale-110" : "bg-custom-gray"
+                  index === page ? "bg-green scale-110" : "bg-custom-gray"
                 }`}
               />
             ))}
