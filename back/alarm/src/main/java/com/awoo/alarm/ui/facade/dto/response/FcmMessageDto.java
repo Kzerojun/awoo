@@ -17,6 +17,7 @@ public class FcmMessageDto {
     public static class Message {
         private FcmMessageDto.Notification notification;
         private String token;
+        private FcmMessageDto.WebPush webPush;
     }
 
     @Builder
@@ -26,5 +27,20 @@ public class FcmMessageDto {
         private String title;
         private String body;
         private String image;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class WebPush {
+        private FcmMessageDto.FcmOptions fcm_options;
+    }
+
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class FcmOptions {
+        private String link;
     }
 }
