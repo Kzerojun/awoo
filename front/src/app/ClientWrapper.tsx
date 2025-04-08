@@ -15,7 +15,7 @@ import { useNotificationListener } from "@/hooks/alarm/useNotificationListner";
 import { usePermissionObserver } from "@/hooks/alarm/usePermissionObserver";
 import { usePathname } from "next/navigation";
 
-export default function RootLayout({
+export default function ClientWrapper({
   children,
   title,
   rightAction,
@@ -96,27 +96,21 @@ export default function RootLayout({
   const showTopBar = title || rightAction;
 
   return (
-    <html lang="ko" className="h-screen">
-      <body className="h-screen flex flex-col">
-        <Providers>
-          <KeypadProvider>
-            <AppInitializer />
-            <TrackRouteWrapper />
-            <ToastWrapper />
-            {/* 메인 컨텐츠 영역 */}
-            <main
-              className={`flex-1 overflow-y-auto w-full scrollbar-hide ${
-                showBottomBar ? "pb-14" : ""
-              }`}
-            >
-              {children}
-            </main>
+    <Providers>
+      <KeypadProvider>
+        <AppInitializer />
+        <TrackRouteWrapper />
+        <ToastWrapper />
+        {/* 메인 컨텐츠 영역 */}
+        <main
+          className={`flex-1 overflow-y-auto w-full scrollbar-hide ${showBottomBar ? "pb-14" : ""}`}
+        >
+          {children}
+        </main>
 
-            {/* 하단바 (fixed bottom-0) */}
-            {showBottomBar && <BottomBarWrapper />}
-          </KeypadProvider>
-        </Providers>
-      </body>
-    </html>
+        {/* 하단바 (fixed bottom-0) */}
+        {showBottomBar && <BottomBarWrapper />}
+      </KeypadProvider>
+    </Providers>
   );
 }
