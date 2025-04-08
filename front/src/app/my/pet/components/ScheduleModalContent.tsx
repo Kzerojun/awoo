@@ -48,9 +48,11 @@ const ScheduleModalContent = ({
   return (
     <>
       <div className="flex items-center justify-end gap-x-2">
-        <button>
-          <TrashIcon className="w-6 h-6 text-red-500" onClick={onDelete} />
-        </button>
+        {showDelete && (
+          <button>
+            <TrashIcon className="w-6 h-6 text-red-500" onClick={onDelete} />
+          </button>
+        )}
         <button>
           <CheckIcon className="w-6 h-6 text-custom-gray" onClick={() => onSubmit()} />
         </button>

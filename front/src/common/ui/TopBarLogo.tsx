@@ -23,7 +23,10 @@ const TopBarLogo: React.FC<TopBarLogoProps> = ({ rightAction }) => {
         </div>
       </Link>
       {/* <BellIcon className="h-7 w-7 text-gray-500 mt-4 mr-4" /> */}
-      <CalendarDaysIcon className="h-7 w-7 text-gray-500 mt-4 mr-4" />
+      <CalendarDaysIcon
+        className="h-7 w-7 text-gray-500 mt-4 mr-4"
+        onClick={() => router.push("/my/pet/calendar")}
+      />
 
       {/* 우측 액션 (옵션) */}
       {rightAction && <div>{rightAction}</div>}
