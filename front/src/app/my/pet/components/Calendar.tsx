@@ -19,6 +19,7 @@ import { useRegisterSchedule } from "@/hooks/calendar/useRegisterSchedule";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useGetPetSchedule } from "@/hooks/calendar/useGetPetSchedule";
 import { useGetMemberSchedule } from "@/hooks/calendar/useGetMemberSchedule";
+import { PetInterface } from "@/lib/slices/petSlice";
 
 type Event = {
   id: number;
@@ -105,7 +106,7 @@ const Calendar = () => {
       return;
     }
 
-    const selectedPet = petList.find((pet) => pet.name === data.dog);
+    const selectedPet = petList.find((pet: PetInterface) => pet.name === data.dog);
     if (!selectedPet) {
       alert("선택한 반려견 정보를 찾을 수 없습니다.");
       return;
@@ -125,7 +126,7 @@ const Calendar = () => {
           if (selectCalendar === 0) {
             refetchMemberSchedule();
           } else {
-            refetchMemberSchedule();
+            refetchPetSchedule();
           }
           setShowAddModal(false);
         },
@@ -170,7 +171,7 @@ const Calendar = () => {
           전체 일정
         </button>
 
-        {petList.map((pet, index) => (
+        {petList.map((pet: PetInterface, index: number) => (
           <button
             key={pet?.petId ?? `fallback-${index}`}
             className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[70px] 
