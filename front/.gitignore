@@ -44,4 +44,5 @@ next-env.d.ts
 
 # PWA - 자동 생성되는 서비스 워커 및 캐시 파일 제외
 /public/sw.js
+# workbox 빌드 파일 무시
 /public/workbox-*.js

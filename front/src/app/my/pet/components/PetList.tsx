@@ -56,7 +56,7 @@ const PetList = () => {
           <Image src={walkingIcon} alt="산책 아이콘" className="w-6 h-6" />
           이번 달 산책 횟수
         </h3>
-        <div className="flex justify-end text-xs mr-1 mb-1"> 이번 달 인정 | 이번 달 전체 </div>
+        <div className="flex justify-end text-xs mr-1 mb-1"> 이번 달 인정 | 전체 </div>
         <div className="flex flex-col gap-3">
           {petList.map((pet, index) => (
             <div

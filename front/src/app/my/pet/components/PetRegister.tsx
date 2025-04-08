@@ -222,7 +222,7 @@ const PetRegister = () => {
         backgroundColor="green"
         width="medium"
         onClick={handleRegisterPet}
-        className="mt-6"
+        className="mt-3 mb-5 "
       />
     </div>
   );

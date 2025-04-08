@@ -37,11 +37,8 @@ export default function MyPet() {
 
   // 반려동물이 없는 경우 보여줄 컴포넌트
   const NoPetsMessage = () => (
-    <div className="flex flex-col items-center justify-center w-full">
+    <div className="mt-2 flex flex-col items-center justify-center w-full">
       <p className="text-sm text-gray-500 mb-2">등록된 반려동물이 없어요</p>
-      <p className="w-full text-aqua " onClick={() => router.push("/my/pet/register")}>
-        등록하기 +
-      </p>
     </div>
   );
 
@@ -56,7 +53,7 @@ export default function MyPet() {
           <div className="flex justify-between items-center">
             <div className="text-xs text-[#828282] ml-1">나의 반려동물 보러 가기</div>
             {petList && petList?.length <= 2 && (
-              <div className="text-xs text-aqua " onClick={() => router.push("/my/pet/register")}>
+              <div className="text-sm text-aqua " onClick={() => router.push("/my/pet/register")}>
                 등록하기 +
               </div>
             )}
