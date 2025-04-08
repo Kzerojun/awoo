@@ -30,6 +30,7 @@ interface ProductDetailResponse {
   canModify: boolean;
   name: string; // 판매자 이름 - sellerName이 아닌 name으로 변경
   sellerId: number; // 판매자 ID 추가
+  memberProfileImage: string;
 }
 
 export default function MarketDetailPage() {
@@ -196,7 +197,7 @@ export default function MarketDetailPage() {
       {/* ✅ 프로필 */}
       <ProfileInfo
         nickname={detail.name} // API에서 받은 판매자 이름 사용 (name 필드)
-        profileImage={"/images/avatars/basic.jpg"}
+        profileImage={detail.memberProfileImage}
         time={"최근 등록"} // 시간 정보가 없으므로 기본값 사용
       />
 
