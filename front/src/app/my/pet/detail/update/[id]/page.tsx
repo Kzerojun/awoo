@@ -13,7 +13,7 @@ const UpdatePetProfile = () => {
 
   return (
     <>
-      <CommonTopBar title="반려견 수정" leftAction="back" />
+      <CommonTopBar title="반려견 수정" leftAction="back" backUrl={`/my/pet/detail/${petId}`} />
       <main className="mt-14 px-4 h-full ">
         <PetUpdate petId={petId} />
       </main>
