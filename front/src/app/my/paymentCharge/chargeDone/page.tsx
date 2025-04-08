@@ -3,8 +3,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
-import { BellIcon } from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
 
 // 실제 컴포넌트 콘텐츠를 별도 컴포넌트로 분리
 function ChargeDoneContent() {

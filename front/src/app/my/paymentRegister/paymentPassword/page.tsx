@@ -6,7 +6,6 @@ import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import Password from "./components/Password";
 import { setPaymentPassword } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 
 export default function PaymentPassword() {
   const router = useRouter();
@@ -19,7 +18,7 @@ export default function PaymentPassword() {
     const isVerified = sessionStorage.getItem("phone_verified");
 
     if (!isVerified) {
-      toast.error("휴대폰 인증이 필요합니다.");
+      alert("휴대폰 인증이 필요합니다.");
       router.push("/my/paymentRegister");
     }
   }, [router]);
@@ -34,7 +33,7 @@ export default function PaymentPassword() {
   const handleSecondPasswordComplete = async (password: string) => {
     if (password !== firstPassword) {
       // 비밀번호 불일치 시 처리
-      toast.error("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+      alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
       setStep(1); // 처음부터 다시 시작
       return;
     }
@@ -46,13 +45,13 @@ export default function PaymentPassword() {
       await setPaymentPassword({ password });
 
       console.log("멍페이 비밀번호 설정 완료");
-      toast.success("멍페이 비밀번호가 설정되었습니다.");
+      alert("멍페이 비밀번호가 설정되었습니다.");
 
       // 완료 페이지로 이동
       router.push("/my/paymentRegister/signupDone");
     } catch (error) {
       console.error("멍페이 비밀번호 설정 실패:", error);
-      toast.error("비밀번호 설정에 실패했습니다. 다시 시도해주세요.");
+      alert("비밀번호 설정에 실패했습니다. 다시 시도해주세요.");
       // 오류 발생 시 첫 단계로 돌아가기
       setStep(1);
     } finally {

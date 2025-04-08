@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import { BellIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { createQuestion } from "@/api/question/question";
-import { toast } from "react-toastify";
 
 export default function Questioning() {
   const router = useRouter();
@@ -27,22 +26,22 @@ export default function Questioning() {
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error("문의 제목을 입력해주세요.");
+      alert("문의 제목을 입력해주세요.");
       return;
     }
 
     if (category === "카테고리 선택") {
-      toast.error("문의 유형을 선택해주세요.");
+      alert("문의 유형을 선택해주세요.");
       return;
     }
 
     if (!content.trim()) {
-      toast.error("문의 내용을 입력해주세요.");
+      alert("문의 내용을 입력해주세요.");
       return;
     }
 
     if (isPrivate && !password.trim()) {
-      toast.error("비밀번호를 입력해주세요.");
+      alert("비밀번호를 입력해주세요.");
       return;
     }
 
@@ -62,14 +61,14 @@ export default function Questioning() {
       const response = await createQuestion(requestData);
 
       if (response.success) {
-        toast.success(response.response || "문의가 성공적으로 등록되었습니다.");
+        alert(response.response || "문의가 성공적으로 등록되었습니다.");
         router.push("/my/question");
       } else {
-        toast.error(response.error || "문의 등록에 실패했습니다.");
+        alert(response.error || "문의 등록에 실패했습니다.");
       }
     } catch (error) {
       console.error("문의 등록 중 오류가 발생했습니다:", error);
-      toast.error("문의 등록에 실패했습니다. 다시 시도해주세요.");
+      alert("문의 등록에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
