@@ -15,7 +15,7 @@ interface PetCardProps {
 
 const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardProps) => {
   const router = useRouter();
-  const petProfileImage: string | null = pet?.profileImage;
+  const petProfileImage: string = pet?.profileImage;
   const petId: number = pet?.petId;
 
   const handleClick = () => {
@@ -34,18 +34,18 @@ const PetCard = ({ pet, clickable = true, onSelect, selected = false }: PetCardP
     >
       {/* 강아지 이미지 */}
       <div>
-        {petProfileImage === null || petProfileImage === "" ? (
+        {petProfileImage ? (
           <Image
-            src={basicPet}
-            alt="펫 기본 이미지"
+            src={petProfileImage}
+            alt="펫 이미지"
             width={45}
             height={45}
             className="rounded-full w-[45px] h-[45px] border border-light-green"
           />
         ) : (
           <Image
-            src={petProfileImage}
-            alt="펫 이미지"
+            src={basicPet}
+            alt="펫 기본 이미지"
             width={45}
             height={45}
             className="rounded-full w-[45px] h-[45px] border border-light-green"
