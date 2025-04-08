@@ -20,6 +20,7 @@ export default function Head() {
         href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
         rel="stylesheet"
       />
+      <link rel="manifest" href="/manifest.json" />
     </>
   );
 }

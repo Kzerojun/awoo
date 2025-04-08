@@ -13,6 +13,14 @@ const AppInitializer = () => {
   const pathname = usePathname();
 
   useEffect(() => {
+    // ✅ PWA 정적 파일 요청 시 return (리다이렉트 방지)
+    const isPwaAsset =
+      pathname.startsWith("/_next") ||
+      pathname === "/sw.js" ||
+      pathname === "/manifest.json" ||
+      pathname === "/firebase-messaging-sw.js";
+
+    if (isPwaAsset) return;
     if (pathname !== "/") return;
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {

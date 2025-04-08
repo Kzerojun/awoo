@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { C } from "vitest/dist/chunks/reporters.66aFHiyX.js";
 import ScheduleDetail from "./ScheduleDetail";
 
 export interface Schedule {
