@@ -1,7 +1,7 @@
 {
   "name": "AwOO",
   "short_name": "AwOO",
-  "start_url": "/home",
+  "start_url": "/",
   "scope":"/",
   "display": "standalone",
   "theme_color": "#ffffff",
