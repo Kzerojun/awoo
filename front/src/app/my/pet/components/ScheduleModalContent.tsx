@@ -20,6 +20,7 @@ interface Props {
   endDate: string;
   setEndDate: (v: string) => void;
   showDelete?: boolean;
+  showUpdate?: boolean;
   onDelete?: () => void;
 }
 
@@ -37,6 +38,7 @@ const ScheduleModalContent = ({
   setStartDate,
   setEndDate,
   showDelete = false,
+  showUpdate = true,
   onDelete,
 }: Props) => {
   const TITLE_MAX_LENGTH = 15;
@@ -54,9 +56,11 @@ const ScheduleModalContent = ({
             <TrashIcon className="w-6 h-6 text-red-500" onClick={onDelete} />
           </button>
         )}
-        <button>
-          <CheckIcon className="w-6 h-6 text-custom-gray" onClick={() => onSubmit()} />
-        </button>
+        {showUpdate && (
+          <button>
+            <CheckIcon className="w-6 h-6 text-custom-gray" onClick={() => onSubmit()} />
+          </button>
+        )}
       </div>
 
       <input

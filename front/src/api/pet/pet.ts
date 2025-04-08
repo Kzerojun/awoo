@@ -101,7 +101,7 @@ export const checkPetOcr = async ({ ocrImage }: OcrPayload): Promise<OcrResponse
 export const getPetList = async (): Promise<PetInterface[] | null> => {
   try {
     const res = await axiosInstance.get("/pets");
-    console.log("반려견 목록 조회 성공:", res.data.response.pet);
+    console.log("반려견 목록 조회 성공:", res.data.response.pets);
     return res.data.response.pets;
   } catch (err: any) {
     console.error("반려견 목록 조회 실패:", err.response?.data || err.message || err);

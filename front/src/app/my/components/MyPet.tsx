@@ -80,9 +80,9 @@ export default function MyPet() {
                   />
                 ))}
               </div>
-              <div className="text-gray-400" onClick={() => router.push("/my/pet")}>
-                <Image src={vector} alt="화살표" />
-              </div>
+              {/* <div className="text-gray-400" onClick={() => router.push("/my/pet")}>
+                <Image src={vector} alt="화살표" width={8} height={8} />
+              </div> */}
             </div>
           )}
         </div>

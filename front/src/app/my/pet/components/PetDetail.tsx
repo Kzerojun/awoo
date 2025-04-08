@@ -11,6 +11,12 @@ import { useGetPetWalkInMonthHistory } from "@/hooks/walk/useGetPetWalkInMonthHi
 import { useGetPetWalkingHistory } from "@/hooks/walk/useGetPetWalkingHistory";
 import { SavingResponse } from "@/api/account/my/saving";
 import { useGetSavingAccount } from "@/hooks/account/saving/useGetSavingAccount";
+import {
+  changeClickedAccount,
+  changeSelectedSavingAccountNo,
+  resetSavingAccountDetailSlice,
+  setSelectedSavingId,
+} from "@/lib/slices/savingAccountDetailSlice";
 
 const PetDetail = ({ pet }: { pet: PetInterface }) => {
   const dispatch = useAppDispatch();
@@ -66,9 +72,21 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
     router.push(`/my/pet/detail/update/${pet.petId.toString()}`);
   };
 
-  const goToSaving = () => {
-    // TODO: 적금 등록 페이지로 이동
+  const goToOpenSaving = () => {
     router.replace("/account/open/saving");
+  };
+
+  const goToPetSaving = () => {
+    if (!petSavingData) {
+      alert("적금 정보 조회에 실패했습니다. \n 나중에 다시 시도해주세요.");
+      return;
+    }
+    dispatch(resetSavingAccountDetailSlice());
+    dispatch(setSelectedSavingId(savingId));
+    dispatch(changeClickedAccount("saving"));
+    dispatch(changeSelectedSavingAccountNo(petSavingData?.accountNo));
+
+    router.replace(`/account/my/check-password`);
   };
   return (
     <div className="w-full mb-10 flex flex-col justify-center items-center gap-y-5">
@@ -141,7 +159,10 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
           </section>
           {/* 적금 상품 */}
           {petSavingData ? (
-            <div className="flex flex-col gap-3 bg-[#BEE1E6]/50 border border-[#A6C1CF] shadow-md rounded-xl p-5 w-72 text-sm text-gray-800">
+            <div
+              className="flex flex-col gap-3 bg-[#BEE1E6]/50 border border-[#A6C1CF] shadow-md rounded-xl p-5 w-72 text-sm text-gray-800"
+              onClick={goToPetSaving}
+            >
               <h3 className="text-lg font-bold text-center text-[#3A5F71] mb-2">
                 {pet.name}의 적금 정보 🐶
               </h3>
@@ -157,11 +178,6 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
                   {Number(petSavingData.totalBalance).toLocaleString("ko-KR")}원
                 </span>
               </div>
-
-              {/* <div className="flex flex-col items-center gap-y-2 mt-2 pt-2 border-t border-blue-200">
-                <p className="text-sm font-medium">이번 달 산책 인정 횟수 🐾</p>
-                <p className="text-xl text-blue-700 font-bold">{pet.walkInMonth} 회</p>
-              </div> */}
             </div>
           ) : (
             <div className="flex flex-col gap-3 bg-[#BEE1E6]/80 border border-[#A6C1CF] shadow-lg rounded-xl p-5 w-72 text-sm text-gray-800">
@@ -170,7 +186,7 @@ const PetDetail = ({ pet }: { pet: PetInterface }) => {
               </h3>
               <div className="flex justify-end">
                 <button
-                  onClick={goToSaving}
+                  onClick={goToOpenSaving}
                   className="flex items-center gap-1 px-3 py-1.5 border border-[#A6C1CF] rounded-xl text-sm text-[#33665A] hover:bg-[#E6F4F1] transition"
                 >
                   🧐 적금 상품 보러가기

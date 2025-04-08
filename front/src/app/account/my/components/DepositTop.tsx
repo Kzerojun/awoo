@@ -42,16 +42,17 @@ const DepositTop = ({ deposit }: Props) => {
       <CommonTopBar
         title="내 계좌 (입출금)"
         rightAction="setting"
-        backColor="aqua"
+        backColor="lightAqua"
         onSettingClick={goToManageDeposit}
+        textColor="white"
         backUrl="/home"
       />
-      <div className="h-2/5 mt-14 w-full flex flex-col items-center justify-center bg-aqua">
-        <main className="flex flex-col  justify-center items-center gap-y-10">
+      <div className="h-2/5 mt-14 w-full flex flex-col items-center justify-center bg-teal-300">
+        <main className="flex flex-col  justify-center items-center gap-y-10 text-white">
           <div className="flex flex-col justify-center items-center gap-y-3">
             {/* 계좌 번호 */}
             <div
-              className="cursor-pointer text-xs text-gray-600 border-b-1 border-gray-400 py-1 underline-offset-8"
+              className="cursor-pointer text-xs text-white border-b-1 border-white py-1 underline-offset-8"
               onClick={handleCopy}
             >
               {formattedAccountNo}
@@ -66,7 +67,7 @@ const DepositTop = ({ deposit }: Props) => {
           {/* 이체하기 버튼 */}
           <button
             type="button"
-            className="h-12 w-36 bg-gray-400/50 rounded-xl"
+            className="h-12 w-36 bg-gray-300/70 rounded-xl"
             onClick={goToTransfer}
           >
             이체하기
