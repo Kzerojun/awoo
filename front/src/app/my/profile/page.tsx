@@ -14,6 +14,8 @@ export default function Profile() {
   // 로그아웃 처리 함수
   const handleLogout = () => {
     // 로컬 스토리지에서 토큰 제거
+    localStorage.removeItem("fcmToken");
+
     localStorage.removeItem("accessToken");
 
     // 리덕스 스토어 초기화
