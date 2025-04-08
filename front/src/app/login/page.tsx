@@ -8,8 +8,6 @@ import Link from "next/link";
 
 import React, { useEffect } from "react";
 
-import { toast } from "react-toastify";
-
 export default function Login() {
   const goBack = (): void => {
     window.history.back();

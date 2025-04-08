@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import NumericKeypad from "@/app/my/paymentSend/components/NumericKeypad";
 import { verifyPaymentPassword } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 import { useCheckPassword } from "@/hooks/account/deposit/useCheckPassword";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
