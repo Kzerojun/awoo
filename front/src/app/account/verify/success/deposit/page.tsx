@@ -9,7 +9,6 @@ import AccountComplete from "../../../open/components/AccountComplete";
 import Button from "@/common/ui/Button";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { setAccountVerified } from "@/lib/slices/accountSlice";
 import { OpenDepositAccount } from "@/api/account/open/account";
 import { useChangeDepositLimit } from "@/hooks/account/deposit/useChangeDepositLimit";
 
@@ -32,10 +31,6 @@ export default function AccountVerifySuccessPage() {
   // 개설 후 계좌번호 조회
   const [accountNo, setAccountNo] = useState<string | null>(null);
   const [readyChangeLimit, setReadyChangeLimit] = useState<boolean>(false);
-  // ✅ 컴포넌트 마운트 시 Redux에 계좌 인증 완료 상태 저장
-  useEffect(() => {
-    dispatch(setAccountVerified(true));
-  }, [dispatch]);
 
   // 이체 한도 변경 준비 완료되면 변경
   useEffect(() => {

@@ -20,10 +20,10 @@ export default function ReadyPage() {
         </div>
 
         {/* 준비물: 계좌번호 */}
-        <div className="flex items-center gap-3 ml-2">
+        {/* <div className="flex items-center gap-3 ml-2">
           <BanknotesIcon className="w-6 h-6 text-aqua" />
           <p className="text-sm text-gray-700">개인 송금 인증을 위한 타인 계좌번호</p>
-        </div>
+        </div> */}
 
         {/* 알아두세요 */}
         <div className="flex items-center gap-2 mt-6 ml-2">
@@ -38,7 +38,7 @@ export default function ReadyPage() {
         <Button
           text="다음"
           onClick={() => {
-            router.push("/account/verify/phone");
+            router.push("/account/verify/phone?type=saving");
           }}
         />
       </div>

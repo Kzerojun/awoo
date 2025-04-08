@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setPhoneVerified } from "@/lib/slices/accountSlice";
 import { requestAuthCode, verifyAuthCode } from "@/api/account/auth/phoneAuth";
 import { getUserInfo } from "@/api/user/auth";
+import { useSearchParams } from "next/navigation";
 
 export default function PhoneVerifyPage() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export default function PhoneVerifyPage() {
   const [timer, setTimer] = useState(180); // 3분
   const [authCode, setAuthCode] = useState("");
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type"); // "saving" or null
 
   // ✅ 이름 fallback 가져오기
   useEffect(() => {
@@ -62,7 +65,9 @@ export default function PhoneVerifyPage() {
         localStorage.setItem("authToken", data.response.authToken);
         dispatch(setPhoneVerified(true));
         alert("인증되었습니다.");
-        router.push("/account/verify");
+        const redirectPath =
+          type === "saving" ? "/account/verify/success/saving" : "/account/verify/success/deposit";
+        router.push(redirectPath);
       } else {
         alert("인증 실패");
       }

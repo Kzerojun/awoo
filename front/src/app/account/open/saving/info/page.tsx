@@ -204,7 +204,7 @@ export default function SavingInfoPage() {
                 if (!depositInput) return alert("납입 금액을 입력하세요.");
                 if (isEnoughBalance === false) return alert("입출금 계좌 잔액이 부족합니다.");
                 dispatch(setPassword(pinPassword));
-                router.push("/account/verify/ready");
+                router.push("/account/verify/ready?type=saving");
               }}
             />
           </div>
