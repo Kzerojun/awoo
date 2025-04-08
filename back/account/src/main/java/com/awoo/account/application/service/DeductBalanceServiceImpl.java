@@ -42,6 +42,7 @@ public class DeductBalanceServiceImpl implements DeductBalanceService{
                         SSAFYCode.DEDUCT_BALANCE))
                 .accountNo(command.accountNo())
                 .transactionBalance((long) command.amount())
+                .transactionSummary("멍페이 충전")
                 .build();
         SSAFYApiClient.deductBalance(deductRequest);
     }
