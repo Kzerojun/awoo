@@ -14,26 +14,49 @@ export const useFCMToken = () => {
   };
 
   const getAndSendToken = async () => {
-    const permissionGranted = await requestPermission();
-    if (!permissionGranted) return;
-
-    const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
-    });
-
-    if (!token) {
-      console.warn("FCM 토큰을 가져올 수 없습니다.");
+    const supported = await isSupported();
+    if (!supported) {
+      console.warn("❌ [FCM] 현재 브라우저는 FCM을 지원하지 않습니다.");
       return;
     }
 
-    // 기존 토큰 여부 관계없이 무조건 서버로 전송
+    // ✅ 이미 권한이 허용되어 있는지 확인
+    let permissionGranted = Notification.permission === "granted";
+
+    // ❗️ 허용되어 있지 않다면 권한 요청
+    if (!permissionGranted) {
+      const permission = await Notification.requestPermission();
+      permissionGranted = permission === "granted";
+
+      if (!permissionGranted) {
+        console.warn("❌ [FCM] 알림 권한이 거부되었습니다.");
+        return;
+      }
+    }
+
+    // ✅ 서비스 워커가 준비될 때까지 대기
+    const swRegistration = await navigator.serviceWorker.ready;
+
+    // ✅ FCM 토큰 발급 요청 (서비스워커 명시적으로 넘김)
+    const token = await getToken(messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      serviceWorkerRegistration: swRegistration,
+    });
+
+    if (!token) {
+      console.warn("❌ [FCM] 토큰을 가져오지 못했습니다.");
+      return;
+    }
+
+    // ✅ 서버로 토큰 전송 & 로컬스토리지 저장
     try {
-      console.log("🚀 [FCM] 토큰 무조건 전송:", token);
+      console.log("✅ VAPID KEY:", process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY);
+      console.log("🚀 [FCM] 토큰 서버 전송:", token);
       await axiosInstance.post("/alarms/tokens", { token });
       localStorage.setItem("fcmToken", token);
       setFcmToken(token);
     } catch (err) {
-      console.error("❌ [FCM] 토큰 전송 실패:", err);
+      console.error("❌ [FCM] 토큰 서버 전송 실패:", err);
     }
   };
 
@@ -41,9 +64,11 @@ export const useFCMToken = () => {
   const checkAndUpdateToken = async () => {
     const permissionGranted = await requestPermission();
     if (!permissionGranted) return;
+    const swRegistration = await navigator.serviceWorker.ready;
 
     const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      serviceWorkerRegistration: swRegistration, // ✅ 명시적으로 넘김
     });
 
     if (!token) {

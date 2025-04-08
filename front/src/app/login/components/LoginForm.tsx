@@ -86,19 +86,11 @@ const LoginForm = () => {
 
       {/* 아이디 찾기 & 비밀번호 재설정 */}
       <div className="flex gap-2 justify-center items-center">
-        <Link
-          href="/login/findId"
-          className="text-xs px-4 cursor-pointer underline underline-offset-5"
-        >
-          아이디 찾기
-        </Link>
+        <div className="text-xs px-4 cursor-pointer underline underline-offset-5">아이디 찾기</div>
         <p className="text-sm">|</p>
-        <Link
-          href="/login/reset-password"
-          className="text-xs px-4 cursor-pointer underline underline-offset-5"
-        >
+        <div className="text-xs px-4 cursor-pointer underline underline-offset-5">
           비밀번호 재설정
-        </Link>
+        </div>
       </div>
     </div>
   );

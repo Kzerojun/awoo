@@ -16,7 +16,7 @@ export default function MarketHeader({ currentTab, onTabChange }: MarketHeaderPr
   const router = useRouter();
 
   return (
-    <header className="fixed top-0 left-0 w-full h-14 bg-[#FCFCFC] flex items-center px-4 justify-between z-50">
+    <header className="fixed top-0 left-0 w-full h-14 bg-white flex items-center px-4 justify-between z-50">
       {/* 왼쪽 로고 */}
       <Link href="/home">
         <div className="flex items-center cursor-pointer" onClick={() => router.push("/home")}>

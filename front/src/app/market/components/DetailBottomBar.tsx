@@ -12,7 +12,7 @@ import { getUserInfo } from "@/api/user/auth";
 interface DetailBottomBarProps {
   price: string;
   isLiked: boolean;
-  onChatClick: () => void;
+  onChatClick?: () => void;
   onToggleLike: () => void;
 }
 
@@ -33,7 +33,7 @@ export default function DetailBottomBar({
         setShowModal(true);
         return;
       }
-      onChatClick();
+      onChatClick?.();
     } catch (err) {
       console.error("멍페이 가입 여부 확인 실패:", err);
       alert("사용자 정보를 확인할 수 없습니다.");
@@ -56,15 +56,20 @@ export default function DetailBottomBar({
         </div>
 
         {/* 💬 채팅하기 버튼 (공통 컴포넌트 사용) */}
-        <Button
-          text="채팅하기"
-          fontBold="base"
-          textSize="small"
-          backgroundColor="aqua"
-          fontColor="white"
-          width="short"
-          onClick={handleChatClick}
-        />
+        {onChatClick ? (
+          <Button
+            text="채팅하기"
+            fontBold="base"
+            textSize="small"
+            backgroundColor="aqua"
+            fontColor="white"
+            width="short"
+            onClick={handleChatClick}
+          />
+        ) : (
+          // ❗️빈 공간으로 자리 유지
+          <div className="w-[88px] h-[40px]" /> // Button의 사이즈와 맞추기
+        )}
       </div>
 
       {/* 💡 모달 컴포넌트 추가 */}

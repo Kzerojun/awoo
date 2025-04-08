@@ -5,5 +5,5 @@ export const patchProductStatus = (
   status: "SA" | "RE" | "SO",
   type: "COMMON" | "SAFE"
 ) => {
-  return axiosInstance.patch(`/used-products/${productId}/status`, { status, type });
+  return axiosInstance.post(`/used-products/${productId}/status`, { status, type });
 };

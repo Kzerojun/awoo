@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import NumericKeypad from "@/app/my/paymentSend/components/NumericKeypad";
 import { verifyPaymentPassword } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 
 interface SafeSendConfirmPasswordProps {
   isOpen: boolean;
@@ -94,12 +93,12 @@ export default function SafeSendConfirmPassword({
     setPassword("");
 
     // 오류 메시지 표시
-    toast.error("비밀번호가 일치하지 않습니다.");
+    alert("비밀번호가 일치하지 않습니다.");
 
     // 3회 이상 실패하면 모달 닫기
     if (errorCount >= 2) {
       // 현재 카운트 + 1로 판단하므로 2를 기준으로 함
-      toast.error("비밀번호 입력 횟수를 초과했습니다.");
+      alert("비밀번호 입력 횟수를 초과했습니다.");
       setTimeout(() => {
         onClose();
       }, 1500);

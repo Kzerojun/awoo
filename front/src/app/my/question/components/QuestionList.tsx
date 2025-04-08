@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import QuestionItem from "./QuestionItem";
 import { QuestionItemType } from "../types";
 import { getQuestionList } from "@/api/question/question";
-import { toast } from "react-toastify";
 
 interface QuestionListProps {
   filter?: (question: QuestionItemType) => boolean;
@@ -53,12 +52,12 @@ const QuestionList: React.FC<QuestionListProps> = ({ filter }) => {
             setQuestions(formattedQuestions);
           }
         } else {
-          toast.error("문의 목록을 불러오는데 실패했습니다.");
+          alert("문의 목록을 불러오는데 실패했습니다.");
           setQuestions([]);
         }
       } catch (error) {
         console.error("문의 목록 조회 오류:", error);
-        toast.error("문의 목록을 불러오는데 실패했습니다.");
+        alert("문의 목록을 불러오는데 실패했습니다.");
         setQuestions([]);
       } finally {
         setLoading(false);

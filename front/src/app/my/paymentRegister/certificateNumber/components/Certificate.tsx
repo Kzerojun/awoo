@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { verifyPhoneAuth } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 
 export default function Certificate() {
   const router = useRouter();
@@ -23,7 +22,7 @@ export default function Certificate() {
       console.log("저장된 전화번호 불러옴:", phone);
     } else {
       console.error("전화번호 정보를 찾을 수 없습니다");
-      toast.error("전화번호 정보를 찾을 수 없습니다. 이전 단계로 돌아가주세요.");
+      alert("전화번호 정보를 찾을 수 없습니다. 이전 단계로 돌아가주세요.");
     }
   }, []);
 
@@ -67,12 +66,12 @@ export default function Certificate() {
   // 인증번호 확인 요청
   const handleVerify = async () => {
     if (certificateNumber.length !== 6) {
-      toast.error("6자리 인증번호를 입력해주세요.");
+      alert("6자리 인증번호를 입력해주세요.");
       return;
     }
 
     if (remainingTime <= 0) {
-      toast.error("인증 시간이 만료되었습니다. 다시 시도해주세요.");
+      alert("인증 시간이 만료되었습니다. 다시 시도해주세요.");
       return;
     }
 
@@ -81,7 +80,7 @@ export default function Certificate() {
     try {
       // 전화번호 확인
       if (!phoneNumber) {
-        toast.error("전화번호 정보가 없습니다. 이전 단계로 돌아가주세요.");
+        alert("전화번호 정보가 없습니다. 이전 단계로 돌아가주세요.");
         return;
       }
 
@@ -106,7 +105,7 @@ export default function Certificate() {
         }
       }
 
-      toast.success("휴대폰 인증이 완료되었습니다.");
+      alert("휴대폰 인증이 완료되었습니다.");
 
       // 인증 성공 시 세션 데이터 유지 (비밀번호 설정 완료 후 제거)
       sessionStorage.setItem("phone_verified", "true");
@@ -115,7 +114,7 @@ export default function Certificate() {
       router.push("/my/paymentRegister/paymentPassword");
     } catch (error) {
       console.error("인증번호 확인 실패:", error);
-      toast.error("인증번호가 올바르지 않습니다. 다시 확인해주세요.");
+      alert("인증번호가 올바르지 않습니다. 다시 확인해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -124,7 +123,7 @@ export default function Certificate() {
   // 인증번호 재전송 처리
   const handleResendCode = async () => {
     // 여기에 인증번호 재전송 로직 구현
-    toast.info("인증번호가 재전송되었습니다.");
+    alert("인증번호가 재전송되었습니다.");
     // 타이머 재설정
     setRemainingTime(180);
   };

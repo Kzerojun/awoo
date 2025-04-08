@@ -15,7 +15,7 @@ import { useNotificationListener } from "@/hooks/alarm/useNotificationListner";
 import { usePermissionObserver } from "@/hooks/alarm/usePermissionObserver";
 import { usePathname } from "next/navigation";
 
-export default function RootLayout({
+export default function ClientWrapper({
   children,
   title,
   rightAction,
@@ -97,8 +97,6 @@ export default function RootLayout({
   const showTopBar = title || rightAction;
 
   return (
-    <html lang="ko" className="h-screen">
-      <body className="h-screen flex flex-col">
         <Providers>
           <KeypadProvider>
             {!isRootPath ? <AppInitializer /> : null}
@@ -112,12 +110,9 @@ export default function RootLayout({
             >
               {children}
             </main>
-
-            {/* 하단바 (fixed bottom-0) */}
-            {showBottomBar && <BottomBarWrapper />}
-          </KeypadProvider>
-        </Providers>
-      </body>
-    </html>
+        {/* 하단바 (fixed bottom-0) */}
+        {showBottomBar && <BottomBarWrapper />}
+      </KeypadProvider>
+    </Providers>
   );
 }
