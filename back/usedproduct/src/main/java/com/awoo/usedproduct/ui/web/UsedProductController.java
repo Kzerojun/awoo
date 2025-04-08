@@ -82,6 +82,7 @@ public class UsedProductController {
         DeleteUsedProductResponse response = usedProductServiceFacade.delete(command);
         return ApiUtils.success(response);
     }
+
     @GetMapping("/{usedProductId}")
     public ApiUtils.ApiResult<FetchUsedProductDetailResponse> fetchUsedProduct(
             @PathVariable(name = "usedProductId") Integer usedProductId,
