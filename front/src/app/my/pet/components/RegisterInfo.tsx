@@ -98,12 +98,11 @@ const RegisterInfo = ({
     );
   };
   return (
-    <div className="w-72 border-t-2 border-custom-gray flex flex-col justify-center items-center gap-y-1">
-      <div className="flex flex-col justify-center items-center mt-3 w-60 bg-emerald-300/30 shadow-md rounded-lg p-3">
-        <h3 className="font-bold text-gray-700">AwOO!</h3>
+    <div className="w-72 border-t-2 border-custom-gray flex flex-col justify-center items-center gap-y-2">
+      <div className="flex flex-col justify-center items-center border border-teal-600 mt-5 w-60 shadow-xs rounded-lg p-3">
         {!checkOcrPending ? (
-          <label className=" text-blue-500 cursor-pointer mt-2 underline">
-            동물등록증으로 불러오기
+          <label className=" text-teal-700 cursor-pointer">
+            동물등록증으로 등록하세요!📝
             <input
               type="file"
               accept="image/*"
