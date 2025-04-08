@@ -52,7 +52,11 @@ export default function MarketDetailPage() {
         alert("로그인이 필요합니다");
         return;
       }
-
+      if (!detail?.usedProductId) {
+        alert("상품 정보가 없습니다. 다시 시도해주세요.");
+        console.error("❌ usedProductId 없음:", detail);
+        return;
+      }
       // 1. 채팅방 생성
       const res = await createChatRoom(detail.usedProductId);
       const chatRoomId = res.response.chatRoomId;

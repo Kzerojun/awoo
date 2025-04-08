@@ -121,8 +121,9 @@ const CommonTopBar = ({
       }
     } else if (leftAction === "close") {
       if (onClose) {
-        // 모달 닫고 페이지 이동 처리 등
-        onClose();
+        onClose(); // 모달용 콜백
+      } else {
+        router.back(); // ✅ 일반 페이지에서는 그냥 뒤로가기
       }
       // 계좌이체 커스텀
     } else if (leftAction === "transferBack") {

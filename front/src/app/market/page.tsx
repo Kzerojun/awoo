@@ -10,7 +10,7 @@ import Button from "@/common/ui/Button";
 import { useRouter } from "next/navigation";
 import { getProductList } from "@/api/market/read/getList";
 import MoungpayJoinModal from "@/app/market/components/MoungpayJoinModel";
-import { useAppSelector } from "@/lib/store";
+import { getUserInfo } from "@/api/user/auth";
 
 export default function MarketPage() {
   const [currentTab, setCurrentTab] = useState<MarketTab>("상품");
@@ -18,14 +18,19 @@ export default function MarketPage() {
   const [originalItems, setOriginalItems] = useState<MarketItem[]>([]);
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const isPaymentUser = useAppSelector((state) => state.user.paymentRegister);
 
-  const handleWriteClick = () => {
-    if (!isPaymentUser) {
-      setShowModal(true); // 모달 띄우기
-      return;
+  const handleWriteClick = async () => {
+    try {
+      const userInfo = await getUserInfo();
+      if (!userInfo.paymentRegister) {
+        setShowModal(true);
+        return;
+      }
+      router.push("/market/article/write");
+    } catch (err) {
+      console.error("유저 정보 확인 실패:", err);
+      alert("사용자 정보를 불러올 수 없습니다. ");
     }
-    router.push("/market/article/write"); // 멍페이 가입자만 진입
   };
   // ✅ 목록 API 연동
   useEffect(() => {

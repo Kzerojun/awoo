@@ -5,9 +5,9 @@ import { BookmarkIcon as SolidBookmarkIcon } from "@heroicons/react/24/solid"; /
 
 import Button from "@/common/ui/Button";
 import MoungpayJoinModal from "@/app/market/components/MoungpayJoinModel";
-import { useAppSelector } from "@/lib/store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getUserInfo } from "@/api/user/auth";
 
 interface DetailBottomBarProps {
   price: string;
@@ -24,15 +24,22 @@ export default function DetailBottomBar({
 }: DetailBottomBarProps) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const isPaymentUser = useAppSelector((state) => state.user.paymentRegister);
+
   // 👉 채팅 버튼 클릭 처리
-  const handleChatClick = () => {
-    if (!isPaymentUser) {
-      setShowModal(true);
-      return;
+  const handleChatClick = async () => {
+    try {
+      const userInfo = await getUserInfo();
+      if (!userInfo.paymentRegister) {
+        setShowModal(true);
+        return;
+      }
+      onChatClick();
+    } catch (err) {
+      console.error("멍페이 가입 여부 확인 실패:", err);
+      alert("사용자 정보를 확인할 수 없습니다.");
     }
-    onChatClick(); // 기존 로직 그대로 실행
   };
+
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-3 z-50">
       <div className="flex items-center justify-between">

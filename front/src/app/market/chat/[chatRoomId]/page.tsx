@@ -12,6 +12,15 @@ import axiosInstance from "@/api/axiosInstance";
 import { useAppSelector } from "@/lib/store";
 import DayDivider from "../components/DayDivider";
 import { formatDate } from "@/utils/formatDate";
+import { useAppDispatch } from "@/lib/store";
+import { isPaymentFinished, resetChatSystem } from "@/lib/slices/chatSystemSlice";
+
+import { SystemPaymentComplete } from "@/app/market/chat/components/systemMessages/PaymentComplete";
+import { SystemSafePaymentCompleteMe } from "../components/systemMessages/SafePaymentComplete";
+import { SystemSafePaymentStart } from "../components/systemMessages/SafePaymentStart";
+import { SystemSafeInfoSubmittedSeller } from "../components/systemMessages/SystemSafeInfoSubmittedSeller";
+import { SystemSafeInfoSubmittedBuyer } from "../components/systemMessages/SystemSafeInfoSubmittedBuyer";
+import { SystemSafeCompleteSeller } from "../components/systemMessages/SystemSafeCompleteSeller"; // 추가된 임포트
 
 // 채팅 메시지 타입 정의
 interface MessageType {
@@ -39,6 +48,8 @@ export default function ChatRoomPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [productId, setProductId] = useState<number | null>(null);
+
+  const [socketReady, setSocketReady] = useState(false);
 
   // 📌 이미지 파일 -> Base64 변환 함수
   const fileToBase64 = (file: File): Promise<string> => {
@@ -70,6 +81,7 @@ export default function ChatRoomPage() {
     if (!memberId || memberId === 0) return;
     const token = localStorage.getItem("accessToken");
     if (!token) return;
+    console.log("🔍 현재 chatSystem 상태:", chatSystem);
 
     const fetchMessagesAndConnect = async () => {
       try {
@@ -90,9 +102,23 @@ export default function ChatRoomPage() {
 
         // ✅ 소켓 연결 및 수신 이벤트 등록
         chatSocket.connect(token, Number(chatRoomId), (message: IMessage) => {
+          setSocketReady(true);
           const body = message.binaryBody
             ? JSON.parse(new TextDecoder().decode((message as any).binaryBody))
             : JSON.parse(message.body);
+          console.log("💬 수신된 메시지:", body); // 👈 여기서 "SAFE_FINISH" 찍히는지 확인
+
+          // 💥 시스템 메시지일 경우, 내가 보낸 건 무시
+          // const isSystemMessage =
+          //   body.message === "SAFE_INFO_SUBMITTED" ||
+          //   body.message === "SAFE_FINISH" ||
+          //   body.message === "PAYMENT_FINISH";
+
+          // const isMyOwnSystemMessage = isSystemMessage && body.senderId === memberId;
+
+          // if (isMyOwnSystemMessage) {
+          //   return; // ❌ 중복 렌더링 방지
+          // }
 
           const fixedMessage: MessageType = {
             messageId: Date.now(),
@@ -151,6 +177,7 @@ export default function ChatRoomPage() {
     setShowActions(false);
     setShowPaymentModal(true);
   };
+  const chatSystem = useAppSelector((state) => state.chatSystem);
 
   // ====================================
   // 💡 === 화면 렌더링 ===
@@ -169,16 +196,53 @@ export default function ChatRoomPage() {
               const msgDate = msg.createdAt.slice(0, 10);
               const isNewDate = msgDate !== lastDate;
               lastDate = msgDate;
+              // 💡 시스템 메시지 분기
+              const isSystemMessage =
+                msg.message === "SAFE_FINISH" ||
+                msg.message === "PAYMENT_FINISH" ||
+                msg.message === "SAFE_INFO_SUBMITTED" ||
+                msg.message === "SAFE_COMPLETE";
               return (
                 <div key={msg.messageId}>
                   {isNewDate && <DayDivider date={formatDate(msg.createdAt)} />}
-                  {/* 날짜 구분선 */}
-                  <ChatMessageBubble
-                    sender={msg.senderId === memberId ? "me" : "partner"}
-                    content={msg.message}
-                    time={msg.createdAt}
-                    image={msg.image}
-                  />
+                  {isSystemMessage ? (
+                    <div className="text-center text-sm text-gray-500 py-2">
+                      {msg.message === "SAFE_FINISH" ? (
+                        msg.senderId === memberId ? (
+                          <SystemSafePaymentCompleteMe sender="me" createdAt={msg.createdAt} />
+                        ) : (
+                          <SystemSafePaymentStart sender="partner" createdAt={msg.createdAt} />
+                        )
+                      ) : msg.message === "SAFE_INFO_SUBMITTED" ? (
+                        msg.senderId === memberId ? (
+                          <SystemSafeInfoSubmittedSeller sender="me" createdAt={msg.createdAt} />
+                        ) : (
+                          <SystemSafeInfoSubmittedBuyer
+                            sender="partner"
+                            createdAt={msg.createdAt}
+                          />
+                        )
+                      ) : msg.message === "SAFE_COMPLETE" ? (
+                        msg.senderId !== memberId && (
+                          <SystemSafeCompleteSeller sender="partner" createdAt={msg.createdAt} />
+                        )
+                      ) : (
+                        <SystemPaymentComplete
+                          sender={msg.senderId === memberId ? "me" : "partner"}
+                          senderName={msg.senderId === memberId ? "나" : "상대방"}
+                          amount={50000} // TODO: 금액 연동 필요
+                          createdAt={msg.createdAt}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <ChatMessageBubble
+                      sender={msg.senderId === memberId ? "me" : "partner"}
+                      content={msg.message}
+                      time={msg.createdAt}
+                      image={msg.image}
+                    />
+                  )}
                 </div>
               );
             });
