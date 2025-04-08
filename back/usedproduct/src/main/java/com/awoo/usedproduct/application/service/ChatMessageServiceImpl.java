@@ -65,7 +65,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         }
 
         ApiResult<MemberInfoResponse> memberInfo = memberClient.fetchMemberInfo(
-                receiverId);
+                command.senderId());
 
         ChatEvent event = ChatEvent.builder()
                 .senderName(memberInfo.getResponse().name())
