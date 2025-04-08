@@ -16,6 +16,8 @@ import { chatSocket } from "@/socket/chatSocket";
 import type { IMessage } from "@stomp/stompjs";
 import { patchProductStatus } from "@/api/market/update/patchStatus";
 
+import { useAppSelector } from "@/lib/store";
+
 // API 응답 타입 정의
 interface ProductDetailResponse {
   usedProductId: number;
@@ -43,6 +45,7 @@ export default function MarketDetailPage() {
   const [type, setType] = useState<"COMMON" | "SAFE">("COMMON"); // 기본은 COMMON
 
   const router = useRouter();
+  const memberId = useAppSelector((state) => state.memberId.memberId);
 
   // 날짜 포맷팅 함수
   const formatDate = (dateString?: string): string => {
@@ -218,35 +221,35 @@ export default function MarketDetailPage() {
       <InfoStats views={detail.viewCount} chat={0} likes={detail.likeCount} />
 
       {/* 상태 변경 */}
-      {detail.canModify && status && (
+      {/* {detail.canModify && status && (
         <div className="px-4 mt-4 space-y-2">
           <p className="text-sm text-gray-600">판매 상태 관리</p>
           <div className="flex gap-2">
             {/* 상태 변경 버튼 */}
-            <button
+      {/* <button
               onClick={() => handleStatusChange("SA")}
               className={`border rounded px-3 py-1 text-sm ${status === "SA" ? "bg-teal-500 text-white" : "bg-white text-gray-600"}`}
             >
               판매중
-            </button>
+            </button> */}
 
-            <button
+      {/* <button
               onClick={() => handleStatusChange("RE")}
               className={`border rounded px-3 py-1 text-sm ${status === "RE" ? "bg-yellow-500 text-white" : "bg-white text-gray-600"}`}
-            >
-              예약중
+            > */}
+      {/* 예약중
             </button>
 
             <button
               onClick={() => handleStatusChange("SO")}
-              className={`border rounded px-3 py-1 text-sm ${status === "SO" ? "bg-gray-500 text-white" : "bg-white text-gray-600"}`}
-            >
-              거래완료
-            </button>
-          </div>
+              className={`border rounded px-3 py-1 text-sm ${status === "SO" ? "bg-gray-500 text-white" : "bg-white text-gray-600"}`} */}
+      {/* > */}
+      {/* 거래완료 */}
+      {/* </button> */}
+      {/* </div> */}
 
-          {/* 거래완료일 때만 type 선택 */}
-          {status === "SO" && (
+      {/* 거래완료일 때만 type 선택 */}
+      {/* {status === "SO" && (
             <div className="flex gap-2 mt-2">
               <button
                 onClick={() => handleStatusPatch("SO", "COMMON")}
@@ -263,15 +266,14 @@ export default function MarketDetailPage() {
               </button>
             </div>
           )}
-        </div>
-      )}
-
-      {/* ✅ 하단 액션바 */}
+        </div> */}
+      {/* )} */}
+      {/* ✅ 하단 액션바 – 본인 글이면 아예 렌더링 X */}
       <DetailBottomBar
         price={`${detail.price.toLocaleString()}원`}
         isLiked={isLiked}
         onToggleLike={handleToggleLike}
-        onChatClick={handleChatClick}
+        onChatClick={detail.sellerId === memberId ? undefined : handleChatClick}
       />
     </div>
   );

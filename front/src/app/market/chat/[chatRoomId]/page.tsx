@@ -145,11 +145,14 @@ export default function ChatRoomPage() {
   }, [chatRoomId, memberId]);
 
   // ✅ 메시지 전송 함수
-  const handleSendMessage = (text: string) => {
-    if (!text.trim() && selectedImages.length === 0) return; // 비어있으면 무시
+  const handleSendMessage = async (text: string, imageFile?: File) => {
+    if (!text.trim() && !imageFile) return;
 
-    const base64Image = selectedImages.length > 0 ? selectedImages[0].split(",")[1] : null;
+    let base64Image: string | null = null;
 
+    if (imageFile) {
+      base64Image = await fileToBase64(imageFile).then((dataUrl) => dataUrl.split(",")[1]);
+    }
     // 이미지 + 텍스트 함께 전송
     chatSocket.send(Number(chatRoomId), text, memberId, base64Image);
 
@@ -184,11 +187,16 @@ export default function ChatRoomPage() {
   // ====================================
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 relative">
+    <div className="relative h-screen flex flex-col">
       {/* ✅ 채팅방 헤더 */}
-      <ChatRoomHeader usedProductId={productId} />
+      <div className="fixed top-0 left-0 right-0 z-20 bg-white">
+        <ChatRoomHeader usedProductId={productId} />{" "}
+      </div>
       {/* ✅ 채팅 메시지 목록 */}
-      <div ref={scrollRef} className="flex-1 min-w-0 overflow-y-auto px-4 py-2 space-y-2">
+      <div
+        ref={scrollRef}
+        className="flex-1 min-h-0 overflow-y-auto pt-[56px] pb-[120px] px-4 space-y-2 bg-white"
+      >
         {messages.length > 0 ? (
           (() => {
             let lastDate = "";
@@ -253,9 +261,8 @@ export default function ChatRoomPage() {
           </div>
         )}
       </div>
-
       {/* ✅ 입력창 + 선택 이미지 + 액션바 */}
-      <div className="sticky bottom-0 bg-white flex flex-col z-20 pb-0.5">
+      <div className="fixed bottom-0 left-0 right-0 bg-white z-20">
         {/* 선택된 이미지 프리뷰 */}
         {selectedImages.length > 0 && (
           <div className="bg-white py-2 border-t flex space-x-2 overflow-x-auto px-4">
@@ -273,71 +280,72 @@ export default function ChatRoomPage() {
           </div>
         )}
         {/* 입력창 */}
-        <ChatInputBox
-          onToggleActions={() => setShowActions(!showActions)}
-          onSendMessage={handleSendMessage}
-          isImageSelected={selectedImages.length > 0}
+        <div className="mb-14 bg-white shadow-[0_-2px_6px_rgba(0,0,0,0.03)]">
+          <ChatInputBox
+            onToggleActions={() => setShowActions(!showActions)}
+            onSendMessage={handleSendMessage}
+            isImageSelected={selectedImages.length > 0}
+          />
+          {/* 액션바 (앨범, 카메라, 송금) */}
+          {showActions && (
+            <div className="w-full bg-white py-4 flex justify-around border-gray-200">
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="flex flex-col items-center space-y-1 cursor-pointer"
+              >
+                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                  🖼️
+                </div>
+                <span className="text-xs">앨범</span>
+              </div>
+
+              <div
+                onClick={() => cameraInputRef.current?.click()}
+                className="flex flex-col items-center space-y-1 cursor-pointer"
+              >
+                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                  📷
+                </div>
+                <span className="text-xs">카메라</span>
+              </div>
+
+              <div
+                onClick={handleSendMoneyClick}
+                className="flex flex-col items-center space-y-1 cursor-pointer"
+              >
+                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                  💸
+                </div>
+                <span className="text-xs">송금</span>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* 숨겨진 파일 입력 */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          hidden
+          multiple
+          onChange={handleFileChange}
         />
-
-        {/* 액션바 (앨범, 카메라, 송금) */}
-        {showActions && (
-          <div className="w-full bg-white py-4 flex justify-around border-t">
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center space-y-1 cursor-pointer"
-            >
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-                🖼️
-              </div>
-              <span className="text-xs">앨범</span>
-            </div>
-
-            <div
-              onClick={() => cameraInputRef.current?.click()}
-              className="flex flex-col items-center space-y-1 cursor-pointer"
-            >
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-                📷
-              </div>
-              <span className="text-xs">카메라</span>
-            </div>
-
-            <div
-              onClick={handleSendMoneyClick}
-              className="flex flex-col items-center space-y-1 cursor-pointer"
-            >
-              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
-                💸
-              </div>
-              <span className="text-xs">송금</span>
-            </div>
-          </div>
-        )}
-      </div>
-      {/* 숨겨진 파일 입력 */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        hidden
-        multiple
-        onChange={handleFileChange}
-      />
-      <input
-        ref={cameraInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        hidden
-        onChange={handleFileChange}
-      />
-      {/* 송금 모달 */}
-      <PaymentSelectModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        chatRoomId={Number(chatRoomId)}
-        usedProductId={productId ?? 0}
-      />
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          hidden
+          onChange={handleFileChange}
+        />
+        {/* 송금 모달 */}
+        <PaymentSelectModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          chatRoomId={Number(chatRoomId)}
+          usedProductId={productId ?? 0}
+        />
+      </div>{" "}
     </div>
   );
 }
