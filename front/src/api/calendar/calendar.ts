@@ -27,8 +27,8 @@ interface ScheduleResponse {
   startTime: string;
   endTime: string;
   color: string;
-  calendarType: string;
-  delYn: string;
+  calendarType: "산책" | "일반";
+  delYn: "Y" | "N";
 }
 
 // 일정 등록 interface
