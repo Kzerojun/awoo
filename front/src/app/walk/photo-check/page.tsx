@@ -51,32 +51,25 @@ const PhotoCheckPage = () => {
       />
       {image ? (
         <div className="flex flex-col items-center justify-center w-full z-50 ">
-          {/* <div className="text-2xl mb-5">사진 확인</div> */}
-          <div className="relative w-full max-w-md aspect-[3/4.5] overflow-hidden border">
+          <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden border">
             <Image src={image} alt="이미지" fill className="object-cover" />
           </div>
           <div className="my-4 flex flex-col items-center justify-center gap-4 bg-white/30 w-72 rounded-lg py-2">
             <div className="flex flex-col items-center justify-center">
-              <h3 className="text-xl">사진을 저장해보세요!</h3>
+              <h3 className="text-xl">사진을 저장하세요!</h3>
               <p className="text-sm">함께 찍은 추억을 보관하세요.</p>
             </div>
-
-            <Button
-              text="다운로드"
-              onClick={downloadImage}
-              backgroundColor="green/50"
-              fontColor="green"
-              border="green"
-              width="medium"
-            />
-            <Button
-              text="다시 찍기"
-              onClick={rePhoto}
-              backgroundColor="green/50"
-              fontColor="green"
-              border="green"
-              width="medium"
-            />
+            <div className=" flex justify-center items-center gap-x-5">
+              <button
+                className="rounded-2xl border border-green p-2 bg-white/40"
+                onClick={downloadImage}
+              >
+                다운로드
+              </button>
+              <button className="rounded-2xl border border-green p-2 bg-white/40" onClick={rePhoto}>
+                다시 찍기
+              </button>
+            </div>
             <Button
               text="산책 종료"
               onClick={goToCheckEnd}
