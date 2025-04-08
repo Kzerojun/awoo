@@ -26,6 +26,7 @@ export default function RootLayout({
 }) {
   // children 의 현재 경로
   const path = usePathname();
+  const isRootPath = path === "/";
 
   // 바텀바 숨김 페이지들
   const hideBottomBarPaths = [
@@ -100,8 +101,8 @@ export default function RootLayout({
       <body className="h-screen flex flex-col">
         <Providers>
           <KeypadProvider>
-            <AppInitializer />
-            <TrackRouteWrapper />
+            {!isRootPath ? <AppInitializer /> : null}
+            {!isRootPath ? <TrackRouteWrapper /> : null}
             <ToastWrapper />
             {/* 메인 컨텐츠 영역 */}
             <main
