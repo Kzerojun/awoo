@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import {
   startOfMonth,
   endOfMonth,
@@ -19,7 +19,8 @@ import { useRegisterSchedule } from "@/hooks/calendar/useRegisterSchedule";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useGetPetSchedule } from "@/hooks/calendar/useGetPetSchedule";
 import { useGetMemberSchedule } from "@/hooks/calendar/useGetMemberSchedule";
-import { PetInterface } from "@/lib/slices/petSlice";
+import { PetInterface, setPetList } from "@/lib/slices/petSlice";
+import { usePetList } from "@/hooks/pet/usePetList";
 
 type Event = {
   id: number;
@@ -28,9 +29,26 @@ type Event = {
   endDate: string; // "yyyy-MM-dd"
   color: string;
   dog: string;
+  calendarType: "산책" | "일반";
 };
+
 const Calendar = () => {
-  const petList = useAppSelector((state) => state.pet.petList);
+  const dispatch = useAppDispatch();
+  const { refetch: petListRefetch } = usePetList();
+  const [petList, changePetList] = useState<PetInterface[]>(
+    useAppSelector((state) => state.pet.petList)
+  );
+
+  useEffect(() => {
+    const fetchPetList = async () => {
+      const result = await petListRefetch();
+      if (result.isSuccess && result.data) {
+        dispatch(setPetList(result.data));
+        changePetList(result.data);
+      }
+    };
+    fetchPetList();
+  }, []);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [events, setEvents] = useState<Event[]>([]);
@@ -142,6 +160,7 @@ const Calendar = () => {
       endDate: item.endTime.slice(0, 10),
       color: item.color || "#C4C4C4", // 기본 색상 처리
       dog: item.petName,
+      calendarType: item.calendarType,
     })) || [];
 
   const getEventsForDay = (dateStr: string) =>
@@ -273,6 +292,7 @@ const Calendar = () => {
           time: e.startDate === e.endDate ? "" : `${e.startDate}~${e.endDate}`,
           color: e.color,
           dog: e.dog,
+          calendarType: e.calendarType,
         }))}
         onAddClick={() => {
           setShowListModal(false);

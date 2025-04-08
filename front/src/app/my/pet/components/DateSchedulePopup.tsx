@@ -12,6 +12,7 @@ export interface Schedule {
   time: string;
   color: string;
   dog: string;
+  calendarType: "산책" | "일반";
 }
 
 interface Props {

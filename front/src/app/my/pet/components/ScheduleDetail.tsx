@@ -13,6 +13,7 @@ interface Schedule {
   time: string;
   color: string;
   dog: string;
+  calendarType: "산책" | "일반";
 }
 
 interface Props {
@@ -156,7 +157,8 @@ const ScheduleDetail = ({ clickedDate, isOpen, schedule, onClose, onRefresh }: P
               setStartDate={setStartDate}
               endDate={endDate}
               setEndDate={setEndDate}
-              showDelete={true}
+              showDelete={schedule?.calendarType === "일반"}
+              showUpdate={schedule?.calendarType === "일반"}
               onDelete={handleDelete}
             />
           </motion.div>
