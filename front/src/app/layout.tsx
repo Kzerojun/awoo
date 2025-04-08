@@ -6,7 +6,6 @@ export const metadata = {
   title: "AwOO",
   description: "AwOO - 강아지 라이프 플랫폼",
   manifest: "/manifest.json",
-  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

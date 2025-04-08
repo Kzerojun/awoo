@@ -41,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 *storybook.log
+# workbox 빌드 파일 무시
+/public/workbox-*.js

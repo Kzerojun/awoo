@@ -22,7 +22,7 @@ const withPWAConfig = withPWA({
   dest: "public",
   register: false,
   skipWaiting: true,
-  disable: false,
+  disable: process.env.NODE_ENV === "development", // ✅ 개발환경 비활성화
   buildExcludes: [/firebase-messaging-sw\.js$/, /app-build-manifest\.json$/],
   sw: "sw.js",
 });
