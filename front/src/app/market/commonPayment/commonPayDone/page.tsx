@@ -111,7 +111,7 @@ export default function CommonPayDone() {
           onClick={handleGoToChat}
           className="w-full py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors"
         >
-          중고거래 홈으로
+          채팅방으로 돌아가기
         </button>
       </div>
     </div>
