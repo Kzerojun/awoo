@@ -4,14 +4,23 @@ import { useEffect } from "react";
 import { useUserInfo } from "./useUserInfo";
 import { setUserData } from "@/lib/slices/userSlice";
 import { useAppDispatch } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const AppInitializer = () => {
   const { refetch: refetchUserInfo, isSuccess, isError } = useUserInfo();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
+    // ✅ PWA 정적 파일 요청 시 return (리다이렉트 방지)
+    const isPwaAsset =
+      pathname.startsWith("/_next") ||
+      pathname === "/sw.js" ||
+      pathname === "/manifest.json" ||
+      pathname === "/firebase-messaging-sw.js";
+
+    if (isPwaAsset) return;
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       refetchUserInfo()

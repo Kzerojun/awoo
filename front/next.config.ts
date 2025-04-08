@@ -1,31 +1,30 @@
+// next.config.ts
 import withPWA from "next-pwa";
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const baseConfig: NextConfig = {
   reactStrictMode: true,
-  output: "standalone",
-  experimental: {
-    appDir: true,
-  },
-  // 이미지 도메인 설정 추가
+  // output: "standalone",
   images: {
     domains: ["c209awoo.s3.us-east-2.amazonaws.com"],
   },
-  // ✅ next-pwa 설정은 별도로 적용
-  ...withPWA({
-    dest: "public",
-    register: true,
-    skipWaiting: true,
-    disable: false,
-    sw: "/firebase-messaging-sw.js",
-  }),
   webpack(config) {
     config.module.rules.push({
       test: /\.css$/,
-      use: ["style-loader", "css-loader", "postcss-loader"], // PostCSS 로더 설정
+      use: ["style-loader", "css-loader", "postcss-loader"],
     });
     return config;
   },
 };
 
-export default nextConfig;
+// ✅ 이렇게 감싸줘야 sw.js 생성됨!
+const withPWAConfig = withPWA({
+  dest: "public",
+  register: false,
+  skipWaiting: true,
+  disable: false,
+  buildExcludes: [/firebase-messaging-sw\.js$/, /app-build-manifest\.json$/],
+  sw: "sw.js",
+});
+
+export default withPWAConfig(baseConfig);
