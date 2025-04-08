@@ -53,7 +53,7 @@ const SavingManageTop = () => {
         <div className="flex flex-col items-start justify-center gap-y-2">
           <span>상품명</span>
           <span>개설일</span>
-          <span>개설일</span>
+          <span>만기일</span>
           <span>잔액</span>
           <span>적용금리</span>
           <span>과세구분</span>
