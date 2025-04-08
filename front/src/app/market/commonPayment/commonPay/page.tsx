@@ -10,7 +10,6 @@ import CommonSendPasswordConfirm from "./components/CommonSendPasswordConfirm";
 import { commonPayment } from "@/api/payment/payment";
 import { RootState } from "@/lib/store";
 import { getUserInfo } from "@/api/user/auth";
-import { toast } from "react-toastify";
 import axiosInstance from "@/api/axiosInstance";
 
 interface ProductDetail {
@@ -49,7 +48,7 @@ export default function CommonPay() {
         setAmount(productData.price);
       } catch (error) {
         console.error("상품 상세 조회 실패", error);
-        toast.error("상품 정보를 불러오는데 실패했습니다.");
+        alert("상품 정보를 불러오는데 실패했습니다.");
       }
     };
 
@@ -86,7 +85,7 @@ export default function CommonPay() {
   // 비밀번호 확인 성공 시 처리
   const handlePasswordConfirmed = async (password: string) => {
     if (!usedProductId || !product) {
-      toast.error("상품 정보가 없습니다.");
+      alert("상품 정보가 없습니다.");
       return;
     }
 
@@ -98,15 +97,15 @@ export default function CommonPay() {
       const response = await commonPayment(productId);
 
       if (response.success) {
-        toast.success("일반 결제가 완료되었습니다.");
+        alert("일반 결제가 완료되었습니다.");
         // 성공 시 결제완료 페이지로 이동하면서 금액 정보 전달
         router.push(`/market/commonPayment/commonPayDone?amount=${amount}`);
       } else {
-        toast.error(response.error?.message || "일반 결제에 실패했습니다.");
+        alert(response.error?.message || "일반 결제에 실패했습니다.");
       }
     } catch (error) {
       console.error("일반 결제 처리 중 오류 발생:", error);
-      toast.error("결제 처리 중 오류가 발생했습니다.");
+      alert("결제 처리 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
       setShowPasswordModal(false);

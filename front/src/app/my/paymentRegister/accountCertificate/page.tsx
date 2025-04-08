@@ -3,10 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
-import { BellIcon } from "@heroicons/react/24/outline";
 import Certificate, { CertificateRef } from "./components/Certificate";
 import { verifyOneWonTransfer } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { changeSelectedDepositAccountNo } from "@/lib/slices/savingAccountDetailSlice";
 
@@ -29,7 +27,7 @@ export default function AccountCertificate() {
       // Redux store에 계좌번호 저장 (입출금 계좌 내역 조회용)
       dispatch(changeSelectedDepositAccountNo(account));
     } else {
-      toast.error("계좌 정보가 없습니다. 이전 단계로 돌아갑니다.");
+      alert("계좌 정보가 없습니다. 이전 단계로 돌아갑니다.");
       router.push("/my/paymentRegister/accountConnect");
     }
   }, [router, dispatch]);
@@ -37,7 +35,7 @@ export default function AccountCertificate() {
   // 인증번호 검증 완료 처리
   const handleCertificateComplete = async (certificateNumber: string) => {
     if (!accountNo) {
-      toast.error("계좌 정보가 없습니다. 이전 단계로 돌아갑니다.");
+      alert("계좌 정보가 없습니다. 이전 단계로 돌아갑니다.");
       router.push("/my/paymentRegister/accountConnect");
       return;
     }
@@ -52,7 +50,7 @@ export default function AccountCertificate() {
       });
 
       console.log("계좌 인증 성공:", response);
-      toast.success("계좌 인증이 완료되었습니다.");
+      alert("계좌 인증이 완료되었습니다.");
 
       // 성공 시 다음 페이지로 이동
       // 인증 완료 후 세션 데이터 정리
@@ -69,13 +67,13 @@ export default function AccountCertificate() {
 
       // 최대 시도 횟수 초과 시
       if (newAttempts >= maxAttempts) {
-        toast.error("인증 시도 횟수를 초과했습니다. 처음부터 다시 시도해주세요.");
+        alert("인증 시도 횟수를 초과했습니다. 처음부터 다시 시도해주세요.");
         router.push("/my/paymentRegister/accountConnect"); // 계좌 연결 페이지로 이동
         return;
       }
 
       // 오류 메시지 표시 및 입력폼 초기화
-      toast.error(`인증번호가 일치하지 않습니다. (${newAttempts}/${maxAttempts})`);
+      alert(`인증번호가 일치하지 않습니다. (${newAttempts}/${maxAttempts})`);
 
       // ref를 통해 입력폼 초기화
       if (certificateRef.current) {

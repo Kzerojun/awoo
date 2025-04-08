@@ -8,7 +8,6 @@ import SendBankInfo from "./components/SendBankInfo";
 import SendAmountModal from "./components/SendAmountModal";
 import SendConfirmModal from "./components/SendConfirmModal";
 import { getPaymentBalance, transferPayment } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 
 export default function PaymentSend() {
@@ -36,7 +35,7 @@ export default function PaymentSend() {
         setBalance(balanceResponse.amount);
       } catch (error) {
         console.error("잔액 조회 실패:", error);
-        toast.error("잔액 정보를 불러오는데 실패했습니다.");
+        alert("잔액 정보를 불러오는데 실패했습니다.");
         setBalance(0);
       } finally {
         setIsLoading(false);
@@ -91,11 +90,11 @@ export default function PaymentSend() {
         );
       } else {
         // 송금 실패
-        toast.error(response.error?.message || "송금에 실패했습니다.");
+        alert(response.error?.message || "송금에 실패했습니다.");
       }
     } catch (error) {
       console.error("송금 처리 중 오류 발생:", error);
-      toast.error("송금 처리 중 오류가 발생했습니다.");
+      alert("송금 처리 중 오류가 발생했습니다.");
     } finally {
       setIsSending(false);
       setShowConfirmModal(false);

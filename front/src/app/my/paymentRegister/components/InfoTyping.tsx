@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getUserInfo } from "@/api/user/auth";
 import { requestPhoneAuth } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 
 interface InfoTypingFormProps {
   initialStep?: number;
@@ -37,7 +36,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
         console.log("사용자 정보 로드 완료:", data);
       } catch (error) {
         console.error("사용자 정보 로드 실패:", error);
-        toast.error("사용자 정보를 불러오는데 실패했습니다.");
+        alert("사용자 정보를 불러오는데 실패했습니다.");
       }
     };
 
@@ -66,7 +65,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
       try {
         // 입력값과 사용자 정보 비교
         if (name.trim() !== userInfo.name) {
-          toast.error("입력한 이름이 회원 정보와 일치하지 않습니다.");
+          alert("입력한 이름이 회원 정보와 일치하지 않습니다.");
           setIsSubmitting(false);
           return;
         }
@@ -76,7 +75,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
         const cleanedUserPhone = userInfo.phone.replace(/-/g, "");
 
         if (cleanedInputPhone !== cleanedUserPhone) {
-          toast.error("입력한 전화번호가 회원 정보와 일치하지 않습니다.");
+          alert("입력한 전화번호가 회원 정보와 일치하지 않습니다.");
           setIsSubmitting(false);
           return;
         }
@@ -91,7 +90,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
         sessionStorage.setItem("verification_phone", phoneNumber.trim());
 
         console.log("인증 요청 성공:", { name, phoneNumber });
-        toast.success("인증번호가 발송되었습니다.");
+        alert("인증번호가 발송되었습니다.");
 
         // 완료 콜백이 있으면 호출
         if (onComplete) {
@@ -102,7 +101,7 @@ export default function InfoTyping({ initialStep = 1, onComplete }: InfoTypingFo
         router.push("/my/paymentRegister/certificateNumber");
       } catch (error) {
         console.error("인증 요청 오류:", error);
-        toast.error("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
+        alert("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
       } finally {
         setIsSubmitting(false);
       }

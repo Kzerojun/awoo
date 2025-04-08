@@ -26,6 +26,7 @@ export default function ClientWrapper({
 }) {
   // children 의 현재 경로
   const path = usePathname();
+  const isRootPath = path === "/";
 
   // 바텀바 숨김 페이지들
   const hideBottomBarPaths = [
@@ -96,18 +97,19 @@ export default function ClientWrapper({
   const showTopBar = title || rightAction;
 
   return (
-    <Providers>
-      <KeypadProvider>
-        <AppInitializer />
-        <TrackRouteWrapper />
-        <ToastWrapper />
-        {/* 메인 컨텐츠 영역 */}
-        <main
-          className={`flex-1 overflow-y-auto w-full scrollbar-hide ${showBottomBar ? "pb-14" : ""}`}
-        >
-          {children}
-        </main>
-
+        <Providers>
+          <KeypadProvider>
+            {!isRootPath ? <AppInitializer /> : null}
+            {!isRootPath ? <TrackRouteWrapper /> : null}
+            <ToastWrapper />
+            {/* 메인 컨텐츠 영역 */}
+            <main
+              className={`flex-1 overflow-y-auto w-full scrollbar-hide ${
+                showBottomBar ? "pb-14" : ""
+              }`}
+            >
+              {children}
+            </main>
         {/* 하단바 (fixed bottom-0) */}
         {showBottomBar && <BottomBarWrapper />}
       </KeypadProvider>

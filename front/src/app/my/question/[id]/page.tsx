@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import CommonTopBar from "@/common/ui/CommonTopBar";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
 import { getQuestionDetail } from "@/api/question/question";
-import { toast } from "react-toastify";
 
 // 문의 상세 데이터 타입
 interface QuestionDetailType {
@@ -64,13 +63,13 @@ export default function QuestionDetail() {
         if (pwd) {
           setPasswordError(true);
         } else {
-          toast.error("문의를 불러오는데 실패했습니다.");
+          alert("문의를 불러오는데 실패했습니다.");
           router.back();
         }
       }
     } catch (error) {
       console.error("문의 상세 조회 오류:", error);
-      toast.error("문의를 불러오는데 실패했습니다.");
+      alert("문의를 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
     }

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ScheduleModalContent from "./ScheduleModalContent";
-import { toast } from "react-toastify";
 import { useAppSelector } from "@/lib/store";
 
 interface Props {
@@ -49,7 +48,7 @@ const ScheduleModal = ({ isOpen, onClose, clickedDate, onSubmit }: Props) => {
 
   const handleSubmit = () => {
     if (!title || !selectedDog || !startDate || !endDate) {
-      toast.info("모든 정보를 입력해주세요!");
+      alert("모든 정보를 입력해주세요!");
       return;
     }
     onSubmit({

@@ -10,7 +10,6 @@ import SafeSendConfirmPassword from "./components/SafeSendConfirmPassword";
 import { makeSafePayment } from "@/api/payment/payment";
 import { RootState } from "@/lib/store";
 import { getUserInfo } from "@/api/user/auth";
-import { toast } from "react-toastify";
 import axiosInstance from "@/api/axiosInstance";
 
 interface ProductResponse {
@@ -60,11 +59,11 @@ export default function SafePay() {
           setAmount(price);
           setFee(Math.round(price * 0.015)); // 1.5% 수수료
         } else {
-          toast.error("상품 정보를 불러오는데 실패했습니다.");
+          alert("상품 정보를 불러오는데 실패했습니다.");
         }
       } catch (error) {
         console.error("상품 상세 조회 실패", error);
-        toast.error("상품 정보를 불러오는데 실패했습니다.");
+        alert("상품 정보를 불러오는데 실패했습니다.");
       }
     };
 
@@ -101,7 +100,7 @@ export default function SafePay() {
   // 비밀번호 확인 성공 시 처리
   const handlePasswordConfirmed = async (password: string) => {
     if (!amount || !productData || !productData.success) {
-      toast.error("상품 정보가 없습니다.");
+      alert("상품 정보가 없습니다.");
       return;
     }
 
@@ -112,15 +111,15 @@ export default function SafePay() {
       const response = await makeSafePayment(amount);
 
       if (response.success) {
-        toast.success("안심 결제가 완료되었습니다.");
+        alert("안심 결제가 완료되었습니다.");
         // 거래 성공 페이지로 이동
         router.push(`/market/safePayment/safePayDone?amount=${amount}`);
       } else {
-        toast.error(response.error?.message || "안심 결제에 실패했습니다.");
+        alert(response.error?.message || "안심 결제에 실패했습니다.");
       }
     } catch (error) {
       console.error("안심 결제 처리 중 오류 발생:", error);
-      toast.error("결제 처리 중 오류가 발생했습니다.");
+      alert("결제 처리 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
       setShowPasswordModal(false);
