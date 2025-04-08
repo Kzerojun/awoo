@@ -32,12 +32,16 @@ export default function MarketPage() {
       alert("사용자 정보를 불러올 수 없습니다. ");
     }
   };
+
   // ✅ 목록 API 연동
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await getProductList();
-        const fetchedItems = res.usedProducts;
+        const fetchedItems = res.usedProducts.map((item: any) => ({
+          ...item,
+          status: item.usedProductStatus, // API 응답의 상태 필드를 status로 매핑
+        }));
         setItems(fetchedItems);
         setOriginalItems(fetchedItems);
       } catch (error) {
@@ -78,7 +82,7 @@ export default function MarketPage() {
               <MarketListItem
                 key={item.productId}
                 {...item}
-                // ✅ 상세 페이지로 연결 준비
+                status={item.status} // 상태 정보 전달
                 onClick={() => router.push(`/market/${item.productId}`)}
               />
             ))
