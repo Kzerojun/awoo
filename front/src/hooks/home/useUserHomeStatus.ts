@@ -27,6 +27,7 @@ export const useUserHomeStatus = (): {
   status: UserHomeStatus;
   account: Account | null;
   isLoading: boolean;
+  hasMongPay: boolean;
 } => {
   // 입출금 계좌
   const {
@@ -81,22 +82,25 @@ export const useUserHomeStatus = (): {
     if (userError) console.error("❌ 유저 정보 에러:", userError);
   }, [accountError, petError, savingError, userError]);
 
-  if (isLoading) return { status: "NEWBIE", account: null, isLoading: true };
+  if (isLoading) return { status: "NEWBIE", account: null, isLoading: true, hasMongPay: true };
   if (accountError || petError || savingError || userError)
-    return { status: "NEWBIE", account: null, isLoading: false };
+    return { status: "NEWBIE", account: null, isLoading: false, hasMongPay: true };
 
   const hasDeposit = !!account;
   const hasPet = Array.isArray(pets) && pets.length > 0;
   const hasSaving = Array.isArray(savings) && savings.length > 0;
   const hasMongPay = user?.paymentRegister === true;
 
-  if (!hasDeposit && !hasPet) return { status: "NEWBIE", account: null, isLoading: false };
-  if (hasDeposit && !hasPet) return { status: "ONLY_DEPOSIT", account, isLoading: false };
-  if (hasDeposit && hasPet && !hasSaving) return { status: "WITH_PET", account, isLoading: false };
+  if (!hasDeposit && !hasPet)
+    return { status: "NEWBIE", account: null, isLoading: false, hasMongPay };
+  if (hasDeposit && !hasPet)
+    return { status: "ONLY_DEPOSIT", account, isLoading: false, hasMongPay };
+  if (hasDeposit && hasPet && !hasSaving)
+    return { status: "WITH_PET", account, isLoading: false, hasMongPay };
   if (hasDeposit && hasPet && hasSaving && !hasMongPay)
-    return { status: "WITH_SAVING", account, isLoading: false };
+    return { status: "WITH_SAVING", account, isLoading: false, hasMongPay };
   if (hasDeposit && hasPet && hasSaving && hasMongPay)
-    return { status: "COMPLETE", account, isLoading: false };
+    return { status: "COMPLETE", account, isLoading: false, hasMongPay };
 
-  return { status: "NEWBIE", account: null, isLoading: false }; // fallback
+  return { status: "NEWBIE", account: null, isLoading: false, hasMongPay }; // fallback
 };

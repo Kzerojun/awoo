@@ -39,7 +39,7 @@ export const useFCMToken = () => {
 
     // ✅ FCM 토큰 발급 요청 (서비스워커 명시적으로 넘김)
     const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
       serviceWorkerRegistration: swRegistration,
     });
 
@@ -67,7 +67,7 @@ export const useFCMToken = () => {
     const swRegistration = await navigator.serviceWorker.ready;
 
     const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
       serviceWorkerRegistration: swRegistration, // ✅ 명시적으로 넘김
     });
 

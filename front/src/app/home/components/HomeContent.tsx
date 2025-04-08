@@ -10,9 +10,10 @@ import PayAdCard from "../myaccount/components/pay/PayAdCard";
 import PetRegisterCard from "../myaccount/components/pet/PetRegisterCard";
 import WalkReportPreview from "../myaccount/components/pet/WalkReportPreview";
 import SavingSummaryCard from "../myaccount/components/saving/SavingSummaryCard";
+import WalkReportCard from "../myaccount/components/pet/WalkReportCard";
 
 export default function HomeContent() {
-  const { status, account, isLoading } = useUserHomeStatus();
+  const { status, account, isLoading, hasMongPay } = useUserHomeStatus();
   const petList = useAppSelector((state) => state.user.petList ?? []);
   const hasPet = petList.length > 0;
 
@@ -27,7 +28,6 @@ export default function HomeContent() {
           <OpenAccountCard />
           <SavingAdCard />
           <PayAdCard />
-          <WalkReportPreview />
           <PetRegisterCard />
         </>
       )}
@@ -37,8 +37,7 @@ export default function HomeContent() {
           <AccountCard account={account} />
           <PetRegisterCard />
           <SavingAdCard />
-          <PayAdCard />
-          <WalkReportPreview />
+          {!hasMongPay && <PayAdCard />}
         </>
       )}
 
@@ -46,8 +45,7 @@ export default function HomeContent() {
         <>
           <AccountCard account={account} />
           <SavingAdCard />
-          <PayAdCard />
-          {hasPet && <WalkReportPreview />}
+          {!hasMongPay && <PayAdCard />}
         </>
       )}
 
@@ -55,7 +53,8 @@ export default function HomeContent() {
         <>
           <AccountCard account={account} />
           <SavingSummaryCard />
-          <PayAdCard />
+          {!hasMongPay && <PayAdCard />}
+          {hasPet && <WalkReportCard />}
         </>
       )}
 
@@ -63,6 +62,7 @@ export default function HomeContent() {
         <>
           <AccountCard account={account} />
           <SavingSummaryCard />
+          {hasPet && <WalkReportCard />}
         </>
       )}
     </div>
