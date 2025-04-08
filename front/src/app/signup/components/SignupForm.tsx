@@ -9,7 +9,7 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import { EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setRegisterData } from "@/lib/slices/registerSlice";
 
 import gender from "../../../../public/icons/signup/gender.svg";
@@ -32,17 +32,18 @@ const SignupForm = () => {
 
   // 스토어에 정보 저장하기 위한 dispatch 정의
   const dispatch = useAppDispatch();
+  const registerData = useAppSelector((state) => state.register);
 
-  const [name, setName] = useState<string>(""); // 이름
+  const [name, setName] = useState<string>(registerData.name || ""); // 이름
   const [nameErr, setNameErr] = useState<string>("");
-  const [birthdate, setBirthdate] = useState<string>(""); // 생년월일
-  const [genderValue, setGenderValue] = useState<string>(""); // 성별
-  const [phonenum, setPhonenum] = useState<string>(""); // 전화번호
-  const [email, setEmail] = useState<string>(""); // 이메일
+  const [birthdate, setBirthdate] = useState<string>(registerData.birthDate || ""); // 생년월일
+  const [genderValue, setGenderValue] = useState<string>(registerData.gender || ""); // 성별
+  const [phonenum, setPhonenum] = useState<string>(registerData.phone || ""); // 전화번호
+  const [email, setEmail] = useState<string>(registerData.email || ""); // 이메일
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true); // 이메일 에러
   const [emailMessage, setEmailMessage] = useState<string>(""); // 이메일 에러 메시지
   const [isDuplicate, setIsDuplicate] = useState<boolean>(true); // 이메일 중복 체크
-  const [password1, setPassword1] = useState<string>(""); // 비밀번호
+  const [password1, setPassword1] = useState<string>(registerData.password || ""); // 비밀번호
   const [password2, setPassword2] = useState<string>(""); // 비밀번호 확인용
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true); // 비밀번호 유효성 검사
   const [passwordMessage, setPasswordMessage] = useState<string>(""); // 비밀번호 메시지
@@ -50,7 +51,7 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false); // 보여줄까 말까
 
   // 약관 동의 체크
-  const [privacyAgreed, setPrivacyAgreed] = useState<boolean>(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState<boolean>(registerData.privacyAgreed || false);
 
   // 이름 5자리 제한
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +64,7 @@ const SignupForm = () => {
     } // 최대 5자리 제한
 
     setName(value);
+    dispatch(setRegisterData({ name: value }));
   };
 
   // 생년월일 입력 시 자동으로 YYYY-MM-DD 형식으로 변환
@@ -75,6 +77,7 @@ const SignupForm = () => {
     if (value.length >= 7) value = value.slice(0, 7) + "-" + value.slice(7);
 
     setBirthdate(value);
+    dispatch(setRegisterData({ birthDate: value }));
   };
 
   // 전화번호 입력 시 자동으로 000-0000-0000 형식으로 변환
@@ -85,6 +88,7 @@ const SignupForm = () => {
     if (value.length >= 3) value = value.slice(0, 3) + "-" + value.slice(3);
     if (value.length >= 8) value = value.slice(0, 8) + "-" + value.slice(8);
     setPhonenum(value);
+    dispatch(setRegisterData({ phone: value }));
   };
 
   // 이메일 유효성 검사 함수
@@ -97,6 +101,7 @@ const SignupForm = () => {
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     setEmail(value);
+    dispatch(setRegisterData({ email: value }));
     const isValid = validateEmail(value);
     setIsValidEmail(isValid); // 입력할 때마다 검사
     if (!isValid) {
