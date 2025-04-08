@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
 
 const baseConfig: NextConfig = {
   reactStrictMode: true,
-  // output: "standalone",
+  output: "standalone",
   images: {
     domains: ["c209awoo.s3.us-east-2.amazonaws.com"],
   },
@@ -23,6 +23,7 @@ const withPWAConfig = withPWA({
   register: false,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development", // ✅ 개발환경 비활성화
+
   buildExcludes: [/firebase-messaging-sw\.js$/, /app-build-manifest\.json$/],
   sw: "sw.js",
 });
