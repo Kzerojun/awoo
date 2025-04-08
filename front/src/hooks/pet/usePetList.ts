@@ -5,9 +5,9 @@ export const usePetList = () => {
   return useQuery({
     queryKey: ["petList"],
     queryFn: getPetList,
-    enabled: false, // 초기 자동 호출 방지
-    staleTime: 1000 * 60 * 5,
+    enabled: true, // 초기 자동 호출 방지
+    staleTime: 0,
     retry: 1,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 };
