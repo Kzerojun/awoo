@@ -4,14 +4,16 @@ import { useEffect } from "react";
 import { useUserInfo } from "./useUserInfo";
 import { setUserData } from "@/lib/slices/userSlice";
 import { useAppDispatch } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const AppInitializer = () => {
   const { refetch: refetchUserInfo, isSuccess, isError } = useUserInfo();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname !== "/") return;
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       refetchUserInfo()
