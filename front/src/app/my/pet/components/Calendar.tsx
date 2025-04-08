@@ -157,9 +157,9 @@ const Calendar = () => {
 
   return (
     <div className="mt-14 w-full flex flex-col justify-center gap-y-5">
-      <div className="flex items-center justify-start flex-wrap gap-3 mx-2 mt-2 px-2">
+      <div className="flex items-center justify-center flex-wrap gap-3 mx-2 mt-2 px-2">
         <button
-          className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[80px] 
+          className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[70px] 
       ${
         selectCalendar === 0
           ? "bg-sky-400 text-white border-sky-400 shadow-md scale-[1.05]"
@@ -173,7 +173,7 @@ const Calendar = () => {
         {petList.map((pet, index) => (
           <button
             key={pet?.petId ?? `fallback-${index}`}
-            className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[80px] 
+            className={`transition-all duration-200 text-[15px] border-2 rounded-full px-1 py-1 min-w-[70px] 
         ${
           selectCalendar === pet.petId
             ? "bg-sky-400 text-white border-sky-400 shadow-md scale-[1.05]"
