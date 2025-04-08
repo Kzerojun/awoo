@@ -32,13 +32,16 @@ public class Walk {
     @Column(nullable = false)
     private double distance;
 
+    @Column(length = 1, nullable = false, columnDefinition = "CHAR(1)")
+    private String isSaving;
+
     @Builder
-    public Walk(Integer memberId, Integer petId, LocalDateTime startTime, LocalDateTime endTime, double distance) {
+    public Walk(Integer memberId, Integer petId, LocalDateTime startTime, LocalDateTime endTime, double distance, String isSaving) {
         this.memberId = memberId;
         this.petId = petId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.distance = distance;
-
+        this.isSaving = isSaving;
     }
 }

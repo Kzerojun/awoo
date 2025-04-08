@@ -21,6 +21,7 @@ const AppInitializer = () => {
       pathname === "/firebase-messaging-sw.js";
 
     if (isPwaAsset) return;
+    if (pathname !== "/") return;
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       refetchUserInfo()

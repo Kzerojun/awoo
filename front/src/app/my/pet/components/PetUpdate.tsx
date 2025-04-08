@@ -10,6 +10,7 @@ import { addPet } from "@/lib/slices/petSlice";
 import { useRouter } from "next/navigation";
 import { usePetDetail } from "@/hooks/pet/usePetDetail";
 import { useUpdatePetDetail } from "@/hooks/pet/useUpdatePetDetail";
+import UpdateInfo from "./UpdateInfo";
 
 const defaultPetAvatars = [
   "/images/pet-avatars/petava_basic.png",
@@ -174,7 +175,7 @@ const PetUpdate = ({ petId }: { petId: number }) => {
       />
 
       {/* 반려견 정보 받는 부분 */}
-      <RegisterInfo
+      <UpdateInfo
         petName={petName}
         setPetName={setPetName}
         petAge={petAgeString}

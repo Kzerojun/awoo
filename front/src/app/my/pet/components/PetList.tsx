@@ -3,12 +3,15 @@
 import PetCard from "./PetCard";
 import Button from "@/common/ui/Button";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/lib/store";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import dogIcon from "../../../../../public/icons/walking/dog.svg";
 import walkingIcon from "../../../../../public/icons/walking/walkingIcon.svg";
 import Image from "next/image";
 import PetWalkStatus from "./PetWalkStatus";
+import { usePetList } from "@/hooks/pet/usePetList";
+import { PetInterface, setPetList } from "@/lib/slices/petSlice";
+import React, { useEffect, useState } from "react";
 interface Pet {
   petId: number;
   memberId: number;
@@ -22,9 +25,20 @@ interface Pet {
 
 const PetList = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const petList = useAppSelector((state) => state.pet.petList);
+  const { refetch: petListRefetch } = usePetList();
 
-  // 후에 useEffect 써서 반려견 별 한 달 산책횟수 조회
+  // 반려견 정보 조회 useEffect 로
+  useEffect(() => {
+    const fetchPetList = async () => {
+      const result = await petListRefetch();
+      if (result.isSuccess && result.data) {
+        dispatch(setPetList(result.data));
+      }
+    };
+    fetchPetList();
+  }, []);
 
   const goToRegisterPet = () => {
     router.push("/my/pet/register");
@@ -44,9 +58,9 @@ const PetList = () => {
         </h3>
         <div className="flex justify-end text-xs mr-1 mb-1"> 이번 달 인정 | 이번 달 전체 </div>
         <div className="flex flex-col gap-3">
-          {petList.map((pet) => (
+          {petList.map((pet, index) => (
             <div
-              key={pet.petId}
+              key={`walk-${pet?.petId ?? `index-${index}`}`}
               className="bg-white border border-[#D2EEDD] rounded-xl px-4 py-3 flex justify-between items-center shadow-sm"
             >
               <div className="font-medium text-green-700">{pet.name}</div>
@@ -73,8 +87,8 @@ const PetList = () => {
             <span className=" text-xl py-3 font-bold">나의 반려견</span>
           </div>
           <div className="w-60 flex flex-col justify-center gap-y-5">
-            {petList.map((pet) => (
-              <PetCard key={pet.petId} pet={pet} />
+            {petList.map((pet, index) => (
+              <PetCard key={`walk-${pet?.petId ?? `index-${index}`}`} pet={pet} />
             ))}
           </div>
           {petList.length < 3 ? (

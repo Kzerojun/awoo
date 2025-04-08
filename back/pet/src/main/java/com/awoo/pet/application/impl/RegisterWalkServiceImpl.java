@@ -32,7 +32,15 @@ public class RegisterWalkServiceImpl implements RegisterWalkService {
     @Override
     public Integer registerWalk(final RegisterWalkCommand command) {
         Pet pet = petRepository.searchPet(command.walkCommand().petId()).orElseThrow(() -> new PetNotFoundException(ApplicationErrorCode.PET_NOT_FOUND));
-        Walk entity = walkFactory.registerWalk(command);
+
+        String isSaving = "F";
+
+        if(pet.getSavingId() != 0){
+            isSaving = "T";
+        }
+
+        Walk entity = walkFactory.registerWalk(command, isSaving);
+
         try{
             walkRepository.registerWalk(entity);
         }catch(Exception e){
