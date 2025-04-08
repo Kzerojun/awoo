@@ -234,7 +234,7 @@ export const getReportDetail = async (reportId: number): Promise<ReportDetailRes
 
 // 신고 처리
 export const processReport = async (data: ReportProcessRequest): Promise<ReportProcessResponse> => {
-  const response = await axiosInstance.patch("/admin/reports", data);
+  const response = await axiosInstance.post("/admin/reports", data);
   return response.data;
 };
 
