@@ -11,6 +11,7 @@ import PetRegisterCard from "../myaccount/components/pet/PetRegisterCard";
 import WalkReportPreview from "../myaccount/components/pet/WalkReportPreview";
 import SavingSummaryCard from "../myaccount/components/saving/SavingSummaryCard";
 import WalkReportCard from "../myaccount/components/pet/WalkReportCard";
+import SafePaymentCTA from "../myaccount/components/pay/SafePaymentCTA";
 
 export default function HomeContent() {
   const { status, account, isLoading, hasMongPay } = useUserHomeStatus();
@@ -38,6 +39,7 @@ export default function HomeContent() {
           <PetRegisterCard />
           <SavingAdCard />
           {!hasMongPay && <PayAdCard />}
+          {hasMongPay && <SafePaymentCTA />}
         </>
       )}
 
@@ -46,6 +48,7 @@ export default function HomeContent() {
           <AccountCard account={account} />
           <SavingAdCard />
           {!hasMongPay && <PayAdCard />}
+          {hasMongPay && <SafePaymentCTA />}
         </>
       )}
 
@@ -55,6 +58,7 @@ export default function HomeContent() {
           <SavingSummaryCard />
           {!hasMongPay && <PayAdCard />}
           {hasPet && <WalkReportCard />}
+          {hasMongPay && <SafePaymentCTA />}
         </>
       )}
 
@@ -63,6 +67,7 @@ export default function HomeContent() {
           <AccountCard account={account} />
           <SavingSummaryCard />
           {hasPet && <WalkReportCard />}
+          {hasMongPay && <SafePaymentCTA />}
         </>
       )}
     </div>
