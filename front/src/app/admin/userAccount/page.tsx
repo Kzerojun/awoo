@@ -7,6 +7,7 @@ import UserDetailModal from "./components/UserDetailModal";
 import { getUserAccount } from "@/api/admin/admin";
 import type { UserAccount } from "@/api/admin/admin";
 import search from "../../../../public/icons/admin/search.svg";
+import Pagination from "./components/Pagination";
 
 // 그룹화된 사용자 타입 정의
 interface AccountInfo {
@@ -28,18 +29,26 @@ interface GroupedUserData {
 
 export default function UserAccount() {
   const [userAccounts, setUserAccounts] = useState<UserAccount[]>([]);
-  const [selectedUser, setSelectedUser] = useState<GroupedUserData | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<GroupedUserData | null>(null);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // 페이지네이션 상태
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
   // 유저 계좌 목록 가져오기
-  const fetchUserAccounts = async () => {
+  const fetchUserAccounts = async (page = 0, size = 10) => {
     try {
       setLoading(true);
-      const response = await getUserAccount();
+      const response = await getUserAccount({ page, size });
       if (response.success) {
-        setUserAccounts(response.response);
+        setUserAccounts(response.response.content);
+        setTotalPages(response.response.totalPages);
+        setTotalElements(response.response.totalElements);
       } else {
         console.error("유저 계좌 목록 조회 실패:", response.error);
       }
@@ -50,9 +59,22 @@ export default function UserAccount() {
     }
   };
 
+  // 페이지 변경 핸들러
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchUserAccounts(page, pageSize);
+  };
+
+  // 페이지 크기 변경 핸들러
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(0); // 페이지 크기 변경 시 첫 페이지로 이동
+    fetchUserAccounts(0, size);
+  };
+
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
-    fetchUserAccounts();
+    fetchUserAccounts(currentPage, pageSize);
   }, []);
 
   // 유저 목록 필터링
@@ -63,47 +85,44 @@ export default function UserAccount() {
       user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // 유저별로 그룹화
-  const groupedUsers = filteredUsers.reduce(
-    (acc, account) => {
-      const email = account.email;
-      if (!acc[email]) {
-        acc[email] = {
-          memberName: account.memberName,
-          email: account.email,
-          nickname: account.nickname,
-          memberCreatedAt: account.memberCreatedAt,
-          petName: account.petName,
-          accounts: [],
-        };
-      }
+  // 검색 시 API 재호출 (검색어 입력 후 일정 시간 후 실행)
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchUserAccounts(0, pageSize); // 검색 시 첫 페이지로 이동
+      setCurrentPage(0);
+    }, 500);
 
-      acc[email].accounts.push({
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  // 그룹화하지 않고 각 계좌를 개별적으로 표시
+  const userAccountsList = filteredUsers.map((account) => ({
+    memberName: account.memberName,
+    email: account.email,
+    nickname: account.nickname,
+    memberCreatedAt: account.memberCreatedAt,
+    petName: account.petName,
+    accounts: [
+      {
         bankCode: account.bankCode,
         accountNo: account.accountNo,
         accountType: account.accountType,
         accountCreatedAt: account.accountCreatedAt,
         isDelete: account.isDelete,
-      });
-
-      return acc;
-    },
-    {} as Record<string, GroupedUserData>
-  );
-
-  // 그룹화된 유저 배열로 변환
-  const groupedUsersList = Object.values(groupedUsers);
+      },
+    ],
+  }));
 
   // 유저 상세 정보 조회 핸들러
-  const handleViewUserDetail = (user: GroupedUserData) => {
-    setSelectedUser(user);
+  const handleViewUserDetail = (account: GroupedUserData) => {
+    setSelectedAccount(account);
     setIsUserModalOpen(true);
   };
 
   // 모달 닫기 핸들러
   const handleCloseModals = () => {
     setIsUserModalOpen(false);
-    setSelectedUser(null);
+    setSelectedAccount(null);
   };
 
   return (
@@ -131,11 +150,25 @@ export default function UserAccount() {
       ) : (
         <>
           {/* 유저 목록 컴포넌트 */}
-          <UserList users={groupedUsersList} onViewUserDetail={handleViewUserDetail} />
+          <UserList users={userAccountsList} onViewUserDetail={handleViewUserDetail} />
+
+          {/* 페이지네이션 컴포넌트 */}
+          {totalPages > 0 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                pageSize={pageSize}
+                totalElements={totalElements}
+              />
+            </div>
+          )}
 
           {/* 유저 상세 정보 모달 */}
-          {isUserModalOpen && selectedUser && (
-            <UserDetailModal user={selectedUser} onClose={handleCloseModals} />
+          {isUserModalOpen && selectedAccount && (
+            <UserDetailModal user={selectedAccount} onClose={handleCloseModals} />
           )}
         </>
       )}
