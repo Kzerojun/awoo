@@ -7,7 +7,7 @@ export default function WalkReportCard() {
 
   return (
     <div
-      onClick={() => router.push("/walk/calendar")}
+      onClick={() => router.push("/my/pet/calendar")}
       className="w-full max-w-sm bg-[#D1ECF1] rounded-2xl px-5 py-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
     >
       <div className="flex flex-col">

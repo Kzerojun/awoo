@@ -92,14 +92,14 @@ export default function MarketListItem({
         {/* 상품 정보 */}
         <div className="ml-4 flex-1 flex flex-col justify-between">
           <div>
-            <h3 className="font-medium text-sm line-clamp-2">{title}</h3>
-            <p className="text-xs text-gray-500 mt-1">{formatDate(createdAt)}</p>
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium text-m line-clamp-2">{title}</h3>
+              {getStatusBadge()}
+            </div>
+            <p className="text-[11px] text-gray-500 mt-1">{formatDate(createdAt)}</p>
           </div>
 
           <div className="flex flex-col mt-1">
-            {/* 상태 배지 */}
-            <div>{getStatusBadge()}</div>
-
             <div className="flex items-center justify-between w-full">
               <p className="text-lg font-bold">{formatPrice(price)}원</p>
 

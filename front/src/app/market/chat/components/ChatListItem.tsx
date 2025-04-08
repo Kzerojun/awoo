@@ -27,7 +27,7 @@ export default function ChatListItem({ chat, hasBorder }: ChatListItemProps) {
   };
   return (
     <div
-      className={`flex items-center justify-between py-4 ${hasBorder ? "border-b" : ""}`}
+      className={`flex items-center justify-between py-4 ${hasBorder ? "border-b border-gray-100" : ""}`}
       onClick={handleClick}
     >
       {/* 프로필 */}

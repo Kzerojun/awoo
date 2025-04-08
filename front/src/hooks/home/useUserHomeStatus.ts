@@ -28,6 +28,7 @@ export const useUserHomeStatus = (): {
   account: Account | null;
   isLoading: boolean;
   hasMongPay: boolean;
+  savingCount: number;
 } => {
   // 입출금 계좌
   const {
@@ -74,6 +75,7 @@ export const useUserHomeStatus = (): {
   });
 
   const isLoading = isAccountLoading || isPetLoading || isSavingLoading || isUserLoading;
+  const savingCount = Array.isArray(savings) ? savings.length : 0;
 
   useEffect(() => {
     if (accountError) console.error("❌ 계좌 에러:", accountError);
@@ -82,9 +84,16 @@ export const useUserHomeStatus = (): {
     if (userError) console.error("❌ 유저 정보 에러:", userError);
   }, [accountError, petError, savingError, userError]);
 
-  if (isLoading) return { status: "NEWBIE", account: null, isLoading: true, hasMongPay: true };
+  if (isLoading)
+    return {
+      status: "NEWBIE",
+      account: null,
+      isLoading: true,
+      hasMongPay: true,
+      savingCount: 1,
+    };
   if (accountError || petError || savingError || userError)
-    return { status: "NEWBIE", account: null, isLoading: false, hasMongPay: true };
+    return { status: "NEWBIE", account: null, isLoading: false, hasMongPay: true, savingCount: 1 };
 
   const hasDeposit = !!account;
   const hasPet = Array.isArray(pets) && pets.length > 0;
@@ -92,15 +101,15 @@ export const useUserHomeStatus = (): {
   const hasMongPay = user?.paymentRegister === true;
 
   if (!hasDeposit && !hasPet)
-    return { status: "NEWBIE", account: null, isLoading: false, hasMongPay };
+    return { status: "NEWBIE", account: null, isLoading: false, hasMongPay, savingCount };
   if (hasDeposit && !hasPet)
-    return { status: "ONLY_DEPOSIT", account, isLoading: false, hasMongPay };
+    return { status: "ONLY_DEPOSIT", account, isLoading: false, hasMongPay, savingCount };
   if (hasDeposit && hasPet && !hasSaving)
-    return { status: "WITH_PET", account, isLoading: false, hasMongPay };
+    return { status: "WITH_PET", account, isLoading: false, hasMongPay, savingCount };
   if (hasDeposit && hasPet && hasSaving && !hasMongPay)
-    return { status: "WITH_SAVING", account, isLoading: false, hasMongPay };
+    return { status: "WITH_SAVING", account, isLoading: false, hasMongPay, savingCount };
   if (hasDeposit && hasPet && hasSaving && hasMongPay)
-    return { status: "COMPLETE", account, isLoading: false, hasMongPay };
+    return { status: "COMPLETE", account, isLoading: false, hasMongPay, savingCount };
 
-  return { status: "NEWBIE", account: null, isLoading: false, hasMongPay }; // fallback
+  return { status: "NEWBIE", account: null, isLoading: false, hasMongPay, savingCount }; // fallback
 };

@@ -30,7 +30,13 @@ export default function ChatList() {
   }, []);
 
   // 메시지 없는 채팅방 제거
-  const filteredList = chatList.filter((chat) => chat.latestMessage !== null);
+  const filteredList = chatList
+    .filter((chat) => chat.latestMessage !== null)
+    .sort((a, b) => {
+      const timeA = new Date(a.latestMessageCreatedAt ?? "").getTime();
+      const timeB = new Date(b.latestMessageCreatedAt ?? "").getTime();
+      return timeB - timeA; // 최신순
+    });
 
   return (
     <div className="flex flex-col space-y-4">

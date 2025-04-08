@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 
 interface Props {
   onToggleActions: () => void;
@@ -29,28 +30,31 @@ export default function ChatInputBox({ onToggleActions, onSendMessage }: Props) 
   };
 
   return (
-    <div className="flex flex-col p-2 border-t bg-white">
+    <div className="flex items-center px-4 py-2 bg-white  gap-2">
       {selectedImage && (
         <div className="mb-2">
           <img
             src={URL.createObjectURL(selectedImage)}
             alt="미리보기"
-            className="h-20 w-auto object-cover rounded"
+            className="h-20 w-auto object-cover rounded-md"
           />
         </div>
       )}
-      <div className="flex items-center">
-        <button className="mr-2 text-2xl" onClick={onToggleActions}>
+      <div className="flex items-center gap-2">
+        <button className="text-2xl text-gray-400 font-semibold px-1" onClick={onToggleActions}>
           ＋
         </button>
-        <input
-          type="text"
-          placeholder="메시지 보내기"
-          className="flex-1 border rounded-full px-3 py-2 text-sm"
-          value={text}
-          onChange={handleTextChange}
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-        />
+        <div className="flex-grow">
+          <input
+            type="text"
+            placeholder="메시지 보내기"
+            className="w-[290px] border border-gray-200 rounded-full px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-aqua"
+            value={text}
+            onChange={handleTextChange}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          />
+        </div>
+
         <input
           type="file"
           accept="image/*"
@@ -58,11 +62,9 @@ export default function ChatInputBox({ onToggleActions, onSendMessage }: Props) 
           id="imageInput"
           onChange={handleImageChange}
         />
-        {/* <label htmlFor="imageInput" className="ml-2 text-xl cursor-pointer">
-          🖼️
-        </label> */}
-        <button className="ml-2 text-xl" onClick={handleSubmit}>
-          ▶
+
+        <button className="text-aqua flex items-center justify-center" onClick={handleSubmit}>
+          <PaperAirplaneIcon className="w-5 h-5 text-aqua transform" />
         </button>
       </div>
     </div>
