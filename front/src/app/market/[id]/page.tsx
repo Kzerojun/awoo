@@ -16,9 +16,26 @@ import { chatSocket } from "@/socket/chatSocket";
 import type { IMessage } from "@stomp/stompjs";
 import { patchProductStatus } from "@/api/market/update/patchStatus";
 
+// API 응답 타입 정의
+interface ProductDetailResponse {
+  usedProductId: number;
+  title: string;
+  content: string;
+  price: number;
+  usedProductStatus: "SA" | "RE" | "SO";
+  viewCount: number;
+  likeCount: number;
+  imageUrls: string[];
+  isLiked: boolean;
+  canModify: boolean;
+  name: string; // 판매자 이름 - sellerName이 아닌 name으로 변경
+  sellerId: number; // 판매자 ID 추가
+  memberProfileImage: string;
+}
+
 export default function MarketDetailPage() {
   const { id } = useParams() as { id: string };
-  const [detail, setDetail] = useState<any>(null);
+  const [detail, setDetail] = useState<ProductDetailResponse | null>(null);
   // ✅ 찜 상태 관리
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -26,8 +43,32 @@ export default function MarketDetailPage() {
   const [type, setType] = useState<"COMMON" | "SAFE">("COMMON"); // 기본은 COMMON
 
   const router = useRouter();
+
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString?: string): string => {
+    if (!dateString) return "최근 등록";
+
+    const now = new Date();
+    const createdAt = new Date(dateString);
+    const diffTime = Math.abs(now.getTime() - createdAt.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+      if (diffHours === 0) {
+        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+        return diffMinutes === 0 ? "방금 전" : `${diffMinutes}분 전`;
+      }
+      return `${diffHours}시간 전`;
+    } else {
+      return `${diffDays}일 전`;
+    }
+  };
+
   // ✅ 찜하기 핸들러
   const handleToggleLike = async () => {
+    if (!detail) return;
+
     try {
       const res = await toggleLike(detail.usedProductId);
       const wasLiked = res.data.response.wasLiked;
@@ -45,7 +86,10 @@ export default function MarketDetailPage() {
       console.error("찜 처리 실패", error);
     }
   };
+
   const handleChatClick = async () => {
+    if (!detail) return;
+
     try {
       const token = localStorage.getItem("accessToken"); // or redux에서 가져와도 됨
       if (!token) {
@@ -70,6 +114,7 @@ export default function MarketDetailPage() {
       console.error("채팅방 생성 실패", error);
     }
   };
+
   const handleStatusChange = async (newStatus: "SA" | "RE" | "SO") => {
     if (newStatus === status) return; // 같은 상태 누르면 무시
     setStatus(newStatus);
@@ -81,8 +126,11 @@ export default function MarketDetailPage() {
       handleStatusPatch(newStatus, "COMMON");
     }
   };
+
   // ✅ PATCH 전용 함수
   const handleStatusPatch = async (status: "SA" | "RE" | "SO", type: "COMMON" | "SAFE") => {
+    if (!detail) return;
+
     try {
       await patchProductStatus(detail.usedProductId, status, type);
       alert("상태가 변경되었습니다!");
@@ -91,14 +139,21 @@ export default function MarketDetailPage() {
       console.error(error);
     }
   };
+
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const res = await getProductDetail(id);
-        setDetail(res);
-        setStatus(res.usedProductStatus); // 상태 초기값
-        setIsLiked(res.isLiked); // ✅ 초기값
-        setLikeCount(res.likeCount); // ✅ 초기 찜 수
+        const productDetail = await getProductDetail(id);
+        console.log("API 응답:", productDetail);
+
+        if (productDetail) {
+          setDetail(productDetail);
+          setStatus(productDetail.usedProductStatus); // 상태 초기값
+          setIsLiked(productDetail.isLiked); // ✅ 초기값
+          setLikeCount(productDetail.likeCount); // ✅ 초기 찜 수
+        } else {
+          console.error("상품 정보가 없습니다:", productDetail);
+        }
       } catch (error) {
         console.error("상세조회 실패", error);
       }
@@ -107,6 +162,29 @@ export default function MarketDetailPage() {
   }, [id]);
 
   if (!detail) return <div>로딩중...</div>;
+
+  // 상품 상태에 따른 스타일과 텍스트
+  const getStatusBadge = () => {
+    if (!status) return null;
+
+    let bgColor = "bg-teal-100";
+    let textColor = "text-teal-700";
+    let statusText = "판매중";
+
+    if (status === "RE") {
+      bgColor = "bg-yellow-100";
+      textColor = "text-yellow-700";
+      statusText = "예약중";
+    } else if (status === "SO") {
+      bgColor = "bg-gray-200";
+      textColor = "text-gray-700";
+      statusText = "거래완료";
+    }
+
+    return (
+      <span className={`${bgColor} ${textColor} text-xs px-2 py-1 rounded-sm`}>{statusText}</span>
+    );
+  };
 
   return (
     <div className="pb-24">
@@ -118,20 +196,26 @@ export default function MarketDetailPage() {
 
       {/* ✅ 프로필 */}
       <ProfileInfo
-        nickname={"판매자"} // 실제 이용자 정보로 수정
-        profileImage={"/images/avatars/basic.jpg"}
-        time={"1시간 전"} // 실제 업로드 시간 참고해서 수정
+        nickname={detail.name} // API에서 받은 판매자 이름 사용 (name 필드)
+        profileImage={detail.memberProfileImage}
+        time={"최근 등록"} // 시간 정보가 없으므로 기본값 사용
       />
 
       {/* ✅ 게시글 내용 */}
       <div className="px-4">
-        <h1 className="text-xl font-semibold mb-2">{detail.title}</h1>
-        <p className="text-sm mb-4 text-gray-500">{detail.content}</p>
-        <p className="text-lg font-bold mb-2">{detail.price.toLocaleString()}원</p>
+        <div className="flex flex-col">
+          <h1 className="text-xl font-semibold mb-2">{detail.title}</h1>
+
+          {/* 상태 배지 추가 */}
+          <div className="mb-2">{getStatusBadge()}</div>
+
+          <p className="text-sm mb-4 text-gray-500">{detail.content}</p>
+          <p className="text-lg font-bold mb-2">{detail.price.toLocaleString()}원</p>
+        </div>
       </div>
 
       {/* ✅ 조회수, 채팅, 좋아요 */}
-      <InfoStats views={detail.viewCount} chat={detail.likeCount} likes={0} />
+      <InfoStats views={detail.viewCount} chat={0} likes={detail.likeCount} />
 
       {/* 상태 변경 */}
       {detail.canModify && status && (
@@ -141,9 +225,9 @@ export default function MarketDetailPage() {
             {/* 상태 변경 버튼 */}
             <button
               onClick={() => handleStatusChange("SA")}
-              className={`border rounded px-3 py-1 text-sm ${status === "SA" ? "bg-blue-500 text-white" : "bg-white text-gray-600"}`}
+              className={`border rounded px-3 py-1 text-sm ${status === "SA" ? "bg-teal-500 text-white" : "bg-white text-gray-600"}`}
             >
-              거래중
+              판매중
             </button>
 
             <button

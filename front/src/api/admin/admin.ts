@@ -144,10 +144,40 @@ export interface UserAccount {
   petName: string | null; // 없으면 null
 }
 
+// 페이지네이션 관련 인터페이스
+export interface PageInfo {
+  pageNumber: number;
+  pageSize: number;
+  sort: any[];
+  offset: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  pageable: PageInfo;
+  totalElements: number;
+  last: boolean;
+  totalPages: number;
+  size: number;
+  number: number;
+  sort: any[];
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
 interface UserAccountResponse {
   success: boolean;
-  response: UserAccount[];
+  response: PageResponse<UserAccount>;
   error: null | string;
+}
+
+// 페이지네이션 파라미터 인터페이스
+export interface PaginationParams {
+  page?: number;
+  size?: number;
 }
 
 // admin 로그인
@@ -209,7 +239,10 @@ export const processReport = async (data: ReportProcessRequest): Promise<ReportP
 };
 
 // 유저 내부 계좌 목록 조회
-export const getUserAccount = async (): Promise<UserAccountResponse> => {
-  const response = await axiosInstance.get("/admin/accounts");
+export const getUserAccount = async (params?: PaginationParams): Promise<UserAccountResponse> => {
+  const { page = 0, size = 10 } = params || {};
+  const response = await axiosInstance.get("/admin/accounts", {
+    params: { page, size },
+  });
   return response.data;
 };

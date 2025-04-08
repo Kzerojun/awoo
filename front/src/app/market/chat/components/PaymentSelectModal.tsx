@@ -53,22 +53,13 @@ export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedPr
                       console.log("🚀 멍페이 송금 페이지로 이동");
 
                       router.push(
-                        `/my/paymentSend?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
+                        `/market/commonPayment?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
                       );
                     }}
                   >
                     송금하기
                   </div>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3 cursor-pointer">
-                <div className="text-green-500 text-xl">💸</div>
-                <div>
-                  <div className="text-sm">송금요청</div>
-                  <div className="text-[11px] text-gray-400">
-                    멍페이나 계좌로 송금요청할 수 있어요
-                  </div>
+                  <div className="text-[11px] text-gray-400">멍페이로 송금할 수 있어요</div>
                 </div>
               </div>
 
@@ -77,11 +68,23 @@ export default function PaymentSelectModal({ isOpen, onClose, chatRoomId, usedPr
                 <div>
                   <div
                     className="text-sm"
-                    onClick={() =>
+                    onClick={() => {
+                      dispatch(resetTransferInfo());
+                      console.log("✅ transfer info 저장", {
+                        chatRoomId,
+                        usedProductId,
+                      });
+                      dispatch(
+                        setTransferInfo({
+                          chatRoomId,
+                          usedProductId,
+                        })
+                      );
+                      console.log("🛡️ 멍페이 안심결제 페이지로 이동");
                       router.push(
                         `/market/safePayment?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
-                      )
-                    }
+                      );
+                    }}
                   >
                     안심결제
                   </div>

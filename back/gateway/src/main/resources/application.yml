@@ -8,7 +8,7 @@ spring:
     multipart:
       max-parts: 5
       headers-charset: UTF-8
-      max-in-memory-size: 256KB
+      max-in-memory-size: 10MB
   servlet:
     multipart:
       enabled: false

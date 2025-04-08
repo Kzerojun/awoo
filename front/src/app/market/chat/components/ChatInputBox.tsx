@@ -58,9 +58,9 @@ export default function ChatInputBox({ onToggleActions, onSendMessage }: Props) 
           id="imageInput"
           onChange={handleImageChange}
         />
-        <label htmlFor="imageInput" className="ml-2 text-xl cursor-pointer">
+        {/* <label htmlFor="imageInput" className="ml-2 text-xl cursor-pointer">
           🖼️
-        </label>
+        </label> */}
         <button className="ml-2 text-xl" onClick={handleSubmit}>
           ▶
         </button>

@@ -25,7 +25,6 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
     private final AccountClient accountClient;
 
     @Override
-    @Transactional
     public void chargeBalance(ChargeBalanceCommand command) {
 
         // 요청이 처리된적이 있는지 확인
@@ -48,6 +47,7 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
         if (response.isSuccess()) {
             log.info("게좌 잔액 충전{}", command.amount());
             paymentEntity.chargeBalance(command.amount());
+            paymentRepository.store(paymentEntity);
         }
     }
 }

@@ -2,11 +2,18 @@
 
 import { useRouter } from "next/navigation";
 
-export default function SafePaymentProcess() {
+interface SafePaymentProcessProps {
+  chatRoomId: string | null;
+  usedProductId: string | null;
+}
+
+export default function SafePaymentProcess({ chatRoomId, usedProductId }: SafePaymentProcessProps) {
   const router = useRouter();
 
   const handleSkip = () => {
-    router.push("/market/safePayment/safePay");
+    router.push(
+      `/market/safePayment/safePay?chatRoomId=${chatRoomId}&usedProductId=${usedProductId}`
+    );
   };
 
   return (

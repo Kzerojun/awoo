@@ -13,6 +13,8 @@ public interface PetServiceFacade {
 
     RegisterPetResponse registerPet(final RegisterPetRequest registerPetRequest, final MultipartFile profileImage, final Integer memberId);
 
+    OcrCheckResponse ocrCheck(final Integer memberId, final MultipartFile ocrImage);
+
     SearchPetListResponse searchPetList(final Integer memberId);
 
     SearchPetResponse searchPet(final Integer petId);

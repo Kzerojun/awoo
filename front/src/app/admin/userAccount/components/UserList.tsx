@@ -67,14 +67,14 @@ export default function UserList({ users, onViewUserDetail }: UserListProps) {
             <th className="px-6 py-4 text-left text-gray-600 font-medium">이름</th>
             <th className="px-6 py-4 text-left text-gray-600 font-medium">닉네임</th>
             <th className="px-6 py-4 text-left text-gray-600 font-medium">가입 날짜</th>
-            <th className="px-6 py-4 text-left text-gray-600 font-medium">유저 계좌</th>
+            <th className="px-6 py-4 text-left text-gray-600 font-medium">계좌 정보</th>
             <th className="px-6 py-4 text-left text-gray-600 font-medium">반려동물</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
             <tr
-              key={user.email}
+              key={`${user.email}-${user.accounts[0].accountNo}`}
               className={`hover:bg-gray-50 transition-colors duration-150 ${
                 index !== users.length - 1 ? "border-b border-gray-100" : ""
               }`}
@@ -103,9 +103,11 @@ export default function UserList({ users, onViewUserDetail }: UserListProps) {
                         {getAccountTypeName(user.accounts[0].accountType)}
                       </span>
                       {user.accounts[0].accountNo}
-                      {user.accounts.length > 1 && (
-                        <span className="ml-2 text-gray-500">외 {user.accounts.length - 1}개</span>
-                      )}
+                      <span
+                        className={`ml-2 ${user.accounts[0].isDelete ? "text-red-500" : "text-green-500"}`}
+                      >
+                        {user.accounts[0].isDelete ? "해지됨" : "사용중"}
+                      </span>
                     </button>
                   </div>
                 )}
@@ -118,7 +120,7 @@ export default function UserList({ users, onViewUserDetail }: UserListProps) {
           {users.length === 0 && (
             <tr>
               <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                등록된 유저가 없습니다.
+                등록된 계좌가 없습니다.
               </td>
             </tr>
           )}

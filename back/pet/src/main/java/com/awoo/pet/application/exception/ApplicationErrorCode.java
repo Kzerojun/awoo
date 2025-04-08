@@ -18,6 +18,8 @@ public enum ApplicationErrorCode {
     PET_PROFILE_MODIFY_FAILED(HttpStatus.NOT_MODIFIED, "반려견 프로필 수정에 실패하였습니다."),
     FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제에 실패하였습니다."),
     SAVING_ID_REGISTER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "적금 계좌 등록에 실패하였습니다."),
+    TEXT_EXTRACTION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "텍스트 추출에 실패하였습니다."),
+    OCR_IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "동물등록증이 필요합니다."),
     ;
 
     private final HttpStatus httpStatus;

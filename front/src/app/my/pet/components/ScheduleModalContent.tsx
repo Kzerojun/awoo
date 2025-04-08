@@ -39,8 +39,9 @@ const ScheduleModalContent = ({
   showDelete = false,
   onDelete,
 }: Props) => {
+  const TITLE_MAX_LENGTH = 15;
   const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.slice(0, TITLE_MAX_LENGTH);
     setTitle(value);
   };
 
@@ -48,9 +49,11 @@ const ScheduleModalContent = ({
   return (
     <>
       <div className="flex items-center justify-end gap-x-2">
-        <button>
-          <TrashIcon className="w-6 h-6 text-red-500" onClick={onDelete} />
-        </button>
+        {showDelete && (
+          <button>
+            <TrashIcon className="w-6 h-6 text-red-500" onClick={onDelete} />
+          </button>
+        )}
         <button>
           <CheckIcon className="w-6 h-6 text-custom-gray" onClick={() => onSubmit()} />
         </button>
@@ -62,6 +65,7 @@ const ScheduleModalContent = ({
         className="w-full font-bold text-2xl outline-none placeholder:text-gray-400 placeholder:text-2xl"
         value={title}
         onChange={changeTitle}
+        maxLength={15}
       />
 
       <div className="my-3 flex items-center justify-start gap-x-3">

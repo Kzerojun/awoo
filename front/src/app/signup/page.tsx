@@ -9,7 +9,7 @@ const SignupPage = () => {
   return (
     <>
       <CommonTopBar title="회원가입" leftAction="back" />
-      <main className="flex flex-col items-center justify-center mt-14 min-h-[calc(100vh-3.5rem)] gap-3">
+      <main className="flex flex-col items-center justify-center mt-14 py-10 min-h-[calc(100vh-3.5rem)] gap-3">
         <Image src={logo} alt="logo" />
         <SignupForm />
       </main>

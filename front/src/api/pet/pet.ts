@@ -3,11 +3,31 @@ import urlToFile from "@/app/signup/hooks/useChangeFile";
 import axiosInstance from "../axiosInstance";
 import { PetInterface } from "@/lib/slices/petSlice";
 
+// API Response Interface
+interface ApiResponse<T> {
+  success: boolean;
+  response: T;
+  error: any;
+}
+
 // 반려견 등록 interface
 interface PetRegisterPayload {
   requestDto: Record<string, any>;
   imageFile: File | null;
   selectedPetAvatar: string;
+}
+
+// 반려동물 등록증 ocr payload
+interface OcrPayload {
+  ocrImage: File | null;
+}
+
+// 반려동물 ocr response
+interface OcrResponse {
+  animalRegNumber: string;
+  animalName: string;
+  breedType: string;
+  ocrImageUrl: string;
 }
 
 // 펫 목록 전체 조회 interface => 각각 PetInterface
@@ -54,6 +74,24 @@ export const registerPet = async ({
     return res.data;
   } catch (err) {
     console.error("반려견 등록 실패:", err);
+    throw err;
+  }
+};
+
+// 반려동물 등록증 ocr 조회
+export const checkPetOcr = async ({ ocrImage }: OcrPayload): Promise<OcrResponse> => {
+  const formData = new FormData();
+
+  if (ocrImage) {
+    formData.append("ocrImage", ocrImage);
+  }
+
+  try {
+    const res = await axiosInstance.post("/pets/ocr", formData);
+    console.log("반려견 등록증 OCR 인증 성공:", res.data.response);
+    return res.data.response;
+  } catch (err) {
+    console.error("반려견 등록증 OCR 인증 실패:", err);
     throw err;
   }
 };

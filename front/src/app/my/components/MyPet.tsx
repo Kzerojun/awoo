@@ -6,8 +6,10 @@ import React, { useEffect, useState } from "react";
 import { usePetList } from "@/hooks/pet/usePetList";
 import { PetInterface } from "@/lib/slices/petSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function MyPet() {
+  const router = useRouter();
   const { refetch: petListRefetch } = usePetList();
   const [petList, setPetList] = useState<PetInterface[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -35,17 +37,26 @@ export default function MyPet() {
 
   // 반려동물이 없는 경우 보여줄 컴포넌트
   const NoPetsMessage = () => (
-    <div className="flex flex-col items-center justify-center w-full">
+    <div className="mt-2 flex flex-col items-center justify-center w-full">
       <p className="text-sm text-gray-500 mb-2">등록된 반려동물이 없어요</p>
     </div>
   );
 
+  const goToPetDetail = (petId: number) => {
+    router.push(`/my/pet/detail/${petId}`);
+  };
+
   return (
-    <Link href="my/pet" className="w-full block">
+    <div className="w-full block">
       <div className="flex items-center justify-between w-full">
         <div className="flex flex-col gap-y-3 w-full">
-          <div className="flex items-center">
+          <div className="flex justify-between items-center">
             <div className="text-xs text-[#828282] ml-1">나의 반려동물 보러 가기</div>
+            {petList && petList?.length <= 2 && (
+              <div className="text-sm text-aqua " onClick={() => router.push("/my/pet/register")}>
+                등록하기 +
+              </div>
+            )}
           </div>
 
           {isLoading ? (
@@ -55,24 +66,27 @@ export default function MyPet() {
           ) : !petList || petList.length === 0 ? (
             <NoPetsMessage />
           ) : (
-            <div className="flex items-center justify-start gap-x-8">
-              {petList.map((pet) => (
-                <Image
-                  key={pet.petId}
-                  src={pet.profileImage}
-                  alt="반려동물 아이콘"
-                  width={55}
-                  height={55}
-                  className="rounded-full object-cover aspect-square"
-                />
-              ))}
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center justify-start gap-x-8">
+                {petList.map((pet) => (
+                  <Image
+                    key={pet.petId}
+                    src={pet.profileImage}
+                    alt="반려동물 아이콘"
+                    width={55}
+                    height={55}
+                    className="rounded-full object-cover aspect-square"
+                    onClick={() => goToPetDetail(pet.petId)}
+                  />
+                ))}
+              </div>
+              <div className="text-gray-400" onClick={() => router.push("/my/pet")}>
+                <Image src={vector} alt="화살표" />
+              </div>
             </div>
           )}
         </div>
-        <div className="text-gray-400">
-          <Image src={vector} alt="화살표" />
-        </div>
       </div>
-    </Link>
+    </div>
   );
 }

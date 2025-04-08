@@ -10,7 +10,7 @@ const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "0", "delete"];
 
 const TransferNumericPad = ({ onClick }: TransferNumericPadProps) => {
   return (
-    <div className="grid grid-cols-3 gap-2 auto-rows-[60px] w-full max-w-xs mx-auto mt-4">
+    <div className="grid grid-cols-3 gap-2 auto-rows-[60px] w-full mt-4">
       {keys.map((key, idx) => (
         <button
           key={idx}

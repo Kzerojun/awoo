@@ -124,22 +124,22 @@ const TransferStep3 = () => {
           내 계좌 ({accountFinalFour}) : {formatAmount(Number(accountBalance))} 원
         </div>
         {/* 받는 분에게 표기 */}
-        <div className=" border border-gray-200 text-xs w-72 h-10 rounded-lg p-3 flex justify-between">
-          <label htmlFor="">받는 분에게 표기</label>
+        <div className=" border border-gray-200 text-xs w-72 h-10 rounded-lg  px-3 py-2 flex items-center justify-between gap-2">
+          <div className="text-gray-500 inline">받는 분에게 표기</div>
           <input
             type="text"
             placeholder={` ${userName ? userName : ""}`}
-            className="text-end focus:outline-none"
+            className="text-end focus:outline-none w-14"
             onChange={handleWriteTransactionSummary}
           />
         </div>
         {/* 나에게 표기  */}
-        <div className=" border border-gray-200 text-xs w-72 h-10 rounded-lg p-3 flex justify-between">
-          <label htmlFor="">나에게 표기</label>
+        <div className=" border border-gray-200 text-xs w-72 h-10 rounded-lg  px-3 py-2 flex items-center justify-between gap-2">
+          <div className="text-gray-500 inline">나에게 표기</div>
           <input
             type="text"
             placeholder="미입력시 수취인명"
-            className="text-end focus:outline-none"
+            className="text-end focus:outline-none w-24"
             onChange={handleWriteMySummary}
           />
         </div>

@@ -22,7 +22,8 @@ public interface JpaWalkRepository extends JpaRepository<Walk, Integer>, WalkRep
             "AND LAST_DAY(CURRENT_DATE) " +
             "AND TIMESTAMPDIFF(SECOND, start_time, end_time) >= 1800 " +
             "AND distance >= 1.5 " +
-            "AND pet_id = :petId",
+            "AND pet_id = :petId " +  
+            "AND is_saving = 'T'",
             nativeQuery = true)
     List<Walk> findByConditions(@Param("petId") Integer petId);
 

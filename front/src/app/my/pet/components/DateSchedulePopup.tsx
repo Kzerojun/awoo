@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { C } from "vitest/dist/chunks/reporters.66aFHiyX.js";
 import ScheduleDetail from "./ScheduleDetail";
 
 export interface Schedule {
@@ -39,6 +38,18 @@ const DateSchedulePopup = ({
   onRefresh,
 }: Props) => {
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  const formatDateRange = (range: string) => {
+    if (!range || !range.includes("~")) return ""; // 빈 값이면 그냥 빈 문자열 반환
+
+    const [start, end] = range.split("~").map((d) => d.trim());
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return ""; // 유효하지 않은 날짜 방지
+
+    const format = (date: Date) => `${date.getMonth() + 1}/${date.getDate()}`;
+    return `${format(startDate)} - ${format(endDate)}`;
+  };
 
   return (
     <>
@@ -72,13 +83,17 @@ const DateSchedulePopup = ({
                       className="flex items-center gap-2 text-sm h-10"
                       onClick={() => setSelectedSchedule(s)}
                     >
+                      {/* 색상 표기 */}
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }} />
-                      <div className="w-full flex flex-col justify-center">
-                        <div className=" flex items-center justify-between">
-                          <span className="flex-1">{s.title}</span>
-                          {s.dog !== "" && <span>{s.dog}</span>}
+                      {/* 일정 텍스트 내용 */}
+                      <div className="flex flex-col w-full">
+                        <div className="flex justify-between text-sm font-medium text-gray-800">
+                          <span className="truncate max-w-[70%]">{s.title}</span>
+                          {s.dog && <span className="text-gray-500 text-xs">{s.dog}</span>}
                         </div>
-                        <span className="text-xs text-end">{s.time}</span>
+                        <span className="text-xs text-gray-400 mt-0.5 text-right">
+                          {formatDateRange(s.time)}
+                        </span>
                       </div>
                     </li>
                   ))}
@@ -92,7 +107,7 @@ const DateSchedulePopup = ({
               {/* 일정 추가 버튼 */}
               <div className="pt-4 flex justify-center ">
                 <button onClick={onAddClick}>
-                  <PlusCircleIcon className="text-green w-16 h-16" />
+                  <PlusCircleIcon className="text-blue-300 w-16 h-16" />
                 </button>
               </div>
             </motion.div>

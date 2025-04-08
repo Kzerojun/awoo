@@ -96,7 +96,7 @@ const TransferStep2 = () => {
         <span>{withdrawalTransactionSummary}</span>
         <span className="text-xs text-gray-400">{depositAccountNo}</span>
       </div>
-      <div className="flex flex-col items-center justify-center gap-y-3 mt-20">
+      <div className="flex flex-col items-center justify-center gap-y-3 mt-35">
         <input
           type="text"
           value={rawAmount ? `${formatAmount(rawAmount)} 원` : ""}
@@ -112,7 +112,7 @@ const TransferStep2 = () => {
         )}
       </div>
       {/* 내 계좌 현재 잔액 */}
-      <div className="fixed bottom-90 bg-gray-100 text-xs w-72 h-10 rounded-lg p-3">
+      <div className="fixed bottom-90 bg-gray-100 text-xs w-80 h-10 rounded-lg p-3">
         내 계좌 ({accountFinalFour}) : {formatAmount(accountBalance)} 원
       </div>
       {/* 보낼 금액 */}
@@ -120,11 +120,7 @@ const TransferStep2 = () => {
         <TransferNumericPad onClick={handlePadClick} />
       </div>
       <div className="w-full flex justify-center">
-        <Button
-          text="다음"
-          className="fixed bottom-5 w-[90%] h-12 text-xl"
-          onClick={handleSaveData}
-        />
+        <Button text="다음" className="fixed bottom-5 w-80 h-12 text-xl" onClick={handleSaveData} />
       </div>
     </div>
   );

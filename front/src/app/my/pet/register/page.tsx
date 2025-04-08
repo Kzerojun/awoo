@@ -7,8 +7,8 @@ import PetRegister from "../components/PetRegister";
 const RegisterPetPage = () => {
   return (
     <>
-      <CommonTopBar title="마이펫" leftAction="back" />
-      <main className="mt-14 px-4 h-full ">
+      <CommonTopBar title="마이펫" leftAction="back" backUrl="/my" />
+      <main className="mt-14 px-4 min-h-[calc(100dvh-7rem)] ">
         <PetRegister />
       </main>
     </>

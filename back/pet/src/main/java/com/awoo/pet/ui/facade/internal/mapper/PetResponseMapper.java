@@ -15,6 +15,10 @@ public class PetResponseMapper {
         return RegisterPetResponse.fromEntity(entity);
     }
 
+    public OcrCheckResponse ocrCheck(final Map<String, Object> ocrInfo){
+        return OcrCheckResponse.fromResult(ocrInfo);
+    }
+
     public SearchPetListResponse searchPetList(final List<Map<String, Object>> pets) {
         return SearchPetListResponse.fromEntity(pets);
     }

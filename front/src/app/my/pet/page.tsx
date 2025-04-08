@@ -9,6 +9,7 @@ import { setPetList } from "@/lib/slices/petSlice";
 import NoPet from "./components/NoPet";
 import PetMain from "./components/PetMain";
 import { PetInterface } from "@/lib/slices/petSlice";
+import PetList from "./components/PetList";
 
 const Pet = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ const Pet = () => {
       // 현재 뷰를 1 (강아지 등록 유도 컴포넌트)
       dispatch(changeMyPetView(1));
     } else {
-      // 현재 뷰를 2 (메인 캘린더 컴포넌트로)
+      // 현재 뷰를 2 (메인 컴포넌트로)
       dispatch(changeMyPetView(2));
     }
   }, [petNum, dispatch]);
@@ -52,8 +53,8 @@ const Pet = () => {
   return (
     <>
       <CommonTopBar title="마이펫" backUrl="/my" />
-      <main className="mt-14 px-4 h-[calc(100vh-112px)]">
-        {currentView === 1 ? <NoPet /> : <PetMain />}
+      <main className="mt-14 px-4 min-h-[calc(100dvh-7rem)]">
+        {currentView === 1 ? <NoPet /> : <PetList />}
       </main>
     </>
   );

@@ -125,7 +125,7 @@ const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
   };
 
   return (
-    <div className="mt-15 bg-white rounded-t-3xl overflow-hidden">
+    <div className="mt-20 bg-white rounded-t-3xl overflow-hidden">
       {/* 헤더 */}
       <div className="p-6 bg-white">
         {/* 자물쇠 아이콘 */}
@@ -182,7 +182,7 @@ const CheckPassword = ({ onConfirm, accountNo }: ConfirmPasswordProps) => {
           10분 후 다시 시도해주세요.
         </div>
       ) : (
-        <div className="bottom-6 fixed left-0 right-0">
+        <div className="bottom-0 fixed left-0 right-0">
           <NumericKeypad
             onNumberPress={handleNumberPress}
             onBackspace={handleBackspace}

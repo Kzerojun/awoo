@@ -25,6 +25,8 @@ import transferReducer from "./slices/transferSlice";
 import memberIdReducer from "./slices/memberIdSlice";
 import accountStatusReducer from "./slices/accountStatusSlice";
 import transfercheckReducer from "./slices/transfercheckSlice";
+import chatSystemReducer from "./slices/chatSystemSlice";
+
 // === ✅ Step 3 : persist 설정 ===
 const persistConfig = {
   key: "root",
@@ -63,6 +65,7 @@ const rootReducer = combineReducers({
   memberId: memberIdReducer,
   accountStatus: accountStatusReducer,
   transfercheck: transfercheckReducer,
+  chatSystem: chatSystemReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

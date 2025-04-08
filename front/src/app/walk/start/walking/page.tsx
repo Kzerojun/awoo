@@ -61,6 +61,11 @@ const Walking = () => {
   useEffect(() => {
     setTrackingStarted(false);
     setIsTrackingStopped(false);
+
+    return () => {
+      setTrackingStarted(false);
+      setIsTrackingStopped(false);
+    };
   }, []);
 
   useEffect(() => {
