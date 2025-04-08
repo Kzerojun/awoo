@@ -21,7 +21,7 @@ interface CommonTopBarProps {
   title: string;
   leftAction?: "back" | "close" | "transferBack" | "depositManageBack" | "savingManageBack";
   rightAction?: "bell" | "none" | "cancel" | "setting" | "close";
-  backColor?: "white" | "aqua" | "green";
+  backColor?: "white" | "aqua" | "green" | "lightAqua";
   textColor?: "white" | "black";
   transferStep?: number;
   currentManageDepositView?: number;
@@ -66,6 +66,7 @@ const CommonTopBar = ({
     white: string;
     aqua: string;
     green: string;
+    lightAqua: string;
   }
 
   interface textColorTypes {
@@ -93,6 +94,7 @@ const CommonTopBar = ({
     white: "bg-white",
     aqua: "bg-aqua",
     green: "bg-green",
+    lightAqua: "bg-teal-300",
   };
 
   const textColorTypes: textColorTypes = {
