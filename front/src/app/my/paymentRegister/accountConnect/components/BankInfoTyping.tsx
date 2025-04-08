@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { requestOneWonTransfer } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 import BankSelectorModal from "../../components/BankSelectorModal";
 
 interface BankInfoTypingProps {
@@ -39,12 +38,12 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
   // 계좌 인증 요청 (1원 송금)
   const handleVerifyAccount = async () => {
     if (!selectedBank) {
-      toast.error("은행을 선택해주세요.");
+      alert("은행을 선택해주세요.");
       return;
     }
 
     if (accountNumber.length < 10) {
-      toast.error("올바른 계좌번호를 입력해주세요.");
+      alert("올바른 계좌번호를 입력해주세요.");
       return;
     }
 
@@ -55,7 +54,7 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
       const response = await requestOneWonTransfer({ accountNo: accountNumber });
 
       console.log("1원 송금 요청 성공:", response);
-      toast.success("계좌로 1원이 송금되었습니다. 입금자명을 확인해주세요.");
+      alert("계좌로 1원이 송금되었습니다. 입금자명을 확인해주세요.");
 
       // 계좌번호 세션 스토리지에 저장 (인증에 필요)
       sessionStorage.setItem("verification_account", accountNumber);
@@ -70,7 +69,7 @@ export default function BankInfoTyping({ onComplete }: BankInfoTypingProps) {
       router.replace("/my/paymentRegister/accountCertificate");
     } catch (error) {
       console.error("1원 송금 요청 실패:", error);
-      toast.error("계좌 인증 요청에 실패했습니다. 다시 시도해주세요.");
+      alert("계좌 인증 요청에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }

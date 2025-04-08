@@ -48,20 +48,20 @@ export default function MyTrade() {
         {/* 구분선 */}
         <div className="border-t border-gray-200 w-full"></div>
 
-        <Link href="my/buyHistory" className="w-full block">
-          {/* 구매 내역 */}
-          <div className="flex items-center justify-between w-full py-2">
-            <div className="flex items-center ml-2">
-              <div className="mr-2">
-                <Image src={buy} alt="구매 내역 아이콘" width={18} height={18} />
-              </div>
-              <div className="text-[15px]">구매 내역</div>
+        {/* <Link href="my/buyHistory" className="w-full block"> */}
+        {/* 구매 내역 */}
+        <div className="flex items-center justify-between w-full py-2">
+          <div className="flex items-center ml-2">
+            <div className="mr-2">
+              <Image src={buy} alt="구매 내역 아이콘" width={18} height={18} />
             </div>
-            <div className="text-gray-400">
-              <Image src={vector} width={7} height={7} alt="화살표" />
-            </div>
+            <div className="text-[15px]">구매 내역</div>
           </div>
-        </Link>
+          <div className="text-gray-400">
+            <Image src={vector} width={7} height={7} alt="화살표" />
+          </div>
+        </div>
+        {/* </Link> */}
       </div>
     </div>
   );

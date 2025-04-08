@@ -7,7 +7,6 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import ChargeAmount from "./components/ChargeAmount";
 import ConfirmChargePassword from "./components/ConfirmChargePassword";
 import { getPaymentBalance, getPaymentAccounts, chargePayment } from "@/api/payment/payment";
-import { toast } from "react-toastify";
 
 export default function PaymentCharge() {
   const [amount, setAmount] = useState<string>("");
@@ -59,7 +58,7 @@ export default function PaymentCharge() {
         }
       } catch (error) {
         console.error("데이터 로드 실패:", error);
-        toast.error("정보를 불러오는데 실패했습니다.");
+        alert("정보를 불러오는데 실패했습니다.");
         setBalance(0);
       } finally {
         setIsLoading(false);
@@ -84,7 +83,7 @@ export default function PaymentCharge() {
   // 충전하기 버튼 처리
   const handleCharge = () => {
     if (!amount || Number(amount) <= 0) {
-      toast.error("충전 금액을 입력해주세요.");
+      alert("충전 금액을 입력해주세요.");
       return;
     }
 
@@ -128,7 +127,7 @@ export default function PaymentCharge() {
       );
     } catch (error) {
       console.error("충전 처리 중 오류 발생:", error);
-      toast.error("충전 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert("충전 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
       setIsCharging(false);
     }
   };
