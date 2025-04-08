@@ -17,7 +17,7 @@ public class FcmMessageDto {
     public static class Message {
         private FcmMessageDto.Notification notification;
         private String token;
-        private FcmMessageDto.WebPush webPush;
+        private FcmMessageDto.Webpush webpush;
     }
 
     @Builder
@@ -32,7 +32,7 @@ public class FcmMessageDto {
     @Data
     @Builder
     @AllArgsConstructor
-    public static class WebPush {
+    public static class Webpush {
         private FcmMessageDto.FcmOptions fcm_options;
     }
 

@@ -106,7 +106,7 @@ public class SendAlarmServiceImpl implements SendAlarmService {
                                 .image(null)
                                 .build()
                         )
-                        .webPush(FcmMessageDto.WebPush.builder()
+                        .webpush(FcmMessageDto.Webpush.builder()
                                 .fcm_options(FcmMessageDto.FcmOptions.builder()
                                         .link("https://awoofinance.duckdns.org/")
                                         .build())
