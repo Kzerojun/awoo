@@ -16,9 +16,11 @@ export const useFCMToken = () => {
   const getAndSendToken = async () => {
     const permissionGranted = await requestPermission();
     if (!permissionGranted) return;
+    const swRegistration = await navigator.serviceWorker.ready;
 
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
+      serviceWorkerRegistration: swRegistration, // ✅ 명시적으로 넘김
     });
 
     if (!token) {
@@ -41,9 +43,11 @@ export const useFCMToken = () => {
   const checkAndUpdateToken = async () => {
     const permissionGranted = await requestPermission();
     if (!permissionGranted) return;
+    const swRegistration = await navigator.serviceWorker.ready;
 
     const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!,
+      serviceWorkerRegistration: swRegistration, // ✅ 명시적으로 넘김
     });
 
     if (!token) {
