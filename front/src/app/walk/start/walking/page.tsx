@@ -123,7 +123,7 @@ const Walking = () => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full min-h-full overflow-hidden">
       {/* 지도 */}
       <div className="absolute inset-0 z-0">
         <MapTraking
