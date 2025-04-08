@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
 
 const baseConfig: NextConfig = {
   reactStrictMode: true,
-  // output: "standalone",
+  output: "standalone",
   images: {
     domains: ["c209awoo.s3.us-east-2.amazonaws.com"],
   },
