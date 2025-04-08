@@ -162,6 +162,12 @@ public class SavingServiceImpl implements SavingService{
         //DB 변경
         AccountEntity account = accountRepository.findByAccountNumber(aesUtil.encrypt(accountNo));
         account.markDeleted();
+
+        //펫 서버에 saving-id 0으로 전달
+        Map<String, Integer> kafkaMessage = new HashMap<>();
+        kafkaMessage.put("petId", account.getPetId());
+        kafkaMessage.put("savingId", 0);
+        kafkaProducer.send("account.saving.created.v1", kafkaMessage);
     }
 
     public InquireSavingPaymentResponse InquireSavingPaymentResponse(String memberId, String accountNo) {
