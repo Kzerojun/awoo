@@ -11,6 +11,23 @@ export default function Home() {
   const router = useRouter();
   const [showLanding, setShowLanding] = useState(true);
   const [animationStage, setAnimationStage] = useState("initial");
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  // 모바일 감지 함수
+  const isMobile = () => {
+    if (typeof window === "undefined") return false;
+
+    // User-Agent 기반 확인
+    const userAgent = navigator.userAgent;
+    const mobileByAgent = Boolean(
+      userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i)
+    );
+
+    // 화면 크기 기반 확인 (768px 미만을 모바일로 간주)
+    const mobileBySize = window.innerWidth < 768;
+
+    return mobileByAgent || mobileBySize;
+  };
 
   useEffect(() => {
     // 첫 번째 단계: 2초 동안 랜딩 페이지 표시
@@ -24,12 +41,29 @@ export default function Home() {
       setShowLanding(false);
     }, 3000);
 
+    // 세 번째 단계: 애니메이션 완료 후 2초 뒤 기기 타입에 따라 리디렉션
+    const redirectTimer = setTimeout(() => {
+      // 로그인 상태 확인 로직도 추가할 수 있음
+      const mobile = isMobile();
+
+      if (mobile) {
+        // 모바일 사용자는 '/'에 그대로 유지 (현재 페이지)
+        console.log("모바일 사용자 감지됨: 홈페이지 유지");
+      } else {
+        // 데스크톱 사용자는 '/main'으로 리디렉션
+        console.log("데스크톱 사용자 감지됨: /main으로 리디렉션");
+        setIsRedirecting(true);
+        router.push("/main");
+      }
+    });
+
     // 컴포넌트가 언마운트될 때 타이머 정리
     return () => {
       clearTimeout(firstTimer);
       clearTimeout(secondTimer);
+      clearTimeout(redirectTimer);
     };
-  }, []);
+  }, [router]);
 
   const goToLogin = (): void => {
     router.push("/login");
@@ -57,6 +91,15 @@ export default function Home() {
     opacity: animationStage === "transition" ? 0 : 1,
     transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
   };
+
+  // 리디렉션 중일 때 로딩 표시
+  if (isRedirecting) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-b from-[#F0FDFB] to-white">
+        <p className="text-gray-700 text-lg">데스크톱 버전으로 이동 중...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={containerClass}>
