@@ -67,7 +67,7 @@ export default function SavingAccountVerifySuccessPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <CommonTopBar title="멍Pay" rightAction="bell" />
+      <CommonTopBar title="적금개설" rightAction="bell" />
 
       {!showComplete ? (
         <div className="flex flex-col items-center px-4 pt-14">
