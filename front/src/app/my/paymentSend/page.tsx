@@ -24,8 +24,10 @@ export default function PaymentSend() {
   const searchParams = useSearchParams();
   const chatRoomId = searchParams.get("chatRoomId");
   const usedProductId = searchParams.get("usedProductId");
-  const backUrl = `/market/chat/${chatRoomId}?usedProductId=${usedProductId}`;
+  // const backUrl = `/market/chat/${chatRoomId}?usedProductId=${usedProductId}`;
+  const isFromChat = !!chatRoomId;
 
+  const backUrl = isFromChat ? `/market/chat/${chatRoomId}?usedProductId=${usedProductId}` : "/my";
   // 컴포넌트 마운트 시 잔액 조회
   useEffect(() => {
     const fetchBalance = async () => {
