@@ -14,6 +14,8 @@ import {
   setSavingStage,
   resetAccountProgress,
 } from "@/lib/slices/accountProgressSlice";
+import CommonTopBar from "@/common/ui/CommonTopBar";
+
 const step3Reviews = [
   {
     text: "꾸준히 함께한 여정이 정말 뿌듯해요! 계속 이용할 계획입니다.",
@@ -34,6 +36,7 @@ const Page = () => {
   const dispatch = useAppDispatch();
   return (
     <div className="container mx-auto max-w-lg py-6">
+      <CommonTopBar title="" leftAction="back" />
       <ProductSummary
         productName="풍족하개"
         description="산책 적금 3단계 상품"

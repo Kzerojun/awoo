@@ -8,7 +8,7 @@ import AccountCard from "../myaccount/components/account/AccountCard";
 import SavingAdCard from "../myaccount/components/saving/SavingAdCard";
 import PayAdCard from "../myaccount/components/pay/PayAdCard";
 import PetRegisterCard from "../myaccount/components/pet/PetRegisterCard";
-import WalkReportPreview from "../myaccount/components/pet/WalkReportPreview";
+// import WalkReportPreview from "../myaccount/components/pet/WalkReportPreview";
 import SavingSummaryCard from "../myaccount/components/saving/SavingSummaryCard";
 import WalkReportCard from "../myaccount/components/pet/WalkReportCard";
 import SafePaymentCTA from "../myaccount/components/pay/SafePaymentCTA";
@@ -42,7 +42,6 @@ export default function HomeContent() {
           <>
             <AccountCard account={account} />
             <PetRegisterCard />
-            <SavingAdCard />
             {!hasMongPay && <PayAdCard />}
             {hasMongPay && <SafePaymentCTA />}
             {showSavingAd && <SavingAdCard />} {/* ✅ 3개 미만이면 보여줌 */}
@@ -51,10 +50,9 @@ export default function HomeContent() {
         {status === "WITH_PET" && account && (
           <>
             <AccountCard account={account} />
-            <SavingAdCard />
+            {showSavingAd && <SavingAdCard />} {/* ✅ 3개 미만이면 보여줌 */}
             {!hasMongPay && <PayAdCard />}
             {hasMongPay && <SafePaymentCTA />}
-            {showSavingAd && <SavingAdCard />} {/* ✅ 3개 미만이면 보여줌 */}
           </>
         )}
         {status === "WITH_SAVING" && account && (

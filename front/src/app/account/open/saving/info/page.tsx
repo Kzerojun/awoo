@@ -58,6 +58,16 @@ export default function SavingInfoPage() {
     const interest = rate / 100;
     return Math.floor(daily * totalDays * (1 + interest));
   };
+  useEffect(() => {
+    dispatch(setWithdrawalAccountNo(""));
+    dispatch(setDepositBalance(0));
+    dispatch(setPassword(""));
+
+    setDepositInput("");
+    setExpectedAmount(null);
+    setBalance(null);
+    setIsEnoughBalance(null);
+  }, [dispatch]);
 
   const handleAutoTransferClick = () => alert("해당 상품은 일일적금으로 자동이체되는 상품입니다!");
 
