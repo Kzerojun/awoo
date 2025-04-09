@@ -26,11 +26,18 @@ export default function ReadyPage() {
         </div> */}
 
         {/* 알아두세요 */}
-        <div className="flex items-center gap-2 mt-6 ml-2">
-          <ExclamationCircleIcon className="w-5 h-5 text-gray-500" />
-          <p className="text-sm font-medium text-gray-700">알아두세요</p>
+        {/* 알아두세요 */}
+        <div className="mt-6 rounded-lg px-3 py-3 border border-gray-200">
+          <div className="flex items-center gap-2 mb-2">
+            <ExclamationCircleIcon className="w-5 h-5 text-aqua" />
+            <p className="text-sm font-semibold text-gray-800">알아두세요</p>
+          </div>
+          <ul className="list-disc list-inside text-sm text-gray-600 ml-1 space-y-1">
+            <li>본인 명의의 휴대폰으로만 인증할 수 있어요.</li>
+            <li>스팸 차단 앱이 인증 문자 수신을 방해할 수 있어요.</li>
+            <li>인증번호는 제한된 시간 내에 입력해주세요.</li>
+          </ul>
         </div>
-        <p className="ml-8">추후에 문구 추가 예정</p>
       </div>
 
       {/* 하단 버튼 */}

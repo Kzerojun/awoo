@@ -52,13 +52,13 @@ const ProductDocs = () => {
 
       {/* 모달 */}
       {modalType && (
-        <div className="fixed inset-0 bg-black flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white max-w-xl w-[90%] max-h-[90vh] overflow-y-auto rounded-lg shadow-lg relative p-6">
             <button
               onClick={handleClose}
               className="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-sm"
             >
-              닫기 ✕
+              ✕
             </button>
             {renderModalContent()}
           </div>

@@ -93,16 +93,16 @@ export default function DepositInfoPage() {
               </div>
             </div>
             {/* 통장 양도 금지 안내 박스 */}
-            <div className="min-h-[100px] bg-gray-300 rounded-md px-4 py-4 mt-6 mb-4">
-              {/* TODO: 통장 양도 금지 안내 문구 들어갈 자리 */}
-              <p>통장 양도 금지 안내</p>
-            </div>
+            {/* <div className="min-h-[100px] bg-gray-300 rounded-md px-4 py-4 mt-6 mb-4"> */}
+            {/* TODO: 통장 양도 금지 안내 문구 들어갈 자리 */}
+            {/* <p>통장 양도 금지 안내</p> */}
+            {/* </div> */}
 
             {/* 금융거래 이체한도 안내 박스 */}
-            <div className="min-h-[100px] bg-gray-300 rounded-md px-4 py-4">
-              {/* TODO: 금융거래 이체한도 안내 문구 들어갈 자리 */}
-              <p>금융거래 이체한도 안내</p>
-            </div>
+            {/* <div className="min-h-[100px] bg-gray-300 rounded-md px-4 py-4"> */}
+            {/* TODO: 금융거래 이체한도 안내 문구 들어갈 자리 */}
+            {/* <p>금융거래 이체한도 안내</p> */}
+            {/* </div> */}
 
             {/* ✅ 최종 동의 + 버튼 */}
             <div className="px-4 py-6">
@@ -122,7 +122,7 @@ export default function DepositInfoPage() {
                   {agreed && <CheckIcon className="w-4 h-4 text-white" />}
                 </div>
 
-                <p className="text-sm text-gray-700 leading-snug">
+                <p className="text-[13px] text-gray-700 leading-snug whitespace-nowrap  ml-1 mt-0.5">
                   위 내용을 모두 확인하였으며, 통장 개설에 동의합니다.
                 </p>
               </div>
@@ -133,21 +133,22 @@ export default function DepositInfoPage() {
                   통장 개설을 위해 동의 및 선택은 필수입니다.
                 </p>
               )}
+              <div className="flex justify-center">
+                {/* 다음 버튼 */}
+                <Button
+                  text="다음"
+                  onClick={() => {
+                    if (!agreed || password.length !== 4 || password !== confirmPassword) {
+                      setShowWarning(true);
+                      return;
+                    }
 
-              {/* 다음 버튼 */}
-              <Button
-                text="다음"
-                onClick={() => {
-                  if (!agreed || password.length !== 4 || password !== confirmPassword) {
-                    setShowWarning(true);
-                    return;
-                  }
-
-                  dispatch(setAccountPassword(password)); // ✅ 최종 저장
-                  dispatch(setConditionsAgreement(true)); // ✅ 동의 여부 저장
-                  router.push("/account/verify/phone");
-                }}
-              />
+                    dispatch(setAccountPassword(password)); // ✅ 최종 저장
+                    dispatch(setConditionsAgreement(true)); // ✅ 동의 여부 저장
+                    router.push("/account/verify/phone");
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
