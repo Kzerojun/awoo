@@ -12,6 +12,8 @@ import { setSavingStage } from "@/lib/slices/accountProgressSlice";
 import { useAppDispatch } from "@/lib/store";
 import { setAccountType } from "@/lib/slices/accountProgressSlice";
 import { resetAccountProgress } from "@/lib/slices/accountProgressSlice";
+import CommonTopBar from "@/common/ui/CommonTopBar";
+
 const step2Reviews = [
   {
     text: "이제 산책이 루틴이 되었어요!",
@@ -32,6 +34,7 @@ const Page = () => {
   const dispatch = useAppDispatch();
   return (
     <div className="container mx-auto max-w-lg py-6">
+      <CommonTopBar title="" leftAction="back" />
       <ProductSummary
         productName="적절하개"
         description="산책 적금 2단계 상품"
