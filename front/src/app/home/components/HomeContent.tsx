@@ -45,6 +45,7 @@ export default function HomeContent() {
             <SavingAdCard />
             {!hasMongPay && <PayAdCard />}
             {hasMongPay && <SafePaymentCTA />}
+            {showSavingAd && <SavingAdCard />} {/* ✅ 3개 미만이면 보여줌 */}
           </>
         )}
         {status === "WITH_PET" && account && (
@@ -53,6 +54,7 @@ export default function HomeContent() {
             <SavingAdCard />
             {!hasMongPay && <PayAdCard />}
             {hasMongPay && <SafePaymentCTA />}
+            {showSavingAd && <SavingAdCard />} {/* ✅ 3개 미만이면 보여줌 */}
           </>
         )}
         {status === "WITH_SAVING" && account && (
@@ -70,6 +72,7 @@ export default function HomeContent() {
             <AccountCard account={account} />
             <SavingSummaryCard />
             {hasPet && <WalkReportCard />}
+            {showSavingAd && <SavingAdCard />} {/* ✅ 3개 미만이면 보여줌 */}
             {hasMongPay && <SafePaymentCTA />}
           </>
         )}
