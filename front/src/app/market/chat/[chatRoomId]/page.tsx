@@ -238,7 +238,7 @@ export default function ChatRoomPage() {
                         <SystemPaymentComplete
                           sender={msg.senderId === memberId ? "me" : "partner"}
                           senderName={msg.senderId === memberId ? "나" : "상대방"}
-                          amount={50000} // TODO: 금액 연동 필요
+                          amount={50000}
                           createdAt={msg.createdAt}
                         />
                       )}

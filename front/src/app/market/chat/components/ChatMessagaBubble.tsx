@@ -32,7 +32,7 @@ export default function ChatMessageBubble({ sender, content, time, image }: Prop
                 text-sm 
                 whitespace-pre-wrap 
                 break-words 
-                ${isMe ? "bg-aqua text-white rounded-br-none" : "bg-white border rounded-bl-none"}
+                ${isMe ? "bg-light-aqua text-gray-800 rounded-br-none" : "bg-gray-100 text-gray-800 border border-gray-200 rounded-bl-none"}
               `}
               style={{ maxWidth: "70%", wordBreak: "break-word" }}
             >

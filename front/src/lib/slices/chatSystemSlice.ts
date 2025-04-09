@@ -7,11 +7,13 @@ type ChatSystemStatus = "IDLE" | "STARTED" | "FINISHED" | "SHIPPING" | "DELIVERE
 interface ChatSystemState {
   paymentMethod: PaymentMethod;
   status: ChatSystemStatus;
+  paymentAmount: number;
 }
 
 const initialState: ChatSystemState = {
   paymentMethod: "NONE",
   status: "IDLE",
+  paymentAmount: 0,
 };
 const chatSystemSlice = createSlice({
   name: "chatSystem",
@@ -23,11 +25,15 @@ const chatSystemSlice = createSlice({
     setChatStatus: (state, action: PayloadAction<ChatSystemStatus>) => {
       state.status = action.payload;
     },
+    setPaymentAmount: (state, action: PayloadAction<number>) => {
+      state.paymentAmount = action.payload; // 💸 금액 저장 액션
+    },
     resetChatSystem: () => initialState,
   },
 });
 
-export const { setPaymentMethod, setChatStatus, resetChatSystem } = chatSystemSlice.actions;
+export const { setPaymentMethod, setChatStatus, resetChatSystem, setPaymentAmount } =
+  chatSystemSlice.actions;
 export const isPaymentFinished = (state: ChatSystemState) =>
   state.status === "FINISHED" &&
   (state.paymentMethod === "PAYMENT" || state.paymentMethod === "SAFE");
