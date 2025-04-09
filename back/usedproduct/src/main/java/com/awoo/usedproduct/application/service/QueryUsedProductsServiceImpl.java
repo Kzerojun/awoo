@@ -77,13 +77,15 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
         List<FetchChatRoomResponse> chatRoomResponses = chatRoomEntities.stream()
                 .map(chatRoom -> {
                     Optional<ChatMessageEntity> chatMessage = chatMessageRepository.findFirstByChatRoomIdOrderByCreatedAtDesc(chatRoom.getChatRoomId());
-                    ApiUtils.ApiResult<MemberNicknameResponse> memberNickname = memberClient.fetchNickname(chatRoom.getSellerId());
+                    ApiUtils.ApiResult<MemberInfoResponse> memberInfo = memberClient.fetchMemberInfo(chatRoom.getSellerId());
                     return new FetchChatRoomResponse(
                             chatRoom.getChatRoomId(),
                             chatRoom.getUsedProductId(),
                             chatMessage.map(ChatMessageEntity::getMessage).orElse(null),
                             chatMessage.map(ChatMessageEntity::getCreatedAt).orElse(null),
-                            memberNickname.getResponse().nickname()
+                            memberInfo.getResponse().nickname(),
+                            memberInfo.getResponse().profileImage(),
+                            memberInfo.getResponse().name()
                     );
                 })
                 .toList();
@@ -93,17 +95,24 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
 
     @Override
     public FetchChatMessagesResponse fetchChatMessages(Integer memberId, Integer chatRoomId) {
+
         List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findAllByChatRoomIdOrderByCreatedAtDesc(chatRoomId);
         List<FetchMessageResponse> fetchMessageResponse = chatMessageEntities.stream()
-                .map(chatMessage -> FetchMessageResponse.builder()
-                        .messageId(chatMessage.getChatMessageId())
-                        .senderId(chatMessage.getSenderId())
-                        .message(chatMessage.getMessage())
-                        .image(chatMessage.getImage())
-                        .chatRoomId(chatMessage.getChatRoomId())
-                        .createdAt(chatMessage.getCreatedAt())
-                        .build()
-                ).toList();
+                .map(chatMessage -> {
+                    ApiUtils.ApiResult<MemberInfoResponse> memberInfo = memberClient.fetchMemberInfo(chatMessage.getSenderId());
+
+                    return FetchMessageResponse.builder()
+                            .messageId(chatMessage.getChatMessageId())
+                            .senderId(chatMessage.getSenderId())
+                            .message(chatMessage.getMessage())
+                            .image(chatMessage.getImage())
+                            .chatRoomId(chatMessage.getChatRoomId())
+                            .createdAt(chatMessage.getCreatedAt())
+                            .name(memberInfo.getResponse().name())
+                            .memberProfileImage(memberInfo.getResponse().profileImage())
+                            .build();
+                })
+                .toList();
 
         return new FetchChatMessagesResponse(fetchMessageResponse);
     }

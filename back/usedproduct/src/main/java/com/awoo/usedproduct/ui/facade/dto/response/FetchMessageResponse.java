@@ -9,7 +9,9 @@ public record FetchMessageResponse(Integer messageId,
                                    Integer chatRoomId,
                                    Integer senderId,
                                    String image,
-                                   LocalDateTime createdAt) {
+                                   LocalDateTime createdAt,
+                                   String name,
+                                   String memberProfileImage) {
 
     @Builder
     public FetchMessageResponse {
