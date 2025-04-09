@@ -84,7 +84,10 @@ export default function SavingInfoPage() {
 
       <div className="pt-16">
         {/* 이자율 표시 */}
-        <p className="text-center text-[22px] text-aqua font-semibold mt-4">{rate.toFixed(2)}%</p>
+        <p className="text-center text-[25px] text-aqua font-semibold mt-4">
+          <span className="text-[18px] text-aqua mr-1">이자율</span>
+          {rate.toFixed(1)}%
+        </p>
 
         <div className="flex flex-col gap-4 px-4 py-6">
           {/* 비밀번호 입력 */}
