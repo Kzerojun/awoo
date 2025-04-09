@@ -55,7 +55,7 @@ const SignupForm = () => {
 
   // 이름 5자리 제한
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/[^ㄱ-ㅎ가-힣\s]/g, ""); // 한글만 입력 가능
+    let value = e.target.value.replace(/[^ㄱ-ㅎ가-힣.\s]/g, ""); // 한글만 입력 가능
     if (value.length > 5) {
       value = value.slice(0, 5);
       setNameErr("이름은 최대 5자리까지 입력 가능합니다.");
