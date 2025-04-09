@@ -3,8 +3,14 @@ import { Client, IMessage } from "@stomp/stompjs";
 
 class ChatSocket {
   private stompClient: Client | null = null;
+  socket: WebSocket | null = null;
 
-  connect(token: string, roomId: number, callback: (message: IMessage) => void) {
+  connect(
+    token: string,
+    roomId: number,
+    onMessage: (message: IMessage) => void,
+    onReady?: () => void
+  ) {
     // 이미 연결되어있으면 재연결 안함
     if (this.stompClient && this.stompClient.connected) return;
 
@@ -18,7 +24,8 @@ class ChatSocket {
       reconnectDelay: 5000,
       onConnect: () => {
         console.log("✅ STOMP 연결 성공");
-        this.subscribe(roomId, callback);
+        this.subscribe(roomId, onMessage);
+        if (onReady) onReady(); // ✅ 연결 완료 후 콜백 실행
       },
     });
 
