@@ -45,7 +45,7 @@ const DepositTop = ({ deposit }: Props) => {
         backColor="lightAqua"
         onSettingClick={goToManageDeposit}
         textColor="white"
-        backUrl="/home"
+        // backUrl="/home"
       />
       <div className="h-2/5 mt-14 w-full flex flex-col items-center justify-center bg-teal-300">
         <main className="flex flex-col  justify-center items-center gap-y-10 text-white">
