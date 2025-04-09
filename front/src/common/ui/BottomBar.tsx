@@ -58,6 +58,8 @@ const Bottombar: React.FC<BottombarProps> = ({ currentPath }) => {
     "/main", // 메인 웹페이지
     "/market/safePayment/safePayDone",
     "/market/safePayment/safePay",
+    "/market/commonPayment/commonPay", // 일반송금 내부 페이지
+    "/market/commonPayment/commonPayDone",
     "/account/my/deposit/transfer", // 계좌이체 페이지
     "/account/my/check-password", // 계좌 조회 비밀번호 입력 페이지
     "/account/open/deposit", // 입출금 계좌 상품 설명 페이지
