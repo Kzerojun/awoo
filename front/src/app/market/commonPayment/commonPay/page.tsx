@@ -43,9 +43,9 @@ export default function CommonPay() {
       try {
         const res = await axiosInstance.get(`/used-products/${usedProductId}`);
         const productData = res.data.response;
-        console.log("qkqkqkkqkqkqkqkq");
         setProduct(productData);
         setAmount(productData.price);
+        setNickname(productData.name);
       } catch (error) {
         console.error("상품 상세 조회 실패", error);
         alert("상품 정보를 불러오는데 실패했습니다.");
@@ -56,26 +56,26 @@ export default function CommonPay() {
   }, [usedProductId]);
 
   // 유저 정보 가져오기
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        // Redux store에 닉네임이 이미 있으면 API 호출 건너뛰기
-        if (userState.nickname) {
-          setNickname(userState.nickname);
-          return;
-        }
+  // useEffect(() => {
+  //   const fetchUserInfo = async () => {
+  //     try {
+  //       // Redux store에 닉네임이 이미 있으면 API 호출 건너뛰기
+  //       if (userState.nickname) {
+  //         setNickname(userState.nickname);
+  //         return;
+  //       }
 
-        // Redux store에 닉네임이 없으면 API 호출
-        const userInfo = await getUserInfo();
-        setNickname(userInfo.nickname);
-      } catch (error) {
-        console.error("사용자 정보를 가져오는 중 오류 발생:", error);
-        setNickname("사용자"); // 에러 시 기본값
-      }
-    };
+  //       // Redux store에 닉네임이 없으면 API 호출
+  //       const userInfo = await getUserInfo();
+  //       setNickname(userInfo.nickname);
+  //     } catch (error) {
+  //       console.error("사용자 정보를 가져오는 중 오류 발생:", error);
+  //       setNickname("사용자"); // 에러 시 기본값
+  //     }
+  //   };
 
-    fetchUserInfo();
-  }, [userState]);
+  //   fetchUserInfo();
+  // }, [userState]);
 
   // 확인 버튼 처리
   const handleConfirm = () => {

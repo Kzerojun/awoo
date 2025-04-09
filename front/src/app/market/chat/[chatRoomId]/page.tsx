@@ -288,12 +288,12 @@ export default function ChatRoomPage() {
           />
           {/* 액션바 (앨범, 카메라, 송금) */}
           {showActions && (
-            <div className="w-full bg-white py-4 flex justify-around border-gray-200">
+            <div className="w-full bg-white py-4 flex justify-around border-gray-100">
               <div
                 onClick={() => fileInputRef.current?.click()}
                 className="flex flex-col items-center space-y-1 cursor-pointer"
               >
-                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-xl">
                   🖼️
                 </div>
                 <span className="text-xs">앨범</span>
@@ -303,7 +303,7 @@ export default function ChatRoomPage() {
                 onClick={() => cameraInputRef.current?.click()}
                 className="flex flex-col items-center space-y-1 cursor-pointer"
               >
-                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-xl">
                   📷
                 </div>
                 <span className="text-xs">카메라</span>
@@ -313,7 +313,7 @@ export default function ChatRoomPage() {
                 onClick={handleSendMoneyClick}
                 className="flex flex-col items-center space-y-1 cursor-pointer"
               >
-                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-xl">
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-xl">
                   💸
                 </div>
                 <span className="text-xs">송금</span>
