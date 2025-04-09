@@ -34,7 +34,7 @@ export default function ChatMessageBubble({ sender, content, time, image }: Prop
                 break-words 
                 ${isMe ? "bg-light-aqua text-gray-800 rounded-br-none" : "bg-gray-100 text-gray-800 border border-gray-200 rounded-bl-none"}
               `}
-              style={{ maxWidth: "70%", wordBreak: "break-word" }}
+              style={{ maxWidth: "85%", wordBreak: "break-word" }}
             >
               {content}
             </div>
