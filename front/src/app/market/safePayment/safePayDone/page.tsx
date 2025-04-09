@@ -35,10 +35,15 @@ export default function SafePayDone() {
       // ✅ 2. 소켓이 이미 연결되어 있다면 여기서 바로 메시지 보냄
       const token = localStorage.getItem("accessToken");
       if (token) {
-        chatSocket.connect(token, chatRoomId, () => {}); // 단순 연결 (수신 콜백은 필요 없음)
-        setTimeout(() => {
-          chatSocket.send(chatRoomId, "SAFE_FINISH", memberId); // ✅ 직접 메시지 전송
-        }, 300); // 아주 짧게 대기 (연결 완료되게)
+        chatSocket.connect(
+          token,
+          chatRoomId,
+          () => {}, // 메시지 수신 콜백은 없으니 비워둠
+          () => {
+            console.log("✅ 연결 완료 후 시스템 메시지 전송");
+            chatSocket.send(chatRoomId, "SAFE_FINISH", memberId);
+          }
+        );
       }
 
       // ✅ 3. 상태 초기화 및 페이지 이동

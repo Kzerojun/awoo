@@ -16,6 +16,16 @@ interface ChatRoomType {
 
 export default function ChatList() {
   const [chatList, setChatList] = useState<ChatRoomType[]>([]);
+  const getDisplayMessage = (msg: string): string => {
+    const systemMessages: { [key: string]: string } = {
+      SAFE_FINISH: "안심결제 관련 메시지",
+      PAYMENT_FINISH: "일반결제 관련 메시지",
+      SAFE_INFO_SUBMITTED: "안심결제 관련 메시지",
+      SAFE_COMPLETE: "안심결제 관련 메시지",
+    };
+
+    return systemMessages[msg] || msg;
+  };
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -49,7 +59,7 @@ export default function ChatList() {
               roomId: chat.chatRoomId.toString(),
               name: chat.name,
               memberProfileImage: chat.memberProfileImage, // FIXME: 임시
-              lastMessage: chat.latestMessage ?? "메시지가 없습니다",
+              lastMessage: getDisplayMessage(chat.latestMessage ?? "메시지가 없습니다"),
               lastMessageTime: chat.latestMessageCreatedAt ?? "",
               unreadCount: 0, // FIXME: 추후 처리
               type: "normal",
