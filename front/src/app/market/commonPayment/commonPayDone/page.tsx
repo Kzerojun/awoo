@@ -7,7 +7,7 @@ import CommonTopBar from "@/common/ui/CommonTopBar";
 import checkmark from "../../../../../public/icons/mypage/checkmark.svg";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { resetTransferInfo } from "@/lib/slices/transfercheckSlice";
-import { setPaymentMethod, setChatStatus } from "@/lib/slices/chatSystemSlice";
+import { setPaymentMethod, setChatStatus, setPaymentAmount } from "@/lib/slices/chatSystemSlice";
 import { chatSocket } from "@/socket/chatSocket";
 
 export default function CommonPayDone() {
@@ -35,12 +35,20 @@ export default function CommonPayDone() {
 
     dispatch(setPaymentMethod("PAYMENT")); // ✅ 송금 방식 설정
     dispatch(setChatStatus("FINISHED")); // ✅ 송금 완료 상태 설정
+    dispatch(setPaymentAmount(amount)); // ✅ 금액 저장 추가!
     const token = localStorage.getItem("accessToken");
     if (token) {
-      chatSocket.connect(token, chatRoomId, () => {});
-      setTimeout(() => {
-        chatSocket.send(chatRoomId, "PAYMENT_FINISH", memberId);
-      }, 300);
+      chatSocket.connect(
+        token,
+        chatRoomId,
+        (message) => {
+          console.log("💬 메시지 수신:", message);
+        },
+        () => {
+          console.log("✅ 연결 완료 후 시스템 메시지 전송");
+          chatSocket.send(chatRoomId, "PAYMENT_FINISH", memberId);
+        }
+      );
     }
 
     dispatch(resetTransferInfo());
