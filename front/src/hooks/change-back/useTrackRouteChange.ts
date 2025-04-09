@@ -16,6 +16,9 @@ const EXCLUDED_PATHS = [
   "/walk/start/walking",
   "/walk/end/check",
   "/my/pet/detail",
+  "/market/chat",
+  "/market/commonPayment",
+  "/market/safePayment",
 ];
 
 export const useTrackRouteChange = () => {
