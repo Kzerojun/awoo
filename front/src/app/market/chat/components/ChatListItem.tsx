@@ -3,8 +3,8 @@ import { useRouter } from "next/navigation";
 interface ChatListItemProps {
   chat: {
     roomId: string;
-    partnerNickname: string;
-    partnerProfileImage: string;
+    name: string;
+    memberProfileImage: string;
     lastMessage: string;
     lastMessageTime: string;
     unreadCount: number;
@@ -32,14 +32,14 @@ export default function ChatListItem({ chat, hasBorder }: ChatListItemProps) {
     >
       {/* 프로필 */}
       <img
-        src={chat.partnerProfileImage}
+        src={chat.memberProfileImage}
         alt="profile"
-        className="w-10 h-10 rounded-md object-cover mr-2"
+        className="w-11 h-11 rounded-full object-cover mr-2"
       />
 
       {/* 닉네임 & 마지막 메시지 */}
       <div className="flex-1 ml-2 truncate">
-        <div className="text-m font-semibold truncate">{chat.partnerNickname}</div>
+        <div className="text-m font-semibold truncate">{chat.name}</div>
         <div className="text-xs text-gray-400 truncate">{chat.lastMessage}</div>
       </div>
 

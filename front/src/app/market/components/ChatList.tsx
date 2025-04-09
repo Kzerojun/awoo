@@ -10,7 +10,8 @@ interface ChatRoomType {
   usedProductId: number | null;
   latestMessage: string | null;
   latestMessageCreatedAt: string | null;
-  sellerNickname: string;
+  name: string;
+  memberProfileImage: string;
 }
 
 export default function ChatList() {
@@ -46,8 +47,8 @@ export default function ChatList() {
             key={chat.chatRoomId}
             chat={{
               roomId: chat.chatRoomId.toString(),
-              partnerNickname: chat.sellerNickname,
-              partnerProfileImage: "/images/avatars/basic.jpg", // FIXME: 임시
+              name: chat.name,
+              memberProfileImage: chat.memberProfileImage, // FIXME: 임시
               lastMessage: chat.latestMessage ?? "메시지가 없습니다",
               lastMessageTime: chat.latestMessageCreatedAt ?? "",
               unreadCount: 0, // FIXME: 추후 처리
