@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ChatFilterTabs from "../chat/components/ChatFilterTabs";
 import ChatListItem from "../chat/components/ChatListItem";
 import axiosInstance from "@/api/axiosInstance";
+import LoadingDog from "@/app/walk/components/LoadingDog";
 
 interface ChatRoomType {
   chatRoomId: number;
@@ -34,11 +35,14 @@ export default function ChatList() {
         setChatList(res.data.response.chatRooms);
       } catch (error) {
         console.error("채팅방 목록 가져오기 실패", error);
+      } finally {
+        setIsLoading(false); // ✅ 무조건 로딩 끝내기
       }
     };
 
     fetchChatRooms();
   }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 메시지 없는 채팅방 제거
   const filteredList = chatList
@@ -51,12 +55,18 @@ export default function ChatList() {
 
   return (
     <div className="flex flex-col space-y-4">
-      {filteredList.length === 0 ? (
+      {isLoading ? (
+        <div className="relative w-full h-screen flex items-center justify-center">
+          <LoadingDog /> {/* 강아지 애니메이션 */}
+        </div>
+      ) : filteredList.length === 0 ? (
+        // 로딩 끝났지만 데이터가 없는 경우
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center text-gray-400 mt-15">
           <p className="text-base">아직 시작된 채팅이 없어요.</p>
           <p className="text-sm mt-1">중고거래에서 상품을 클릭해 대화를 시작해보세요!</p>
         </div>
       ) : (
+        // ✅ 데이터 있을 때
         <div className="space-y-2">
           {filteredList.map((chat, index) => (
             <ChatListItem
