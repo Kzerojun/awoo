@@ -115,7 +115,8 @@ const WalkingGuide = () => {
                     매달 <span className="font-semibold text-amber-600">20회 이상</span> 산책이
                     필요하며,
                     <br />매 회차{" "}
-                    <span className="font-semibold text-amber-600">30분 이상, 3km 이상</span> <br />
+                    <span className="font-semibold text-amber-600">30분 이상, 1.5km 이상</span>{" "}
+                    <br />
                     이어야 인정됩니다.
                   </li>
                   <li>
