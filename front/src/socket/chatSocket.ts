@@ -21,7 +21,7 @@ class ChatSocket {
         Authorization: `${token}`,
       },
       debug: (str) => console.log("[STOMP]", str),
-      reconnectDelay: 5000,
+      reconnectDelay: 3000,
       onConnect: () => {
         console.log("✅ STOMP 연결 성공");
         this.subscribe(roomId, onMessage);
