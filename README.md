@@ -4,8 +4,34 @@
 ## :paw_prints: 프로젝트 개요
 
 > ### :sparkles: 프로젝트 소개
+>   반려동물과 보호자가 **함께 걷는 삶**을 위한 금융 플랫폼  
+>   산책을 통해 **건강과 유대감**을 챙기고, 동시에 **양육비 관리**를 할 수 있는 새로운 금융 서비스
+
 > ### :brain: 프로젝트 기획 배경
-> ### :dart: 프로젝트 목표
+>   바야흐로 대한민국 반려인 1,500만 시대. 반려동물은 더 이상 '애완'이 아닌 **인생의 반쪽**, '반려'로 여겨지고 있습니다. 그만큼 더 많은 책임과 비용이 따르며, 특히 산책은 반려견 보호자에게 있어 **선택이 아닌 필수**입니다.  
+>
+>   독일처럼 산책이 법적 의무인 나라도 있을 만큼, 산책은 건강·정서·사회성·유대감을 키우는 중요한 활동입니다.  
+>
+>   하지만 현실은, 반려동물 양육에 드는 **비용 부담**이 적지 않습니다. 저희는 이 점에 주목해, **반려견의 산책을 중심으로 한 금융 서비스**를 기획하게 되었습니다. 산책을 통해 혜택을 받고, 미래의 의료비나 돌봄비용을 대비할 수 있는 **AwOO**는 반려인과 반려견 모두를 위한 플랫폼입니다.
+
+
+> ### :dart: 주요 기능 및 핵심 서비스
+><details>
+>   <summary> BobIssue WBS 보기 </summary>
+>   <img src = "front/public/logos/AwOO_logo.png">)
+></details>
+><details>
+>   <summary> BobIssue WBS 보기 </summary>
+>   <img src = "front/public/logos/AwOO_logo.png">)
+></details>
+><details>
+>   <summary> BobIssue WBS 보기 </summary>
+>   <img src = "front/public/logos/AwOO_logo.png">)
+></details>
+><details>
+>   <summary> BobIssue WBS 보기 </summary>
+>   <img src = "front/public/logos/AwOO_logo.png">)
+></details>
 
 ## 개발 환경
 
