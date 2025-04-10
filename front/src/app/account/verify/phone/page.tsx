@@ -92,7 +92,7 @@ export default function PhoneVerifyPage() {
 
   return (
     <div>
-      <CommonTopBar title="본인인증" leftAction="back" rightAction="cancel" />
+      <CommonTopBar title="본인인증" leftAction="back" />
       <div className="pt-16 px-6 flex flex-col gap-6">
         <h2 className="text-xl font-semibold">휴대폰 본인인증을 해주세요</h2>
         <div className="border rounded-lg p-4 text-sm bg-white border-gray-300">

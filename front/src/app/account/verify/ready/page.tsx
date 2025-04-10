@@ -8,7 +8,7 @@ export default function ReadyPage() {
   const router = useRouter();
   return (
     <div>
-      <CommonTopBar title="신청 전 확인사항" leftAction="back" rightAction="cancel" />
+      <CommonTopBar title="신청 전 확인사항" leftAction="back" />
 
       <div className="pt-16 px-4 flex flex-col gap-6">
         <h2 className="text-lg font-bold">시작 전 준비해 주세요</h2>

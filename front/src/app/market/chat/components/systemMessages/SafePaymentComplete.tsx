@@ -30,7 +30,7 @@ export function SystemSafePaymentCompleteMe({ sender, createdAt }: Props) {
               안심거래 송금완료
             </div>
             <div className="text-[12px] mt-2 text-gray-600 leading-tight">
-              판매자 배송지입력 대기중
+              판매자 운송장입력 대기중
             </div>
           </div>
           <span className="text-[10px] text-gray-400 mb-0.5">{formatTime(createdAt)}</span>

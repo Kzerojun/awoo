@@ -87,7 +87,7 @@ export default function SavingAccountVerifySuccessPage() {
             {/* 안내 메시지 */}
             <div className="mt-6 bg-gray-50 rounded-xl p-5 w-full max-w-xs">
               <p className="text-gray-700 text-center leading-relaxed text-[15px]">
-                <span className="text-teal-600">멍Pay</span>의{" "}
+                <span className="text-teal-600">AwOO</span>의{" "}
                 <span className="text-teal-600">산책 리워드 적금</span>
                 <br />
                 계좌 개설을 위해 버튼을 눌러주세요
@@ -99,7 +99,7 @@ export default function SavingAccountVerifySuccessPage() {
           <div className="w-[270px] max-w-md">
             <button
               onClick={handleOpenSavingAccount}
-              className="w-full py-3 bg-[#0DCFAA] rounded-lg text-white font-medium text-lg"
+              className="w-full py-3 bg-aqua rounded-lg text-white font-medium text-lg"
             >
               계좌 개설 진행
             </button>
