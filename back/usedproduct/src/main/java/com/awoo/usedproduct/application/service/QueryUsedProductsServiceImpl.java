@@ -77,7 +77,12 @@ public class QueryUsedProductsServiceImpl implements QueryUsedProductsService {
         List<FetchChatRoomResponse> chatRoomResponses = chatRoomEntities.stream()
                 .map(chatRoom -> {
                     Optional<ChatMessageEntity> chatMessage = chatMessageRepository.findFirstByChatRoomIdOrderByCreatedAtDesc(chatRoom.getChatRoomId());
-                    ApiUtils.ApiResult<MemberInfoResponse> memberInfo = memberClient.fetchMemberInfo(chatRoom.getSellerId());
+                    Integer opponentId = chatRoom.getSellerId().equals(memberId)
+                            ? chatRoom.getBuyerId()
+                            : chatRoom.getSellerId();
+
+                    ApiUtils.ApiResult<MemberInfoResponse> memberInfo = memberClient.fetchMemberInfo(opponentId);
+
                     return new FetchChatRoomResponse(
                             chatRoom.getChatRoomId(),
                             chatRoom.getUsedProductId(),
