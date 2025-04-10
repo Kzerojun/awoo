@@ -90,7 +90,7 @@ export default function SavingInfoPage() {
 
   return (
     <div>
-      <CommonTopBar title="정기적금 개설" leftAction="back" rightAction="cancel" />
+      <CommonTopBar title="정기적금 개설" leftAction="back" />
 
       <div className="pt-16">
         {/* 이자율 표시 */}
@@ -175,7 +175,7 @@ export default function SavingInfoPage() {
           {/* 만기 예상액 */}
           {withdrawalAccountNo && (
             <button
-              className="bg-gray-200 rounded-md py-2 text-gray-500"
+              className="bg-aqua text-white rounded-md py-2"
               onClick={() => {
                 if (!depositInput) return alert("납입금액을 입력하세요");
                 const numeric = Number(depositInput.replace(/,/g, ""));
