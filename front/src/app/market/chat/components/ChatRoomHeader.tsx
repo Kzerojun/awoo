@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/api/axiosInstance";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { useSearchParams } from "next/navigation";
 
 interface ChatRoomHeaderProps {
   usedProductId: number | null;
@@ -18,6 +19,10 @@ interface ProductDetail {
 export default function ChatRoomHeader({ usedProductId }: ChatRoomHeaderProps) {
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+
   useEffect(() => {
     if (!usedProductId) return;
 
@@ -39,7 +44,11 @@ export default function ChatRoomHeader({ usedProductId }: ChatRoomHeaderProps) {
     <div className="sticky top-0 z-10 flex items-center justify-between px-3 py-3 bg-white">
       <div className="flex items-center space-x-2">
         <button
-          onClick={() => router.push(`/market/${product.usedProductId}`)}
+          onClick={() =>
+            from === "mychat"
+              ? router.push("/market?tab=mychat")
+              : router.push(`/market/${product.usedProductId}`)
+          }
           className="text-gray-700 -ml-1"
         >
           <ChevronLeftIcon className="w-6 h-6" />

@@ -51,24 +51,31 @@ export default function ChatList() {
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="space-y-2">
-        {filteredList.map((chat, index) => (
-          <ChatListItem
-            key={chat.chatRoomId}
-            chat={{
-              roomId: chat.chatRoomId.toString(),
-              name: chat.name,
-              memberProfileImage: chat.memberProfileImage, // FIXME: 임시
-              lastMessage: getDisplayMessage(chat.latestMessage ?? "메시지가 없습니다"),
-              lastMessageTime: chat.latestMessageCreatedAt ?? "",
-              unreadCount: 0, // FIXME: 추후 처리
-              type: "normal",
-              usedProductId: chat.usedProductId,
-            }}
-            hasBorder={index !== filteredList.length - 1} // ✅ 마지막 채팅방 border 제거
-          />
-        ))}
-      </div>
+      {filteredList.length === 0 ? (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center text-gray-400 mt-15">
+          <p className="text-base">아직 시작된 채팅이 없어요.</p>
+          <p className="text-sm mt-1">중고거래에서 상품을 클릭해 대화를 시작해보세요!</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {filteredList.map((chat, index) => (
+            <ChatListItem
+              key={chat.chatRoomId}
+              chat={{
+                roomId: chat.chatRoomId.toString(),
+                name: chat.name,
+                memberProfileImage: chat.memberProfileImage, // FIXME: 임시
+                lastMessage: getDisplayMessage(chat.latestMessage ?? "메시지가 없습니다"),
+                lastMessageTime: chat.latestMessageCreatedAt ?? "",
+                unreadCount: 0, // FIXME: 추후 처리
+                type: "normal",
+                usedProductId: chat.usedProductId,
+              }}
+              hasBorder={index !== filteredList.length - 1} // ✅ 마지막 채팅방 border 제거
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

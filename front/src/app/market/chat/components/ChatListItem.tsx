@@ -23,7 +23,7 @@ const formatDate = (dateStr: string) => {
 export default function ChatListItem({ chat, hasBorder }: ChatListItemProps) {
   const router = useRouter();
   const handleClick = () => {
-    router.push(`/market/chat/${chat.roomId}?usedProductId=${chat.usedProductId}`);
+    router.push(`/market/chat/${chat.roomId}?usedProductId=${chat.usedProductId}&from=mychat`);
   };
   return (
     <div
