@@ -1,14 +1,11 @@
 # <img src = "front/public/icons/AwOO.png" width="25px">  AwOO
 <img src = "front/public/logos/AwOO_logo.png">
 
-## 프로젝트 개요
+## :paw_prints: 프로젝트 개요
 
-### 프로젝트 소개
-
-### 프로젝트 기획 배경
-
-### 주요 기능 및 핵심 서비스
---- gif
+> ### :sparkles: 프로젝트 소개
+> ### :brain: 프로젝트 기획 배경
+> ### :dart: 프로젝트 목표
 
 ## 개발 환경
 
