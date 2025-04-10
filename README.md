@@ -1,4 +1,5 @@
-# :paw_prints: AwOO
+# <img src = "front/public/icons/AwOO.png" width="25px">  AwOO
+<img src = "front/public/logos/AwOO_logo.png">
 
 ## 프로젝트 개요
 
