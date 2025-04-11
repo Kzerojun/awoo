@@ -16,22 +16,64 @@
 
 
 > ### :dart: 주요 기능 및 핵심 서비스
+>
 ><details>
->   <summary> BobIssue WBS 보기 </summary>
->   <img src = "front/public/logos/AwOO_logo.png">)
+>   <summary> 반려견 등록 </summary>
+>   <img src = "exec/GIF/반려견등록.gif">)
 ></details>
+>
 ><details>
->   <summary> BobIssue WBS 보기 </summary>
->   <img src = "front/public/logos/AwOO_logo.png">)
+>   <summary> 계좌 내역 조회 </summary>
+>   <img src = "exec/GIF/계좌내역조회.gif">)
 ></details>
+>
 ><details>
->   <summary> BobIssue WBS 보기 </summary>
->   <img src = "front/public/logos/AwOO_logo.png">)
+>   <summary> 멍페이 계좌 연결 </summary>
+>   <img src = "exec/GIF/멍페이계좌연결.gif">)
 ></details>
+>
 ><details>
->   <summary> BobIssue WBS 보기 </summary>
->   <img src = "front/public/logos/AwOO_logo.png">)
+>   <summary> 멍페이 등록 </summary>
+>   <img src = "exec/GIF/멍페이등록.gif">)
 ></details>
+>
+><details>
+>   <summary> 산책 트래킹하기 </summary>
+>   <img src = "exec/GIF/산책.gif">)
+></details>
+>
+><details>
+>   <summary> 산책 후 캘린더 조회 </summary>
+>   <img src = "exec/GIF/산책조회.gif">)
+></details>
+>
+><details>
+>   <summary> 적금 계좌 개설 </summary>
+>   <img src = "exec/GIF/적금계좌개설.gif">)
+></details>
+>
+><details>
+>   <summary> 적금 내역 조회 </summary>
+>   <img src = "exec/GIF/적금 내역 조회.gif">)
+></details>
+>
+><details>
+>   <summary> 중고 거래 등록 </summary>
+>   <img src = "exec/GIF/중고거래등록.gif">)
+></details>
+>
+><details>
+>   <summary> 중고 거래 안심 결제 </summary>
+>   <img src = "exec/GIF/중고거래안심결제.gif">)
+></details>
+>
+><details>
+>   <summary> 캘린더 일정 등록 및 수정 </summary>
+>   <img src = "exec/GIF/캘린더 일정 등록 및 수정.gif">)
+></details>
+
+
+
 
 ## 개발 환경
 
