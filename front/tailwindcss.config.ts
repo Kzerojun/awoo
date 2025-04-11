@@ -1,5 +1,3 @@
-import { background } from "storybook/internal/theming";
-
 export default {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx}", // ✅ Next.js App Router 적용

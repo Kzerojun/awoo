@@ -1,0 +1,91 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import ChatFilterTabs from "../chat/components/ChatFilterTabs";
+import ChatListItem from "../chat/components/ChatListItem";
+import axiosInstance from "@/api/axiosInstance";
+import LoadingDog from "@/app/walk/components/LoadingDog";
+
+interface ChatRoomType {
+  chatRoomId: number;
+  usedProductId: number | null;
+  latestMessage: string | null;
+  latestMessageCreatedAt: string | null;
+  name: string;
+  memberProfileImage: string;
+}
+
+export default function ChatList() {
+  const [chatList, setChatList] = useState<ChatRoomType[]>([]);
+  const getDisplayMessage = (msg: string): string => {
+    const systemMessages: { [key: string]: string } = {
+      SAFE_FINISH: "안심결제 관련 메시지",
+      PAYMENT_FINISH: "일반결제 관련 메시지",
+      SAFE_INFO_SUBMITTED: "안심결제 관련 메시지",
+      SAFE_COMPLETE: "안심결제 관련 메시지",
+    };
+
+    return systemMessages[msg] || msg;
+  };
+
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      try {
+        const res = await axiosInstance.get("/used-products/chat-rooms");
+        setChatList(res.data.response.chatRooms);
+      } catch (error) {
+        console.error("채팅방 목록 가져오기 실패", error);
+      } finally {
+        setIsLoading(false); // ✅ 무조건 로딩 끝내기
+      }
+    };
+
+    fetchChatRooms();
+  }, []);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 메시지 없는 채팅방 제거
+  const filteredList = chatList
+    .filter((chat) => chat.latestMessage !== null)
+    .sort((a, b) => {
+      const timeA = new Date(a.latestMessageCreatedAt ?? "").getTime();
+      const timeB = new Date(b.latestMessageCreatedAt ?? "").getTime();
+      return timeB - timeA; // 최신순
+    });
+
+  return (
+    <div className="flex flex-col space-y-4">
+      {isLoading ? (
+        <div className="relative w-full h-screen flex items-center justify-center">
+          <LoadingDog /> {/* 강아지 애니메이션 */}
+        </div>
+      ) : filteredList.length === 0 ? (
+        // 로딩 끝났지만 데이터가 없는 경우
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center text-gray-400 mt-15">
+          <p className="text-base">아직 시작된 채팅이 없어요.</p>
+          <p className="text-sm mt-1">중고거래에서 상품을 클릭해 대화를 시작해보세요!</p>
+        </div>
+      ) : (
+        // ✅ 데이터 있을 때
+        <div className="space-y-2">
+          {filteredList.map((chat, index) => (
+            <ChatListItem
+              key={chat.chatRoomId}
+              chat={{
+                roomId: chat.chatRoomId.toString(),
+                name: chat.name,
+                memberProfileImage: chat.memberProfileImage, // FIXME: 임시
+                lastMessage: getDisplayMessage(chat.latestMessage ?? "메시지가 없습니다"),
+                lastMessageTime: chat.latestMessageCreatedAt ?? "",
+                unreadCount: 0, // FIXME: 추후 처리
+                type: "normal",
+                usedProductId: chat.usedProductId,
+              }}
+              hasBorder={index !== filteredList.length - 1} // ✅ 마지막 채팅방 border 제거
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

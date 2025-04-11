@@ -1,0 +1,25 @@
+#spring.application.name=eureka
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true

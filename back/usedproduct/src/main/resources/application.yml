@@ -1,0 +1,73 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: USED-PRODUCT-SERVICE
+
+  kafka:
+    properties:
+      security.protocol: PLAINTEXT
+    bootstrap-servers: j12c209.p.ssafy.io:9092
+    consumer:
+      group-id: "used-product"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    defer-datasource-initialization: true
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+# AWS S3
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    region:
+      static: us-east-2  # 버킷의 리전
+    s3:
+      bucket: c209awoo   # 버킷 이름
+    stack:
+      auto: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true

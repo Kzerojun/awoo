@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+/* 로컬 폰트 정의 추가 */
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../../public/fonts/NanumSquareNeo-aLt.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../../public/fonts/NanumSquareNeo-bRg.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NanumSquareNeo";
+  src: url("../../public/fonts/NanumSquareNeo-cBd.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-family: "NanumSquareNeo", sans-serif;
+}
+
 @theme {
   --color-aqua: #0fc9ba;
   --color-light-aqua: #8aede1;
@@ -9,14 +38,17 @@
   --color-error: #f12a2a;
   --color-custom-white: #ffffff;
   --color-custom-black: #000000;
+  --color-kakao: #fee500;
+  --color-naver: #00c300;
+  --color-kakao-font: #392020;
 }
-
+/* 
 @tailwind base;
-@tailwind components;
+@tailwind components; */
 @tailwind utilities;
 
 @layer base {
-  html {
+  body {
     font-family: "NanumSquareNeo", sans-serif;
   }
 
@@ -53,6 +85,14 @@
     background-color: var(--color-custom-black);
   }
 
+  .bg-kakao {
+    background-color: var(--color-kakao);
+  }
+
+  .bg-naver {
+    background-color: var(--color-naver);
+  }
+
   /* 텍스트 색상 적용 */
   .text-aqua {
     color: var(--color-aqua);
@@ -85,11 +125,91 @@
   .text-custom-black {
     color: var(--color-custom-black);
   }
+
+  .text-kakao {
+    color: var(--color-kakao-font);
+  }
+
+  /* 보더 색 */
+  .border-1-aqua {
+    border: 1px solid var(--color-aqua);
+  }
+  .border-1-green {
+    border: 1px solid var(--color-green);
+  }
 }
 
-/* Tailwind v4에서는 `@layer utilities`에서만 `@apply` 가능 */
-/* @layer utilities {
-  .container {
-    @apply mx-auto;
+@layer utilities {
+  /* ✅ Tailwind에서 사용할 `scrollbar-hide` 유틸리티 클래스 추가 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* ✅ 크롬, 사파리, 엣지 */
   }
-} */
+
+  .scrollbar-hide {
+    scrollbar-width: none; /* ✅ 파이어폭스 */
+  }
+}
+@layer base {
+  /* ✅ 전체 페이지에서 불필요한 스크롤 제거 */
+  html,
+  body {
+    height: 100%; /* ✅ 동적 뷰포트 높이 적용 */
+    min-height: 100dvh;
+    overflow: auto;
+  }
+
+  /* ✅ 스크롤바 숨기기 */
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* ✅ IE, Edge 대응 */
+  }
+
+  /* 토스트 커스텀 */
+  .Toastify__toast {
+    background-color: #ffffff !important;
+    white-space: pre-line;
+    font-weight: 500 !important;
+    border-radius: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+
+    .Toastify__progress-bar {
+      background: #0fc9ba !important; /* var(--color-aqua) 같은 색상 */
+    }
+  }
+}
+
+@layer utilities {
+  @keyframes jump {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-jump {
+    animation: jump 1.2s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+  .delay-400 {
+    animation-delay: 0.4s;
+  }
+}

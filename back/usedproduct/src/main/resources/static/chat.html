@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STOMP Chat Test</title>
+    <style>
+        #chat-box {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #message-input, #image-input {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<h2>STOMP Chat Test (Room ID: <span id="room-id">1</span>)</h2>
+<div>
+    <label>User ID: </label>
+    <input type="text" id="user-id" value="123" placeholder="Enter your user ID">
+</div>
+<div id="chat-box"></div>
+<input type="text" id="message-input" placeholder="Type a message">
+<input type="file" id="image-input" accept="image/*">
+<button onclick="sendMessage()">Send</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    const chatRoomId = 1; // 테스트용으로 고정, 필요 시 동적으로 변경 가능
+    document.getElementById('room-id').textContent = chatRoomId;
+
+    // WebSocket 연결 설정
+    const socket = new SockJS('http://localhost:8085/api/used-products/ws'); // Spring Boot의 STOMP 엔드포인트
+    const stompClient = Stomp.over(socket);
+
+    // 사용자 ID (헤더로 전송)
+    const headers = { 'X-User-Id': 2, };
+
+    stompClient.connect(headers, function (frame) {
+        console.log('Connected: ' + frame);
+
+        // 채팅방 구독
+        stompClient.subscribe('/sub/chat/rooms/' + chatRoomId, function (message) {
+            const response = JSON.parse(message.body);
+            displayMessage(response);
+        });
+    }, function (error) {
+        console.error('Connection error: ' + error);
+    });
+
+    // 메시지와 이미지 전송
+    function sendMessage() {
+        const messageInput = document.getElementById('message-input').value;
+        const imageInput = document.getElementById('image-input').files[0];
+        const userId = document.getElementById('user-id').value;
+
+        if (!messageInput && !imageInput) return;
+
+        const messageData = {
+            message: messageInput || ''
+        };
+
+        if (imageInput) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                messageData.image = e.target.result.split(',')[1]; // Base64 데이터만 추출
+                sendToServer(messageData, userId);
+            };
+            reader.readAsDataURL(imageInput);
+        } else {
+            sendToServer(messageData, userId);
+        }
+
+        // 입력 필드 초기화
+        document.getElementById('message-input').value = '';
+        document.getElementById('image-input').value = '';
+    }
+
+    function sendToServer(messageData, userId) {
+        const chatRoomId = 1; // 전역에서 가져올 수도 있음
+
+        stompClient.send(
+            '/pub/chat/rooms/' + chatRoomId,
+            { 'X-User-Id': userId },
+            JSON.stringify({
+                message: messageData.message,
+                image: messageData.image || null // 없으면 null로 처리
+            })
+        );
+    }
+
+
+    // 메시지 표시
+    function displayMessage(response) {
+        const chatBox = document.getElementById('chat-box');
+        const div = document.createElement('div');
+
+        // 텍스트 메시지
+        if (response.message) {
+            div.innerHTML += `<p><strong>User ${response.senderId}:</strong> ${response.message}</p>`;
+        }
+
+        // 이미지
+        if (response.image) {
+            div.innerHTML += `<p><strong>User ${response.senderId}:</strong> <img src="data:image/jpeg;base64,${response.image}" style="max-width: 200px;"></p>`;
+        }
+
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight; // 자동 스크롤
+    }
+</script>
+</body>
+</html>

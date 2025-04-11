@@ -1,0 +1,54 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: account
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${USER_NAME}
+    password: ${PASSWORD}
+
+  kafka:
+    bootstrap-servers: j12c209.p.ssafy.io:9092
+    consumer:
+      group-id: account-group-${spring.profiles.active}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+aes :
+  secret_key : ${AES_KEY}
+
+ssafy :
+  finance :
+    api_key : ${SSAFY_API_KEY}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true

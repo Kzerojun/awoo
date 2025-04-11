@@ -1,0 +1,118 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: API-GATEWAY-SERVICE
+  webflux:
+    multipart:
+      max-parts: 5
+      headers-charset: UTF-8
+      max-in-memory-size: 10MB
+  servlet:
+    multipart:
+      enabled: false
+
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "https://awoofinance.duckdns.org"
+              - "http://localhost:3000"
+              - "http://localhost:80"
+              - "http://localhost:8090"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+            allowCredentials: true
+            exposed-headers: "Authorization"
+
+      routes:
+        - id: pet-service
+          uri: lb://pet
+          predicates:
+            - Path=/api/pets/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: member-service
+          uri: lb://member
+          predicates:
+            - Path=/api/members/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: calendar-service
+          uri: lb://calendar
+          predicates:
+            - Path=/api/calendars/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: account-service
+          uri: lb://account
+          predicates:
+            - Path=/api/accounts/**, /api/savings/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: used-product-service
+          uri: lb://USED-PRODUCT-SERVICE
+          predicates:
+            - Path=/api/used-products/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: admin-service
+          uri: lb://admin
+          predicates :
+            - Path=/api/admin/**
+        - id: alarm
+          uri: lb://alarm
+          predicates:
+            - Path=/api/alarms/**
+          filters:
+            - name: JwtAuthenticationFilter
+
+
+      discovery:
+        locator:
+          enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+jwt:
+  secret_key: ${JWT_SECRET_KEY}
+  access_expiration: ${ACCESS_EXPIRATION}
+  refresh_expiration: ${REFRESH_EXPIRATION}
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
