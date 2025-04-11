@@ -102,7 +102,7 @@
 ## :building_construction: 아키텍처 
 ![image.png](./exec/image.png)
 
-## :jigsaw: ERD
+## :card_file_box: ERD
 ![image.png](./exec/ERD.png)
 
 
