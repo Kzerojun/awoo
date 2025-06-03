@@ -25,6 +25,7 @@ public class ChargeBalanceServiceImpl implements ChargeBalanceService {
     private final AccountClient accountClient;
 
     @Override
+    @Transactional
     public void chargeBalance(ChargeBalanceCommand command) {
 
         // 요청이 처리된적이 있는지 확인
