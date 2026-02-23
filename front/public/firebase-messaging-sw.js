@@ -1,12 +1,14 @@
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js");
 
+// Firebase 설정은 빌드 시 주입됩니다.
+// .env 파일에 NEXT_PUBLIC_FIREBASE_* 환경변수를 설정하세요.
 firebase.initializeApp({
-  apiKey: "AIzaSyB7GPu9vQL0VxeJllUUFu2-ATf2HruhBqE",
-  authDomain: "awoo-2c8de.firebaseapp.com",
-  projectId: "awoo-2c8de",
-  messagingSenderId: "127681937004",
-  appId: "1:127681937004:web:1e4f9c45486abba974e249",
+  apiKey: self.__FIREBASE_CONFIG__?.apiKey || "",
+  authDomain: self.__FIREBASE_CONFIG__?.authDomain || "",
+  projectId: self.__FIREBASE_CONFIG__?.projectId || "",
+  messagingSenderId: self.__FIREBASE_CONFIG__?.messagingSenderId || "",
+  appId: self.__FIREBASE_CONFIG__?.appId || "",
 });
 
 const messaging = firebase.messaging();
